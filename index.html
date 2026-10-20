@@ -126,6 +126,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 
 </div>
 
+<script src="results.js"></script>
 <script src="games.js"></script>
 <script>
 (function(){
@@ -167,7 +168,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   }
   function show(pid){
     current = pid; filter = "All";
-    try { sessionStorage.setItem("gamesroom-player", pid || ""); } catch(e) {}
+    try { sessionStorage.setItem("gamesroom-player", pid || ""); if (pid) localStorage.setItem("gamesroom-last-player", pid); } catch(e) {}
     $("#who").hidden = !!pid; $("#room").hidden = !pid;
     if (!pid) { renderWho(); return; }
     var p = PLAYERS.filter(function(x){ return x.id===pid; })[0];

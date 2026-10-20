@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sofia's Map of Mexico</title>
+<script src="../../results.js"></script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -314,7 +315,8 @@ const ICON_FEATHER = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 3
 const ICON_STAMP = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" fill="#F2B01E"/><path d="M7 15l3-5 2 3 2-4 3 6z" fill="#9B5B34"/></svg>`;
 
 /* ---------- state ---------- */
-const KEY = 'sofia-map-mexico-v1';
+const GR = window.GR || {player:()=>'unknown', key:k=>k, start(){}, part(){}, partDone(){}, finish(){}, ask(){return {miss(){},hint(){},done(){},giveUp(){}};}};
+const KEY = GR.key('sofia-map-mexico-v1');
 let S = {done:{}, feathers:0, postcard:'', mapwork:{}};
 try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch(e) {}
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
@@ -623,6 +625,8 @@ const STOPS = [
  },
 ];
 
+const CONCEPT = {1:'People and the economy', 2:'Landforms', 3:'Cities and population', 4:'Rivers and lakes', 5:'Climate', 6:'Plants, animals and the Yucatán', 7:'Location and borders'};
+function Q(item, st){ return GR.ask({item:item, concept:(st&&st.concept)||CONCEPT[CUR.stop.id], area:'HSS'}); }
 const MAPWORK = [
  'Label Mexico, its capital Mexico City, and its borders with the United States, Guatemala and Belize.',
  'Mark the Pacific Ocean, the Gulf of Mexico (Gulf of America) and the Caribbean Sea.',
@@ -676,6 +680,7 @@ let CUR = null; // {stop, i, firstTry, mapCfg}
 function startStop(id){
   const stop = STOPS.find(s=>s.id===id);
   CUR = {stop, i:0, mapCfg:Object.assign({}, stop.mapStart||{}), extra:{}};
+  GR.start('sofias-map-of-mexico'); GR.part('Stop '+stop.id+': '+stop.title);
   if (CUR.mapCfg.mark) CUR.mapCfg.mark = D.places[CUR.mapCfg.mark];
   show('stop');
   chips($('#stop-chips'));
@@ -728,13 +733,14 @@ function fb(P, kind, html){
 function stepSort(st, P){
   drawStopMap(CUR.mapCfg);
   const items = shuffle(st.items.map((x,k)=>Object.assign({k},x)));
-  const missed = new Set(); let sel = null; let left = items.length;
+  const missed = new Set(); let sel = null; let left = items.length; const qs = {};
   P.innerHTML = head() + `<p class="q">${esc(st.prompt)}</p>
     <div class="cards">${items.map(x=>`<button class="card" data-k="${x.k}">${esc(x.t)}</button>`).join('')}</div>
     <div class="bins">${st.bins.map(b=>`<button class="bin" data-b="${b.id}"><b>${esc(b.label)}</b><small>${esc(b.sub)}</small><span class="in"></span></button>`).join('')}</div>`;
   P.querySelectorAll('.card').forEach(c=>c.onclick=()=>{
     P.querySelectorAll('.card').forEach(x=>x.classList.remove('sel'));
     c.classList.add('sel'); sel = +c.dataset.k;
+    if (!qs[sel]) qs[sel] = Q('Sort: '+st.items[sel].t, st);
     P.querySelectorAll('.bin').forEach(b=>b.classList.add('armed'));
   });
   P.querySelectorAll('.bin').forEach(b=>b.onclick=()=>{
@@ -742,6 +748,7 @@ function stepSort(st, P){
     const it = st.items[sel];
     if (it.bin===b.dataset.b){
       if (!missed.has(sel)) feather();
+      qs[sel].done();
       const c = P.querySelector(`.card[data-k="${sel}"]`); c.classList.add('gone');
       b.querySelector('.in').insertAdjacentHTML('beforeend', `<span>${esc(it.t)}</span>`);
       fb(P,'ok', esc(it.why)); left--; sel=null;
@@ -749,7 +756,7 @@ function stepSort(st, P){
       if (left===0){ fb(P,'ok','All sorted. '+esc(it.why)); doneButton(P); }
     } else {
       missed.add(sel);
-      const right = st.bins.find(x=>x.id===it.bin);
+      qs[sel].miss(st.bins.find(x=>x.id===b.dataset.b).label);
       fb(P,'bad', esc(st.retry || 'Not that one. Try another.'));
     }
   });
@@ -760,6 +767,7 @@ function stepChoice(st, P){
   drawStopMap(CUR.mapCfg);
   const opts = st.multi ? st.options.map((o,k)=>Object.assign({k},o)) : shuffle(st.options.map((o,k)=>Object.assign({k},o)));
   let wrong = false, found = 0; const need = st.multi || 1;
+  const q = Q(st.prompt, st);
   P.innerHTML = head() + `<p class="q">${esc(st.prompt)}</p><div class="opts">${opts.map(o=>`<button class="opt" data-k="${o.k}">${esc(o.t)}</button>`).join('')}</div>`;
   P.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
     const o = st.options[+b.dataset.k];
@@ -768,13 +776,14 @@ function stepChoice(st, P){
       b.classList.add('ok'); b.disabled = true; found++;
       if (!wrong && found===need) feather();
       if (found===need){
+        q.done();
         P.querySelectorAll('.opt').forEach(x=>x.disabled=true);
         fb(P,'ok', esc(o.why || (st.multi ? 'You found them all.' : 'Yes.')));
         if (st.multi && !o.why) fb(P,'ok','You found them all.');
         doneButton(P);
       } else fb(P,'ok', `Yes. ${need-found} more to find.`);
     } else {
-      wrong = true; b.classList.add('bad'); b.disabled = true;
+      wrong = true; b.classList.add('bad'); b.disabled = true; q.miss(o.t);
       fb(P,'bad', esc(o.why || 'Not that one. Try again.'));
     }
   });
@@ -787,17 +796,17 @@ function stepTF(st, P){
   P.innerHTML = head() + `<div class="say">${FACES.mateo}<div class="bubble"><span class="who">Cousin Mateo</span>Here are my facts. Which ones are true?</div></div>
    <div class="tf">${st.items.map((it,k)=>`<div class="tfrow" data-k="${k}"><span>“${esc(it.t)}”</span><div class="btns"><button data-v="1">True</button><button data-v="0">Tall tale</button></div><span class="why" hidden></span></div>`).join('')}</div>`;
   P.querySelectorAll('.tfrow').forEach(row=>{
-    const it = st.items[+row.dataset.k]; let missed = false;
+    const it = st.items[+row.dataset.k]; let missed = false; const q = Q('True or tall tale: '+it.t, st);
     row.querySelectorAll('button').forEach(b=>b.onclick=()=>{
       if (row.classList.contains('answered')) return;
       const v = b.dataset.v==='1';
       const why = row.querySelector('.why'); why.hidden = false;
       if (v===it.ok){
-        b.classList.add('ok'); row.classList.add('answered'); if (!missed) feather();
+        b.classList.add('ok'); row.classList.add('answered'); if (!missed) feather(); q.done();
         why.innerHTML = `<b style="color:var(--ok)">Right.</b> ${esc(it.why)}`;
         left--; if (left===0){ doneButton(P); }
       } else {
-        missed = true; b.classList.add('bad');
+        missed = true; b.classList.add('bad'); q.miss(v ? 'True' : 'Tall tale');
         why.innerHTML = `<b style="color:var(--bad)">Think again.</b> Try the other button.`;
       }
     });
@@ -808,21 +817,21 @@ function stepTF(st, P){
 function stepOrder(st, P){
   drawStopMap(CUR.mapCfg);
   let items; do { items = shuffle(st.items); } while (items.join()===st.items.join());
-  let pos = 0, missed = false;
+  let pos = 0, missed = false; const q = Q(st.prompt, st);
   P.innerHTML = head() + `<p class="q">${esc(st.prompt)}</p><div class="opts">${items.map(t=>`<button class="opt" data-t="${esc(t)}">${esc(t)}</button>`).join('')}</div>`;
   P.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
     if (b.disabled) return;
     if (b.dataset.t===st.items[pos]){
       pos++; b.classList.add('ok'); b.disabled = true; b.textContent = pos+'. '+b.dataset.t;
-      if (pos===st.items.length){ if(!missed) feather(); fb(P,'ok', esc(st.why)); doneButton(P); }
+      if (pos===st.items.length){ if(!missed) feather(); q.done(); fb(P,'ok', esc(st.why)); doneButton(P); }
       else fb(P,'ok','Yes. What came next?');
-    } else { missed = true; fb(P,'bad','Not yet. Think about the bus climbing higher and higher.'); }
+    } else { missed = true; q.miss(b.dataset.t+' at position '+(pos+1)); fb(P,'bad','Not yet. Think about the bus climbing higher and higher.'); }
   });
 }
 
 /* map tap */
 function stepMapTap(st, P){
-  let t = 0; const found = {}; let missed = false;
+  let t = 0; const found = {}; let missed = false; let q = null;
   function draw(){
     const target = st.targets[t];
     const cfg = Object.assign({}, CUR.mapCfg, {interactive:{type:st.layer, found}, hint:'Tap on the map.'});
@@ -830,15 +839,17 @@ function stepMapTap(st, P){
     drawStopMap(cfg);
     $('#stop-map').querySelectorAll('[data-hit]').forEach(h=>h.addEventListener('click', ()=>hit(h.dataset.hit)));
     if (!target){ return; }
+    q = Q(target.ask, st);
     P.innerHTML = head() + `<div class="say">${FACES.pluma}<div class="bubble"><span class="who">Pluma</span>${esc(target.ask)}</div></div>
       <p style="color:var(--ink-soft);font-size:.9rem">${esc(st.prompt)} ${t+1} of ${st.targets.length}.</p>
       <div class="row"><button class="link" id="hintb">I need a hint</button></div>`;
-    $('#hintb').onclick = ()=>{ missed = true; fb(P,'info', esc(target.hint)); };
+    $('#hintb').onclick = ()=>{ missed = true; q.hint(); fb(P,'info', esc(target.hint)); };
   }
   function hit(id){
     const target = st.targets[t]; if (!target) return;
     if (id===target.id){
       if (!missed) feather();
+      q.done();
       found[id] = true; missed = false; t++;
       const msg = st.layer==='ranges' ? `${RANGE_NAMES[id]}. Found it.` : st.layer==='rivers' ? (id==='chapala' ? 'Lake Chapala. Found it.' : `The ${RIVER_NAMES[id]}. Found it.`) : 'The Yucatán Peninsula. Found it.';
       if (t < st.targets.length){ draw(); fb(P,'ok', esc(msg)); }
@@ -846,6 +857,7 @@ function stepMapTap(st, P){
     } else {
       missed = true;
       const name = st.layer==='ranges' ? RANGE_NAMES[id] : st.layer==='rivers' ? (id==='chapala' ? 'Lake Chapala' : 'the '+RIVER_NAMES[id]) : null;
+      q.miss(name || 'somewhere else on the map');
       fb(P,'bad', (name && found[id]) ? `That's ${esc(name)}, which you've already found. ${esc(target.hint)}` : name ? `Not that one. ${esc(target.hint)}` : `Not there. ${esc(target.hint)}`);
     }
   }
@@ -854,7 +866,8 @@ function stepMapTap(st, P){
 
 /* colour zones */
 function stepColour(st, P){
-  const fills = {desert:null, highland:null, tropical:null}; let crayon = null; let missed = new Set();
+  const fills = {desert:null, highland:null, tropical:null}; let crayon = null; let missed = new Set(); const qs = {};
+  const ZNAME = {desert:'the desert north', highland:'the central highlands', tropical:'the tropical south and coasts'};
   const CR = [{id:'desert', name:'Yellow', col:'var(--desert)'},{id:'highland', name:'Light brown', col:'var(--highland)'},{id:'tropical', name:'Dark green', col:'var(--tropical)'}];
   const WHY = {desert:'The north is mostly dry desert, so it\'s yellow.', highland:'The middle has a mild highland climate, so it\'s light brown.', tropical:'The south and the coasts are tropical, so they\'re dark green.'};
   P.innerHTML = head() + `<p class="q">${esc(st.prompt)}</p>
@@ -866,13 +879,14 @@ function stepColour(st, P){
       const zid = z.dataset.zone;
       if (!crayon){ fb(P,'info','Pick a crayon first.'); return; }
       if (fills[zid]){ fb(P,'info','That zone is already coloured. Try another.'); return; }
+      if (!qs[zid]) qs[zid] = Q('Colour '+ZNAME[zid], st);
       if (crayon===zid){
-        fills[zid] = zid; if (!missed.has(zid)) feather(); draw();
+        fills[zid] = zid; if (!missed.has(zid)) feather(); qs[zid].done(); draw();
         const left = Object.values(fills).filter(v=>!v).length;
         fb(P,'ok', esc(WHY[zid]) + (left ? ` ${left} to go.` : ''));
         if (!left) doneButton(P);
       } else {
-        missed.add(zid);
+        missed.add(zid); qs[zid].miss({desert:'yellow', highland:'light brown', tropical:'dark green'}[crayon]);
         const where = {desert:'the north', highland:'the middle', tropical:'the south and the coasts'}[zid];
         fb(P,'bad', `This zone is ${where}. Which climate did Pluma say belongs there?`);
       }
@@ -883,7 +897,8 @@ function stepColour(st, P){
 
 /* place labels */
 function stepPlace(st, P){
-  const placed = {}; let armed = null; let missed = new Set();
+  const placed = {}; let armed = null; let missed = new Set(); const qs = {};
+  const qFor = id => qs[id] || (qs[id] = Q('Place '+NEIGH.find(n=>n.id===id).name, st));
   const HINT = {usa:'The United States is north of Mexico, at the top of the map.', gtm:'Guatemala is south-east of Mexico, below the Yucatán.', blz:'Belize is a small country south-east of Mexico, beside the Caribbean Sea.', pacific:'The Pacific Ocean is to the west of Mexico.', gulf:'The Gulf of Mexico is to the east, curving round to the United States.', caribbean:'The Caribbean Sea is to the east of the Yucatán and Belize.'};
   function draw(){
     drawStopMap(Object.assign({}, CUR.mapCfg, {interactive:{type:'slots', placed, armed:null}, hint:'Pick a label, then tap a yellow ? on the map.'}));
@@ -891,12 +906,12 @@ function stepPlace(st, P){
       const go = ()=>{
         if (!armed){ fb(P,'info','Tap a label first.'); return; }
         if (s.dataset.slot===armed){
-          placed[armed] = true; if (!missed.has(armed)) feather();
+          placed[armed] = true; if (!missed.has(armed)) feather(); qFor(armed).done();
           const nm = NEIGH.find(n=>n.id===armed).name; armed = null; draw(); renderLabels();
           const left = NEIGH.filter(n=>!placed[n.id]).length;
           fb(P,'ok', `${esc(nm)} is in place.` + (left ? ` ${left} to go.` : ' Every label is in place.'));
           if (!left) doneButton(P);
-        } else { missed.add(armed); fb(P,'bad', 'Not there. ' + esc(HINT[armed])); }
+        } else { missed.add(armed); qFor(armed).miss('where '+NEIGH.find(n=>n.id===s.dataset.slot).name+' goes'); fb(P,'bad', 'Not there. ' + esc(HINT[armed])); }
       };
       s.addEventListener('click', go); s.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); }});
     });
@@ -914,6 +929,8 @@ function stepPlace(st, P){
 function finishStop(){
   const stop = CUR.stop; const first = !S.done[stop.id];
   S.done[stop.id] = true; save();
+  GR.partDone('Stop '+stop.id+': '+stop.title);
+  if (Object.keys(S.done).length===7) GR.finish();
   chips($('#stop-chips'));
   drawStopMap({});
   const i = STOPS.indexOf(stop);

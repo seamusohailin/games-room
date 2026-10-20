@@ -1,5 +1,6 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gods of Ancient Egypt</title>
+<script src="../../results.js"></script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -407,13 +408,14 @@ if(canSpeak){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e)
 function say(t,force){if(!canSpeak||(!readAloud&&!force))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-AU';u.rate=.9;u.pitch=1.05;speechSynthesis.speak(u);}catch(e){}}
 
 /* ---------- saved progress ---------- */
-const KEY='sotw-gods-egypt-v1';
+const GR=window.GR||{player:()=>'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask(){return {miss(){},hint(){},done(){},giveUp(){}};}};
+const KEY=GR.key('sotw-gods-egypt-v1');
 let save={stamps:{},met:[]};
 try{const raw=localStorage.getItem(KEY);if(raw)save=Object.assign(save,JSON.parse(raw));}catch(e){}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(save));}catch(e){}}
 let toastTimer;
 function toast(t){const el=$('#toast');el.innerHTML=scarab(true,C.gold)+`<span>${esc(t)}</span>`;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,3800);}
-function stamp(k){if(save.stamps[k])return;save.stamps[k]=true;persist();renderScarabs();toast(`You earned a scarab for ${GAMES[k].title}!`);}
+function stamp(k){GR.partDone(GAMES[k].title);if(Object.keys(GAMES).every(x=>x===k||save.stamps[x]))GR.finish();if(save.stamps[k])return;save.stamps[k]=true;persist();renderScarabs();toast(`You earned a scarab for ${GAMES[k].title}!`);}
 function renderScarabs(){const n=Object.keys(GAMES).filter(k=>save.stamps[k]).length;
   $('#scarabs').innerHTML=Object.keys(GAMES).map(k=>scarab(!!save.stamps[k],'#f6ecd4')).join('');
   $('#scarab-label').textContent=`Scarabs: ${n} of 4`;}
@@ -429,7 +431,7 @@ function show(id){
   if(id==='story'){if(!story.started)storyStart();else renderStory();}
   if(id==='build')renderBuild();
   window.scrollTo(0,0);
-  if(id!=='home')say(GAMES[id].instr);
+  if(id!=='home'){GR.start('gods-of-ancient-egypt');GR.part(GAMES[id].title);say(GAMES[id].instr);}
 }
 const head=id=>`<div class="screen-head"><button class="back" data-act="home">← All games</button><h2>${GAMES[id].title}</h2></div><div class="instr">${sayBtn(GAMES[id].instr)}<p>${GAMES[id].instr}</p></div>`;
 
@@ -468,7 +470,8 @@ function closeModal(){const ov=$('#overlay');ov.hidden=true;ov.innerHTML='';if(c
 const who={order:[],i:0,clue:0,total:0,choices:[],wrong:new Set(),reveal:false,got:0,finished:false};
 function whoStart(){Object.assign(who,{order:shuffle(GODS.map(g=>g.id)),i:0,total:0,finished:false});whoRound(false);}
 function whoRound(speak=true){const id=who.order[who.i];who.clue=0;who.wrong=new Set();who.reveal=false;
-  who.choices=shuffle([id,...shuffle(GODS.filter(g=>g.id!==id)).slice(0,3).map(g=>g.id)]);renderWho();
+  who.choices=shuffle([id,...shuffle(GODS.filter(g=>g.id!==id)).slice(0,3).map(g=>g.id)]);
+  who.q=GR.ask({item:'Who am I: '+GOD[id].name,concept:'Recognising the gods from clues',area:'HSS',part:'Who am I?'});renderWho();
   if(speak)say('Clue one. '+GOD[id].clues[0]);}
 function renderWho(){
   const el=$('#who');let body='';
@@ -487,8 +490,8 @@ function renderWho(){
   el.innerHTML=head('who')+body;
 }
 function whoGuess(id){const ans=who.order[who.i];
-  if(id===ans){who.got=3-who.clue;who.total+=who.got;who.reveal=true;renderWho();say(`Yes! I am ${GOD[ans].name}. ${GOD[ans].fact}`);return;}
-  who.wrong.add(id);
+  if(id===ans){who.q&&who.q.done();who.got=3-who.clue;who.total+=who.got;who.reveal=true;renderWho();say(`Yes! I am ${GOD[ans].name}. ${GOD[ans].fact}`);return;}
+  who.wrong.add(id);who.q&&who.q.miss(GOD[id].name);
   if(who.clue<2){who.clue++;renderWho();say(`Not ${GOD[id].name}. Here is another clue. ${GOD[ans].clues[who.clue]}`);}
   else{renderWho();say(`Not ${GOD[id].name}. Try again!`);}
 }
@@ -496,7 +499,8 @@ function whoGuess(id){const ans=who.order[who.i];
 /* ---------- story of Osiris ---------- */
 const story={tray:[],slots:[],locked:new Set(),msg:'',solved:false,started:false};
 function storyStart(){let t;do{t=shuffle([0,1,2,3,4,5]);}while(t.every((v,i)=>v===i));
-  Object.assign(story,{tray:t,slots:Array(6).fill(null),locked:new Set(),msg:'',solved:false,started:true});renderStory();}
+  Object.assign(story,{tray:t,slots:Array(6).fill(null),locked:new Set(),msg:'',solved:false,started:true});
+  story.q=GR.ask({item:'Put the story of Osiris in order',concept:'Sequencing the story of Osiris',area:'HSS',part:'The story of Osiris'});renderStory();}
 function scard(idx,where,pos){const sc=STORY[idx],locked=where==='slot'&&story.locked.has(pos);
   return `<div class="scard${locked?' is-locked':''}"><button class="scard-main" data-act="story-${where}" data-i="${where==='slot'?pos:idx}" ${locked?'disabled':''} aria-label="${esc(sc.t)}${locked?', in the right place':where==='tray'?', put in the next box':', take back out'}">${SCENES[idx]}<span class="scard-t">${sc.t}</span></button>${sayBtn(sc.say,'small')}${locked?'<span class="tick" aria-hidden="true">✓</span>':''}</div>`;}
 function renderStory(){
@@ -520,7 +524,8 @@ function renderStory(){
 }
 function storyCheck(){let right=0;
   story.slots.forEach((v,k)=>{if(v===k){story.locked.add(k);right++;}else if(v!==null){story.tray.push(v);story.slots[k]=null;}});
-  if(right===6){story.solved=true;renderStory();stamp('story');say('You put the whole story in order! Now tell it back.');return;}
+  if(right===6){story.q&&story.q.done();story.solved=true;renderStory();stamp('story');say('You put the whole story in order! Now tell it back.');return;}
+  story.q&&story.q.miss(right+' of 6 in place');
   story.msg=`${right} ${right===1?'picture is':'pictures are'} in the right place. Listen again and try the others.`;
   renderStory();say(story.msg);
 }
@@ -586,7 +591,7 @@ document.addEventListener('click',e=>{
     case 'open-god':openGod(d.id);break;
     case 'close':closeModal();break;
     case 'who-guess':whoGuess(d.id);break;
-    case 'who-clue':who.clue++;renderWho();say('Clue '+(who.clue+1)+'. '+GOD[who.order[who.i]].clues[who.clue]);break;
+    case 'who-clue':who.q&&who.q.hint();who.clue++;renderWho();say('Clue '+(who.clue+1)+'. '+GOD[who.order[who.i]].clues[who.clue]);break;
     case 'who-next':if(who.i<7){who.i++;whoRound();}else{who.finished=true;renderWho();stamp('who');say(`You found all eight gods and won ${who.total} stars!`);}break;
     case 'who-again':whoStart();say('Clue one. '+GOD[who.order[0]].clues[0]);break;
     case 'story-tray':{const idx=+d.i,k=story.slots.indexOf(null);if(k<0)break;story.slots[k]=idx;story.tray=story.tray.filter(v=>v!==idx);story.msg='';renderStory();break;}

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>The Shadow Keeper of Misselthwaite</title>
+<script src="../../results.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -162,9 +163,21 @@ function record(cap,html){
   r.insertAdjacentHTML("beforeend",html);
   return r;
 }
+var GR=window.GR||{start:function(){},part:function(){},partDone:function(){},finish:function(){},ask:function(){return {miss:function(){},hint:function(){},done:function(){}};}};
+var CONCEPTS={atmosphere:"Literal and figurative meanings",evidence:"Finding evidence in a text",glossary:"Checking definitions",geosphere:"Checking definitions",
+  microsphere:"Building words from roots",biospheric:"Building words from roots",claim1:"Shadow length and the sun's height",claim2:"Shadow length and the sun's height",
+  claim3:"How shadows form",claim4:"How shadows form",torch:"How shadows form",sunangle:"Shadow length and the sun's height",why:"Shadow length and the sun's height",
+  measure:"Measuring shadows",scale:"Graph scales",scalefault:"Graph scales",scalewhy:"Graph scales",datatype:"Numerical and categorical data",
+  catfault:"Numerical and categorical data",catfix:"Numerical and categorical data",freqtable:"Frequency tables",entry:"Writing the record entry"};
+var AREAS={Words:"EN",Light:"SC",Numbers:"MA"};
+var pageT0=Date.now();
 function mark(id,label,ok,chose,right){
   if(S.audit[id])return;
   S.audit[id]={label:label,ok:ok,chose:chose||"",right:right||""};
+  var pg=PAGES[S.p]||{};
+  var q=GR.ask({item:label,concept:CONCEPTS[id]||pg.chap||"",area:AREAS[pg.chap]||"",since:pageT0});
+  if(!ok)q.miss(chose||"");
+  q.done();
 }
 
 /* ---------- task components; each calls done() when finished ---------- */
@@ -748,6 +761,7 @@ page({id:"p12",chap:"Words",time:"dusk",build:function(c,done){
 
 /* ============================ closing ============================ */
 function closing(){
+  GR.finish();
   stage.innerHTML="";
   document.body.setAttribute("data-time","dusk");
   chapline.innerHTML="The record is closed<b>Misselthwaite</b>";
@@ -818,6 +832,7 @@ function paintTokens(){
 }
 function render(){
   var pg=PAGES[S.p];
+  pageT0=Date.now();GR.part("Page "+(S.p+1)+": "+pg.chap);
   stage.innerHTML="";
   document.body.setAttribute("data-time",pg.time);
   chapline.innerHTML="Page "+(S.p+1)+" of 12<b>"+pg.chap+"</b>";
@@ -840,14 +855,16 @@ function render(){
     holder.appendChild(b);
     if(scroll&&b.scrollIntoView)b.scrollIntoView({behavior:"smooth",block:"center"});
   }
+  var pageNo=S.p+1;
   pg.build(c,function(){
-    S.done[pg.id]=true;paintTokens();
+    S.done[pg.id]=true;paintTokens();GR.partDone("Page "+pageNo);
     forward(true);
   });
   if(already)forward(false);
   window.scrollTo({top:0,behavior:"smooth"});
 }
 document.getElementById("beginBtn").onclick=function(){
+  GR.start("shadow-keeper");
   document.getElementById("title").style.display="none";
   document.getElementById("frame").style.display="block";
   render();
