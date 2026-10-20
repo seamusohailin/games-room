@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "globe-makers-apprentice",
+    title: "The Globe-Maker's Apprentice",
+    blurb: "Help Mistress Wren make a globe for Captain Hale.",
+    players: ["maeve"],
+    subject: "Geography",
+    source: "Earth is Our Home, Lessons 4 and 5: day and night; the Northern and Southern Hemispheres",
+    added: "2026-10-20",
+    colour: "#16A08F",
+    href: "games/globe-makers-apprentice/index.html"
+  },
+  {
     id: "sofias-map-of-mexico",
     title: "Sofia's Map of Mexico",
     blurb: "Travel across Mexico with Sofia and finish her map.",

@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>The Globe-Maker's Apprentice</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fraunces:opsz,wght@9..144,700&display=swap">
+<style>
+/* A night-time globe-maker's workshop: candlelit indigo room, parchment work panels, Maeve's teal for actions */
+:root{
+  --bg:#17162e; --bg-deep:#0e0d21; --glow:#f6b860; --parch:#f8efdc; --parch-2:#e8d9b6;
+  --ink:#2a2118; --muted:#6d5c44; --teal:#16A08F; --teal-deep:#0c6b5f; --wax:#a5302a; --gold:#f2c14e;
+  --ok:#2f7d4f; --ok-bg:#e1f1e2; --hmm-bg:#fbecd2; --on-dark:#f4ead6;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background-color:var(--bg);background-image:radial-gradient(ellipse at 8% -5%,rgba(246,184,96,.30),transparent 55%),radial-gradient(ellipse at 100% 100%,rgba(22,160,143,.12),transparent 50%);
+  color:var(--on-dark);font-family:var(--body);font-size:1.15rem;line-height:1.45;min-height:100vh;-webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance;letter-spacing:.005em}
+
+.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;justify-content:space-between;padding-bottom:16px;margin-bottom:20px;border-bottom:2px dashed rgba(246,184,96,.35)}
+.brand h1{color:var(--glow);font-size:clamp(1.7rem,5.4vw,2.7rem);line-height:1.05}
+.brand p{margin:.35rem 0 0;font-size:1rem;opacity:.85}
+.status{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.seals{display:flex;gap:4px;align-items:center}
+.seals svg{width:34px;height:34px}
+.toggle{display:inline-flex;align-items:center;gap:8px;background:var(--bg-deep);border:2px solid var(--glow);border-radius:999px;padding:6px 14px 6px 8px;min-height:46px;cursor:pointer;font-size:.95rem}
+.toggle .dot{width:28px;height:28px;border-radius:50%;background:var(--glow);color:var(--ink);display:grid;place-items:center}
+.toggle .dot svg{width:17px;height:17px}
+.toggle[aria-pressed="false"] .dot{background:transparent;color:var(--on-dark);border:2px dashed var(--on-dark)}
+body.no-speech .say,body.no-speech .toggle{display:none!important}
+
+.panel{background:var(--parch);color:var(--ink);border-radius:14px;padding:20px;box-shadow:0 6px 0 var(--bg-deep)}
+.btn{font-family:var(--body);font-weight:700;font-size:1.2rem;background:var(--teal);color:#fff;border:0;border-radius:999px;padding:.6em 1.4em;min-height:54px;cursor:pointer;box-shadow:0 4px 0 var(--teal-deep);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--teal-deep)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.small{font-size:1rem;min-height:46px;padding:.45em 1.1em}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+
+.say{flex:none;width:46px;height:46px;border-radius:50%;background:var(--glow);color:var(--ink);border:2px solid var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}
+.say svg{width:23px;height:23px}
+.line{display:flex;gap:12px;align-items:flex-start}
+.line p{margin:0;font-size:1.25rem;line-height:1.45;padding-top:6px}
+
+/* home */
+.letter{position:relative;max-width:820px;margin-bottom:26px;background:#fbf4e3;border:2px solid var(--parch-2)}
+.letter .eyebrow{font-family:var(--display);color:var(--wax);font-size:1.35rem;margin:0 0 10px}
+.letter .sign{margin:12px 0 0 58px;font-style:italic;color:var(--muted)}
+.shelf{color:var(--glow);font-size:1.5rem;margin:0 0 14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.tile{display:grid;grid-template-rows:auto auto 1fr auto;gap:6px;text-align:left;border:0;cursor:pointer;position:relative;transition:transform .15s;padding:14px 16px 16px}
+.tile:hover:not([disabled]){transform:translateY(-3px)}
+.tile[disabled]{opacity:.5;cursor:default}
+.tile .art{background:#1f1d3d;border-radius:10px;overflow:hidden}
+.tile .art svg{display:block;width:100%;height:150px}
+.tile .num{position:absolute;top:22px;left:24px;width:38px;height:38px;border-radius:50%;background:var(--glow);color:var(--ink);font-family:var(--display);font-size:1.3rem;display:grid;place-items:center;border:2px solid var(--ink)}
+.tile h3{font-size:1.35rem;color:var(--ink);margin-top:6px}
+.tile p{margin:0;font-size:1rem;color:var(--muted)}
+.tile.now{box-shadow:0 0 0 4px var(--glow),0 6px 0 var(--bg-deep)}
+.chip{justify-self:start;align-self:end;display:inline-flex;align-items:center;gap:6px;font-size:.9rem;font-weight:700;background:var(--parch-2);border-radius:999px;padding:4px 12px 4px 6px;margin-top:6px}
+.chip svg{width:24px;height:24px}
+.tile.now .chip{background:var(--teal);color:#fff}
+.finished-link{margin-top:20px}
+
+/* station */
+.bar{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.bar h2{color:var(--glow);font-size:clamp(1.4rem,4.2vw,2.05rem)}
+.back{background:var(--bg-deep);border:2px solid var(--on-dark);border-radius:999px;padding:6px 16px;min-height:46px;cursor:pointer;font-size:1rem}
+.play{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:760px){.play{grid-template-columns:minmax(0,1fr)}}
+.scene{background:#1f1d3d;border-radius:14px;padding:6px;box-shadow:0 6px 0 var(--bg-deep),inset 0 0 0 2px rgba(246,184,96,.18)}
+.scene svg{display:block;width:100%;height:auto;max-height:60vh}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.dots i{width:13px;height:13px;border-radius:50%;background:var(--parch-2)}
+.dots i.on{background:var(--teal)}
+.dots i.now{background:var(--glow);box-shadow:0 0 0 2px var(--ink)}
+
+.choices{display:grid;gap:12px;margin:18px 0 6px}
+.choices.pics{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.choice{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:12px 16px;min-height:58px;font-size:1.2rem;color:var(--ink);text-align:left;cursor:pointer;box-shadow:0 4px 0 var(--parch-2);display:flex;align-items:center;gap:12px;transition:transform .1s}
+.choice:active:not([disabled]){transform:translateY(2px)}
+.choices.pics .choice{flex-direction:column;text-align:center;justify-content:flex-start;padding:10px}
+.choice svg{flex:none;width:48px;height:48px}
+.choices.pics .choice svg{width:100%;height:104px}
+.choice.yes{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
+.choice.no{opacity:.38;box-shadow:none;cursor:default}
+.choice[disabled]{cursor:default}
+.fb{border-radius:12px;margin:10px 0 0}
+.fb:empty{display:none}
+.fb.show{padding:12px 14px}
+.fb.yes{background:var(--ok-bg)}
+.fb.hmm{background:var(--hmm-bg)}
+.fb .line p{font-size:1.15rem}
+
+.beads{display:flex;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.beads i{width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);background:#fff}
+.beads i.on{background:var(--glow)}
+.state{margin:6px 0 0;font-size:1.15rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:2em}
+.state svg{width:30px;height:30px}
+.hrs{background:var(--parch-2);border-radius:999px;padding:2px 10px;font-weight:700;font-size:1rem}
+
+.words{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0 4px}
+.word{background:#fff;border:3px dashed var(--muted);border-radius:12px;padding:10px 16px;font-size:1.05rem;text-align:center}
+.word b{display:block;font-family:var(--display);font-size:1.7rem;color:var(--wax)}
+.word.big{border-style:solid;border-color:var(--teal)}
+.plus{font-family:var(--display);font-size:2rem}
+
+.swatches{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 4px}
+.sw{width:58px;height:58px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 2px var(--ink);cursor:pointer;padding:0}
+.sw.on{box-shadow:0 0 0 3px var(--ink),0 0 0 7px var(--glow)}
+
+.todo{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:12px}
+.todo li{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:10px 12px}
+.todo .line p{font-size:1.1rem;padding-top:8px}
+
+.grown{margin-top:34px;padding-top:14px;border-top:2px dashed rgba(244,234,214,.25);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;opacity:.85}
+.grown button{background:transparent;border:2px solid rgba(244,234,214,.5);border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:.95rem}
+.grown button[aria-pressed="true"]{background:var(--teal);border-color:var(--teal)}
+
+/* svg text and motion */
+svg text{font-family:var(--body)}
+svg .lbl{fill:#f6ecd4;font-size:17px;font-weight:700;paint-order:stroke;stroke:#14132a;stroke-width:5px;stroke-linejoin:round}
+svg .lbl.sm{font-size:14px}
+svg .ink{fill:var(--ink);stroke:none;font-weight:700}
+.flame{transform-origin:center bottom;transform-box:fill-box;animation:flick 2.6s ease-in-out infinite}
+@keyframes flick{0%,100%{transform:scale(1,1)}40%{transform:scale(.93,1.07)}70%{transform:scale(1.04,.97)}}
+.stripes{animation:slide 1s linear infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-60px)}}
+.pulse{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.stamp{transform-origin:center;transform-box:fill-box;animation:stamp .7s ease-out both}
+@keyframes stamp{0%{transform:scale(1.7);opacity:0}60%{transform:scale(.9);opacity:1}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.flame,.pulse,.stamp{animation:none}.stripes{animation-duration:2.4s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>The Globe-Maker's Apprentice</h1>
+      <p>Day and night, the axis, the poles and the Equator</p>
+    </div>
+    <div class="status">
+      <div class="seals" id="seals" aria-label="Stations finished"></div>
+      <button class="toggle" id="toggle" aria-pressed="true"><span class="dot" id="toggle-dot"></span><span id="toggle-t">Read to me: on</span></button>
+    </div>
+  </header>
+  <main id="app"></main>
+  <footer class="grown">
+    <span>For grown-ups:</span>
+    <button id="easy" aria-pressed="false">Easier version: off</button>
+    <button id="reset">Start over</button>
+  </footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+const GAME_ID='globe-makers-apprentice';
+const GR=window.GR||{player:()=>'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask(){return {miss(){},hint(){},done(){},giveUp(){}};}};
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const plain=h=>String(h).replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+
+/* ---------- saved progress (separate for each girl) ---------- */
+const KEY=GR.key('globe-apprentice-v1');
+const PAPER='#eadcbc';
+function load(){
+  try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.seals))return v;}catch(e){}
+  return {seals:[0,0,0,0],north:'#e8a33d',south:'#4cb3c4',pn:false,ps:false,easy:false};
+}
+let S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ---------- icons ---------- */
+const SPK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.6 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+const SUN='<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#e08a1e" stroke-width="3.5" stroke-linecap="round"><path d="M24 3v7M24 38v7M3 24h7M38 24h7M9 9l5 5M34 34l5 5M9 39l5-5M34 14l5-5"/></g><circle cx="24" cy="24" r="10" fill="#f2c14e" stroke="#e08a1e" stroke-width="3"/></svg>';
+const MOON='<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M30 6a17 17 0 1 0 12 26A14 14 0 0 1 30 6z" fill="#3b3a73" stroke="#17162e" stroke-width="3" stroke-linejoin="round"/><circle cx="10" cy="10" r="2" fill="#3b3a73"/><circle cx="40" cy="12" r="1.6" fill="#3b3a73"/></svg>';
+function starPath(cx,cy,R,r){let d='';for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r:R;d+=(i?'L':'M')+(cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1);}return d+'Z';}
+function blobPath(cx,cy,R,r,n){let d='';for(let i=0;i<n*2;i++){const a=i*Math.PI/n,rr=i%2?r:R;d+=(i?'L':'M')+(cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1);}return d+'Z';}
+function seal(on){
+  return `<svg viewBox="0 0 40 40" aria-hidden="true"><path d="${blobPath(20,20,18,15.5,12)}" fill="${on?'#a5302a':'none'}" stroke="${on?'#6e1d18':'#f4ead6'}" stroke-width="1.6" stroke-linejoin="round" ${on?'':'stroke-dasharray="3 2" opacity=".55"'}/>${on?`<circle cx="20" cy="20" r="10" fill="none" stroke="#d6655d" stroke-width="1.5"/><path d="${starPath(20,20,6.5,2.8)}" fill="#d6655d"/>`:''}</svg>`;
+}
+
+/* ---------- speech ---------- */
+const canSpeak=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+let voice=null,readAloud=true;
+function pickVoice(){try{const vs=speechSynthesis.getVoices();voice=vs.find(v=>/en[-_]AU/i.test(v.lang))||vs.find(v=>/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;}catch(e){}}
+if(canSpeak){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}}else document.body.classList.add('no-speech');
+function say(t,force){if(!canSpeak||(!readAloud&&!force))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(plain(t));if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-AU';u.rate=.88;u.pitch=1.05;speechSynthesis.speak(u);}catch(e){}}
+function hush(){if(canSpeak)try{speechSynthesis.cancel();}catch(e){}}
+function line(t){return `<div class="line"><button class="say" data-say="${esc(plain(t))}" aria-label="Read this to me">${SPK}</button><p>${t}</p></div>`;}
+
+/* ---------- scenes ---------- */
+let UID=0;
+const SKY=[[24,26],[92,58],[150,16],[332,30],[376,84],[302,312],[56,316],[384,246],[16,196],[246,14],[362,160],[118,318],[200,322]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${i%3?1.1:1.7}" fill="#f6ecd4" opacity="${i%2?.4:.7}"/>`).join('');
+function frame(inner,defs,vb){return `<svg viewBox="${vb||'0 0 400 330'}" aria-hidden="true" focusable="false"><defs>${defs||''}</defs>${vb?'':SKY}${inner}</svg>`;}
+const glowDef=id=>`<radialGradient id="glow${id}"><stop offset="0" stop-color="#ffd98a" stop-opacity=".75"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>`;
+function candle(x,y,id){
+  return `<g><circle cx="${x}" cy="${y-112}" r="74" fill="url(#glow${id})"/>
+  <ellipse cx="${x}" cy="${y}" rx="30" ry="8" fill="#8a6a3c" stroke="#2a2118" stroke-width="2"/>
+  <rect x="${x-14}" y="${y-90}" width="28" height="90" rx="4" fill="#f3e6c6" stroke="#2a2118" stroke-width="2"/>
+  <path d="M${x-14} ${y-80} q7 7 14 0 q7 -7 14 0" fill="none" stroke="#dccb9e" stroke-width="2"/>
+  <line x1="${x}" y1="${y-90}" x2="${x}" y2="${y-98}" stroke="#2a2118" stroke-width="2"/>
+  <g class="flame"><path d="M${x} ${y-130} C${x+13} ${y-113} ${x+11} ${y-98} ${x} ${y-96} C${x-11} ${y-98} ${x-13} ${y-113} ${x} ${y-130}Z" fill="#f7b23b"/><path d="M${x} ${y-117} C${x+5} ${y-109} ${x+5} ${y-101} ${x} ${y-100} C${x-5} ${y-101} ${x-5} ${y-109} ${x} ${y-117}Z" fill="#fff1b8"/></g></g>`;
+}
+
+/* Lesson 4: the orange by the candle */
+function orangeSVG(after){
+  const id=++UID,cx=262,cy=165,r=84;
+  return frame(`${candle(56,262,id)}
+  <g stroke="#ffd98a" stroke-width="2" opacity=".35" stroke-linecap="round"><path d="M80 150 L170 120M80 160 L170 165M80 170 L170 210"/></g>
+  <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#or${id})" stroke="#7a3e10" stroke-width="2"/>
+  <path d="M${cx},${cy-r} A${r},${r} 0 0 1 ${cx},${cy+r} Z" fill="#100e24" opacity=".74"/>
+  <line x1="${cx}" y1="${cy-r}" x2="${cx}" y2="${cy+r}" stroke="#fff3c4" stroke-width="1.5" stroke-dasharray="3 5" opacity=".6"/>
+  <path d="M${cx-2} ${cy-r+2} q-2 -14 8 -20" stroke="#4d7a2e" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M${cx+6} ${cy-r-16} q18 -10 28 4 q-15 9 -28 -4z" fill="#5f9c4c" stroke="#2c5a2a" stroke-width="1.5"/>
+  ${after?`<text class="lbl" x="${cx-44}" y="${cy+r+34}" text-anchor="middle">light</text><text class="lbl" x="${cx+44}" y="${cy+r+34}" text-anchor="middle">shadow</text>`:''}`,
+  glowDef(id)+`<radialGradient id="or${id}" cx=".3" cy=".45" r=".8"><stop offset="0" stop-color="#ffc463"/><stop offset=".7" stop-color="#f08a22"/><stop offset="1" stop-color="#c8641a"/></radialGradient>`);
+}
+
+/* Lesson 4: the world from above, spinning before the Sun */
+const W={cx:250,cy:162,r:96};
+const LAND_TOP=["M-62,-38 C-44,-70 -2,-62 8,-40 C20,-16 -12,-2 -32,-8 C-56,-14 -76,-20 -62,-38Z","M22,18 C46,4 76,20 70,46 C62,70 30,72 20,56 C12,44 6,30 22,18Z","M-42,38 C-26,28 -6,44 -16,62 C-26,78 -52,70 -54,56 C-56,46 -50,42 -42,38Z","M40,-62 C56,-72 76,-56 68,-40 C60,-28 42,-34 38,-46 C34,-54 34,-58 40,-62Z","M-80,6 C-72,-4 -60,2 -62,14 C-64,24 -78,24 -82,16Z"];
+function house(a,col){
+  const {cx,cy,r}=W,t=a*Math.PI/180,x=cx+r*Math.cos(t),y=cy-r*Math.sin(t);
+  return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(90-a).toFixed(1)})"><path d="M-11,4 L-11,-10 L0,-21 L11,-10 L11,4 Z" fill="${col}" stroke="#f6ecd4" stroke-width="2.2" stroke-linejoin="round"/><rect x="-3.5" y="-7" width="7" height="11" fill="#17162e"/></g>`;
+}
+function tag(a,txt){
+  const {cx,cy,r}=W,t=a*Math.PI/180;
+  const x=Math.max(40,Math.min(372,cx+(r+34)*Math.cos(t))),y=Math.max(20,Math.min(318,cy-(r+34)*Math.sin(t)+6));
+  return `<text class="lbl sm" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle">${txt}</text>`;
+}
+function worldDyn(a,o){
+  const {cx,cy,r}=W;
+  let s=`<g transform="translate(${cx} ${cy}) rotate(${(180-a).toFixed(2)})">${LAND_TOP.map(d=>`<path d="${d}" fill="#5f9c4c" stroke="#2c5a2a" stroke-width="2"/>`).join('')}</g>`;
+  s+=`<path d="M${cx},${cy-r} A${r},${r} 0 0 1 ${cx},${cy+r} Z" fill="#070a22" opacity=".66"/>`;
+  s+=`<line x1="${cx}" y1="${cy-r}" x2="${cx}" y2="${cy+r}" stroke="#fff3c4" stroke-dasharray="3 5" opacity=".5"/>`;
+  if(o.frozen){
+    [[cx+30,cy-45],[cx+62,cy+8],[cx+28,cy+52],[cx+70,cy-30]].forEach(([x,y])=>{s+=`<g stroke="#cfe6ff" stroke-width="2.4" stroke-linecap="round"><path d="M${x-8},${y}h16M${x},${y-8}v16M${x-6},${y-6}l12,12M${x-6},${y+6}l12,-12"/></g>`;});
+    s+=`<text class="lbl sm" x="${cx+58}" y="${cy+r+30}" text-anchor="middle">always night</text><text class="lbl sm" x="${cx-58}" y="${cy+r+30}" text-anchor="middle">always day</text>`;
+  }
+  s+=house(a,'#16A08F');
+  if(o.two){s+=house(a+180,'#e8a33d');s+=tag(a,'us')+tag(a+180,'friend');}
+  else s+=tag(a,'us');
+  return s;
+}
+function worldSVG(a,o){
+  o=o||{};const id=++UID,{cx,cy,r}=W;
+  return frame(`${candle(48,262,id)}
+  <g stroke="#ffd98a" stroke-width="2" opacity=".32" stroke-linecap="round"><path d="M72 140 L150 108M72 150 L148 162M72 160 L150 214"/></g>
+  <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#sea${id})" stroke="#0b1a3a" stroke-width="2"/>
+  <g id="dyn">${worldDyn(a,o)}</g>
+  ${o.caption&&!o.frozen?`<text class="lbl sm" x="${cx}" y="${cy+r+52}" text-anchor="middle">${o.caption}</text>`:''}`,
+  glowDef(id)+`<radialGradient id="sea${id}" cx=".28" cy=".5" r=".8"><stop offset="0" stop-color="#63afe6"/><stop offset="1" stop-color="#235f99"/></radialGradient>`);
+}
+
+/* Lesson 5: the spinning top */
+function topSVG(showAxis){
+  const id=++UID,body="M110,150 C110,112 290,112 290,150 C290,185 232,222 200,272 C168,222 110,185 110,150Z";
+  let stripes='';for(let x=100;x<420;x+=60){stripes+=`<rect x="${x}" y="100" width="20" height="190" fill="#16A08F"/><rect x="${x+20}" y="100" width="20" height="190" fill="#c8372d"/>`;}
+  return frame(`<ellipse cx="200" cy="292" rx="70" ry="10" fill="#000" opacity=".35"/>
+  <clipPath id="tb${id}"><path d="${body}"/></clipPath>
+  <g clip-path="url(#tb${id})"><rect x="100" y="100" width="200" height="190" fill="#f2c14e"/><g class="stripes">${stripes}</g><path d="M100 150 Q200 175 300 150 L300 100 L100 100Z" fill="#fff" opacity=".18"/></g>
+  <path d="${body}" fill="none" stroke="#2a2118" stroke-width="3"/>
+  <rect x="191" y="72" width="18" height="52" rx="6" fill="#8a5a2b" stroke="#2a2118" stroke-width="3"/>
+  <g stroke="#f6ecd4" stroke-width="3" fill="none" opacity=".5" stroke-linecap="round"><path d="M86 128 q-16 24 0 48"/><path d="M314 128 q16 24 0 48"/><path d="M70 120 q-20 32 0 64"/><path d="M330 120 q20 32 0 64"/></g>
+  <line x1="200" y1="${showAxis?46:74}" x2="200" y2="${showAxis?292:270}" stroke="${showAxis?'#f2c14e':'#2a2118'}" stroke-width="${showAxis?3.5:2}" ${showAxis?'stroke-dasharray="7 6"':''}/>
+  ${showAxis?'<text class="lbl" x="200" y="34" text-anchor="middle">axis: the still middle line</text>':''}`);
+}
+
+/* Lesson 5: spinning on your heels */
+function heelsSVG(){
+  return frame(`<ellipse cx="200" cy="298" rx="62" ry="10" fill="#000" opacity=".35"/>
+  <path d="M170 120 l-34 58 M230 120 l34 58" stroke="#f1c9a5" stroke-width="13" stroke-linecap="round"/>
+  <path d="M168 110 h64 l16 100 h-96z" fill="#16A08F" stroke="#2a2118" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M184 210 v78 M216 210 v78" stroke="#2a2118" stroke-width="13" stroke-linecap="round"/>
+  <circle cx="200" cy="78" r="27" fill="#f1c9a5" stroke="#2a2118" stroke-width="3"/>
+  <path d="M172 76 q2 -34 28 -33 q26 -1 28 33 q-6 -18 -28 -18 q-22 0 -28 18z" fill="#7a4a24" stroke="#2a2118" stroke-width="2"/>
+  <circle cx="190" cy="82" r="2.6" fill="#2a2118"/><circle cx="210" cy="82" r="2.6" fill="#2a2118"/><path d="M191 93 q9 7 18 0" stroke="#2a2118" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M118 236 A82 20 0 0 0 282 236" fill="none" stroke="#f2c14e" stroke-width="4" stroke-linecap="round"/>
+  <path d="M282 236 l-14 -2 l8 -10z" fill="#f2c14e"/>
+  <line x1="200" y1="34" x2="200" y2="302" stroke="#f2c14e" stroke-width="3.5" stroke-dasharray="7 6"/>
+  <text class="lbl" x="214" y="36">axis</text>
+  <text class="lbl sm" x="236" y="290">spin slowly</text>`);
+}
+
+/* Lesson 5: the globe being made */
+const G={cx:200,cy:172,rx:114,ry:94};
+const LAND_SIDE=["M-74,-50 C-58,-80 -16,-74 -8,-52 C0,-30 -30,-18 -48,-24 C-68,-30 -86,-36 -74,-50Z","M18,-66 C40,-78 72,-58 66,-38 C60,-18 34,-22 24,-34 C16,-44 8,-56 18,-66Z","M-30,14 C-10,2 14,16 8,38 C2,60 -22,68 -36,54 C-48,42 -46,24 -30,14Z","M42,22 C60,14 84,28 78,48 C72,66 48,64 40,50 C34,40 32,28 42,22Z","M-92,6 C-82,-4 -66,2 -68,16 C-70,26 -86,26 -92,16Z"];
+function strPaths(y0){
+  const {cx,cy,rx,ry}=G,w=rx*Math.sqrt(1-Math.pow((y0-cy)/ry,2)),b=18*(w/rx);
+  return {back:`M${(cx-w).toFixed(1)},${y0} Q${cx},${(y0-2*b).toFixed(1)} ${(cx+w).toFixed(1)},${y0}`,front:`M${(cx-w).toFixed(1)},${y0} Q${cx},${(y0+2*b).toFixed(1)} ${(cx+w).toFixed(1)},${y0}`,mid:y0+b};
+}
+const STRING_Y={mid:172,high:120,low:224};
+function globeSVG(o){
+  o=o||{};const id=++UID,{cx,cy,rx,ry}=G,mini=!!o.mini;
+  const north=o.paint&&S.pn?S.north:PAPER,south=o.paint&&S.ps?S.south:PAPER,anyPaint=o.paint&&(S.pn||S.ps);
+  const landFill=anyPaint?'#5f9c4c':'#d6c497',landStroke=anyPaint?'#2c5a2a':'#a38f63';
+  let s='';
+  s+=`<ellipse cx="${cx}" cy="${cy+ry+24}" rx="${rx*.7}" ry="9" fill="#000" opacity=".35"/>`;
+  if(o.stand){s+=`<path d="M${cx},${cy-ry-16} A${rx+16},${ry+16} 0 0 0 ${cx},${cy+ry+16}" fill="none" stroke="#c9a24a" stroke-width="7"/><path d="M${cx-64},${cy+ry+44} L${cx+64},${cy+ry+44} L${cx+46},${cy+ry+30} L${cx-46},${cy+ry+30}Z" fill="#7a4a24" stroke="#2a2118" stroke-width="2"/><rect x="${cx-5}" y="${cy+ry+14}" width="10" height="18" fill="#c9a24a"/>`;}
+  s+=`<clipPath id="gc${id}"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/></clipPath>`;
+  const SOUTH=`M${cx-rx-2},${cy} Q${cx},${cy+36} ${cx+rx+2},${cy} V${cy+ry+2} H${cx-rx-2} Z`,NORTH=`M${cx-rx-2},${cy-ry-2} H${cx+rx+2} V${cy} Q${cx},${cy+36} ${cx-rx-2},${cy} Z`;
+  s+=`<g clip-path="url(#gc${id})"><rect x="${cx-rx-2}" y="${cy-ry-2}" width="${2*rx+4}" height="${2*ry+4}" fill="${north}"/>${south!==north?`<path d="${SOUTH}" fill="${south}"/>`:''}`;
+  s+=`<g transform="translate(${cx} ${cy})">${LAND_SIDE.map(d=>`<path d="${d}" fill="${landFill}" stroke="${landStroke}" stroke-width="2"/>`).join('')}</g>`;
+  s+=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#sh${id})"/>`;
+  if(o.glowHalf==='n')s+=`<path d="${SOUTH}" fill="#0b0a1e" opacity=".62"/>`;
+  if(o.glowHalf==='s')s+=`<path d="${NORTH}" fill="#0b0a1e" opacity=".62"/>`;
+  s+=`</g><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="#2a2118" stroke-width="3"/>`;
+  if(o.string){const p=strPaths(STRING_Y[o.string]);s+=`<path d="${p.back}" fill="none" stroke="#c8372d" stroke-width="2" stroke-dasharray="5 5" opacity=".55"/><path d="${p.front}" fill="none" stroke="#c8372d" stroke-width="5" stroke-linecap="round"/>`;
+    if(o.string==='mid'&&!mini)s+=`<g fill="none" stroke="#c8372d" stroke-width="3.5"><ellipse cx="${cx-9}" cy="${p.mid+4}" rx="9" ry="5"/><ellipse cx="${cx+9}" cy="${p.mid+4}" rx="9" ry="5"/></g>`;}
+  const needle=(x1,y1,x2,y2,knob)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#2a2118" stroke-width="9" stroke-linecap="round"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#cdd5dd" stroke-width="5" stroke-linecap="round"/>${knob?`<circle cx="${x2}" cy="${y2}" r="7" fill="#c8372d" stroke="#2a2118" stroke-width="2"/>`:''}`;
+  if(o.needle==='side'){s+=needle(cx-rx-30,cy,cx-rx,cy,false)+needle(cx+rx,cy,cx+rx+30,cy,true);}
+  else if(o.needle==='edge'){const x=cx+80,h=ry*Math.sqrt(1-Math.pow(80/rx,2));s+=needle(x,cy-ry-30,x,cy-h,false)+needle(x,cy+h,x,cy+ry+30,true);}
+  else if(o.needle){s+=needle(cx,cy-ry-30,cx,cy-ry,false)+needle(cx,cy+ry,cx,cy+ry+30,true);}
+  if(o.glowEnd){const y=o.glowEnd==='top'?cy-ry:cy+ry;s+=`<circle class="pulse" cx="${cx}" cy="${y}" r="17" fill="none" stroke="#f2c14e" stroke-width="5"/>`;}
+  if(o.star&&!mini){s+=`<path d="${starPath(cx,24,13,5.5)}" fill="#f2c14e" stroke="#fff3c4" stroke-width="1"/><g stroke="#f2c14e" stroke-width="1.6" opacity=".6"><path d="M${cx} 40 V${cy-ry-34}" stroke-dasharray="2 6"/></g><text class="lbl sm" x="${cx+20}" y="30">pole star</text>`;}
+  if(o.poles&&!mini){s+=`<text class="lbl" x="${cx+16}" y="${cy-ry-12}">North Pole</text><text class="lbl" x="${cx+16}" y="${cy+ry+24}">South Pole</text>`;}
+  if(o.poleOne&&!mini){s+=o.poleOne==='top'?`<text class="lbl" x="${cx+16}" y="${cy-ry-12}">North Pole</text>`:`<text class="lbl" x="${cx+16}" y="${cy+ry+24}">South Pole</text>`;}
+  if(o.eqLabel&&!mini){s+=`<text class="lbl" x="${cx+rx+6}" y="${cy+6}">Equator</text>`;}
+  const hl=o.hemiLabels;
+  if(hl&&!mini){if(hl==='n'||hl==='both')s+=`<text class="lbl" x="${cx}" y="${cy-50}" text-anchor="middle">Northern</text><text class="lbl" x="${cx}" y="${cy-30}" text-anchor="middle">Hemisphere</text>`;
+    if(hl==='s'||hl==='both')s+=`<text class="lbl" x="${cx}" y="${cy+40}" text-anchor="middle">Southern</text><text class="lbl" x="${cx}" y="${cy+60}" text-anchor="middle">Hemisphere</text>`;}
+  if(o.pin&&!mini){const px=cx+36,py=cy+66;s+=`<path d="M${px},${py} c0,-10 -11,-14 -11,-24 a11,11 0 1 1 22,0 c0,10 -11,14 -11,24z" fill="#c8372d" stroke="#2a2118" stroke-width="2"/><circle cx="${px}" cy="${py-24}" r="4" fill="#fff"/><text class="lbl" x="${px+16}" y="${py-30}">Australia</text><text class="lbl sm" x="${px+16}" y="${py-12}">our home</text>`;}
+  const defs=`<radialGradient id="sh${id}" cx=".32" cy=".3" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></radialGradient>`;
+  return frame(s,defs,mini?'64 36 272 272':null);
+}
+
+/* the Captain's ship */
+function shipSVG(){
+  return frame(`<circle cx="320" cy="70" r="26" fill="#f6ecd4" opacity=".85"/><circle cx="332" cy="62" r="24" fill="#1f1d3d"/>
+  <path d="M0 268 Q50 256 100 268 T200 268 T300 268 T400 268 V330 H0Z" fill="#234a7a"/>
+  <path d="M0 286 Q50 274 100 286 T200 286 T300 286 T400 286" fill="none" stroke="#6fa6d8" stroke-width="2" opacity=".6"/>
+  <path d="M96 232 L304 232 L278 268 L122 268 Z" fill="#7a4a24" stroke="#2a2118" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M110 244 H290" stroke="#c9a24a" stroke-width="3"/>
+  <g stroke="#2a2118" stroke-width="4" stroke-linecap="round"><path d="M150 232 V112M205 232 V86M258 232 V118"/></g>
+  <g fill="#f3e6c6" stroke="#2a2118" stroke-width="2" stroke-linejoin="round"><path d="M126 124 Q150 150 126 176 H174 Q198 150 174 124Z"/><path d="M126 184 Q150 204 128 222 H172 Q194 204 174 184Z"/><path d="M178 98 Q205 128 178 160 H232 Q258 128 232 98Z"/><path d="M178 168 Q205 192 180 214 H230 Q254 192 232 168Z"/><path d="M236 128 Q258 152 236 176 H280 Q302 152 280 128Z"/><path d="M236 184 Q258 202 238 220 H278 Q298 202 280 184Z"/></g>
+  <path d="M205 86 L232 94 L205 102Z" fill="#c8372d" stroke="#2a2118" stroke-width="2"/>
+  <circle cx="290" cy="226" r="6" fill="#f6b860"/><circle cx="290" cy="226" r="16" fill="#f6b860" opacity=".25"/>`);
+}
+
+/* the Captain's order, with a seal for each station */
+function orderSVG(justDone){
+  let seals='';for(let i=0;i<4;i++){const on=S.seals[i],x=96+i*70;seals+=`<g ${i===justDone?'class="stamp"':''}><path d="${blobPath(x,232,26,22,12)}" fill="${on?'#a5302a':'none'}" stroke="${on?'#6e1d18':'#8a7a5e'}" stroke-width="2" ${on?'':'stroke-dasharray="4 3"'}/>${on?`<circle cx="${x}" cy="232" r="14" fill="none" stroke="#d6655d" stroke-width="2"/><path d="${starPath(x,232,9,3.8)}" fill="#d6655d"/>`:`<text class="ink" x="${x}" y="238" text-anchor="middle" font-size="16" fill="#8a7a5e" style="fill:#8a7a5e">${i+1}</text>`}</g>`;}
+  return frame(`<path d="M52 40 H348 V290 H52Z" fill="#f8efdc" stroke="#c9b48a" stroke-width="3"/>
+  <path d="M52 40 q-14 0 -14 14 t14 14" fill="#e8d9b6" stroke="#c9b48a" stroke-width="2"/>
+  <text class="ink" x="200" y="84" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="26">An order for one globe</text>
+  <text class="ink" x="200" y="110" text-anchor="middle" font-size="15" style="font-weight:400">for Captain Hale, who sails at dawn</text>
+  <g stroke="#c9b48a" stroke-width="2" stroke-linecap="round"><path d="M86 140 H314M86 162 H290M86 184 H306"/></g>
+  ${seals}`);
+}
+
+/* ---------- step machinery ---------- */
+let cur=null;
+function dots(){if(!cur)return '';let s='<div class="dots" aria-hidden="true">';for(let i=0;i<cur.steps.length;i++)s+=`<i class="${i<cur.i-1?'on':i===cur.i-1?'now':''}"></i>`;return s+'</div>';}
+function stage(scene,html){if(scene!=null)$('#scene').innerHTML=scene;$('#talk').innerHTML=dots()+html;}
+function next(){hush();if(cur.i>=cur.steps.length){completeStation();return;}cur.steps[cur.i++]();}
+function goBtn(label){$('#ctl').innerHTML=`<button class="btn" id="go">${label||'Next'}</button>`;$('#go').onclick=next;}
+
+function info(o){
+  stage(o.scene,line(o.text)+(o.extra||'')+`<div class="row" id="ctl"><button class="btn" id="go">${o.btn||'Next'}</button></div>`);
+  say(o.text);$('#go').onclick=next;
+}
+function ask(o){
+  const ws=S.easy?o.wrong.slice(0,1):o.wrong.slice(),wi=o.wrongIcons||[];
+  let opts=shuffle([{t:o.right,ok:true,ic:o.rightIcon}].concat(ws.map(w=>({t:w,ok:false,ic:wi[o.wrong.indexOf(w)]}))));
+  if(o.letters)opts.forEach((x,i)=>{x.show='String '+'ABC'[i];});
+  const q=GR.ask({item:o.item,concept:o.concept,area:o.area});
+  let hinted=false;const pics=opts.some(x=>x.ic);
+  stage(o.scene,line(o.text)+`<div class="choices ${pics?'pics':''}">${opts.map((x,i)=>`<button class="choice" data-i="${i}">${x.ic||''}<span>${x.show||x.t}</span></button>`).join('')}</div><div class="fb" id="fb" aria-live="polite"></div><div class="row" id="ctl"><button class="btn ghost small" id="clue">A clue, please</button></div>`);
+  say(o.text);
+  const fb=$('#fb');
+  $('#clue').onclick=()=>{if(!hinted){hinted=true;q.hint();}fb.className='fb show hmm';fb.innerHTML=line('<b>Clue:</b> '+o.hint);say('Clue. '+o.hint);};
+  $$('#talk .choice').forEach(b=>{b.onclick=()=>{
+    if(b.disabled)return;const x=opts[+b.dataset.i];
+    if(x.ok){
+      q.done();$$('#talk .choice').forEach(c=>{c.disabled=true;});b.classList.add('yes');
+      if(o.sceneAfter)$('#scene').innerHTML=o.sceneAfter;
+      fb.className='fb show yes';fb.innerHTML=line('<b>Yes!</b> '+o.explain);goBtn();say('Yes! '+o.explain);
+    }else{
+      q.miss(x.t);b.disabled=true;b.classList.add('no');
+      fb.className='fb show hmm';fb.innerHTML=line('Not quite. Have another look. '+o.hint);say('Not quite. Have another look. '+o.hint);
+    }
+  };});
+}
+function tween(from,to,ms,step,done){const t0=performance.now();function f(t){let k=Math.min(1,(t-t0)/ms);const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;step(from+(to-from)*e);if(k<1)requestAnimationFrame(f);else if(done)done();}requestAnimationFrame(f);}
+
+/* ---------- station 1: the candle and the world (Lesson 4) ---------- */
+const CAP_WORLD='The world, seen from above';
+function spinStep(){
+  let a=157.5,turns=0,busy=false;
+  const txt='Now look down on the whole world from high above, like a bird. The candle is the Sun. Tap <b>Turn the world</b> and watch our little house.';
+  stage(worldSVG(a,{caption:CAP_WORLD}),line(txt)+`<div class="beads" id="beads" aria-hidden="true">${'<i></i>'.repeat(8)}</div><p class="state" id="state" aria-live="polite"></p><div class="fb" id="fb"></div><div class="row" id="ctl"><button class="btn" id="turn">Turn the world</button></div>`);
+  say(txt);
+  const now=()=>{const c=Math.cos(a*Math.PI/180);return c<-.2?'day':c>.2?'night':'edge';};
+  const show=()=>{const n=now();$('#state').innerHTML=(n==='day'?SUN+'<span>At our house it is <b>day</b>.</span>':n==='night'?MOON+'<span>At our house it is <b>night</b>.</span>':'<span>Our house is at the edge of the light.</span>')+(turns?`<span class="hrs">${turns*3} hours</span>`:'');};
+  show();
+  $('#turn').onclick=()=>{
+    if(busy)return;busy=true;const from=a;
+    tween(from,from+45,1000,v=>{a=v;const d=$('#dyn');if(d)d.innerHTML=worldDyn(a,{});},()=>{
+      busy=false;turns++;const b=$('#beads');if(!b)return;b.children[turns-1].className='on';show();
+      if(turns===8){
+        const m='One whole spin! That took 24 hours: one day and one night. Every place on Earth gets a turn in the light and a turn in the dark.';
+        $('#fb').className='fb show yes';$('#fb').innerHTML=line(m);goBtn();say(m);
+      }else say(now()==='day'?'Day.':'Night.');
+    });
+  };
+}
+function dnAsk(kind,k){
+  return ()=>ask({scene:worldSVG(pick(kind==='day'?[150,168,192,210]:[330,348,12,30]),{caption:CAP_WORLD}),
+    text:'Is it day or night at our little house?',item:'day-or-night-'+k,concept:'Facing the Sun is day, facing away is night',area:'SC',
+    right:kind==='day'?'Day':'Night',wrong:[kind==='day'?'Night':'Day'],rightIcon:kind==='day'?SUN:MOON,wrongIcons:[kind==='day'?MOON:SUN],
+    hint:'Is our house on the side facing the candle, or on the side turned away from it?',
+    explain:kind==='day'?'Our house is facing the Sun, so it is daytime there.':'Our house has turned away from the Sun, so it is night time there.'});
+}
+function twoHouses(){
+  const ourNight=Math.random()<.5,a=ourNight?pick([350,10]):pick([170,190]);
+  ask({scene:worldSVG(a,{two:true,caption:CAP_WORLD}),
+    text:`It is ${ourNight?'night':'day'} at our house. Our friend lives on the other side of the world. What is it at our friend's house?`,
+    item:'other-side-of-the-world',concept:'When it is night here, it is day on the other side of the world',area:'SC',
+    right:ourNight?'Day':'Night',wrong:[ourNight?'Night':'Day'],rightIcon:ourNight?SUN:MOON,wrongIcons:[ourNight?MOON:SUN],
+    hint:'Look at the orange house. Is it facing the candle?',
+    explain:ourNight?'When it is night where we live, people on the other side of the world are having daytime. When we go to bed, they are waking up.':'When it is day where we live, it is night on the other side of the world. When we wake up, they are going to bed.'});
+}
+function station1(){
+  const st=[];
+  st.push(()=>info({scene:orangeSVG(false),text:'Mistress Wren lights a candle in the dark workshop. She holds an orange beside it. Look closely at the orange.',btn:"I'm looking"}));
+  st.push(()=>ask({scene:orangeSVG(false),text:'Which half of the orange is lit up?',item:'orange-lit-half',concept:'Only the half facing the light is lit',area:'SC',
+    right:'The half facing the candle',wrong:['The half facing away','All of it'],hint:'Look at which side is near the candle flame.',
+    explain:'The half facing the candle is bright. The other half is in shadow. The Earth is round like an orange, so the Sun lights only one half of it at a time.',sceneAfter:orangeSVG(true)}));
+  st.push(spinStep);
+  const seq=S.easy?shuffle(['day','night']):shuffle(['day','night',pick(['day','night'])]);
+  seq.forEach((k,i)=>st.push(dnAsk(k,i+1)));
+  st.push(twoHouses);
+  st.push(()=>info({scene:worldSVG(180,{frozen:true}),text:'What if the Earth stopped spinning? One side would always be bright and warm. The other side would always be dark and cold, and nothing could live there.'}));
+  if(!S.easy)st.push(()=>ask({scene:worldSVG(180,{frozen:true}),text:'Why is it good that the Earth spins?',item:'why-spin',concept:'Spinning gives every place a turn in the light',area:'SC',
+    right:'Every place gets a turn in the light',wrong:['It makes the Sun hotter','It keeps the Moon shining'],hint:'Think about the side that would always be dark.',
+    explain:'The spin gives every place on Earth a turn in the light and a turn in the dark.'}));
+  st.push(()=>info({scene:worldSVG(157.5,{caption:'diurnal motion'}),text:'The Earth\'s daily spin has a grand name: <b>diurnal motion</b>. Say it out loud: diurnal motion. <b>Diurnal</b> means daily. <b>Motion</b> means movement.'}));
+  st.push(()=>ask({scene:worldSVG(157.5,{caption:'diurnal motion'}),text:'What does <b>diurnal</b> mean?',item:'diurnal',concept:'Diurnal motion is the daily spin',area:'SC',
+    right:'Daily',wrong:['Yearly','Nightly'],hint:'The Earth spins round once every day.',
+    explain:'Diurnal means daily, and motion means movement. So diurnal motion is the Earth\'s daily spin.'}));
+  return st;
+}
+
+/* ---------- station 2: the knitting needle (Lesson 5) ---------- */
+function poleAsk(end){
+  const top=end==='top';
+  return ()=>ask({scene:globeSVG({needle:1,star:1,glowEnd:end}),
+    text:'The two ends of the axis are called the <b>poles</b>. One pole always points to the pole star. What is this glowing end called?',
+    item:'pole-'+(top?'north':'south'),concept:'The poles are the two ends of the axis; the North Pole points to the pole star',area:'HSS',
+    right:top?'The North Pole':'The South Pole',wrong:[top?'The South Pole':'The North Pole','The pole star'],
+    hint:top?'Look up. Which end points to the pole star?':'This end is the one far away from the pole star.',
+    explain:top?'This end points to the pole star, so it is the North Pole.':'The pole at the other flattened end is the South Pole.',
+    sceneAfter:globeSVG({needle:1,star:1,poleOne:end})});
+}
+function station2(){
+  const st=[];
+  st.push(()=>info({scene:topSVG(false),text:'Mistress Wren spins a wooden top on her bench. Watch it closely as it whirls.',btn:"I'm watching"}));
+  st.push(()=>ask({scene:topSVG(false),text:'Which part of the top stays still while it spins?',item:'top-still-line',concept:'A spinning thing turns on a still middle line',area:'SC',
+    right:'The line down the middle',wrong:['The coloured stripes','The outside edge'],hint:'Watch the stripes race round. What does not move?',
+    explain:'The middle line stays still while everything else whirls round. That still middle line is called the <b>axis</b>. It is not a real line, it is imaginary, but the stillness is real.',sceneAfter:topSVG(true)}));
+  st.push(()=>info({scene:heelsSVG(),text:'Your turn! Stand up where there is space. Spin slowly on your heels, three times. Imagine a line from the top of your head down to your heels. That line is your axis.',btn:'I spun three times'}));
+  st.push(()=>info({scene:globeSVG({}),text:'Now we start the Captain\'s globe. Like the Earth, it is a little flattened at the top and bottom, and it bulges a little round the middle.'}));
+  st.push(()=>ask({scene:globeSVG({}),text:'Mistress Wren hands you a knitting needle to be the axis. Where should it go?',item:'axis-position',concept:'The axis runs through the middle, between the flattened ends',area:'SC',
+    right:'Through the two flat ends',wrong:['Through the round sides','Down near one edge'],
+    rightIcon:globeSVG({mini:1,needle:1}),wrongIcons:[globeSVG({mini:1,needle:'side'}),globeSVG({mini:1,needle:'edge'})],
+    hint:'The axis goes right through the middle, between the flattened top and bottom.',
+    explain:'The Earth\'s axis runs through the middle, between the two flattened ends. The Earth spins on her axis once every 24 hours.',sceneAfter:globeSVG({needle:1})}));
+  shuffle(['top','bottom']).forEach(e=>st.push(poleAsk(e)));
+  return st;
+}
+
+/* ---------- station 3: the red string (Lesson 5) ---------- */
+const SWATCHES=['#e8a33d','#d6577a','#8a6cc7','#3f86c6','#4cb3c4','#f0d04a','#e8774a'];
+function wordStep(){
+  const t='Here are two old words. <b>Sphere</b> means a round ball, like the Earth. <b>Hemi</b> means half. Tap <b>Join them</b>.';
+  stage(globeSVG({needle:1,star:1,poles:1,string:'mid',eqLabel:1}),line(t)+`<div class="words" id="words"><div class="word"><b>hemi</b>half</div><span class="plus" aria-hidden="true">+</span><div class="word"><b>sphere</b>a round ball</div></div><div class="fb" id="fb"></div><div class="row" id="ctl"><button class="btn" id="join">Join them</button></div>`);
+  say(t);
+  $('#join').onclick=()=>{
+    $('#words').innerHTML='<div class="word big"><b>hemisphere</b>half a sphere</div>';
+    const m='Hemi and sphere make <b>hemisphere</b>. A hemisphere is half a sphere.';
+    $('#fb').className='fb show yes';$('#fb').innerHTML=line(m);goBtn();say(m);
+  };
+}
+function paintStep(half){
+  const t=half==='north'?'Time to paint! Choose a colour for the top half, from the Equator up to the North Pole.':'Now choose a colour for the bottom half, from the Equator down to the South Pole.';
+  const flag=half==='north'?'pn':'ps';
+  const draw=()=>{$('#scene').innerHTML=globeSVG({needle:1,star:1,poles:1,string:'mid',eqLabel:1,paint:1});};
+  stage(globeSVG({needle:1,star:1,poles:1,string:'mid',eqLabel:1,paint:1}),line(t)+`<div class="swatches">${SWATCHES.map(c=>`<button class="sw ${S[flag]&&S[half]===c?'on':''}" style="background:${c}" data-c="${c}" aria-label="Paint colour"></button>`).join('')}</div><div class="row" id="ctl"></div>`);
+  say(t);
+  if(S[flag])goBtn('Done painting');
+  $$('#talk .sw').forEach(b=>{b.onclick=()=>{S[half]=b.dataset.c;S[flag]=true;save();draw();$$('#talk .sw').forEach(x=>x.classList.toggle('on',x===b));goBtn('Done painting');};});
+}
+function hemiAsk(h){
+  const n=h==='n',base={needle:1,star:1,poles:1,string:'mid',eqLabel:1,paint:1};
+  return ()=>ask({scene:globeSVG(Object.assign({glowHalf:h},base)),text:'What is this bright half called?',
+    item:'hemisphere-'+(n?'northern':'southern'),concept:'The Northern and Southern Hemispheres',area:'HSS',
+    right:n?'The Northern Hemisphere':'The Southern Hemisphere',wrong:[n?'The Southern Hemisphere':'The Northern Hemisphere','The Equator'],
+    hint:'Which pole is in the bright half?',
+    explain:n?'The half between the Equator and the North Pole is the Northern Hemisphere.':'The half between the Equator and the South Pole is the Southern Hemisphere.',
+    sceneAfter:globeSVG(Object.assign({glowHalf:h,hemiLabels:h},base))});
+}
+function station3(){
+  const st=[];
+  st.push(()=>ask({scene:globeSVG({needle:1,star:1,poles:1}),
+    text:'The globe bulges a little round its middle. Tie a red string round the middle, exactly halfway between the North Pole and the South Pole. Which string is right?',
+    item:'equator-position',concept:'The Equator is halfway between the poles',area:'HSS',letters:true,
+    right:'middle',wrong:['near the North Pole','near the South Pole'],
+    rightIcon:globeSVG({mini:1,needle:1,string:'mid'}),wrongIcons:[globeSVG({mini:1,needle:1,string:'high'}),globeSVG({mini:1,needle:1,string:'low'})],
+    hint:'Find the string that is just as far from the North Pole as it is from the South Pole.',
+    explain:'That line round the middle is called the <b>Equator</b>. It divides the Earth into two equal halves. You will find it marked on maps of the world.',
+    sceneAfter:globeSVG({needle:1,star:1,poles:1,string:'mid',eqLabel:1})}));
+  st.push(wordStep);
+  st.push(()=>ask({scene:globeSVG({needle:1,star:1,poles:1,string:'mid',eqLabel:1}),text:'The Equator cuts the Earth into two halves. What is each half called?',
+    item:'what-is-a-hemisphere',concept:'A hemisphere is half a sphere',area:'HSS',
+    right:'A hemisphere',wrong:['A pole','An axis'],hint:'Hemi means half.',
+    explain:'Each half is a hemisphere, just as tying a string round the middle of an orange shows its two halves.'}));
+  st.push(()=>paintStep('north'));
+  st.push(()=>paintStep('south'));
+  shuffle(['n','s']).forEach(h=>st.push(hemiAsk(h)));
+  st.push(()=>ask({scene:globeSVG({needle:1,star:1,poles:1,string:'mid',eqLabel:1,paint:1,pin:1}),
+    text:'Australia is below the Equator, on the South Pole\'s side. Which hemisphere do we live in?',
+    item:'australia-hemisphere',concept:'Australia is in the Southern Hemisphere',area:'HSS',
+    right:'The Southern Hemisphere',wrong:['The Northern Hemisphere','Both of them'],hint:'Which pole is on the same side of the Equator as Australia?',
+    explain:'Australia is in the Southern Hemisphere, between the Equator and the South Pole. That is where you live!'}));
+  return st;
+}
+
+/* ---------- station 4: the Captain's questions (Lessons 4 and 5) ---------- */
+const CAP={
+  c1:{l:4,core:1,q:'What makes day and night?',right:'The Earth spinning in front of the Sun',wrong:['The Sun going out each night','Clouds covering the Sun'],hint:'Think of the world turning by the candle.',explain:'The Earth spins in front of the Sun. The side facing the Sun has day, and the side turned away has night.',concept:'The Earth\'s rotation causes day and night',area:'SC'},
+  c2:{l:4,core:1,q:'How long does the Earth take to spin round once?',right:'24 hours',wrong:['1 hour','365 days'],hint:'One spin makes one day and one night.',explain:'The Earth spins round once every 24 hours: one day and one night.',concept:'One rotation takes 24 hours',area:'SC'},
+  c3:{l:4,core:1,q:'When is it daytime where we live?',right:'When our side faces the Sun',wrong:['When our side turns away from the Sun','When the Moon comes out'],hint:'Which half of the orange was bright?',explain:'We have day when our part of the Earth faces the Sun.',concept:'Facing the Sun is day, facing away is night',area:'SC'},
+  c4:{l:4,core:1,q:'When it is night here, what is it on the other side of the world?',right:'Daytime',wrong:['Night time too','Winter'],hint:'The other side of the world is facing the Sun.',explain:'When it is night where we live, people on the other side of the world are having daytime.',concept:'When it is night here, it is day on the other side of the world',area:'SC'},
+  c5:{l:4,core:0,q:'How many times does the Earth spin while it travels once round the Sun?',right:'365 times',wrong:['24 times','Only once'],hint:'There are 365 days in a year.',explain:'The Earth spins 365 times while it travels once round the Sun. That is why a year has 365 days.',concept:'The Earth spins 365 times in one orbit',area:'SC'},
+  c11:{l:4,core:0,q:'Why can\'t we feel the Earth spinning?',right:'Everything around us moves with it',wrong:['It only spins at night','It has stopped spinning'],hint:'We, the air, the houses and the trees all travel together.',explain:'Everything around us moves with the Earth, so we don\'t feel the spin.',concept:'We move with the Earth, so we don\'t feel it spin',area:'SC'},
+  c6:{l:5,core:1,q:'What is the Earth\'s axis?',right:'An imaginary line it spins around',wrong:['A real metal pole','A line round its middle'],hint:'Remember the still line down the middle of the top.',explain:'The axis is an imaginary line through the middle of the Earth. The Earth spins around it.',concept:'The axis is the imaginary line the Earth spins around',area:'SC'},
+  c7:{l:5,core:1,q:'What are the poles?',right:'The two ends of the axis',wrong:['Two tall trees','The middle of the Earth'],hint:'Think of where the knitting needle came out of the globe.',explain:'The poles are the two ends of the axis: the North Pole and the South Pole.',concept:'The poles are the two ends of the axis',area:'HSS'},
+  c8:{l:5,core:0,q:'Which pole points to the pole star?',right:'The North Pole',wrong:['The South Pole','The Equator'],hint:'Remember which end of the needle pointed up to the star.',explain:'The North Pole always points to the pole star.',concept:'The North Pole points to the pole star',area:'HSS'},
+  c9:{l:5,core:1,q:'What is the Equator?',right:'An imaginary line round the middle of the Earth',wrong:['The top of the Earth','A long river'],hint:'Remember the red string you tied.',explain:'The Equator is an imaginary line round the middle of the Earth, halfway between the poles.',concept:'The Equator is halfway between the poles',area:'HSS'},
+  c10:{l:5,core:1,q:'Which half lies between the Equator and the South Pole?',right:'The Southern Hemisphere',wrong:['The Northern Hemisphere','The North Pole'],hint:'Its name sounds like the pole at that end.',explain:'The Southern Hemisphere lies between the Equator and the South Pole. Australia is in it.',concept:'The Northern and Southern Hemispheres',area:'HSS'},
+  c12:{l:5,core:0,q:'What does hemisphere mean?',right:'Half a sphere',wrong:['A whole sphere','A kind of map'],hint:'Hemi means half.',explain:'Hemi means half, so a hemisphere is half a sphere.',concept:'A hemisphere is half a sphere',area:'HSS'}
+};
+function station4(){
+  const ids=Object.keys(CAP),L4=shuffle(ids.filter(k=>CAP[k].l===4)),L5=shuffle(ids.filter(k=>CAP[k].l===5));
+  const chosen=S.easy?shuffle(L4.filter(k=>CAP[k].core).slice(0,2).concat(L5.filter(k=>CAP[k].core).slice(0,2))):shuffle(L4.slice(0,3).concat(L5.slice(0,3)));
+  const st=[];
+  st.push(()=>info({scene:shipSVG(),text:'Captain Hale has come to collect his globe. Before he sails, he wants to be sure he can explain it to his crew. Help him answer his questions.',btn:'Ready'}));
+  chosen.forEach(k=>{const c=CAP[k];st.push(()=>ask({scene:c.l===4?worldSVG(157.5,{caption:CAP_WORLD}):globeSVG({needle:1,string:'mid',paint:1}),
+    text:c.q,item:'captain-'+k,concept:c.concept,area:c.area,right:c.right,wrong:c.wrong,hint:c.hint,explain:c.explain}));});
+  return st;
+}
+
+const STATIONS=[
+  {title:'The candle and the world',short:'Why we have day and night',build:station1,art:()=>orangeSVG(false)},
+  {title:'The knitting needle',short:'The axis and the poles',build:station2,art:()=>globeSVG({needle:1,star:1})},
+  {title:'The red string',short:'The Equator and the two hemispheres',build:station3,art:()=>globeSVG({needle:1,star:1,string:'mid',paint:1})},
+  {title:"The Captain's questions",short:'Help the Captain before he sails',build:station4,art:shipSVG}
+];
+
+/* ---------- screens ---------- */
+function renderSeals(){$('#seals').innerHTML=S.seals.map(v=>seal(v)).join('');}
+const LETTER='Dear Apprentice, Captain Hale sails at dawn. He has ordered a globe to show his crew why day turns into night, and where the poles and the Equator are. Will you help me make it? There are four stations in my workshop. Do them in order, one at a time.';
+function renderHome(){
+  cur=null;hush();renderSeals();
+  const nextIdx=S.seals.indexOf(0);
+  $('#app').innerHTML=`<section class="panel letter"><p class="eyebrow">A letter from the workshop</p>${line(LETTER)}<p class="sign">Mistress Wren, Globe-maker</p></section>
+  <h2 class="shelf">The workshop stations</h2>
+  <div class="tiles">${STATIONS.map((st,i)=>{const done=S.seals[i],open=i===0||S.seals[i-1],now=i===nextIdx;
+    return `<button class="tile panel ${now?'now':''}" data-n="${i}" ${open?'':'disabled'}><div class="art">${st.art()}</div><span class="num">${i+1}</span><h3>${st.title}</h3><p>${st.short}</p><span class="chip">${done?seal(1)+'Done. Play again?':now?'Start here':'Opens after station '+i}</span></button>`;}).join('')}</div>
+  ${nextIdx<0?'<div class="row finished-link"><button class="btn" id="see">See the finished globe</button></div>':''}`;
+  $$('.tile').forEach(t=>{t.onclick=()=>{if(!t.disabled)openStation(+t.dataset.n);};});
+  if($('#see'))$('#see').onclick=finale;
+  window.scrollTo(0,0);
+}
+function openStation(n){
+  cur={n,i:0,steps:STATIONS[n].build()};
+  GR.start(GAME_ID);GR.part(STATIONS[n].title);
+  $('#app').innerHTML=`<div class="bar"><button class="back" id="back">&larr; Workshop</button><h2>${n+1}. ${STATIONS[n].title}</h2></div><div class="play"><div class="scene" id="scene"></div><div class="panel talk" id="talk"></div></div>`;
+  $('#back').onclick=renderHome;
+  window.scrollTo(0,0);next();
+}
+function completeStation(){
+  const n=cur.n;S.seals[n]=1;save();renderSeals();GR.partDone(STATIONS[n].title);
+  if(n===3){finale();return;}
+  cur.i=cur.steps.length+1;
+  const t=`Station ${n+1} is done! Mistress Wren presses a wax seal onto the Captain's order.`;
+  stage(orderSVG(n),line(t)+`<div class="row"><button class="btn" id="nx">Next station</button><button class="btn ghost" id="hm">Back to the workshop</button></div>`);
+  say(t);
+  $('#nx').onclick=()=>openStation(n+1);$('#hm').onclick=renderHome;
+}
+function finale(){
+  GR.finish();cur=null;hush();
+  const t='Captain Hale holds up your globe. "Now my crew will understand why day turns into night," he says. "Thank you, apprentice!"';
+  const todo=['<b>Tell it back.</b> Show a grown-up your globe and explain why we have day and night, and where the poles and the Equator are.',
+    '<b>Your Earth notebook.</b> Now do Lessons 4 and 5 in your notebook.',
+    '<b>Try it for real.</b> With a grown-up, use an orange, a torch and a pencil for the axis.'];
+  $('#app').innerHTML=`<div class="bar"><button class="back" id="back">&larr; Workshop</button><h2>The globe is finished!</h2></div><div class="play"><div class="scene">${globeSVG({needle:1,star:1,poles:1,string:'mid',eqLabel:1,paint:1,stand:1})}</div><div class="panel talk">${line(t)}<ul class="todo">${todo.map(x=>`<li>${line(x)}</li>`).join('')}</ul><div class="row"><button class="btn" id="done">All done</button></div></div></div>`;
+  say(t);window.scrollTo(0,0);
+  $('#back').onclick=renderHome;
+  $('#done').onclick=()=>{hush();$('#app').innerHTML=`<section class="panel letter">${line('Well done, apprentice. The Captain sails at dawn with your globe. Time to put the iPad away.')}<div class="row"><button class="btn ghost" id="hm">Back to the workshop</button></div></section>`;say('Well done, apprentice. The Captain sails at dawn with your globe. Time to put the iPad away.');$('#hm').onclick=renderHome;};
+}
+
+/* ---------- controls ---------- */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b)say(b.dataset.say,true);});
+$('#toggle-dot').innerHTML=SPK;
+$('#toggle').addEventListener('click',()=>{readAloud=!readAloud;$('#toggle').setAttribute('aria-pressed',readAloud);$('#toggle-t').textContent='Read to me: '+(readAloud?'on':'off');if(!readAloud)hush();});
+function showEasy(){$('#easy').setAttribute('aria-pressed',S.easy);$('#easy').textContent='Easier version: '+(S.easy?'on':'off');}
+$('#easy').addEventListener('click',()=>{S.easy=!S.easy;save();showEasy();});
+let resetArmed=false;
+$('#reset').addEventListener('click',()=>{
+  if(!resetArmed){resetArmed=true;$('#reset').textContent='Tap again to start over';setTimeout(()=>{resetArmed=false;$('#reset').textContent='Start over';},4000);return;}
+  resetArmed=false;$('#reset').textContent='Start over';const easy=S.easy;S={seals:[0,0,0,0],north:'#e8a33d',south:'#4cb3c4',pn:false,ps:false,easy:easy};save();renderHome();
+});
+showEasy();renderHome();
+})();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>
