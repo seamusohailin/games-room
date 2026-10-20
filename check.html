@@ -17,7 +17,7 @@ button{font:inherit;font-weight:700;background:#FFD34D;color:#1D1A2B;border:0;bo
 <body>
 <main>
   <h1>Results connection check</h1>
-  <p>Sends one test result, marked "test", to the Games Room results sheet. It isn't linked from the Games Room.</p>
+  <p>Sends one test result and one test piece of writing, marked "test", to the Games Room results sheet. It isn't linked from the Games Room.</p>
   <button id="go">Send a test result</button>
   <div id="out">Not sent yet.</div>
 </main>
@@ -32,12 +32,14 @@ document.getElementById("go").onclick = function () {
     { id: id + "-a", type: "answer", t: t, player: "test", game: "connection-check", session: id, part: "Connection check",
       item: "Test row (safe to delete)", concept: "Setup", area: "", firstTry: true, attempts: 1, hint: false, secs: 0, wrong: [] },
     { id: id + "-s", type: "session", t: t, started: t, player: "test", game: "connection-check", session: id, finished: true,
-      status: "finished", partsDone: 1, questions: 1, firstRight: 1, hints: 0, secs: 0, lastPart: "Connection check" }
+      status: "finished", partsDone: 1, questions: 1, firstRight: 1, hints: 0, secs: 0, lastPart: "Connection check" },
+    { id: id + "-w", type: "writing", t: t, wid: "test|connection-check|" + id, player: "test", game: "connection-check", session: id,
+      part: "Connection check", prompt: "Test writing (safe to delete)", text: "This is a test of the Writing tab.", area: "" }
   ];
   fetch(url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ k: "gr-2026-kq7", events: events }) })
     .then(function (r) { return r.json(); })
     .then(function (res) {
-      out.textContent = res && res.ok ? "Connected. The sheet received " + res.received + " test records. Look for a row marked \"test\" on its Answers and Sessions tabs."
+      out.textContent = res && res.ok ? "Connected. The sheet received " + res.received + " test records. Look for a row marked \"test\" on its Answers, Sessions and Writing tabs."
         : "The sheet answered but refused the test: " + JSON.stringify(res);
     })
     .catch(function (e) { out.textContent = "Couldn't read a reply from the sheet (" + e.message + "). Check the sheet anyway: if a \"test\" row arrived, sending works."; });
