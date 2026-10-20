@@ -71,11 +71,12 @@ a{color:inherit}
 .text{padding:12px 14px 16px;display:grid;gap:4px;align-content:start}
 .text h3{font-size:1.35rem;line-height:1.1}
 .text p{margin:0;font-size:1rem;color:var(--ink-soft)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .empty{background:var(--wall-2);border-radius:18px;padding:22px;max-width:560px}
 
 /* grown-ups */
 .grown{margin-top:56px;text-align:center}
-.grown button{background:none;border:0;text-decoration:underline;text-underline-offset:4px;color:var(--on-wall);opacity:.75;font-size:.95rem;padding:8px}
+.grown > button{background:none;border:0;text-decoration:underline;text-underline-offset:4px;color:var(--on-wall);opacity:.75;font-size:.95rem;padding:8px}
 .sheet{background:var(--paper);color:var(--ink);border-radius:20px;padding:20px;margin-top:16px;text-align:left}
 .sheet h2{font-size:1.6rem;margin-bottom:6px}
 .sheet p{margin:0 0 10px;color:var(--ink-soft)}
@@ -84,6 +85,14 @@ table{border-collapse:collapse;width:100%;font-size:.95rem;min-width:620px}
 th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #E5E0D3;vertical-align:top}
 th{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
 td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pair{border-top:1px solid #E5E0D3;margin-top:18px;padding-top:16px;display:grid;gap:10px}
+.pair h3{font-size:1.25rem}
+.pair .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pair input{font:inherit;flex:1 1 240px;min-width:0;padding:10px 12px;border:2px solid #D8D2C3;border-radius:12px;background:#fff;color:var(--ink)}
+.pair button{font:inherit;font-weight:700;background:var(--wall);color:var(--sun);border:0;border-radius:12px;padding:10px 18px;min-height:46px;cursor:pointer}
+.pair .status{margin:0;font-weight:700}
+.pair .status.ok{color:#1F7A45}
+.pair .status.no{color:#B0412D}
 
 @media (max-width:480px){
   body{font-size:17px}
@@ -121,6 +130,17 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
       <h2>Every game in the room</h2>
       <p>Newest first. To add a game, see <b>README.md</b> in the Games Room folder.</p>
       <div class="tablewrap"><table><thead><tr><th>Game</th><th>For</th><th>Subject</th><th>Supports</th><th>Added</th><th>Kept</th></tr></thead><tbody id="grown-rows"></tbody></table></div>
+      <div class="pair">
+        <h3>Pair this iPad</h3>
+        <p>Results only reach the family's results sheet from a paired device. Type the pairing code you set in the results sheet's script. Do this from the Games Room icon on the home screen, not from Safari, because they keep separate storage.</p>
+        <p class="status" id="pair-status"></p>
+        <div class="row">
+          <label for="pair-code" class="sr">Pairing code</label>
+          <input id="pair-code" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Pairing code">
+          <button id="pair-btn" type="button">Pair</button>
+        </div>
+        <p id="pair-msg"></p>
+      </div>
     </div>
   </div>
 
@@ -198,7 +218,15 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
         + '</span><span class="text"><h3>'+esc(g.title)+'</h3><p>'+esc(g.blurb)+'</p></span></a>';
     }).join("") : '<div class="empty">No games here yet. Ask Mum or Dad to add one.</div>';
   }
+  function renderPair(){
+    var st = $("#pair-status"), GRr = window.GR;
+    if (!GRr) { st.textContent = "The results recorder didn't load."; st.className = "status no"; return; }
+    var n = GRr.pending();
+    if (GRr.paired()) { st.textContent = "This device is paired." + (n ? " " + n + " results waiting to send." : " Nothing waiting to send."); st.className = "status ok"; }
+    else { st.textContent = "Not paired yet." + (n ? " " + n + " results are kept on this device until it is." : ""); st.className = "status no"; }
+  }
   function renderGrown(){
+    renderPair();
     $("#grown-rows").innerHTML = GAMES.map(function(g){
       var who = g.players.map(function(id){ var p = PLAYERS.filter(function(x){ return x.id===id; })[0]; return p ? p.name : id; }).join(", ");
       var kept = /^https?:/.test(g.href) ? "Elsewhere" : "In this site";
@@ -213,6 +241,11 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     var a = e.target.closest("[data-g]"); if (!a) return;
     store.played[current] = store.played[current] || {};
     store.played[current][a.dataset.g] = Date.now(); save();
+  });
+  $("#pair-btn").addEventListener("click", function(){
+    var msg = $("#pair-msg"), input = $("#pair-code");
+    msg.textContent = "Checking…";
+    window.GR.pair(input.value, function(ok, text){ msg.textContent = text; if (ok) input.value = ""; renderPair(); setTimeout(renderPair, 4000); });
   });
   $("#grown-btn").addEventListener("click", function(){
     var s = $("#grown"); s.hidden = !s.hidden; this.setAttribute("aria-expanded", String(!s.hidden));

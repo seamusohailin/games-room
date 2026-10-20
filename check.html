@@ -17,7 +17,7 @@ button{font:inherit;font-weight:700;background:#FFD34D;color:#1D1A2B;border:0;bo
 <body>
 <main>
   <h1>Results connection check</h1>
-  <p>Sends one test result and one test piece of writing, marked "test", to the Games Room results sheet. It isn't linked from the Games Room.</p>
+  <p>Sends one test result and one test piece of writing, marked "test", to the Games Room results sheet. It isn't linked from the Games Room. This browser has to be paired first (Games Room, For grown-ups, Pair this iPad).</p>
   <button id="go">Send a test result</button>
   <div id="out">Not sent yet.</div>
 </main>
@@ -26,6 +26,8 @@ document.getElementById("go").onclick = function () {
   var out = document.getElementById("out");
   var url = (window.GR && GR.endpoint) ? GR.endpoint() : "";
   if (!url) { out.textContent = "No results sheet address is set in results.js."; return; }
+  var code = ""; try { code = localStorage.getItem("gamesroom-pairing") || ""; } catch (e) {}
+  if (!code) { out.textContent = "This browser isn't paired. Open the Games Room, then For grown-ups, then Pair this iPad, and come back."; return; }
   out.textContent = "Sending…";
   var t = new Date().toISOString(), id = "check-" + Date.now();
   var events = [
@@ -36,11 +38,11 @@ document.getElementById("go").onclick = function () {
     { id: id + "-w", type: "writing", t: t, wid: "test|connection-check|" + id, player: "test", game: "connection-check", session: id,
       part: "Connection check", prompt: "Test writing (safe to delete)", text: "This is a test of the Writing tab.", area: "" }
   ];
-  fetch(url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ k: "gr-2026-kq7", events: events }) })
+  fetch(url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ k: code, events: events }) })
     .then(function (r) { return r.json(); })
     .then(function (res) {
       out.textContent = res && res.ok ? "Connected. The sheet received " + res.received + " test records. Look for a row marked \"test\" on its Answers, Sessions and Writing tabs."
-        : "The sheet answered but refused the test: " + JSON.stringify(res);
+        : (res && res.reason === "pairing" ? "The sheet refused the pairing code. Pair this browser again." : "The sheet answered but refused the test: " + JSON.stringify(res));
     })
     .catch(function (e) { out.textContent = "Couldn't read a reply from the sheet (" + e.message + "). Check the sheet anyway: if a \"test\" row arrived, sending works."; });
 };

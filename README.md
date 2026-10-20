@@ -38,6 +38,8 @@ Each game records which girl is playing (from the name she taps), every question
 
 The sheet's script (`results-sheet-script.gs` in the Home Education copy of this folder) only adds rows; it never sends anything back. Its web address goes in `ENDPOINT` at the top of `results.js`.
 
+Only paired devices can send results. The pairing code is kept in the script's **Project Settings → Script Properties** as `PAIRING_CODE`, never in the public code. Pair a device from **For grown-ups → Pair this iPad** in the Games Room (on the iPad, from the home-screen icon, not Safari). Until a device is paired, its results wait on the device. To change the code, edit `PAIRING_CODE` and pair the iPad again.
+
 ## On the iPads
 
 Open the address in Safari, tap **Share → Add to Home Screen**. It then opens full screen from its own icon. New games appear the next time it's opened.

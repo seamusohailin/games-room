@@ -20,13 +20,26 @@
 */
 (function () {
   var ENDPOINT = "https://script.google.com/macros/s/AKfycbxT8gXunqCv31jiyprsQu-TfLpLuyV7akTTf2j5oypMR0v-05QTwmQ6Rvh3IpamaW7M/exec"; // the results sheet's web app address
-  var KEY = "gr-2026-kq7";
   var QKEY = "gamesroom-queue-v1";
+  var PKEY = "gamesroom-pairing";      // the pairing code typed into "Pair this iPad"
+  var BADKEY = "gamesroom-pairing-refused";
 
   function store(get, k, v) {
     try { if (get) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; }
   }
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  function uid() {
+    try {
+      var a = new Uint32Array(3); crypto.getRandomValues(a);
+      return Date.now().toString(36) + Array.prototype.map.call(a, function (n) { return n.toString(36); }).join("");
+    } catch (e) { return Date.now().toString(36) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2); }
+  }
+  function device() {
+    var d = store(true, "gamesroom-device");
+    if (!d) { d = uid(); store(false, "gamesroom-device", d); }
+    return d;
+  }
+  function code() { return store(true, PKEY) || ""; }
+  function refused() { return store(true, BADKEY) === "1"; }
   function now() { return new Date().toISOString(); }
 
   function player() {
@@ -44,18 +57,20 @@
   var sending = false, timer = null;
   function schedule() { if (!timer) timer = setTimeout(function () { timer = null; flush(); }, 1500); }
   function flush(onLeave) {
-    if (!ENDPOINT || !queue.length || (navigator.onLine === false)) return;
+    if (!ENDPOINT || !queue.length || (navigator.onLine === false) || !code() || refused()) return;
     if (sending && !onLeave) return;
     sending = true;
     var batch = queue.slice(0, 200);
     fetch(ENDPOINT, { method: "POST", keepalive: !!onLeave, headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ k: KEY, events: batch }) })
+      body: JSON.stringify({ k: code(), events: batch }) })
       .then(function (r) { return r.json(); })
       .then(function (res) {
         if (res && res.ok) {
           var ids = {}; batch.forEach(function (e) { ids[e.id] = 1; });
           queue = queue.filter(function (e) { return !ids[e.id]; }); saveQueue();
           if (queue.length) schedule();
+        } else if (res && res.reason === "pairing") {
+          store(false, BADKEY, "1");   // stop sending until this device is paired again
         }
       })
       .catch(function () {})
@@ -115,12 +130,32 @@
       if (!w || w.text == null) return;
       var d = new Date(), day = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
       var game = w.game || (S && S.game) || "unknown";
-      var wid = [player(), game, w.prompt || "", day].join("|");
+      var wid = [device(), player(), game, w.prompt || "", day].join("|");
       drafts[wid] = { type: "writing", wid: wid, game: game, session: S ? S.id : "", part: w.part || (S && S.part) || "",
         prompt: w.prompt || "", text: String(w.text).slice(0, 5000), area: w.area || "" };
       clearTimeout(draftTimer); draftTimer = setTimeout(pushDrafts, 4000);
     },
     pending: function () { return queue.length; },
+    paired: function () { return !!code() && !refused(); },
+    pair: function (c, cb) {
+      c = String(c || "").trim();
+      if (!ENDPOINT) { cb && cb(false, "No results sheet address is set."); return; }
+      if (c.length < 8) { cb && cb(false, "The code needs at least 8 characters."); return; }
+      fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ k: c, events: [] }) })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (res && res.ok) {
+            store(false, PKEY, c); store(false, BADKEY, "0"); flush();
+            cb && cb(true, "Paired. Results from this device now go to the results sheet.");
+          } else if (res && res.reason === "not set up") {
+            cb && cb(false, "The results sheet has no pairing code yet. Add PAIRING_CODE in Apps Script, then try again.");
+          } else {
+            cb && cb(false, "That code wasn't accepted. Check it and try again.");
+          }
+        })
+        .catch(function () { cb && cb(false, "Couldn't reach the results sheet. Check the internet connection and try again."); });
+    },
+    unpair: function () { store(false, PKEY, ""); },
     endpoint: function () { return ENDPOINT; },
     flush: flush
   };
