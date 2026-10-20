@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Games Room</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Games Room">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1F2A4D">
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+/* Layout: a toy cupboard. A night-blue wall, each girl's games standing on wooden shelves like boxed games. */
+:root{
+  --wall:#1F2A4D; --wall-2:#283766; --wood:#C68A4C; --wood-dark:#8E5A2B;
+  --paper:#FFFDF6; --ink:#1D1A2B; --ink-soft:#5A566B; --sun:#FFD34D; --on-wall:#F3F0FF;
+  --display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
+  --body:"Andika","Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{background:var(--wall);color:var(--on-wall);font-family:var(--body);font-size:18px;line-height:1.45;
+  background-image:radial-gradient(circle at 20% 10%,rgba(255,255,255,.06) 0 2px,transparent 3px),radial-gradient(circle at 70% 40%,rgba(255,255,255,.05) 0 2px,transparent 3px);
+  background-size:120px 120px,170px 170px;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:1100px;margin:0 auto;padding-block:22px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;letter-spacing:.01em;text-wrap:balance}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+[hidden]{display:none!important}
+
+/* who's playing */
+.hello{display:grid;justify-items:center;text-align:center;gap:10px;padding-top:4vh}
+.hello h1{font-size:clamp(2.6rem,9vw,4.6rem);color:var(--sun);line-height:1;text-shadow:0 4px 0 rgba(0,0,0,.3)}
+.hello p{font-size:1.3rem;margin:0}
+.players{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:22px}
+.player{border:0;border-radius:28px;padding:22px 26px 20px;width:min(260px,80vw);display:grid;justify-items:center;gap:8px;color:#fff;box-shadow:0 8px 0 rgba(0,0,0,.3);transition:transform .12s}
+.player:active{transform:translateY(5px);box-shadow:0 3px 0 rgba(0,0,0,.3)}
+.player .face{width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;font-family:var(--display);font-size:3.6rem;border:4px solid rgba(255,255,255,.65)}
+.player .nm{font-family:var(--display);font-size:2.2rem;line-height:1}
+.player .ct{font-size:1rem;opacity:.95}
+.player .newpill{background:var(--sun);color:var(--ink);border-radius:999px;padding:1px 10px;font-weight:700;font-size:.85rem}
+
+/* shelf */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.bar h2{font-size:clamp(2rem,6vw,3rem);color:var(--sun);line-height:1}
+.swap{background:transparent;border:2px solid var(--on-wall);border-radius:999px;padding:8px 16px;min-height:46px;font-weight:700}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.filters button{background:var(--wall-2);border:2px solid transparent;border-radius:999px;padding:6px 14px;font-weight:700;min-height:42px}
+.filters button[aria-pressed="true"]{border-color:var(--sun);color:var(--sun)}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:34px 22px;padding-bottom:6px}
+.box{position:relative;display:grid;grid-template-rows:auto 1fr;text-decoration:none;color:var(--ink);background:var(--paper);border-radius:18px;box-shadow:0 8px 0 rgba(0,0,0,.28);transition:transform .12s}
+.box:hover{transform:translateY(-3px)}
+.box:active{transform:translateY(4px)}
+.box::after{content:"";position:absolute;left:-14px;right:-14px;bottom:-26px;height:12px;border-radius:4px;background:linear-gradient(var(--wood),var(--wood-dark));box-shadow:0 4px 0 rgba(0,0,0,.25);z-index:-1}
+.cover{height:132px;display:grid;place-items:center;position:relative;border-radius:18px 18px 0 0}
+.cover svg{width:74px;height:74px;color:#fff}
+.cover .subj{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.28);color:#fff;border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:700;letter-spacing:.03em}
+.ribbon{position:absolute;top:12px;right:-6px;background:var(--sun);color:var(--ink);font-family:var(--display);font-size:1.05rem;padding:3px 14px 3px 12px;border-radius:6px 0 0 6px;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.played{position:absolute;top:10px;left:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center}
+.played svg{width:18px;height:18px}
+.text{padding:12px 14px 16px;display:grid;gap:4px;align-content:start}
+.text h3{font-size:1.35rem;line-height:1.1}
+.text p{margin:0;font-size:1rem;color:var(--ink-soft)}
+.empty{background:var(--wall-2);border-radius:18px;padding:22px;max-width:560px}
+
+/* grown-ups */
+.grown{margin-top:56px;text-align:center}
+.grown button{background:none;border:0;text-decoration:underline;text-underline-offset:4px;color:var(--on-wall);opacity:.75;font-size:.95rem;padding:8px}
+.sheet{background:var(--paper);color:var(--ink);border-radius:20px;padding:20px;margin-top:16px;text-align:left}
+.sheet h2{font-size:1.6rem;margin-bottom:6px}
+.sheet p{margin:0 0 10px;color:var(--ink-soft)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem;min-width:620px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #E5E0D3;vertical-align:top}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+@media (max-width:480px){
+  body{font-size:17px}
+  .shelf{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:30px 14px}
+  .cover{height:104px}
+  .cover svg{width:56px;height:56px}
+  .text h3{font-size:1.15rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section id="who">
+    <div class="hello">
+      <h1>The Games Room</h1>
+      <p>Who's playing today?</p>
+      <div class="players" id="players"></div>
+    </div>
+  </section>
+
+  <section id="room" hidden>
+    <div class="bar">
+      <h2 id="room-title"></h2>
+      <button class="swap" id="swap"></button>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="shelf" id="shelf"></div>
+  </section>
+
+  <div class="grown">
+    <button id="grown-btn" aria-expanded="false">For grown-ups</button>
+    <div class="sheet" id="grown" hidden>
+      <h2>Every game in the room</h2>
+      <p>Newest first. To add a game, see <b>README.md</b> in the Games Room folder.</p>
+      <div class="tablewrap"><table><thead><tr><th>Game</th><th>For</th><th>Subject</th><th>Supports</th><th>Added</th><th>Kept</th></tr></thead><tbody id="grown-rows"></tbody></table></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="games.js"></script>
+<script>
+(function(){
+  var PLAYERS = window.PLAYERS || [], GAMES = (window.GAMES || []).slice();
+  GAMES.sort(function(a,b){ return a.added < b.added ? 1 : a.added > b.added ? -1 : 0; });
+  var NEW_DAYS = 14, KEY = "gamesroom-v1";
+  var store = { played:{} };
+  try { var raw = localStorage.getItem(KEY); if (raw) store = Object.assign(store, JSON.parse(raw)); } catch(e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {} }
+  var $ = function(s){ return document.querySelector(s); };
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  var ICONS = {
+    Geography:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M8 18c6 2 8-3 13 0s3 9 9 8 6-6 10-4M14 36c3-5 8-3 10-7s7-2 10 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>',
+    History:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 7 43 40H5z" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/><path d="M11 30h26M15.5 22h17M20 14.5h8" stroke="currentColor" stroke-width="3"/></svg>',
+    Science:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="8" fill="currentColor"/><path d="M24 4v7M24 37v7M4 24h7M37 24h7M9.9 9.9l5 5M33.1 33.1l5 5M9.9 38.1l5-5M33.1 14.9l5-5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg>',
+    Maths:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 10l12 12M22 10 10 22" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M27 16h13M33.5 9.5v13M8 34h14M27 31h13M27 37h13" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>',
+    Music:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M18 36V10l22-5v26" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/><ellipse cx="13" cy="36" rx="6" ry="5" fill="currentColor"/><ellipse cx="35" cy="31" rx="6" ry="5" fill="currentColor"/></svg>',
+    English:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 12c-5-4-12-4-18-2v28c6-2 13-2 18 2 5-4 12-4 18-2V10c-6-2-13-2-18 2zM24 12v28" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/></svg>',
+    Art:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6C12 6 5 14 5 23c0 10 8 17 15 15 4-1 2-6 6-7 6-1 17 3 17-9C43 13 35 6 24 6z" fill="none" stroke="currentColor" stroke-width="3.5"/><circle cx="15" cy="20" r="3" fill="currentColor"/><circle cx="23" cy="14" r="3" fill="currentColor"/><circle cx="32" cy="16" r="3" fill="currentColor"/></svg>',
+    Other:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5l5.5 12 13 1.3-9.8 8.8 2.9 12.9L24 33.3 12.4 40l2.9-12.9-9.8-8.8 13-1.3z" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/></svg>'
+  };
+  var TICK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="#1F8A4C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function today(){ var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function isNew(g, pid){
+    var p = g.added.split("-"); var added = new Date(+p[0], +p[1]-1, +p[2]);
+    var age = (today() - added) / 86400000;
+    return age <= NEW_DAYS && !((store.played[pid]||{})[g.id]);
+  }
+  function gamesFor(pid){ return GAMES.filter(function(g){ return g.players.indexOf(pid) > -1; }); }
+  var current = null, filter = "All";
+
+  function renderWho(){
+    $("#players").innerHTML = PLAYERS.map(function(p){
+      var gs = gamesFor(p.id), n = gs.filter(function(g){ return isNew(g, p.id); }).length;
+      return '<button class="player" data-p="'+p.id+'" style="background:'+p.colour+'"><span class="face">'+esc(p.name.charAt(0))+'</span><span class="nm">'+esc(p.name)+'</span><span class="ct">'+gs.length+' game'+(gs.length===1?'':'s')+(n ? ' <span class="newpill">'+n+' new</span>' : '')+'</span></button>';
+    }).join("");
+  }
+  function show(pid){
+    current = pid; filter = "All";
+    try { sessionStorage.setItem("gamesroom-player", pid || ""); } catch(e) {}
+    $("#who").hidden = !!pid; $("#room").hidden = !pid;
+    if (!pid) { renderWho(); return; }
+    var p = PLAYERS.filter(function(x){ return x.id===pid; })[0];
+    $("#room-title").textContent = p.name + "'s games";
+    var other = PLAYERS.filter(function(x){ return x.id!==pid; })[0];
+    $("#swap").textContent = other ? "Not " + p.name + "? Swap" : "Back";
+    renderShelf();
+    window.scrollTo(0,0);
+  }
+  function renderShelf(){
+    var gs = gamesFor(current);
+    var subjects = []; gs.forEach(function(g){ if (subjects.indexOf(g.subject) < 0) subjects.push(g.subject); });
+    var f = $("#filters");
+    if (gs.length > 8 && subjects.length > 1) {
+      f.hidden = false;
+      f.innerHTML = ["All"].concat(subjects.sort()).map(function(s){ return '<button data-f="'+esc(s)+'" aria-pressed="'+(s===filter)+'">'+esc(s)+'</button>'; }).join("");
+    } else { f.hidden = true; filter = "All"; }
+    var shown = gs.filter(function(g){ return filter==="All" || g.subject===filter; });
+    shown.sort(function(a,b){ return (isNew(b,current)?1:0) - (isNew(a,current)?1:0); });
+    $("#shelf").innerHTML = shown.length ? shown.map(function(g){
+      var played = (store.played[current]||{})[g.id];
+      return '<a class="box" href="'+esc(g.href)+'" data-g="'+esc(g.id)+'">'
+        + '<span class="cover" style="background:'+esc(g.colour)+'">'+(ICONS[g.subject]||ICONS.Other)
+        + '<span class="subj">'+esc(g.subject)+'</span>'
+        + (isNew(g,current) ? '<span class="ribbon">New</span>' : '')
+        + (played ? '<span class="played" title="Played">'+TICK+'</span>' : '')
+        + '</span><span class="text"><h3>'+esc(g.title)+'</h3><p>'+esc(g.blurb)+'</p></span></a>';
+    }).join("") : '<div class="empty">No games here yet. Ask Mum or Dad to add one.</div>';
+  }
+  function renderGrown(){
+    $("#grown-rows").innerHTML = GAMES.map(function(g){
+      var who = g.players.map(function(id){ var p = PLAYERS.filter(function(x){ return x.id===id; })[0]; return p ? p.name : id; }).join(", ");
+      var kept = /^https?:/.test(g.href) ? "Elsewhere" : "In this site";
+      return '<tr><td><a href="'+esc(g.href)+'">'+esc(g.title)+'</a></td><td>'+esc(who)+'</td><td>'+esc(g.subject)+'</td><td>'+esc(g.source||"")+'</td><td class="n">'+esc(g.added)+'</td><td>'+kept+'</td></tr>';
+    }).join("");
+  }
+
+  $("#players").addEventListener("click", function(e){ var b = e.target.closest("[data-p]"); if (b) show(b.dataset.p); });
+  $("#swap").addEventListener("click", function(){ show(null); });
+  $("#filters").addEventListener("click", function(e){ var b = e.target.closest("[data-f]"); if (b){ filter = b.dataset.f; renderShelf(); } });
+  $("#shelf").addEventListener("click", function(e){
+    var a = e.target.closest("[data-g]"); if (!a) return;
+    store.played[current] = store.played[current] || {};
+    store.played[current][a.dataset.g] = Date.now(); save();
+  });
+  $("#grown-btn").addEventListener("click", function(){
+    var s = $("#grown"); s.hidden = !s.hidden; this.setAttribute("aria-expanded", String(!s.hidden));
+    if (!s.hidden) renderGrown();
+  });
+
+  var last = null; try { last = sessionStorage.getItem("gamesroom-player"); } catch(e) {}
+  show(last && PLAYERS.some(function(p){ return p.id===last; }) ? last : null);
+})();
+</script>
+</body>
+</html>

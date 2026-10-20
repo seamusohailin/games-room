@@ -1,0 +1,611 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Gods of Ancient Egypt</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Lilita+One&display=swap">
+<style>
+/* Layout: a painted tomb ceiling (lapis sky, gold stars) holding limestone game panels edged with Egyptian block borders */
+:root{
+  --sky:#152a63; --sky-deep:#0c1a42; --gold:#e3ad42; --stone:#f2e7cf; --stone-2:#e4d3ad;
+  --ink:#2b1d0e; --muted:#6a5434; --ochre:#b9402a; --malachite:#2c7a58; --lapis:#2453a3; --on-sky:#f6ecd4;
+  --display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
+  --body:"Andika","Comic Neue","Trebuchet MS",system-ui,sans-serif;
+  --frieze:repeating-linear-gradient(90deg,var(--ochre) 0 14px,var(--ink) 14px 16px,var(--lapis) 16px 30px,var(--ink) 30px 32px,var(--malachite) 32px 46px,var(--ink) 46px 48px,var(--gold) 48px 62px,var(--ink) 62px 64px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background-color:var(--sky);color:var(--on-sky);font-family:var(--body);font-size:1.125rem;line-height:1.45;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M16 7 L18.6 13.2 L25 13.6 L20 17.6 L21.6 24 L16 20.6 L10.4 24 L12 17.6 L7 13.6 L13.4 13.2Z' fill='%23e3ad42' fill-opacity='.45'/%3E%3Cpath d='M48 39 L50.6 45.2 L57 45.6 L52 49.6 L53.6 56 L48 52.6 L42.4 56 L44 49.6 L39 45.6 L45.4 45.2Z' fill='%23e3ad42' fill-opacity='.45'/%3E%3C/svg%3E");}
+.wrap{max-width:1060px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+button{font:inherit;color:inherit}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0;letter-spacing:.01em}
+
+.top{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end;justify-content:space-between;padding-bottom:20px;margin-bottom:24px;position:relative}
+.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:var(--frieze);border-radius:2px}
+.brand h1{color:var(--gold);font-size:clamp(2.1rem,7vw,3.5rem);line-height:1;text-shadow:0 3px 0 var(--sky-deep)}
+.brand p{margin:.4rem 0 0;font-size:1rem;opacity:.88}
+.status{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.scarabs{display:flex;gap:2px;align-items:center}
+.scarabs svg{width:32px;height:32px}
+.scarab-label{font-size:.95rem;margin-right:6px}
+.toggle{display:inline-flex;align-items:center;gap:8px;background:var(--sky-deep);border:2px solid var(--gold);color:var(--on-sky);border-radius:999px;padding:6px 14px 6px 8px;min-height:44px;cursor:pointer;font-size:.95rem}
+.toggle .dot{width:26px;height:26px;border-radius:50%;background:var(--gold);color:var(--ink);display:grid;place-items:center}
+.toggle .dot svg{width:16px;height:16px}
+.toggle[aria-pressed="false"] .dot{background:transparent;color:var(--on-sky);border:2px dashed var(--on-sky)}
+body.no-speech .say,body.no-speech .toggle{display:none!important}
+
+.panel{background:var(--stone);color:var(--ink);border-radius:8px;position:relative;padding:28px 20px 20px;box-shadow:0 6px 0 var(--sky-deep)}
+.panel::before{content:"";position:absolute;inset:0 0 auto;height:10px;background:var(--frieze);border-radius:8px 8px 0 0}
+.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:0 0 4px;font-weight:700}
+
+.btn{font-family:var(--display);font-size:1.2rem;background:var(--ochre);color:#fff7e6;border:0;border-radius:999px;padding:.55em 1.25em;min-height:50px;cursor:pointer;box-shadow:0 4px 0 #7a2717;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #7a2717}
+.btn.alt{background:var(--lapis);box-shadow:0 4px 0 #15326a}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn[disabled]{opacity:.45;cursor:default}
+.say{flex:none;width:46px;height:46px;border-radius:50%;background:var(--gold);color:var(--ink);border:2px solid var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}
+.say svg{width:24px;height:24px}
+.say.small{width:36px;height:36px}
+.say.small svg{width:18px;height:18px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+.screen-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.screen-head h2{color:var(--gold);font-size:clamp(1.7rem,5vw,2.4rem);text-shadow:0 3px 0 var(--sky-deep)}
+.back{background:var(--sky-deep);border:2px solid var(--on-sky);border-radius:999px;padding:6px 16px;min-height:44px;cursor:pointer;font-size:1rem}
+.instr{display:flex;gap:12px;align-items:center;background:var(--sky-deep);border-radius:30px;padding:8px 18px 8px 8px;margin-bottom:20px;max-width:760px}
+.instr p{margin:0}
+
+/* home */
+.intro{display:flex;gap:12px;align-items:center;margin:0 0 20px}
+.intro p{margin:0;max-width:60ch}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
+.tile{display:grid;grid-template-rows:auto auto 1fr auto;gap:6px;text-align:left;border:0;cursor:pointer;transition:transform .15s}
+.tile:hover{transform:translateY(-3px)}
+.tile svg.figure{width:100%;height:190px}
+.tile h3{font-size:1.55rem;color:var(--ochre)}
+.tile p{margin:0;font-size:1rem}
+.chip{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-size:.85rem;font-weight:700;background:var(--stone-2);border-radius:999px;padding:3px 12px 3px 4px}
+.chip svg{width:24px;height:24px}
+.chip.earned{background:var(--lapis);color:#fff7e6}
+
+/* meet */
+.counter{font-size:1rem;margin:0 0 14px}
+.gods{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
+.god-card{border:0;cursor:pointer;text-align:center;padding:24px 10px 14px;display:grid;gap:4px;transition:transform .15s}
+.god-card:hover{transform:translateY(-3px)}
+.god-card svg{width:100%;height:200px}
+.god-card .nm{font-family:var(--display);font-size:1.45rem;color:var(--ink)}
+.god-card .met{font-size:.85rem;color:var(--malachite);font-weight:700;min-height:1.2em}
+
+.overlay{position:fixed;inset:0;background:rgba(6,14,38,.78);display:grid;place-items:center;z-index:20;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow:auto}
+.modal{max-width:760px;width:100%;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px;align-items:center}
+.modal svg.big{width:100%;height:min(52vh,380px)}
+.modal h3{font-size:2.4rem;color:var(--ochre)}
+.modal dl{margin:12px 0;display:grid;gap:8px}
+.modal dt{font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.modal dd{margin:0}
+.close{position:absolute;top:16px;right:12px;width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);background:var(--stone);cursor:pointer;font-size:1.3rem;line-height:1}
+
+/* who */
+.who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px;align-items:start}
+.who-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.stars{display:inline-flex;gap:2px;vertical-align:middle}
+.star{width:26px;height:26px;fill:transparent;stroke:var(--muted);stroke-width:1.6}
+.star.on{fill:var(--gold);stroke:var(--ink)}
+.clues{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:10px}
+.clue{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;background:#fff8e8;border:2px solid var(--stone-2);border-radius:10px;padding:10px 12px;animation:pop .3s ease-out}
+.clue-n{grid-column:1;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ochre)}
+.clue-t{grid-column:1;font-size:1.25rem;line-height:1.35}
+.clue .say{grid-column:2;grid-row:1/span 2}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.choice{background:var(--stone);border:3px solid var(--stone-2);border-radius:12px;padding:10px 6px;cursor:pointer;display:grid;gap:4px;justify-items:center;box-shadow:0 5px 0 var(--sky-deep);transition:transform .12s}
+.choice:hover{transform:translateY(-2px)}
+.choice svg{width:100%;height:120px}
+.choice span{font-family:var(--display);font-size:1.3rem;color:var(--ink)}
+.choice.is-wrong{opacity:.4;animation:wiggle .35s}
+.choice[disabled]{cursor:default}
+.reveal{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:20px;align-items:center;max-width:820px}
+.reveal svg{width:100%;height:320px}
+.reveal h3,.done h3{font-size:2.2rem;color:var(--ochre);margin-bottom:6px}
+.reveal p{margin:8px 0}
+
+/* story */
+.story-label{font-family:var(--display);color:var(--gold);font-size:1.3rem;margin:4px 0 10px}
+.slots,.tray{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.slot{position:relative;background:rgba(242,231,207,.12);border:3px dashed rgba(246,236,212,.55);border-radius:10px;min-height:120px;display:grid}
+.slot-n{position:absolute;top:-12px;left:-10px;z-index:2;width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--ink);font-family:var(--display);display:grid;place-items:center;border:2px solid var(--ink)}
+.scard{position:relative;background:var(--stone);border-radius:10px;box-shadow:0 4px 0 var(--sky-deep);animation:pop .25s ease-out}
+.scard-main{display:grid;width:100%;border:0;background:none;padding:6px 6px 8px;cursor:pointer;color:var(--ink);text-align:center;gap:2px}
+.scard-main svg{width:100%;height:auto;aspect-ratio:240/150;border-radius:6px;background:#f7efdc}
+.scard-t{font-family:var(--display);font-size:clamp(.85rem,2.6vw,1.1rem);line-height:1.15}
+.scard .say{position:absolute;top:4px;right:4px}
+.scard.is-locked{box-shadow:0 0 0 3px var(--malachite),0 4px 0 var(--sky-deep)}
+.scard.is-locked .scard-main{cursor:default}
+.tick{position:absolute;top:4px;left:4px;width:30px;height:30px;border-radius:50%;background:var(--malachite);color:#fff;display:grid;place-items:center;font-weight:700}
+.msg{min-height:1.5em;margin:14px 0;font-size:1.1rem}
+.tell{margin-top:20px}
+.tell h3{font-size:1.9rem;color:var(--ochre)}
+.tell ol{padding-left:1.4em;display:grid;gap:10px;margin:12px 0}
+.tell li{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.tip{font-size:.95rem;color:var(--muted);border-top:2px solid var(--stone-2);padding-top:10px;margin:14px 0 0;max-width:65ch}
+.strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:12px 0}
+.strip svg{width:100%;height:auto;aspect-ratio:240/150;background:#f7efdc;border-radius:6px;border:2px solid var(--stone-2)}
+
+/* build */
+.build{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:20px;align-items:start}
+.stage{text-align:center}
+.stage svg{width:100%;height:380px}
+.result{margin-top:10px;text-align:left}
+.result h3{font-size:1.7rem;color:var(--ochre)}
+.result p{margin:6px 0}
+.controls{display:grid;gap:16px}
+.group h3{font-size:1.15rem;color:var(--ink);margin-bottom:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{width:68px;height:68px;border-radius:12px;background:#fff8e8;border:3px solid var(--stone-2);cursor:pointer;display:grid;place-items:center;padding:4px}
+.opt svg{width:100%;height:100%}
+.opt.text{width:auto;min-width:68px;height:52px;padding:4px 14px;font-weight:700;font-size:1rem}
+.opt[aria-pressed="true"]{border-color:var(--lapis);background:#ffe9b5;box-shadow:0 0 0 2px var(--lapis)}
+.swatch{width:52px;height:52px;border-radius:50%;border:3px solid var(--stone-2);cursor:pointer}
+.swatch[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 3px var(--gold)}
+.charges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.charge{border:2px solid var(--ink);background:#fff8e8;border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:1rem}
+.charge[aria-pressed="true"]{background:var(--malachite);color:#fff;border-color:var(--malachite)}
+.meetline{font-size:1.3rem;margin:10px 0}
+.meetline b{font-family:var(--display);font-weight:400;color:var(--lapis);font-size:1.5rem}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--lapis);color:#fff7e6;border:3px solid var(--gold);border-radius:999px;padding:10px 20px 10px 10px;display:flex;align-items:center;gap:10px;z-index:30;box-shadow:0 6px 0 var(--sky-deep);max-width:calc(100% - 32px);animation:pop .3s ease-out}
+.toast svg{width:34px;height:34px;flex:none}
+
+@keyframes pop{from{transform:scale(.92);opacity:.4}to{transform:none;opacity:1}}
+.toast{animation-name:toastIn}
+@keyframes toastIn{from{transform:translate(-50%,20px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+@keyframes wiggle{0%,100%{transform:none}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+@media (max-width:760px){
+  .who,.build,.modal,.reveal{grid-template-columns:minmax(0,1fr)}
+  .modal svg.big{height:240px}
+  .reveal svg{height:220px}
+  .stage svg{height:300px}
+  .strip{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:440px){
+  .slots,.tray{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .choice svg{height:96px}
+  body{font-size:1.05rem}
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Gods of Ancient Egypt</h1>
+      <p>Four games for the Story of the World reading on the gods of Egypt</p>
+    </div>
+    <div class="status">
+      <span class="scarab-label" id="scarab-label">Scarabs: 0 of 4</span>
+      <span class="scarabs" id="scarabs" aria-hidden="true"></span>
+      <button class="toggle" id="toggle" aria-pressed="true"><span class="dot" id="toggle-dot"></span><span id="toggle-t">Read to me: on</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section id="home"></section>
+    <section id="meet" hidden></section>
+    <section id="who" hidden></section>
+    <section id="story" hidden></section>
+    <section id="build" hidden></section>
+  </main>
+</div>
+<div class="overlay" id="overlay" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ---------- colours and drawing helpers ---------- */
+const C={wig:'#1c2647',gold:'#e3ad42',white:'#f6efdf',ink:'#2b1d0e',ochre:'#b9402a',lapis:'#2453a3',malachite:'#2c7a58',
+  skinBrown:'#a9592f',skinGold:'#d39a4f',skinGreen:'#3f9160',skinBlue:'#3a66b8'};
+const LN='stroke="#2b1d0e" stroke-width="1.3" stroke-linejoin="round"';
+const st=(d,col,w)=>`<path d="${d}" fill="none" stroke="#2b1d0e" stroke-width="${w+2.4}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const limb=(d,col)=>st(d,col,9);
+const hand=(x,y,col)=>`<circle cx="${x}" cy="${y}" r="5" fill="${col}" ${LN}/>`;
+const foot=(x,y,col)=>`<path d="M${x-8} ${y+3} Q${x-8} ${y-4} ${x} ${y-4} Q${x+9} ${y-2} ${x+10} ${y+3} Z" fill="${col}" ${LN}/>`;
+const ankh=(x,y)=>st(`M${x} ${y} a4.5 6.5 0 0 1 0 13 a4.5 6.5 0 0 1 0 -13 M${x-7} ${y+14} L${x+7} ${y+14} M${x} ${y+13} L${x} ${y+30}`,C.gold,2.8);
+
+const LAP_B=`<path d="M-16 12 L-15 -16 L-3 -14 L-3 12 Z" fill="${C.wig}" ${LN}/>`;
+const LAP_F=`<path d="M1 -6 L3 16 L11 16 L9 -6 Z" fill="${C.wig}" ${LN}/><path d="M2 2 L10 2 M2.6 9 L10.6 9" stroke="${C.lapis}" stroke-width="1.6"/>`;
+const HEADS={
+  human:f=>`<path d="M-4 -30 Q10 -35 15 -23 L19 -15 L15 -12 Q17 -7 13 -4 L9 1 L-4 3 Z" fill="${f.skin}" ${LN}/>
+    <path d="M-16 12 L-17 -20 Q-14 -37 2 -37 Q12 -37 15 -29 L5 -27 Q1 -18 5 -10 L9 12 Z" fill="${C.wig}" ${LN}/>
+    <path d="M-12 -2 L3 -2 M-13 5 L5 5" stroke="${C.lapis}" stroke-width="1.6"/>
+    <path d="M5 -25 Q10 -27 14 -24" fill="none" stroke="${C.ink}" stroke-width="1.4" stroke-linecap="round"/>
+    <ellipse cx="10" cy="-21" rx="3.3" ry="1.8" fill="#fff" ${LN}/><circle cx="11" cy="-21" r="1.3" fill="${C.ink}"/>
+    <path d="M6.5 -21 L1.5 -20" stroke="${C.ink}" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M14 -7 L11 -7" stroke="${C.ink}" stroke-width="1.2" stroke-linecap="round"/>
+    ${f.beard?`<path d="M9 -2 L13 -2 Q15 6 14 12 Q16 15 12.5 15.5 Q10 12 10 4 Z" fill="${C.wig}" ${LN}/>`:''}`,
+  falcon:()=>`${LAP_B}<path d="M-13 4 Q-17 -26 0 -35 Q14 -38 20 -27 Q24 -26 27 -21 Q29 -14 25 -11 Q22 -14 19 -14 Q17 -6 10 1 Z" fill="#8c5c34" ${LN}/>
+    <path d="M3 -16 Q10 -10 17 -14 Q15 -5 8 -1 Z" fill="#ecdcb6"/>
+    <path d="M19 -24 Q27 -24 28 -16 Q27 -12 24.5 -11 Q24 -16 19 -17 Z" fill="#3a3640" ${LN}/>
+    <path d="M7 -23 L1 -22" stroke="${C.ink}" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="11" cy="-23" r="3.4" fill="${C.gold}" ${LN}/><circle cx="11.5" cy="-23" r="1.5" fill="${C.ink}"/>
+    <path d="M9 -19 Q8 -12 4 -6" fill="none" stroke="${C.ink}" stroke-width="2.6" stroke-linecap="round"/>${LAP_F}`,
+  jackal:()=>`${LAP_B}<path d="M-7 -24 L-6 -50 L3 -27 Z" fill="#1d1c24" ${LN}/><path d="M-1 -27 L5 -48 L10 -25 Z" fill="#1d1c24" ${LN}/>
+    <path d="M1.5 -28 L5 -41 L7.5 -27" fill="none" stroke="${C.gold}" stroke-width="1"/>
+    <path d="M-12 4 Q-15 -20 -2 -28 L20 -22 Q30 -19 33 -16 Q33 -12 30 -12 L14 -9 Q10 -2 6 2 Z" fill="#1d1c24" ${LN}/>
+    <ellipse cx="8" cy="-19" rx="3.2" ry="1.7" fill="${C.gold}"/><circle cx="8.6" cy="-19" r="1" fill="${C.ink}"/>
+    <path d="M30 -12 L16 -10" stroke="#6a6470" stroke-width="1.2"/>${LAP_F}`,
+  cat:()=>`${LAP_B}<path d="M-8 -24 L-5 -43 L3 -28 Z" fill="#2a2630" ${LN}/><path d="M2 -28 L9 -42 L12 -23 Z" fill="#2a2630" ${LN}/>
+    <path d="M4.5 -28 L8.5 -37 L10 -25" fill="${C.ochre}" opacity=".85"/>
+    <path d="M-12 4 Q-16 -22 -2 -28 Q12 -30 17 -20 Q22 -17 21 -12 Q19 -8 13 -8 Q8 -2 4 2 Z" fill="#2a2630" ${LN}/>
+    <ellipse cx="9" cy="-19" rx="3.4" ry="2.1" fill="#9bd06f"/><ellipse cx="9.4" cy="-19" rx=".8" ry="1.9" fill="${C.ink}"/>
+    <path d="M19 -14 L22 -13 L19 -11 Z" fill="#d98a7a"/>
+    <path d="M17 -11 L29 -14 M17 -10 L29 -8" stroke="#cfc6b8" stroke-width=".8"/>${LAP_F}`,
+  ibis:()=>`${LAP_B}<path d="M-10 4 Q-14 -18 -2 -26 Q10 -30 14 -20 Q14 -14 8 -8 Q5 -2 3 2 Z" fill="#1d1c24" ${LN}/>
+    <path d="M12 -22 Q30 -22 40 2 Q37 4 34 0 Q26 -14 12 -15 Z" fill="#1d1c24" ${LN}/>
+    <circle cx="6" cy="-19" r="2.5" fill="${C.gold}"/><circle cx="6.4" cy="-19" r="1" fill="${C.ink}"/>${LAP_F}`,
+  setanimal:()=>`${LAP_B}<path d="M-7 -21 L-8 -46 L0 -46 L-1 -23 Z" fill="#9a4a33" ${LN}/><path d="M1 -24 L3 -45 L10 -45 L8 -22 Z" fill="#9a4a33" ${LN}/>
+    <path d="M-12 4 Q-15 -18 -2 -24 Q12 -27 22 -21 Q31 -15 35 -6 Q33 -3 29 -6 Q22 -12 14 -10 Q9 -3 6 2 Z" fill="#9a4a33" ${LN}/>
+    <ellipse cx="7" cy="-17" rx="3" ry="1.6" fill="${C.gold}"/><circle cx="7.5" cy="-17" r="1" fill="${C.ink}"/>${LAP_F}`
+};
+const NECK={falcon:'#8c5c34',jackal:'#1d1c24',cat:'#2a2630',ibis:'#1d1c24',setanimal:'#9a4a33'};
+const CROWNS={
+  none:'',
+  sun:`<circle cx="2" cy="-49" r="14.6" fill="${C.ink}"/><circle cx="2" cy="-49" r="13" fill="${C.ochre}" stroke="${C.gold}" stroke-width="2.6"/>
+    <path d="M12 -34 Q16 -40 13 -46 Q10 -50 12.5 -54 Q16 -50 17.5 -46 Q19 -40 15.5 -34 Z" fill="${C.gold}" ${LN}/>`,
+  atef:`<path d="M-6 -32 Q-17 -50 -12 -70 Q-6 -56 -3 -32 Z" fill="#e9dfc6" ${LN}/><path d="M12 -32 Q23 -50 18 -70 Q12 -56 9 -32 Z" fill="#e9dfc6" ${LN}/>
+    <path d="M-10 -52 L-6 -50 M-11 -60 L-7 -58 M16 -52 L12 -50 M17 -60 L13 -58" stroke="${C.lapis}" stroke-width="1.4"/>
+    <path d="M-5 -32 Q-8 -58 3 -72 Q14 -58 11 -32 Z" fill="${C.white}" ${LN}/><circle cx="3" cy="-74" r="3.2" fill="${C.gold}" ${LN}/>
+    ${st('M-11 -33 Q3 -27 17 -33','#c9a05a',2.6)}`,
+  throne:`<path d="M-5 -34 L-5 -58 L3 -58 L3 -46 L12 -46 L12 -34 Z" fill="${C.lapis}" ${LN}/><path d="M-3 -40 L10 -40" stroke="${C.gold}" stroke-width="2"/>`,
+  double:`<path d="M-3 -34 Q-6 -52 0 -64 Q3 -70 6 -64 Q10 -52 8 -34 Z" fill="${C.white}" ${LN}/>
+    <path d="M-12 -31 L-12 -55 L-3 -55 L-3 -44 L14 -44 L14 -31 Z" fill="${C.ochre}" ${LN}/>
+    <path d="M-3 -44 Q4 -51 10 -47 Q11 -43 8 -43" fill="none" stroke="${C.gold}" stroke-width="1.8"/>`,
+  moon:`<circle cx="2" cy="-50" r="10" fill="#e8e2cf" ${LN}/><path d="M-11 -42 Q2 -26 15 -42 Q2 -33 -11 -42 Z" fill="${C.gold}" ${LN}/>`
+};
+const CROWN_DY={human:0,falcon:0,jackal:8,cat:6,ibis:8,setanimal:10};
+const COLLAR=`<path d="M41 71 Q62 64 83 71 Q62 102 41 71 Z" fill="${C.lapis}" ${LN}/><path d="M45 74 Q62 92 79 74" fill="none" stroke="${C.gold}" stroke-width="3"/><path d="M49 76 Q62 86 75 76" fill="none" stroke="${C.ochre}" stroke-width="2.4"/>`;
+
+function mummyItems(f){
+  const k=f.skin; let s='';
+  if(f.item==='crookflail'){
+    s+=st('M56 116 L69 80 Q71 73 77 74 Q81 76 79 81',C.gold,3)+st('M70 116 L56 80',C.gold,3)+st('M56 80 L47 78 M56 80 L49 85 M56 80 L52 89',C.gold,1.8);
+    s+=hand(60,98,k)+hand(66,98,k);
+  } else if(f.item==='was'){
+    s+=st('M72 50 L72 160',C.gold,3)+st('M72 50 L81 46 L80 52',C.gold,2.4)+st('M72 160 L68 166 M72 160 L76 166',C.gold,2.4);
+    s+=hand(72,94,k)+hand(72,104,k);
+  } else if(f.item==='palette'){
+    s+=`<rect x="57" y="82" width="10" height="34" rx="1.6" fill="${C.white}" ${LN}/><circle cx="62" cy="87" r="2" fill="${C.ochre}"/><circle cx="62" cy="93" r="2" fill="${C.ink}"/>`+hand(62,104,k);
+  } else { s+=ankh(62,86)+hand(62,86,k); }
+  return s;
+}
+function standingItems(f){
+  let s='';
+  if(f.item==='crookflail') s+=st('M36 124 L28 103',C.gold,3)+st('M28 103 L19 105 M28 103 L21 111 M28 103 L25 115',C.gold,1.8);
+  else s+=ankh(36,124);
+  if(f.item==='was') s+=st('M97 40 L97 192',C.gold,3)+st('M97 40 L106 35 L105 42',C.gold,2.4)+st('M97 192 L93 198 M97 192 L101 198',C.gold,2.4);
+  if(f.item==='crookflail') s+=st('M97 118 L97 72 Q97 62 106 62 Q113 63 112 71',C.gold,3.4);
+  if(f.item==='palette') s+=`<path d="M107 66 L100 104" stroke="#7a5a2c" stroke-width="2" stroke-linecap="round"/><rect x="92" y="78" width="10" height="34" rx="1.6" fill="${C.white}" ${LN}/><circle cx="97" cy="83" r="2" fill="${C.ochre}"/><circle cx="97" cy="89" r="2" fill="${C.ink}"/>`;
+  return s+hand(36,124,f.skin)+hand(97,100,f.skin);
+}
+function drawFigure(f){
+  const k=f.skin, neck=f.head==='human'?k:NECK[f.head]; let s='';
+  const neckRect=`<rect x="56" y="54" width="12" height="16" fill="${neck}" ${LN}/>`;
+  if(f.body==='mummy'){
+    s+=neckRect+`<path d="M43 70 Q62 62 81 70 L84 150 Q83 186 72 193 L52 193 Q41 186 42 150 Z" fill="${C.white}" ${LN}/>`;
+    [114,130,146,162,178].forEach(y=>s+=`<path d="M45 ${y} Q63 ${y+6} 82 ${y}" fill="none" stroke="#c7b083" stroke-width="1.6"/>`);
+    s+=COLLAR+mummyItems(f);
+  } else {
+    const dress=f.body==='dress';
+    s+=limb('M44 76 L36 124',k);
+    if(!dress) s+=limb('M56 140 L56 186',k)+limb('M69 140 L73 186',k);
+    s+=foot(58,190,k)+foot(76,190,k)+neckRect;
+    s+=`<path d="M42 72 Q62 64 82 72 L78 110 L46 110 Z" fill="${k}" ${LN}/>`;
+    if(dress) s+=`<path d="M45 78 L79 78 L85 190 L41 190 Z" fill="${f.dress||C.white}" ${LN}/>`;
+    else s+=`<path d="M45 108 L79 108 L88 146 L38 146 Z" fill="${C.white}" ${LN}/><path d="M66 110 L74 146" stroke="#c7b083" stroke-width="1.5"/><rect x="44" y="104" width="36" height="6" rx="1" fill="${C.gold}" ${LN}/>`;
+    s+=COLLAR+limb('M80 76 L88 100 L97 100',k)+standingItems(f);
+  }
+  s+=`<g transform="translate(62 64)">${HEADS[f.head](f)}<g transform="translate(0 ${CROWN_DY[f.head]})">${CROWNS[f.crown]}</g></g>`;
+  return s;
+}
+const VB_FULL='0 -18 124 220', VB_BUST='30 -18 84 98';
+const svgFig=(f,cls='figure',vb=VB_FULL)=>`<svg class="${cls}" viewBox="${vb}" aria-hidden="true">${drawFigure(f)}</svg>`;
+
+/* ---------- content ---------- */
+const GODS=[
+ {id:'ra',name:'Ra',eg:'Ra',pr:'he',fig:{head:'falcon',crown:'sun',body:'kilt',item:'was',skin:C.skinBrown},
+  charge:'the sun',look:'a falcon head with a red sun on top',
+  fact:'Egyptians said Ra sailed a boat across the sky every day, and through the land of the dead every night.',
+  clues:['I sail a boat across the sky every day.','I wear a round red sun on my head.','The Egyptians called me the god of the sun.']},
+ {id:'osiris',name:'Osiris',eg:'Wesir',pr:'he',fig:{head:'human',crown:'atef',body:'mummy',item:'crookflail',skin:C.skinGreen,beard:1},
+  charge:'the land of the dead, and the crops that grow each year',look:'green skin, mummy wrappings, a tall white crown with feathers, and a crook and flail',
+  fact:'His green skin stood for new life, like plants growing after the Nile flood.',
+  clues:['I was a good king. I taught people how to grow food.','My skin is green, like new plants.','I am wrapped like a mummy. I rule the land of the dead.']},
+ {id:'isis',name:'Isis',eg:'Aset',pr:'she',fig:{head:'human',crown:'throne',body:'dress',dress:C.ochre,item:'ankh',skin:C.skinGold},
+  charge:'magic, and keeping families safe',look:'a throne on her head',
+  fact:'Her name was written with a picture of a throne, so the Egyptians drew one on her head.',
+  clues:['I know lots of magic.','I searched all over Egypt to find my husband.','I wear a throne on my head. My son is Horus.']},
+ {id:'set',name:'Set',eg:'Set',pr:'he',fig:{head:'setanimal',crown:'none',body:'kilt',item:'was',skin:C.skinBrown},
+  charge:'storms and the dry desert',look:'the head of a strange animal with a curved nose and square-topped ears',
+  fact:'Nobody today knows what animal Set is meant to be. It may be made up.',
+  clues:['I am the god of storms and the dry desert.','I tricked my brother with a beautiful box.','I have the head of a strange animal with square ears.']},
+ {id:'horus',name:'Horus',eg:'Heru',pr:'he',fig:{head:'falcon',crown:'double',body:'kilt',item:'was',skin:C.skinBrown},
+  charge:'the sky, and the kings of Egypt',look:'a falcon head and the red and white crown of Egypt',
+  fact:'Each pharaoh said he was Horus, ruling on earth.',
+  clues:['When I grew up, I fought my uncle Set.','People wore my eye as a lucky charm.','I have a falcon head and wear the crown of Egypt.']},
+ {id:'anubis',name:'Anubis',eg:'Inpu',pr:'he',fig:{head:'jackal',crown:'none',body:'kilt',item:'was',skin:C.skinBrown},
+  charge:'mummies and graves',look:'the head of a black jackal, a kind of wild dog',
+  fact:'Black was the colour of the rich mud left by the Nile flood, so it stood for new life.',
+  clues:['I look after people who have died.','I helped wrap Osiris as the first mummy.','I have the head of a black jackal, a wild dog.']},
+ {id:'thoth',name:'Thoth',eg:'Djehuty',pr:'he',fig:{head:'ibis',crown:'moon',body:'kilt',item:'palette',skin:C.skinBrown},
+  charge:'writing, wisdom and the moon',look:'an ibis head with a moon on top',
+  fact:'Egyptians made millions of little ibis bird mummies as gifts for Thoth.',
+  clues:['I am the wisest god. The Egyptians said I gave them writing.','Scribes asked me to help with their writing.','I have the head of an ibis, a bird with a long curved beak.']},
+ {id:'bastet',name:'Bastet',eg:'Bast',pr:'she',fig:{head:'cat',crown:'none',body:'dress',dress:C.malachite,item:'ankh',skin:C.skinGold},
+  charge:'homes, families and cats',look:'the head of a cat',
+  fact:'In the oldest pictures she was a lioness. Later she became a gentler cat.',
+  clues:['I protect homes and families.','Egyptians loved animals like me and kept them as pets.','I am a goddess with the head of a cat.']}
+];
+const GOD=Object.fromEntries(GODS.map(g=>[g.id,g]));
+
+const STORY=[
+ {t:'Good King Osiris',say:'Osiris was a good king of Egypt. He taught the people how to grow food.'},
+ {t:"Set's tricky box",say:'His brother Set was jealous. Set made a beautiful box and said, whoever fits inside can keep it!'},
+ {t:'Into the Nile',say:'Osiris lay down in the box. Set slammed the lid shut and threw the box into the Nile.'},
+ {t:'Isis searches',say:'Queen Isis searched far and wide until she found the box.'},
+ {t:'The first mummy',say:'Set found Osiris and scattered him all over Egypt. Isis gathered him up, and Anubis helped wrap him as the first mummy.'},
+ {t:'King Horus',say:'Osiris became king of the land of the dead. His son Horus grew up, beat Set, and became king of Egypt.'}
+];
+const TELL=['Who was the good king of Egypt?','How did Set trick Osiris?','Who searched for Osiris?','Who helped make the first mummy?','Who became king of Egypt at the end?'];
+
+const GAMES={
+ meet:{title:'Meet the gods',desc:'Tap each god to find out who they are.',fig:GOD.isis.fig,instr:'Tap a god to meet them. Can you meet all eight?'},
+ who:{title:'Who am I?',desc:'Listen to the clues and guess the god.',fig:GOD.thoth.fig,instr:'Listen to the clues. Which god is talking? Guess early to win more stars.'},
+ story:{title:'The story of Osiris',desc:'Put the pictures in order, then tell it back.',fig:GOD.osiris.fig,instr:'Put the story of Osiris in order. Tap a picture to put it in the next box. Tap the speaker to hear what happens.'},
+ build:{title:'Make a god',desc:'Mix heads, crowns and more.',fig:GOD.bastet.fig,instr:'Mix and match to make a god. Can you make one the Egyptians knew, or invent your own?'}
+};
+
+/* ---------- story scenes ---------- */
+const fig=(f,x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})">${drawFigure(f)}</g>`;
+const ground=`<rect x="0" y="140" width="240" height="10" fill="#d8c08c"/>`;
+const sunDisc=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${C.ochre}" stroke="${C.gold}" stroke-width="2.4"/>`;
+function papyrus(x,top,lean){const x2=x+lean;return `<path d="M${x} 146 L${x2} ${top}" stroke="${C.malachite}" stroke-width="2.2"/><path d="M${x2-9} ${top-9} L${x2} ${top} L${x2+9} ${top-9} Q${x2} ${top-17} ${x2-9} ${top-9} Z" fill="${C.malachite}" stroke="#1d5a3f" stroke-width="1"/>`;}
+function wheat(x,top){let s=`<path d="M${x} 140 L${x} ${top}" stroke="#b8862c" stroke-width="1.8"/>`;for(let i=0;i<5;i++){const y=top+i*5+2;s+=`<ellipse cx="${x-3}" cy="${y}" rx="2" ry="3.4" fill="${C.gold}" transform="rotate(-25 ${x-3} ${y})"/><ellipse cx="${x+3}" cy="${y}" rx="2" ry="3.4" fill="${C.gold}" transform="rotate(25 ${x+3} ${y})"/>`;}return s;}
+function chest(x,y,w,h,open){let s='';
+  if(open) s+=`<path d="M${x+10} ${y-12} L${x+16} ${y-34} L${x+w+16} ${y-34} L${x+w+10} ${y-12} Z" fill="#c48a2a" ${LN}/><path d="M${x} ${y} L${x+10} ${y-12} L${x+w+10} ${y-12} L${x+w} ${y} Z" fill="#4a2f12" ${LN}/>`;
+  else s+=`<rect x="${x-3}" y="${y-7}" width="${w+6}" height="8" rx="2" fill="#c48a2a" ${LN}/>`;
+  s+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${C.gold}" ${LN}/><rect x="${x+5}" y="${y+5}" width="${w-10}" height="${h-10}" fill="${C.lapis}"/>`;
+  for(let i=x+11;i<x+w-6;i+=12) s+=`<circle cx="${i}" cy="${y+h/2}" r="2.2" fill="${C.gold}"/>`;
+  return s;}
+function water(y){let s=`<rect x="0" y="${y}" width="240" height="${150-y}" fill="#3a76c2"/>`;for(let r=0;r<3;r++){const yy=y+12+r*12;let d=`M0 ${yy}`;for(let i=0;i<240;i+=10)d+=' l5 -5 l5 5';s+=`<path d="${d}" fill="none" stroke="#1b4a8f" stroke-width="2"/>`;}return s;}
+const OSIRIS_KING={head:'human',crown:'atef',body:'kilt',item:'crookflail',skin:C.skinGreen,beard:1};
+const SCENE_ART=[
+ ()=>ground+sunDisc(212,26,13)+[132,146,160,174,188,202,216].map((x,k)=>wheat(x,92+(k%2)*8)).join('')+fig(OSIRIS_KING,22,14,.62),
+ ()=>ground+chest(108,108,108,30,true)+fig(GOD.set.fig,6,14,.62),
+ ()=>water(96)+papyrus(10,58,4)+papyrus(24,50,-3)+papyrus(224,56,-4)+`<g transform="rotate(-4 125 92)">${chest(80,84,90,22,false)}</g>`,
+ ()=>ground+papyrus(162,54,-4)+papyrus(186,46,2)+papyrus(210,52,4)+chest(146,112,80,24,false)+papyrus(150,70,-6)+papyrus(232,66,2)+fig(GOD.isis.fig,14,14,.62),
+ ()=>ground+st('M98 113 Q88 106 92 96',C.gold,2.4)+`<rect x="98" y="110" width="124" height="7" rx="2" fill="${C.gold}" ${LN}/>`+st('M106 117 L106 138',C.gold,3.5)+st('M212 117 L212 138',C.gold,3.5)+`<circle cx="224" cy="106" r="7" fill="${C.gold}" ${LN}/><path d="M104 103 Q104 94 116 94 L198 95 Q212 97 214 103 Q212 109 198 110 L116 110 Q104 110 104 103 Z" fill="${C.white}" ${LN}/>`+[132,152,172,192].map(x=>`<path d="M${x} 95 Q${x-3} 102 ${x} 110" fill="none" stroke="#c7b083" stroke-width="1.5"/>`).join('')+`<circle cx="206" cy="102" r="6" fill="${C.skinGreen}" ${LN}/>`+fig({...GOD.anubis.fig,item:'ankh'},0,14,.62),
+ ()=>ground+sunDisc(28,28,13)+fig(GOD.horus.fig,62,14,.62)+fig(GOD.set.fig,172,56,.45)
+];
+const SCENES=SCENE_ART.map((a,i)=>`<svg viewBox="0 0 240 150" role="img" aria-label="${STORY[i].t}">${a()}</svg>`);
+
+/* ---------- small UI pieces ---------- */
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const SPK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+const sayBtn=(t,cls='')=>`<button class="say ${cls}" data-say="${esc(t)}" aria-label="Read aloud">${SPK}</button>`;
+const STAR='<path d="M12 2.5l2.9 6.2 6.6.7-5 4.5 1.5 6.6L12 17.1l-5.9 3.4 1.5-6.6-5-4.5 6.6-.7z"/>';
+const starRow=(n,max=3)=>`<span class="stars">${Array.from({length:max},(_,i)=>`<svg class="star${i<n?' on':''}" viewBox="0 0 24 24" aria-hidden="true">${STAR}</svg>`).join('')}</span>`;
+const scarab=(on,stroke)=>`<svg viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="${stroke}" stroke-width="1.6" stroke-linecap="round"><path d="M9 14 L4 11 M9 19 L3 20 M10 24 L5 28 M23 14 L28 11 M23 19 L29 20 M22 24 L27 28"/></g><ellipse cx="16" cy="19" rx="8" ry="10" fill="${on?C.lapis:'none'}" stroke="${on?C.gold:stroke}" stroke-width="1.8" ${on?'':'stroke-dasharray="3 2"'}/><path d="M10.5 8.5 Q16 3 21.5 8.5 Z" fill="${on?C.gold:'none'}" stroke="${on?C.gold:stroke}" stroke-width="1.6"/><path d="M16 11 L16 28" stroke="${on?C.gold:stroke}" stroke-width="1.4"/></svg>`;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+/* ---------- speech ---------- */
+const canSpeak=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+let voice=null, readAloud=true;
+function pickVoice(){try{const vs=speechSynthesis.getVoices();voice=vs.find(v=>/en[-_]AU/i.test(v.lang))||vs.find(v=>/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;}catch(e){}}
+if(canSpeak){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}}else document.body.classList.add('no-speech');
+function say(t,force){if(!canSpeak||(!readAloud&&!force))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-AU';u.rate=.9;u.pitch=1.05;speechSynthesis.speak(u);}catch(e){}}
+
+/* ---------- saved progress ---------- */
+const KEY='sotw-gods-egypt-v1';
+let save={stamps:{},met:[]};
+try{const raw=localStorage.getItem(KEY);if(raw)save=Object.assign(save,JSON.parse(raw));}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(save));}catch(e){}}
+let toastTimer;
+function toast(t){const el=$('#toast');el.innerHTML=scarab(true,C.gold)+`<span>${esc(t)}</span>`;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,3800);}
+function stamp(k){if(save.stamps[k])return;save.stamps[k]=true;persist();renderScarabs();toast(`You earned a scarab for ${GAMES[k].title}!`);}
+function renderScarabs(){const n=Object.keys(GAMES).filter(k=>save.stamps[k]).length;
+  $('#scarabs').innerHTML=Object.keys(GAMES).map(k=>scarab(!!save.stamps[k],'#f6ecd4')).join('');
+  $('#scarab-label').textContent=`Scarabs: ${n} of 4`;}
+
+/* ---------- navigation ---------- */
+let current='home';
+function show(id){
+  ['home','meet','who','story','build'].forEach(s=>$('#'+s).hidden=s!==id);
+  current=id;
+  if(id==='home')renderHome();
+  if(id==='meet')renderMeet();
+  if(id==='who'){if(!who.order.length||who.finished)whoStart();else renderWho();}
+  if(id==='story'){if(!story.started)storyStart();else renderStory();}
+  if(id==='build')renderBuild();
+  window.scrollTo(0,0);
+  if(id!=='home')say(GAMES[id].instr);
+}
+const head=id=>`<div class="screen-head"><button class="back" data-act="home">← All games</button><h2>${GAMES[id].title}</h2></div><div class="instr">${sayBtn(GAMES[id].instr)}<p>${GAMES[id].instr}</p></div>`;
+
+function renderHome(){
+  const intro='Four games about the gods of ancient Egypt. Tap a game to play. Each game you finish earns a scarab.';
+  $('#home').innerHTML=`<div class="intro">${sayBtn(intro)}<p>${intro}</p></div><div class="tiles">`+
+    Object.entries(GAMES).map(([k,g])=>`<button class="tile panel" data-act="go" data-id="${k}">${svgFig(g.fig)}<h3>${g.title}</h3><p>${g.desc}</p><span class="chip${save.stamps[k]?' earned':''}">${scarab(!!save.stamps[k],save.stamps[k]?'#f6ecd4':'#6a5434')}${save.stamps[k]?'Scarab earned':'Not yet played'}</span></button>`).join('')+`</div>`;
+}
+
+/* ---------- meet the gods ---------- */
+function renderMeet(){
+  $('#meet').innerHTML=head('meet')+`<p class="counter">You have met ${save.met.length} of 8 gods.</p><div class="gods">`+
+    GODS.map(g=>`<button class="god-card panel" data-act="open-god" data-id="${g.id}">${svgFig(g.fig)}<span class="nm">${g.name}</span><span class="met">${save.met.includes(g.id)?'✓ Met':''}</span></button>`).join('')+`</div>`;
+}
+let lastFocus=null;
+function godText(g){const P=g.pr==='she'?'She':'He',p=g.pr==='she'?'her':'him';return `This is ${g.name}. The Egyptians called ${p} ${g.eg}. ${P} looked after ${g.charge}. Look for ${g.look}. ${g.fact}`;}
+function openGod(id){
+  const g=GOD[id];lastFocus=document.activeElement;
+  if(!save.met.includes(id)){save.met.push(id);persist();}
+  const ov=$('#overlay');
+  ov.innerHTML=`<div class="panel modal" role="dialog" aria-modal="true" aria-labelledby="mh"><button class="close" data-act="close" aria-label="Close">✕</button>
+    ${svgFig(g.fig,'big')}
+    <div><p class="eyebrow">${g.pr==='she'?'Goddess':'God'} of ancient Egypt</p><h3 id="mh">${g.name}</h3>
+    <dl><div><dt>The Egyptians called ${g.pr==='she'?'her':'him'}</dt><dd>${g.eg}</dd></div>
+    <div><dt>Looked after</dt><dd>${g.charge[0].toUpperCase()+g.charge.slice(1)}</dd></div>
+    <div><dt>Look for</dt><dd>${g.look[0].toUpperCase()+g.look.slice(1)}</dd></div></dl>
+    <p>${g.fact}</p><div class="row">${sayBtn(godText(g))}<button class="btn alt" data-act="close">Back to the gods</button></div></div></div>`;
+  ov.hidden=false;ov.querySelector('.close').focus();
+  say(godText(g));
+  renderMeet();
+  if(save.met.length>=8)stamp('meet');
+}
+function closeModal(){const ov=$('#overlay');ov.hidden=true;ov.innerHTML='';if(canSpeak)try{speechSynthesis.cancel();}catch(e){}if(lastFocus&&document.body.contains(lastFocus))lastFocus.focus();}
+
+/* ---------- who am I ---------- */
+const who={order:[],i:0,clue:0,total:0,choices:[],wrong:new Set(),reveal:false,got:0,finished:false};
+function whoStart(){Object.assign(who,{order:shuffle(GODS.map(g=>g.id)),i:0,total:0,finished:false});whoRound(false);}
+function whoRound(speak=true){const id=who.order[who.i];who.clue=0;who.wrong=new Set();who.reveal=false;
+  who.choices=shuffle([id,...shuffle(GODS.filter(g=>g.id!==id)).slice(0,3).map(g=>g.id)]);renderWho();
+  if(speak)say('Clue one. '+GOD[id].clues[0]);}
+function renderWho(){
+  const el=$('#who');let body='';
+  if(who.finished){
+    body=`<div class="panel done" style="max-width:640px"><p class="eyebrow">All eight gods found</p><h3>${who.total} of 24 stars</h3><p>${starRow(Math.round(who.total/8),3)}</p><p>${who.total>=20?'Amazing guessing! You knew most gods from the very first clue.':who.total>=14?'Great work! You found every god.':'You found every god. Play again to win more stars.'}</p><div class="row"><button class="btn" data-act="who-again">Play again</button><button class="btn ghost" data-act="home">All games</button></div></div>`;
+  } else if(who.reveal){
+    const g=GOD[who.order[who.i]];
+    body=`<div class="panel reveal">${svgFig(g.fig)}<div><p class="eyebrow">God ${who.i+1} of 8</p><h3>Yes! I am ${g.name}.</h3><p>${starRow(who.got)} You won ${who.got} star${who.got>1?'s':''}.</p><p>${g.fact}</p><div class="row"><button class="btn" data-act="who-next">${who.i<7?'Next god':'See my stars'}</button>${sayBtn(`Yes! I am ${g.name}. ${g.fact}`)}</div></div></div>`;
+  } else {
+    const g=GOD[who.order[who.i]];
+    body=`<div class="who"><div class="panel"><div class="who-meta"><span class="eyebrow" style="margin:0">God ${who.i+1} of 8 · ${who.total} stars so far</span><span>${starRow(3-who.clue)}</span></div>
+      <ul class="clues">${g.clues.slice(0,who.clue+1).map((c,k)=>`<li class="clue"><span class="clue-n">Clue ${k+1}</span><span class="clue-t">${c}</span>${sayBtn(c)}</li>`).join('')}</ul>
+      ${who.clue<2?`<button class="btn alt" data-act="who-clue">Give me another clue</button>`:`<p style="margin:0">That is the last clue. You can do it!</p>`}</div>
+      <div class="choices">${who.choices.map(id=>{const c=GOD[id],w=who.wrong.has(id);return `<button class="choice${w?' is-wrong':''}" data-act="who-guess" data-id="${id}" ${w?'disabled':''} aria-label="${c.name}">${svgFig(c.fig,'',VB_BUST)}<span>${c.name}</span></button>`;}).join('')}</div></div>`;
+  }
+  el.innerHTML=head('who')+body;
+}
+function whoGuess(id){const ans=who.order[who.i];
+  if(id===ans){who.got=3-who.clue;who.total+=who.got;who.reveal=true;renderWho();say(`Yes! I am ${GOD[ans].name}. ${GOD[ans].fact}`);return;}
+  who.wrong.add(id);
+  if(who.clue<2){who.clue++;renderWho();say(`Not ${GOD[id].name}. Here is another clue. ${GOD[ans].clues[who.clue]}`);}
+  else{renderWho();say(`Not ${GOD[id].name}. Try again!`);}
+}
+
+/* ---------- story of Osiris ---------- */
+const story={tray:[],slots:[],locked:new Set(),msg:'',solved:false,started:false};
+function storyStart(){let t;do{t=shuffle([0,1,2,3,4,5]);}while(t.every((v,i)=>v===i));
+  Object.assign(story,{tray:t,slots:Array(6).fill(null),locked:new Set(),msg:'',solved:false,started:true});renderStory();}
+function scard(idx,where,pos){const sc=STORY[idx],locked=where==='slot'&&story.locked.has(pos);
+  return `<div class="scard${locked?' is-locked':''}"><button class="scard-main" data-act="story-${where}" data-i="${where==='slot'?pos:idx}" ${locked?'disabled':''} aria-label="${esc(sc.t)}${locked?', in the right place':where==='tray'?', put in the next box':', take back out'}">${SCENES[idx]}<span class="scard-t">${sc.t}</span></button>${sayBtn(sc.say,'small')}${locked?'<span class="tick" aria-hidden="true">✓</span>':''}</div>`;}
+function renderStory(){
+  let body;
+  if(story.solved){
+    const whole=STORY.map(s=>s.say).join(' ');
+    body=`<div class="panel tell"><p class="eyebrow">You put the whole story in order</p><h3>Now tell it back</h3>
+      <div class="strip">${SCENES.join('')}</div>
+      <div class="row">${sayBtn(whole)}<span>Hear the whole story again</span></div>
+      <ol>${TELL.map(q=>`<li><span>${q}</span>${sayBtn(q,'small')}</li>`).join('')}</ol>
+      <p>Last of all, use the pictures to tell the whole story in your own words.</p>
+      <p class="tip">For the grown-up: let her tell it without prompting first, then use the questions for anything she skips. Write down two or three of her own sentences for her narration page.</p>
+      <div class="row" style="margin-top:14px"><button class="btn" data-act="story-again">Play again</button><button class="btn ghost" data-act="home">All games</button></div></div>`;
+  } else {
+    const full=story.slots.every(v=>v!==null);
+    body=`<p class="story-label">Your story</p><div class="slots">${story.slots.map((v,k)=>`<div class="slot"><span class="slot-n">${k+1}</span>${v!==null?scard(v,'slot',k):''}</div>`).join('')}</div>
+      <p class="msg" aria-live="polite">${story.msg}</p>
+      ${full?`<button class="btn" data-act="story-check">Check my story</button>`:`<p class="story-label">Pictures to place</p><div class="tray">${story.tray.map(i=>scard(i,'tray')).join('')}</div>`}`;
+  }
+  $('#story').innerHTML=head('story')+body;
+}
+function storyCheck(){let right=0;
+  story.slots.forEach((v,k)=>{if(v===k){story.locked.add(k);right++;}else if(v!==null){story.tray.push(v);story.slots[k]=null;}});
+  if(right===6){story.solved=true;renderStory();stamp('story');say('You put the whole story in order! Now tell it back.');return;}
+  story.msg=`${right} ${right===1?'picture is':'pictures are'} in the right place. Listen again and try the others.`;
+  renderStory();say(story.msg);
+}
+
+/* ---------- make a god ---------- */
+const OPTS={
+ head:[['human','Person'],['falcon','Falcon'],['jackal','Jackal'],['cat','Cat'],['ibis','Ibis'],['setanimal','Set animal']],
+ crown:[['none','No crown'],['sun','Sun'],['atef','Feather crown'],['throne','Throne'],['double','Crown of Egypt'],['moon','Moon']],
+ body:[['kilt','Kilt'],['dress','Dress'],['mummy','Mummy wrap']],
+ item:[['ankh','Ankh'],['was','Staff'],['crookflail','Crook and flail'],['palette','Scribe palette']],
+ skin:[[C.skinBrown,'Red-brown'],[C.skinGold,'Gold'],[C.skinGreen,'Green'],[C.skinBlue,'Blue']]
+};
+const ITEM_ICONS={
+ ankh:st('M20 4 a5 7 0 0 1 0 14 a5 7 0 0 1 0 -14 M12 21 L28 21 M20 20 L20 36',C.gold,3),
+ was:st('M20 7 L20 34 M20 7 L28 4 L27 10 M20 34 L16 38 M20 34 L24 38',C.gold,2.6),
+ crookflail:st('M13 36 L13 13 Q13 5 20 5 Q26 6 25 12',C.gold,3)+st('M27 36 L30 14 M30 14 L24 15 M30 14 L25 20 M30 14 L28 22',C.gold,2),
+ palette:`<rect x="15" y="4" width="10" height="32" rx="2" fill="${C.white}" ${LN}/><circle cx="20" cy="10" r="2.2" fill="${C.ochre}"/><circle cx="20" cy="16" r="2.2" fill="${C.ink}"/>`
+};
+const CHARGES=['the wind','rivers','gardens','music','sleep','dogs','rain','games','bread','the stars'];
+const PRE=['Nefer','Kha','Meri','Wadj','Senu','Tefi','Hesu','Iunu','Djeser','Seba'],SUF=['hotep','ankh','mose','khet','et','nut','iti','ra'];
+const newName=()=>PRE[Math.floor(Math.random()*PRE.length)]+SUF[Math.floor(Math.random()*SUF.length)];
+const build={head:'human',crown:'none',body:'kilt',item:'ankh',skin:C.skinBrown,charge:null,name:newName(),msg:''};
+function identify(b){const h=b.head,c=b.crown;
+  if(h==='falcon'&&c==='sun')return'ra';if(h==='falcon'&&c==='double')return'horus';
+  if(h==='jackal')return'anubis';if(h==='ibis')return'thoth';if(h==='cat')return'bastet';if(h==='setanimal')return'set';
+  if(h==='human'&&c==='atef')return'osiris';if(h==='human'&&c==='throne')return'isis';return null;}
+function optButton(k,v,label){const pressed=build[k]===v;let inner;
+  if(k==='head')inner=`<svg viewBox="-20 -52 62 66" aria-hidden="true"><g>${HEADS[v]({skin:build.skin})}</g></svg>`;
+  else if(k==='crown')inner=v==='none'?'<span style="font-size:.8rem;font-weight:700">None</span>':`<svg viewBox="-22 -80 46 52" aria-hidden="true">${CROWNS[v]}</svg>`;
+  else if(k==='item')inner=`<svg viewBox="0 0 40 40" aria-hidden="true">${ITEM_ICONS[v]}</svg>`;
+  if(k==='skin')return `<button class="swatch" style="background:${v}" data-act="build-set" data-k="${k}" data-v="${v}" data-label="${label}" aria-pressed="${pressed}" aria-label="${label}" title="${label}"></button>`;
+  if(k==='body')return `<button class="opt text" data-act="build-set" data-k="${k}" data-v="${v}" data-label="${label}" aria-pressed="${pressed}">${label}</button>`;
+  return `<button class="opt" data-act="build-set" data-k="${k}" data-v="${v}" data-label="${label}" aria-pressed="${pressed}" aria-label="${label}" title="${label}">${inner}</button>`;}
+function renderBuild(){
+  const id=identify(build),g=id&&GOD[id],gw=build.body==='dress'?'goddess':'god';
+  let result;
+  if(g){result=`<p class="eyebrow">Who is it?</p><h3>That looks like ${g.name}!</h3><p>The Egyptians drew ${g.name} with ${g.look}. ${g.pr==='she'?'She':'He'} looked after ${g.charge}.</p>`;}
+  else{
+    const hint=build.head==='falcon'?`<p>Two gods had falcon heads. Try the sun or the crown of Egypt to see who they are.</p>`:'';
+    result=`<p class="eyebrow">Who is it?</p><h3>A brand new ${gw}!</h3>${hint}<p>What does your ${gw} look after?</p>
+      <div class="charges">${CHARGES.map(c=>`<button class="charge" data-act="build-charge" data-v="${c}" aria-pressed="${build.charge===c}">${c[0].toUpperCase()+c.slice(1)}</button>`).join('')}</div>
+      ${build.charge?`<p class="meetline">Meet <b>${build.name}</b>, ${gw} of ${build.charge}.</p><div class="row">${sayBtn(`Meet ${build.name}, ${gw} of ${build.charge}.`)}<button class="btn ghost" data-act="build-name">New name</button></div>`:''}`;
+  }
+  const groups=[['head','Choose a head'],['crown','Choose a crown'],['body','Choose clothes'],['item','Choose what to hold'],['skin','Choose a skin colour']];
+  $('#build').innerHTML=head('build')+`<div class="build"><div class="panel stage">${svgFig(build)}<div class="result">${result}
+      <p class="msg" aria-live="polite">${build.msg}</p><button class="btn" data-act="build-done">This is my ${gw}!</button></div></div>
+    <div class="panel controls">${groups.map(([k,t])=>`<div class="group"><h3>${t}</h3><div class="opts">${OPTS[k].map(([v,l])=>optButton(k,v,l)).join('')}</div></div>`).join('')}</div></div>`;
+}
+function buildDone(){const id=identify(build),gw=build.body==='dress'?'goddess':'god';
+  if(!id&&!build.charge){build.msg=`First choose what your ${gw} looks after.`;renderBuild();say(build.msg);return;}
+  build.msg=id?`You made ${GOD[id].name}. The Egyptians would know who that is!`:`Hooray for ${build.name}, ${gw} of ${build.charge}!`;
+  renderBuild();say(build.msg);stamp('build');}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const s=e.target.closest('[data-say]');if(s){say(s.dataset.say,true);return;}
+  if(e.target.id==='overlay'){closeModal();return;}
+  const b=e.target.closest('[data-act]');if(!b)return;
+  const a=b.dataset.act,d=b.dataset;
+  switch(a){
+    case 'home':show('home');break;
+    case 'go':show(d.id);break;
+    case 'open-god':openGod(d.id);break;
+    case 'close':closeModal();break;
+    case 'who-guess':whoGuess(d.id);break;
+    case 'who-clue':who.clue++;renderWho();say('Clue '+(who.clue+1)+'. '+GOD[who.order[who.i]].clues[who.clue]);break;
+    case 'who-next':if(who.i<7){who.i++;whoRound();}else{who.finished=true;renderWho();stamp('who');say(`You found all eight gods and won ${who.total} stars!`);}break;
+    case 'who-again':whoStart();say('Clue one. '+GOD[who.order[0]].clues[0]);break;
+    case 'story-tray':{const idx=+d.i,k=story.slots.indexOf(null);if(k<0)break;story.slots[k]=idx;story.tray=story.tray.filter(v=>v!==idx);story.msg='';renderStory();break;}
+    case 'story-slot':{const k=+d.i;if(story.locked.has(k))break;story.tray.push(story.slots[k]);story.slots[k]=null;story.msg='';renderStory();break;}
+    case 'story-check':storyCheck();break;
+    case 'story-again':storyStart();break;
+    case 'build-set':build[d.k]=d.v;build.msg='';renderBuild();say(d.label);break;
+    case 'build-charge':build.charge=d.v;build.msg='';renderBuild();say(`Meet ${build.name}, ${build.body==='dress'?'goddess':'god'} of ${d.v}.`);break;
+    case 'build-name':build.name=newName();renderBuild();say(`Meet ${build.name}.`);break;
+    case 'build-done':buildDone();break;
+  }
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#overlay').hidden)closeModal();});
+$('#toggle').addEventListener('click',()=>{readAloud=!readAloud;$('#toggle').setAttribute('aria-pressed',readAloud);$('#toggle-t').textContent='Read to me: '+(readAloud?'on':'off');if(!readAloud&&canSpeak)try{speechSynthesis.cancel();}catch(e){}});
+$('#toggle-dot').innerHTML=SPK;
+
+renderScarabs();
+renderHome();
+</script>
+
+<script src="../../home.js"></script>
+</body></html>

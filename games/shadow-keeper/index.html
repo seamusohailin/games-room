@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>The Shadow Keeper of Misselthwaite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --shade:#14261f;--panel:#f2f5ee;--ink:#16231c;--ink-soft:#4a5a50;
+  --sun:#e0a93b;--violet:#4c4677;--moss:#6f8f6a;--clay:#a8523f;--rule:#cdd6c6;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--shade);color:var(--ink);
+  font-family:"Newsreader",Georgia,serif;font-size:19px;line-height:1.6;
+  -webkit-text-size-adjust:100%;transition:background-color 1.2s ease;
+}
+body[data-time="dawn"]{background:#141e2c}
+body[data-time="noon"]{background:#1d3327}
+body[data-time="afternoon"]{background:#2a2740}
+body[data-time="dusk"]{background:#241a22}
+
+#title{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:32px 24px;text-align:center;color:#eef3e9}
+#gnomon{width:min(320px,70vw);height:auto;margin-bottom:8px}
+#title h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(30px,7vw,52px);line-height:1.05;margin:0 0 14px}
+#title p{max-width:36ch;margin:0 auto 28px;color:#c3cfc0}
+.begin{font-family:"Newsreader",serif;font-size:20px;background:var(--sun);color:#20180a;border:none;padding:16px 34px;border-radius:2px;min-height:56px;cursor:pointer}
+
+#frame{display:none;max-width:720px;margin:0 auto;padding:0 14px 130px}
+header.bar{position:sticky;top:0;z-index:5;background:rgba(20,38,31,.93);backdrop-filter:blur(6px);margin:0 -14px 18px;padding:9px 14px 11px;display:flex;align-items:center;gap:12px}
+button.back{font-family:"Newsreader",serif;font-size:17px;background:transparent;color:#dfe7da;border:1.5px solid #56655a;border-radius:2px;padding:8px 14px;min-height:44px;cursor:pointer}
+button.back:disabled{opacity:.3;cursor:default}
+.chapline{color:#dfe7da;font-size:15px;line-height:1.25}
+.chapline b{display:block;font-weight:400;color:var(--sun);font-size:13px}
+.tokens{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap;max-width:152px;justify-content:flex-end}
+.tok{width:13px;height:13px;border-radius:50%;border:1.5px solid #7d8d80;transition:all .4s ease}
+.tok.on{background:var(--sun);border-color:var(--sun)}
+
+.card{background:var(--panel);border-radius:3px;padding:26px 24px 28px;margin:0 0 18px;box-shadow:0 18px 40px rgba(0,0,0,.28)}
+.card h2{font-family:"Fraunces",serif;font-weight:600;font-size:26px;line-height:1.15;margin:0 0 14px}
+.card p{margin:0 0 16px;max-width:62ch}
+.card p:last-child{margin-bottom:0}
+.where{font-size:17px;color:var(--ink-soft);border-left:3px solid var(--rule);padding-left:14px;margin:0 0 20px}
+
+.said{border-left:3px solid var(--rule);padding:2px 0 2px 16px;margin:0 0 18px}
+.said .who{font-size:15px;color:var(--ink-soft);display:block;margin-bottom:2px}
+.said.colin{border-color:var(--sun)}
+.said.colin .who{color:#8a6c1c}
+.said.mary{border-color:var(--violet)}
+.said.mary .who{color:var(--violet)}
+.said p{margin:0 0 8px;max-width:60ch}
+.said p:last-child{margin:0}
+
+.record{background:#fff;border:1px solid var(--rule);border-radius:2px;padding:16px 18px;margin:0 0 18px}
+.record .cap{font-size:15px;color:var(--ink-soft);font-style:italic;margin:0 0 10px}
+
+.q{font-size:20px;margin:22px 0 14px;max-width:60ch}
+.opts{display:flex;flex-direction:column;gap:10px}
+button.opt{font-family:"Newsreader",serif;font-size:18px;line-height:1.45;text-align:left;background:#fff;border:1.5px solid var(--rule);border-radius:2px;padding:15px 17px;min-height:56px;cursor:pointer;color:var(--ink)}
+button.opt:active{background:#f6f8f3}
+button.opt.sel{border-color:var(--moss);background:#eef3ea}
+button.opt.right{border-color:var(--moss);background:#e6efe2}
+button.opt.wrong{border-color:var(--clay);background:#f7ece9}
+button.opt:disabled{cursor:default;opacity:.72}
+button.opt.right:disabled,button.opt.wrong:disabled{opacity:1}
+.shake{animation:shk .3s}
+@keyframes shk{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@media (prefers-reduced-motion:reduce){.shake{animation:none}}
+
+.act{font-family:"Newsreader",serif;font-size:19px;background:var(--ink);color:#f2f5ee;border:none;border-radius:2px;padding:15px 28px;min-height:54px;cursor:pointer;margin-top:20px}
+.act.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.act:disabled{opacity:.35;cursor:default}
+.note{margin-top:18px;padding:14px 16px;border-radius:2px;font-size:18px;background:#eef3ea;border-left:3px solid var(--moss)}
+.note.bad{background:#f7ece9;border-left-color:var(--clay)}
+
+.slots{display:flex;gap:8px;flex-wrap:wrap;align-items:center;min-height:64px;border-bottom:2px solid var(--rule);padding:10px 4px;margin-bottom:16px;font-family:"Fraunces",serif;font-size:26px}
+.slots .empty{color:#a9b4a6;font-family:"Newsreader",serif;font-size:17px;font-style:italic}
+.chipline{display:flex;gap:9px;flex-wrap:wrap}
+button.chip{font-family:"Fraunces",serif;font-size:20px;background:#fff;border:1.5px solid var(--rule);border-radius:2px;padding:11px 16px;min-height:48px;cursor:pointer;color:var(--ink)}
+button.chip.used{opacity:.3}
+.builtpart{background:#eef3ea;border-radius:2px;padding:2px 8px}
+
+.field{display:flex;align-items:baseline;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+.field label{font-size:18px;min-width:220px}
+input[type=number],input[type=text]{font-family:"Newsreader",serif;font-size:19px;border:1.5px solid var(--rule);border-radius:2px;background:#fff;padding:11px 12px;width:110px;min-height:48px;color:var(--ink)}
+input:focus,button:focus-visible,select:focus,textarea:focus{outline:2.5px solid var(--sun);outline-offset:2px}
+textarea{font-family:"Newsreader",serif;font-size:19px;line-height:1.6;width:100%;min-height:210px;padding:14px;border:1.5px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
+select{font-family:"Newsreader",serif;font-size:18px;padding:12px;min-height:48px;border:1.5px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
+table.grid{border-collapse:collapse;width:100%;font-size:17px}
+table.grid th,table.grid td{border:1px solid var(--rule);padding:9px 10px;text-align:left}
+table.grid th{font-weight:600;background:#e9eee4}
+.tallies{letter-spacing:2px;font-size:19px}
+.wordcount{font-size:16px;color:var(--ink-soft);margin-top:8px}
+svg .ax{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .gl{stroke:#d7ddd2;stroke-width:1}
+svg text{font-family:"Newsreader",serif;font-size:13px;fill:var(--ink)}
+.letter{font-size:20px;line-height:1.75}
+.letter p{margin:0 0 14px}
+.sig{font-family:"Fraunces",serif;font-size:22px}
+.audit{border-top:1px solid var(--rule);margin-top:18px;padding-top:6px}
+.audit .row{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #e2e8dd;font-size:17px}
+.audit .mk{font-size:20px;line-height:1.2}
+.audit .mk.y{color:var(--moss)}
+.audit .mk.n{color:var(--clay)}
+.audit .det{font-size:16px;color:var(--ink-soft);margin-top:4px}
+@media print{body{background:#fff}header.bar,.act{display:none}.card{box-shadow:none;border:1px solid #ccc}}
+@media (max-width:520px){body{font-size:18px}.card{padding:22px 18px 24px}.field label{min-width:100%}}
+</style>
+</head>
+<body data-time="dawn">
+
+<section id="title">
+  <svg id="gnomon" viewBox="0 0 320 190" aria-hidden="true">
+    <defs><linearGradient id="shg" x1="0" x2="1"><stop offset="0" stop-color="#4c4677" stop-opacity=".95"/><stop offset="1" stop-color="#4c4677" stop-opacity="0"/></linearGradient></defs>
+    <circle cx="252" cy="46" r="21" fill="#e0a93b" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="1.1s" begin="0.2s" fill="freeze"/></circle>
+    <line x1="40" y1="150" x2="290" y2="150" stroke="#7d8d80" stroke-width="1.5"/>
+    <polygon points="40,150 40,58 100,150" fill="#eef3e9"/>
+    <polygon points="40,150 100,150 40,150" fill="url(#shg)"><animate attributeName="points" from="40,150 100,150 40,150" to="40,150 236,150 40,150" dur="1.6s" begin="0.7s" fill="freeze"/></polygon>
+  </svg>
+  <h1>The Shadow Keeper<br>of Misselthwaite</h1>
+  <p>Colin has been outside for a week. He writes down everything he sees, and some of it is wrong. Twelve pages. You decide who is right.</p>
+  <button class="begin" id="beginBtn">Take up the record</button>
+</section>
+
+<div id="frame">
+  <header class="bar">
+    <button class="back" id="backBtn">Back</button>
+    <span class="chapline" id="chapline"></span>
+    <div class="tokens" id="tokens"></div>
+  </header>
+  <main id="stage"></main>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var PAGES=[];
+var S={p:0,done:{},audit:{},data:{}};
+var stage=document.getElementById("stage");
+var chapline=document.getElementById("chapline");
+var tokbox=document.getElementById("tokens");
+var backBtn=document.getElementById("backBtn");
+
+function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+function card(title){var c=el("div","card");if(title)c.appendChild(el("h2",null,title));return c;}
+function where(c,text){c.appendChild(el("p","where",text));}
+function said(who,cls,lines){
+  var s=el("div","said "+cls);
+  s.appendChild(el("span","who",who));
+  (Array.isArray(lines)?lines:[lines]).forEach(function(l){s.appendChild(el("p",null,l));});
+  return s;
+}
+function record(cap,html){
+  var r=el("div","record");
+  r.appendChild(el("p","cap",cap));
+  r.insertAdjacentHTML("beforeend",html);
+  return r;
+}
+function mark(id,label,ok,chose,right){
+  if(S.audit[id])return;
+  S.audit[id]={label:label,ok:ok,chose:chose||"",right:right||""};
+}
+
+/* ---------- task components; each calls done() when finished ---------- */
+function choice(parent,cfg,done){
+  var wrap=el("div");
+  wrap.appendChild(el("p","q",cfg.q));
+  var box=el("div","opts");
+  var finished=false,first=true,rightText="";
+  cfg.opts.forEach(function(o){if(o.ok)rightText=o.t;});
+  cfg.opts.forEach(function(o){
+    var b=el("button","opt",o.t);
+    b.onclick=function(){
+      if(finished)return;
+      if(o.ok){
+        finished=true;
+        b.className="opt right";
+        Array.prototype.forEach.call(box.children,function(x){x.disabled=true;});
+        if(first)mark(cfg.id,cfg.label,true,o.t,rightText);
+        wrap.appendChild(el("div","note","<b>Recorded.</b> "+cfg.why));
+        done();
+      }else{
+        if(first)mark(cfg.id,cfg.label,false,o.t,rightText);
+        first=false;
+        b.className="opt wrong";b.disabled=true;b.classList.add("shake");
+        var old=wrap.querySelector(".note.bad");if(old)old.remove();
+        wrap.insertBefore(el("div","note bad","<b>Not that one.</b> "+(o.why||"Read it again and try another.")),box.nextSibling);
+      }
+    };
+    box.appendChild(b);
+  });
+  wrap.appendChild(box);
+  parent.appendChild(wrap);
+}
+
+function multi(parent,cfg,done){
+  var wrap=el("div");
+  wrap.appendChild(el("p","q",cfg.q));
+  var box=el("div","opts");
+  var picked=[],first=true;
+  var rightText=cfg.opts.filter(function(o){return o.ok;}).map(function(o){return o.short||o.t;}).join(", ");
+  cfg.opts.forEach(function(o,ix){
+    var b=el("button","opt",o.t);
+    b.onclick=function(){
+      if(b.disabled)return;
+      var at=picked.indexOf(ix);
+      if(at>-1){picked.splice(at,1);b.className="opt";}else{picked.push(ix);b.className="opt sel";}
+      chk.disabled=picked.length===0;
+    };
+    box.appendChild(b);
+  });
+  wrap.appendChild(box);
+  var chk=el("button","act","Check my answer");chk.disabled=true;
+  chk.onclick=function(){
+    var ok=true;
+    cfg.opts.forEach(function(o,ix){if((picked.indexOf(ix)>-1)!==!!o.ok)ok=false;});
+    var chose=picked.map(function(ix){return cfg.opts[ix].short||cfg.opts[ix].t;}).join(", ");
+    if(first)mark(cfg.id,cfg.label,ok,chose,rightText);
+    first=false;
+    if(ok){
+      cfg.opts.forEach(function(o,ix){box.children[ix].disabled=true;box.children[ix].className="opt"+(o.ok?" right":"");});
+      chk.remove();
+      wrap.appendChild(el("div","note","<b>Recorded.</b> "+cfg.why));
+      done();
+    }else{
+      var old=wrap.querySelector(".note.bad");if(old)old.remove();
+      wrap.insertBefore(el("div","note bad","<b>Not yet.</b> "+cfg.hint),chk);
+      cfg.opts.forEach(function(o,ix){box.children[ix].className="opt";});
+      picked=[];chk.disabled=true;
+    }
+  };
+  wrap.appendChild(chk);
+  parent.appendChild(wrap);
+}
+
+function assemble(parent,cfg,done){
+  var wrap=el("div");
+  wrap.appendChild(el("p","q",cfg.q));
+  var slots=el("div","slots"),built=[],chips=el("div","chipline"),first=true;
+  function draw(){
+    slots.innerHTML="";
+    if(!built.length)slots.appendChild(el("span","empty","tap the parts in order"));
+    built.forEach(function(p,ix){
+      var s=el("span","builtpart",p.t);s.style.cursor="pointer";
+      s.onclick=function(){built.splice(ix,1);chips.children[p.ix].className="chip";draw();};
+      slots.appendChild(s);
+    });
+    check.disabled=!built.length;
+  }
+  cfg.parts.forEach(function(p,ix){
+    var b=el("button","chip",p);
+    b.onclick=function(){if(b.classList.contains("used"))return;b.className="chip used";built.push({t:p,ix:ix});draw();};
+    chips.appendChild(b);
+  });
+  wrap.appendChild(slots);wrap.appendChild(chips);
+  var check=el("button","act","Check the word");check.disabled=true;
+  check.onclick=function(){
+    var word=built.map(function(b){return b.t;}).join("").toLowerCase();
+    var old=wrap.querySelector(".note");if(old)old.remove();
+    if(first)mark(cfg.id,cfg.label,word===cfg.answer,word,cfg.answer);
+    first=false;
+    if(word===cfg.answer){
+      wrap.appendChild(el("div","note","<b>"+cfg.answer+".</b> "+cfg.why));
+      check.remove();done();
+    }else{
+      wrap.appendChild(el("div","note bad","<b>"+(word||"nothing")+" is not a word.</b> "+cfg.hint+" The parts have been put back for you."));
+      built=[];
+      Array.prototype.forEach.call(chips.children,function(ch){ch.className="chip";});
+      draw();
+    }
+  };
+  wrap.appendChild(check);
+  parent.appendChild(wrap);draw();
+}
+
+function columnGraph(data,opts){
+  opts=opts||{};
+  var W=Math.min(640,Math.max(340,data.length*110+80)),H=300,L=50,B=54,T=26;
+  var max=0;data.forEach(function(d){if(d.value>max)max=d.value;});
+  var stp=opts.step||(max<=10?1:max<=25?5:max<=60?10:max<=250?25:50);
+  var top=Math.ceil(max/stp)*stp||stp;
+  var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img">';
+  if(opts.title)s+='<text x="'+(W/2)+'" y="16" text-anchor="middle" font-size="15">'+opts.title+'</text>';
+  for(var v=0;v<=top;v+=stp){
+    var y=H-B-((H-B-T)*(v/top));
+    s+='<line class="gl" x1="'+L+'" y1="'+y+'" x2="'+(W-14)+'" y2="'+y+'"/><text x="'+(L-8)+'" y="'+(y+4)+'" text-anchor="end">'+v+'</text>';
+  }
+  var bw=(W-L-24)/data.length;
+  data.forEach(function(d,ix){
+    var h=(H-B-T)*(d.value/top),x=L+ix*bw+bw*0.2;
+    s+='<rect x="'+x+'" y="'+(H-B-h)+'" width="'+(bw*0.6)+'" height="'+h+'" fill="'+(ix%2?"#6f8f6a":"#e0a93b")+'"/>';
+    s+='<text x="'+(L+ix*bw+bw/2)+'" y="'+(H-B+20)+'" text-anchor="middle">'+d.label+'</text>';
+  });
+  s+='<line class="ax" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-B)+'"/><line class="ax" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-14)+'" y2="'+(H-B)+'"/></svg>';
+  return s;
+}
+
+/* ============================ the twelve pages ============================ */
+function page(o){PAGES.push(o);}
+
+page({id:"p1",chap:"Words",time:"dawn",build:function(c,done){
+  c.appendChild(el("h2",null,"A word Colin used"));
+  where(c,"You are the Keeper of the Record at Misselthwaite Manor. Colin Craven spent ten years shut in a bedroom and has now been outside for a week. He writes down what he sees. Mary Lennox checks it. When they disagree, you decide, and you give your reason.");
+  c.appendChild(record("Colin's record, Monday.","<p>The walled garden has an atmosphere of great happiness in it now that the roses are waking up.</p>"));
+  c.appendChild(said("Mary","mary","That is wrong. The atmosphere is the layer of gases around a planet. Happiness is not a gas."));
+  c.appendChild(said("Colin","colin","I know what it means in science. I am using the word a second way. The garden feels happy. That is what I meant and that is what I wrote."));
+  c.appendChild(said("Mary","mary","You cannot use a word any way you please. Keeper, decide."));
+  var t2=el("div");
+  choice(c,{
+    id:"atmosphere",label:"Can 'atmosphere' mean a feeling?",
+    q:"Who is right?",
+    opts:[
+      {t:"Mary. Atmosphere only means the gases around a planet, so Colin must cross it out.",ok:false,why:"That is the first meaning, but words often grow a second one."},
+      {t:"Colin. Atmosphere also means the feeling of a place, and that meaning grew out of the first one.",ok:true},
+      {t:"Neither. Atmosphere means the weather.",ok:false,why:"Weather happens in the atmosphere, but the word does not mean weather."}
+    ],
+    why:"Air is all around you and you cannot see it. A feeling can fill a room in the same way. That is how the second meaning grew out of the first. Using a word like this is called using it figuratively."
+  },function(){
+    c.appendChild(t2);
+    t2.appendChild(said("Mary","mary","Then show me a real writer doing it. Not you. A book."));
+    choice(t2,{
+      id:"evidence",label:"Finding evidence in The Secret Garden",
+      q:"Here are three lines from The Secret Garden. Which one shows the author using 'atmosphere' to mean a feeling?",
+      opts:[
+        {t:"He had lain on his back in the huge closed house, breathing an atmosphere heavy with the fears of people who were tired of him.",ok:true},
+        {t:"An angry unsympathetic little girl insisted obstinately that he was not as ill as he thought he was.",ok:false,why:"True, but it does not use the word at all."},
+        {t:"Most of his fright and illness was created by himself.",ok:false,why:"That is the point of the chapter, not the point of the argument."}
+      ],
+      why:"Fear is not a gas either. The atmosphere in that closed house was the feeling of it, and Colin was breathing it. Your ruling stands and Mary has to accept it."
+    },done);
+  });
+}});
+
+page({id:"p2",chap:"Words",time:"dawn",build:function(c,done){
+  c.appendChild(el("h2",null,"Colin's glossary"));
+  where(c,"Colin has copied five definitions into the back of his record, all of them words built from the base 'sphere'. Mary says two of them are wrong. She is right, but she cannot say which two.");
+  c.appendChild(record("The back page of Colin's record.",
+    '<p><b>1. Cryosphere</b> &mdash; the frozen water part of the Earth: ice caps, glaciers and frozen ground.</p>'+
+    '<p><b>2. Lithosphere</b> &mdash; all the solid parts of the earth: the crust, the mantle and the core.</p>'+
+    '<p><b>3. Atmosphere</b> &mdash; the layer of gases surrounding a planet or star.</p>'+
+    '<p><b>4. Hydrosphere</b> &mdash; the salt water of the oceans and the seas.</p>'+
+    '<p><b>5. Hemisphere</b> &mdash; half of a sphere.</p>'));
+  var t2=el("div");
+  multi(c,{
+    id:"glossary",label:"Finding the two wrong definitions",
+    q:"Tap the two that are wrong, then check.",
+    opts:[
+      {t:"1. Cryosphere",ok:false,short:"cryosphere"},
+      {t:"2. Lithosphere",ok:true,short:"lithosphere"},
+      {t:"3. Atmosphere",ok:false,short:"atmosphere"},
+      {t:"4. Hydrosphere",ok:true,short:"hydrosphere"},
+      {t:"5. Hemisphere",ok:false,short:"hemisphere"}
+    ],
+    hint:"One of them goes far too deep into the earth. Another leaves out an enormous amount of water.",
+    why:"Number 2 goes too deep: the lithosphere is only the rigid outside, the crust and the upper mantle. Number 4 is too narrow: the hydrosphere is all the water on the earth's surface, lakes and rivers as well as seas, and sometimes the water in the clouds above it."
+  },function(){
+    c.appendChild(t2);
+    t2.appendChild(said("Colin","colin","But I did not invent number 2. I copied it out of a book, so it must be a word for something."));
+    choice(t2,{
+      id:"geosphere",label:"Naming the word Colin actually defined",
+      q:"Colin's number 2 is a good definition of a different word. Which word is it?",
+      opts:[
+        {t:"geosphere",ok:true},
+        {t:"biosphere",ok:false,why:"The biosphere is the living part: every living thing and how it all connects."},
+        {t:"exosphere",ok:false,why:"The exosphere is the outermost layer of a planet's atmosphere. Nothing solid about it."}
+      ],
+      why:"The geosphere is the crust, the mantle and the core together. Colin had a good definition attached to the wrong word."
+    },done);
+  });
+}});
+
+page({id:"p3",chap:"Words",time:"dawn",build:function(c,done){
+  c.appendChild(el("h2",null,"Two words Colin does not have"));
+  where(c,"Colin keeps finding things in the garden he cannot name. Words built from 'sphere' are made of three kinds of part: a prefix at the front, the base in the middle, and a suffix at the end. Build the words he needs by tapping the parts in order.");
+  c.appendChild(said("Colin","colin","There is a grain of pollen on my sleeve. It is a tiny ball. I cannot call it a sphere, because a sphere sounds enormous."));
+  var t2=el("div");
+  assemble(c,{
+    id:"microsphere",label:"Building 'microsphere'",
+    q:"A very small ball, such as a grain of pollen.",
+    parts:["hemi","micro","bio","sphere","spher","ic","oid"],
+    answer:"microsphere",
+    hint:"You need a prefix meaning small, then the base.",
+    why:"<i>Micro</i> means small. The base keeps its full shape and the prefix does the work."
+  },function(){
+    c.appendChild(t2);
+    t2.appendChild(said("Mary","mary","Now a harder one. I want a describing word. A word that says something belongs to the biosphere, the way 'watery' says something belongs to water."));
+    assemble(t2,{
+      id:"biospheric",label:"Building 'biospheric'",
+      q:"Relating to, or affecting, the biosphere.",
+      parts:["bio","micro","sphere","spher","ic","oid"],
+      answer:"biospheric",
+      hint:"This one needs a prefix and a suffix. The base loses its final 'e'.",
+      why:"Prefix, base and suffix all at once: <i>bio</i> + <i>spher</i> + <i>ic</i>. The suffix <i>-ic</i> turns a naming word into a describing word."
+    },done);
+  });
+}});
+
+page({id:"p4",chap:"Light",time:"noon",build:function(c,done){
+  c.appendChild(el("h2",null,"Colin reads a poem"));
+  where(c,"It is late morning. Colin has found Robert Louis Stevenson's poem 'My Shadow' and has decided the poet was making things up. You have to rule on four of his complaints. Here are the first two.");
+  c.appendChild(record("My Shadow, verse two.","<p><i>For he sometimes shoots up taller like an India-rubber ball,<br>And he sometimes gets so little that there's none of him at all.</i></p>"));
+  c.appendChild(said("Colin","colin","Both lines are nonsense. A shadow is a copy of you, so it must be your size. And it certainly cannot disappear."));
+  var t2=el("div");
+  choice(c,{
+    id:"claim1",label:"Can a shadow be taller than you?",
+    q:"First line. Can your shadow really be much taller than you are?",
+    opts:[
+      {t:"Yes. When the sun is low in the sky, early or late in the day, your shadow stretches far longer than you are tall.",ok:true},
+      {t:"No. A shadow is a copy, so it stays the same size as the thing that makes it.",ok:false,why:"Stand outside late in the afternoon. Your shadow will cross the whole garden."},
+      {t:"Only indoors with a lamp.",ok:false,why:"It happens outside too, and for the same reason: the angle the light comes in at."}
+    ],
+    why:"Low sun, long shadow. The lower the light comes in, the further along the ground the dark patch is thrown."
+  },function(){
+    c.appendChild(t2);
+    choice(t2,{
+      id:"claim2",label:"Does a shadow disappear at midday?",
+      q:"Second line: none of him at all. Is that true?",
+      opts:[
+        {t:"Stevenson is right. At midday your shadow disappears completely.",ok:false,why:"It gets very short. Here in the southern half of the world it never quite disappears."},
+        {t:"Stevenson is wrong. Shadows never change size.",ok:false,why:"You have just ruled that they stretch."},
+        {t:"He saw it correctly but he has exaggerated. The shadow is shortest when the sun is highest, and it does not vanish.",ok:true}
+      ],
+      why:"A poet is allowed to exaggerate to make you see something. A Keeper of the Record is not. Saying which is which is your job."
+    },done);
+  });
+}});
+
+page({id:"p5",chap:"Light",time:"noon",build:function(c,done){
+  c.appendChild(el("h2",null,"Two more of Colin's complaints"));
+  where(c,"Still the same poem, in which Stevenson describes a boy and his shadow. Two complaints left. This time one of them is about the reason behind what the poet saw, not about what he saw.");
+  c.appendChild(record("My Shadow, verse three.","<p><i>He stays so close beside me, he's a coward you can see.</i></p>"));
+  c.appendChild(said("Colin","colin","He is calling his shadow a coward just for standing near him. That is unfair, and it is also wrong."));
+  var t2=el("div");
+  choice(c,{
+    id:"claim3",label:"Why a shadow stays at your feet",
+    q:"How do you rule on the word 'coward'?",
+    opts:[
+      {t:"He is right about what he saw but wrong about why. The shadow starts at his feet because that is exactly where his body blocks the light.",ok:true},
+      {t:"He is wrong. A shadow can be a long way away from you.",ok:false,why:"The far end can be a long way off. The near end is always joined to your feet."},
+      {t:"He is right, and for the right reason. Shadows are timid.",ok:false,why:"A shadow is not alive. It is a patch of ground the light cannot reach."}
+    ],
+    why:"Your feet are the one place where you are touching the ground and blocking the light at the same time, so that is where the dark begins."
+  },function(){
+    c.appendChild(t2);
+    t2.appendChild(record("My Shadow, last verse.","<p><i>One morning, very early, before the sun was up... But my lazy little shadow, like an arrant sleepy-head, had stayed at home behind me and was fast asleep in bed.</i></p>"));
+    t2.appendChild(said("Colin","colin","This is the worst one. A shadow cannot stay behind in bed. Shadows are always there."));
+    choice(t2,{
+      id:"claim4",label:"No light, no shadow",
+      q:"Is Colin right that a shadow is always there?",
+      opts:[
+        {t:"Colin is right. There is always a shadow somewhere.",ok:false,why:"Ask what makes a shadow. Take that thing away and there is nothing to make one with."},
+        {t:"Stevenson is right, and he is being exact. Before sunrise there is no sunlight, so there is nothing for the boy to block, so there is no shadow at all.",ok:true},
+        {t:"Stevenson is right, but only because it was too dark to see the shadow.",ok:false,why:"Close, but not the same thing. The shadow is not hidden. It has not been made."}
+      ],
+      why:"A shadow needs three things: a light, something solid in the way, and a surface for it to fall on. Take away the light and there is no shadow to have."
+    },done);
+  });
+}});
+
+page({id:"p6",chap:"Light",time:"noon",build:function(c,done){
+  c.appendChild(el("h2",null,"The torch on the nursery wall"));
+  where(c,"Colin has put a torch on the floor, stood a toy in front of it, and is watching the shadow on the wall. He has not moved the torch, but the shadow keeps changing size and he cannot work out why.");
+  c.appendChild(said("Colin","colin","Watch. The torch has not moved an inch. Only the toy has moved. So why does the shadow grow?"));
+  c.appendChild(el("p",null,"Slide the toy between the torch and the wall and watch what happens."));
+  var svgBox=el("div");
+  var slider=document.createElement("input");
+  slider.type="range";slider.min="20";slider.max="150";slider.value="110";
+  slider.style.width="100%";slider.style.minHeight="48px";slider.style.marginTop="10px";
+  var readout=el("p","wordcount","");
+  function drawTorch(){
+    var d=Number(slider.value),wall=170,toyH=34,shadow=toyH*(wall/d),W=560,H=230,y0=200;
+    var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%">';
+    s+='<rect x="'+(60+wall*2.4)+'" y="20" width="14" height="'+(y0-20)+'" fill="#d7ddd2"/>';
+    s+='<rect x="'+(60+wall*2.4-3)+'" y="'+(y0-shadow*2.4)+'" width="5" height="'+(shadow*2.4)+'" fill="#4c4677" opacity=".85"/>';
+    s+='<line x1="60" y1="'+(y0-18)+'" x2="'+(60+wall*2.4)+'" y2="'+(y0-shadow*2.4)+'" stroke="#e0a93b" stroke-width="1" opacity=".6"/>';
+    s+='<line x1="60" y1="'+(y0-18)+'" x2="'+(60+wall*2.4)+'" y2="'+y0+'" stroke="#e0a93b" stroke-width="1" opacity=".6"/>';
+    s+='<circle cx="60" cy="'+(y0-18)+'" r="13" fill="#e0a93b"/>';
+    s+='<rect x="'+(60+d*2.4-8)+'" y="'+(y0-toyH)+'" width="16" height="'+toyH+'" fill="#16231c"/>';
+    s+='<line x1="20" y1="'+y0+'" x2="'+(W-20)+'" y2="'+y0+'" stroke="#7d8d80" stroke-width="1.5"/></svg>';
+    svgBox.innerHTML=s;
+    readout.textContent="The toy is "+d+" cm from the torch. Its shadow on the wall is "+shadow.toFixed(0)+" cm tall. The toy itself is 34 cm tall.";
+  }
+  slider.oninput=drawTorch;
+  c.appendChild(svgBox);c.appendChild(slider);c.appendChild(readout);
+  drawTorch();
+  var t2=el("div");
+  choice(c,{
+    id:"torch",label:"Moving an object closer to a lamp",
+    q:"Move the toy closer to the torch. What happens to its shadow?",
+    opts:[
+      {t:"It gets larger.",ok:true},
+      {t:"It gets smaller.",ok:false,why:"Slide it right down to the low numbers and watch the wall again."},
+      {t:"It stays the same size and only gets darker.",ok:false,why:"Watch the height of the purple band on the wall as you slide."}
+    ],
+    why:"Close to the torch the toy blocks a wide slice of the light. Far from the torch it blocks a narrow slice."
+  },function(){
+    c.appendChild(t2);
+    choice(t2,{
+      id:"sunangle",label:"What changes your shadow outdoors",
+      q:"Outside you cannot move closer to the sun. So what changes the length of your shadow during the day?",
+      opts:[
+        {t:"The angle the sunlight arrives at, which changes as the sun moves across the sky.",ok:true},
+        {t:"How close the earth is to the sun at that moment.",ok:false,why:"The sun is an enormous distance away all day long. That is not what is changing."},
+        {t:"How bright the sun is.",ok:false,why:"A brighter light makes a sharper shadow, not a longer one."}
+      ],
+      why:"Indoors it is the distance from the lamp. Outdoors it is the angle of the light. Two different causes, both of them changing the shadow."
+    },done);
+  });
+}});
+
+page({id:"p7",chap:"Light",time:"noon",build:function(c,done){
+  c.appendChild(el("h2",null,"Outside with a tape measure"));
+  where(c,"You have ruled that shadows are long when the sun is low and short when it is high. Mary says a ruling is only worth something if you have checked it yourself. Put the iPad down. This page happens outside.");
+  c.appendChild(said("Mary","mary","Find something that stands up and stays put. A fence post, a broom handle pushed into the ground, or a person standing straight. Measure how tall it is. Then measure its shadow three times today: in the morning, in the middle of the day, and late in the afternoon."));
+  c.appendChild(said("Colin","colin","And if it rains all day, use the torch on the floor instead. Hold it low, then almost overhead, then low on the other side, and measure the shadow each time."));
+  c.appendChild(el("p",null,"Come back and fill these in as you get them. Measure in centimetres."));
+  var ins={};
+  [["height","How tall is the object?"],["m","Morning shadow"],["n","Middle of the day shadow"],["a","Afternoon shadow"]].forEach(function(p){
+    var row=el("div","field");
+    row.appendChild(el("label",null,p[1]));
+    var i=document.createElement("input");i.type="number";i.min="0";i.inputMode="decimal";
+    if(S.data.shadow)i.value=S.data.shadow[p[0]];
+    ins[p[0]]=i;row.appendChild(i);row.appendChild(el("span",null,"cm"));
+    c.appendChild(row);
+  });
+  var msg=el("div"),b=el("button","act","Enter into the record"),warned=false;
+  c.appendChild(msg);c.appendChild(b);
+  b.onclick=function(){
+    var h=Number(ins.height.value),m=Number(ins.m.value),n=Number(ins.n.value),a=Number(ins.a.value);
+    msg.innerHTML="";
+    if(!(h>0&&m>0&&n>0&&a>0)){msg.appendChild(el("div","note bad","<b>Four numbers needed.</b> Fill in every box in centimetres."));return;}
+    if((n>=m||n>=a)&&!warned){
+      warned=true;
+      msg.appendChild(el("div","note bad","<b>Check the middle one.</b> The sun is highest in the middle of the day, so that shadow should be the shortest of the three. Measure it again if you can. If you really did measure it that way, press the button again and the record will stand exactly as you took it."));
+      b.textContent="These are my measurements. Enter them.";
+      return;
+    }
+    S.data.shadow={height:h,m:m,n:n,a:a};
+    mark("measure","Measuring shadows outside",true,m+" cm, "+n+" cm, "+a+" cm","");
+    msg.appendChild(el("div","note","<b>Recorded.</b> Morning "+m+" cm, middle of the day "+n+" cm, afternoon "+a+" cm. That is your data now, not Colin's. Nobody else in the world has it."));
+    b.remove();done();
+  };
+}});
+
+page({id:"p8",chap:"Numbers",time:"afternoon",build:function(c,done){
+  var d=S.data.shadow||{height:120,m:180,n:60,a:200};
+  c.appendChild(el("h2",null,"Turning your measurements into a graph"));
+  where(c,"These are the three shadow measurements you took outside. Before they can go on a column graph you have to explain them, and then decide how the numbers up the side of the graph will run.");
+  c.appendChild(record("The Keeper's own measurements.","<p>Object: "+d.height+" cm tall. Morning shadow "+d.m+" cm. Middle of the day shadow "+d.n+" cm. Afternoon shadow "+d.a+" cm.</p>"));
+  var max=Math.max(d.m,d.n,d.a),stp,scaleOpts;
+  if(max<=30){stp=5;scaleOpts=[{t:"Count up in 5s",ok:true},{t:"Count up in 100s",ok:false,why:"Every column would be squashed flat at the bottom."},{t:"0, 5, 10, 30, 50",ok:false,why:"Those gaps are not equal, so the columns would be the wrong sizes compared with each other."}];}
+  else if(max<=120){stp=10;scaleOpts=[{t:"Count up in 10s",ok:true},{t:"Count up in 1s",ok:false,why:"That is more than a hundred lines. Nobody could read it."},{t:"0, 10, 20, 60, 100",ok:false,why:"Those gaps are not equal, so the columns would be the wrong sizes compared with each other."}];}
+  else{stp=50;scaleOpts=[{t:"Count up in 50s",ok:true},{t:"Count up in 2s",ok:false,why:"Far too many lines for numbers this big."},{t:"0, 50, 100, 300, 400",ok:false,why:"Those gaps are not equal, so the columns would be the wrong sizes compared with each other."}];}
+  var t2=el("div");
+  choice(c,{
+    id:"why",label:"Why the midday shadow is shortest",
+    q:"Colin wants to know why the middle-of-the-day measurement came out so different from the other two. What do you tell him?",
+    opts:[
+      {t:"The sun was higher in the sky, so the light came down closer to straight overhead and the shadow was thrown less far along the ground.",ok:true},
+      {t:"The sun was closer to the earth in the middle of the day.",ok:false,why:"You ruled on this already. What changes is the angle, not the distance."},
+      {t:"The object shrank in the heat.",ok:false,why:"You measured it. It did not."}
+    ],
+    why:"The angle of the light explains all three of your measurements, and it is the same reason Stevenson's shadow shot up taller in the evening."
+  },function(){
+    c.appendChild(t2);
+    t2.appendChild(el("p",null,"Your largest measurement is "+max+" cm. Now choose the scale for the side of the graph."));
+    choice(t2,{
+      id:"scale",label:"Choosing a scale for your own graph",
+      q:"Which scale suits your measurements?",
+      opts:scaleOpts,
+      why:"A scale has to do two things: fit the largest number on, and keep every gap the same size. Remember that second rule. It comes back on the next page."
+    },function(){
+      var g=el("div");
+      g.innerHTML=columnGraph([{label:"Morning",value:d.m},{label:"Midday",value:d.n},{label:"Afternoon",value:d.a}],{title:"Shadow length across one day (cm)",step:stp});
+      t2.appendChild(g);
+      t2.appendChild(el("p",null,"Three measurements you took yourself, drawn to a scale you chose."));
+      done();
+    });
+  });
+}});
+
+page({id:"p9",chap:"Numbers",time:"afternoon",build:function(c,done){
+  c.appendChild(el("h2",null,"Colin's graph of the bird feeder"));
+  where(c,"Colin counted the birds at the feeder every day for a week and drew this graph. He is very pleased with it. Mary says something is wrong but cannot say what. Look carefully at the numbers running up the left-hand side.");
+  var ys=[0,2,4,10,12],ypx=[240,200,160,120,80],svg='<svg viewBox="0 0 500 280" width="100%">';
+  for(var i=0;i<ys.length;i++){
+    svg+='<line class="gl" x1="60" y1="'+ypx[i]+'" x2="470" y2="'+ypx[i]+'"/><text x="52" y="'+(ypx[i]+4)+'" text-anchor="end">'+ys[i]+'</text>';
+  }
+  [["Mon",200],["Tue",104],["Wed",200],["Thu",80],["Fri",145]].forEach(function(dd,ix){
+    var x=72+ix*80;
+    svg+='<rect x="'+x+'" y="'+dd[1]+'" width="46" height="'+(240-dd[1])+'" fill="'+(ix%2?"#6f8f6a":"#e0a93b")+'"/><text x="'+(x+23)+'" y="262" text-anchor="middle">'+dd[0]+'</text>';
+  });
+  svg+='<line class="ax" x1="60" y1="60" x2="60" y2="240"/><line class="ax" x1="60" y1="240" x2="470" y2="240"/><text x="265" y="22" text-anchor="middle" font-size="15">Birds at the feeder</text></svg>';
+  c.appendChild(record("Colin's graph.",svg));
+  var t2=el("div");
+  choice(c,{
+    id:"scalefault",label:"Spotting an uneven scale",
+    q:"What is wrong with this graph?",
+    opts:[
+      {t:"The numbers up the side do not go up in equal steps, so the columns are the wrong sizes compared with each other.",ok:true},
+      {t:"It has no title.",ok:false,why:"It has one, along the top."},
+      {t:"It should have been a dot plot.",ok:false,why:"A column graph is a sensible choice for counts across five days."},
+      {t:"The days are in the wrong order.",ok:false,why:"Monday to Friday. That is the order."}
+    ],
+    why:"His scale runs 0, 2, 4, 10, 12. The jump from 4 to 10 is six birds, but he has drawn it the same height as the jump from 2 to 4, which is only two birds."
+  },function(){
+    c.appendChild(t2);
+    t2.appendChild(said("Colin","colin","Does it really matter? The tall columns are still the tall ones."));
+    choice(t2,{
+      id:"scalewhy",label:"Why an uneven scale misleads",
+      q:"Does it matter? Tell Colin why it does.",
+      opts:[
+        {t:"Yes. On an uneven scale the heights lie about the numbers, so Tuesday looks almost as busy as Thursday when it was well behind.",ok:true},
+        {t:"No. As long as the numbers are written on the side, the graph is fine.",ok:false,why:"Then why draw a graph at all? The whole point is to see the sizes at a glance."},
+        {t:"Yes, but only because it looks untidy.",ok:false,why:"It is not about neatness. The graph gives a false picture."}
+      ],
+      why:"A graph is a picture of numbers. If the gaps are uneven the picture tells a lie, even when every number written on it is correct."
+    },done);
+  });
+}});
+
+page({id:"p10",chap:"Numbers",time:"afternoon",build:function(c,done){
+  c.appendChild(el("h2",null,"Colin counts the flowers"));
+  where(c,"Colin counted four kinds of flower in the walled garden and put them on a dot plot, with the names spread out along a number line. Remember that there are two kinds of data: numerical data, which is counted or measured, and categorical data, which comes in kinds rather than amounts.");
+  var svg='<svg viewBox="0 0 500 200" width="100%"><text x="250" y="22" text-anchor="middle" font-size="15">Flowers in the walled garden</text>';
+  svg+='<line x1="40" y1="150" x2="460" y2="150" stroke="#16231c" stroke-width="1.5"/><polygon points="34,150 46,145 46,155" fill="#16231c"/><polygon points="466,150 454,145 454,155" fill="#16231c"/>';
+  ["rose","daisy","fern","ivy"].forEach(function(l,ix){
+    var x=100+ix*95,counts=[4,2,3,1];
+    svg+='<line x1="'+x+'" y1="145" x2="'+x+'" y2="155" stroke="#16231c"/><text x="'+x+'" y="172" text-anchor="middle">'+l+'</text>';
+    for(var k=0;k<counts[ix];k++)svg+='<circle cx="'+x+'" cy="'+(132-k*20)+'" r="7" fill="#e0a93b"/>';
+  });
+  svg+='</svg>';
+  c.appendChild(record("Colin's dot plot.",svg));
+  var t2=el("div");
+  choice(c,{
+    id:"datatype",label:"Numerical or categorical",
+    q:"First, what kind of data is 'rose, daisy, fern, ivy'?",
+    opts:[
+      {t:"Categorical. They are kinds of flower, not amounts.",ok:true},
+      {t:"Numerical. He counted them, so they must be numbers.",ok:false,why:"He counted how many of each, and those counts are numerical. But the flower names themselves are kinds."}
+    ],
+    why:"The counts are numerical. The flower names are categorical. A graph has to handle both of them correctly."
+  },function(){
+    c.appendChild(t2);
+    choice(t2,{
+      id:"catfault",label:"Why categories cannot go on a number line",
+      q:"So what has Colin done wrong?",
+      opts:[
+        {t:"He has put categories along a number line. A number line has an order and equal gaps, and flower names have neither.",ok:true},
+        {t:"He counted the flowers wrongly.",ok:false,why:"You cannot tell that from the page. Look at what kind of data it is."},
+        {t:"He should have counted more kinds of flower.",ok:false,why:"Four kinds is plenty. The problem is what he has done with them."}
+      ],
+      why:"Nothing sits halfway between a rose and a daisy, so the space between them on his line means nothing at all."
+    },function(){
+      var t3=el("div");t2.appendChild(t3);
+      choice(t3,{
+        id:"catfix",label:"Choosing the right graph for categories",
+        q:"What should he draw instead?",
+        opts:[
+          {t:"A column graph, with one separate column for each kind of flower.",ok:true},
+          {t:"A line graph joining rose to daisy to fern to ivy.",ok:false,why:"A line between them would mean one was slowly turning into the other."},
+          {t:"Nothing. Categorical data cannot be graphed.",ok:false,why:"It certainly can. It just needs the right kind of graph."}
+        ],
+        why:"Separate columns, with gaps between them. The gaps are the point: they say these are different kinds, not different amounts of one thing."
+      },done);
+    });
+  });
+}});
+
+page({id:"p11",chap:"Numbers",time:"dusk",build:function(c,done){
+  c.appendChild(el("h2",null,"The temperature table"));
+  where(c,"Colin took the temperature at noon every day and kept a tally. A tally is grouped in fives: four upright marks with a fifth drawn across them. The frequency column says how many times each temperature happened. The total says how many days he recorded altogether. Two numbers in his table are wrong.");
+  c.appendChild(record("Colin's frequency table.",
+    '<table class="grid"><tr><th>Temperature</th><th>Tally</th><th>Frequency</th></tr>'+
+    '<tr><td>17&deg;</td><td class="tallies">||</td><td>2</td></tr>'+
+    '<tr><td>18&deg;</td><td class="tallies">||||</td><td>4</td></tr>'+
+    '<tr><td>19&deg;</td><td class="tallies"><span style="text-decoration:line-through">||||</span> |</td><td>5</td></tr>'+
+    '<tr><td>20&deg;</td><td class="tallies">||||</td><td>4</td></tr>'+
+    '<tr><th>Total</th><td></td><th>17</th></tr></table>'));
+  c.appendChild(said("Colin","colin","I am quite certain of the total. It was a fortnight. Fourteen days, or possibly seventeen."));
+  c.appendChild(said("Mary","mary","You cannot remember a total. You add it up. Count his marks yourself, Keeper."));
+  c.appendChild(el("p","q","Count the tally marks and write in what the two numbers should be."));
+  var r1=el("div","field");r1.appendChild(el("label",null,"Frequency for 19 degrees"));
+  var i1=document.createElement("input");i1.type="number";i1.inputMode="numeric";r1.appendChild(i1);
+  var r2=el("div","field");r2.appendChild(el("label",null,"The total number of days"));
+  var i2=document.createElement("input");i2.type="number";i2.inputMode="numeric";r2.appendChild(i2);
+  c.appendChild(r1);c.appendChild(r2);
+  var out=el("div"),b=el("button","act","Correct the table"),first=true;
+  c.appendChild(out);c.appendChild(b);
+  b.onclick=function(){
+    var a=Number(i1.value),t=Number(i2.value),ok=(a===6&&t===16);
+    out.innerHTML="";
+    if(first)mark("freqtable","Correcting the frequency table",ok,"19 degrees = "+(i1.value||"blank")+", total = "+(i2.value||"blank"),"19 degrees = 6, total = 16");
+    first=false;
+    if(ok){
+      out.appendChild(el("div","note","<b>Corrected.</b> A group of five with one more beside it makes six at 19 degrees, not five. And 2 + 4 + 6 + 4 comes to 16. Notice that Colin's total of 17 did not even match his own frequency column, which adds up to 15. That is the thing Mary could feel but could not name: a table that disagrees with itself. So it was sixteen days, not a fortnight."));
+      b.remove();done();
+    }else{
+      out.appendChild(el("div","note bad","<b>Not right yet.</b> "+(a!==6?"Count the marks in the 19 degrees row again. There is a group of five with the fifth drawn across it, and then one more standing on its own.":"Add the four numbers in the frequency column together, using your corrected number for 19 degrees.")));
+    }
+  };
+}});
+
+page({id:"p12",chap:"Words",time:"dusk",build:function(c,done){
+  c.appendChild(el("h2",null,"The last entry"));
+  where(c,"Evening. Every ruling is made and the record is nearly closed. Colin has asked for one last entry, and it has to be written by you.");
+  c.appendChild(said("Colin","colin",["Write down what my first morning outside was like. I was there, and I still cannot find the words for it.","Use at least three of the sphere words. And do the thing you decided on the very first page: use one of them for something I could touch, and use one of them figuratively, for something I could not touch."]));
+  var ta=document.createElement("textarea");
+  ta.placeholder="The first morning Colin came out of the house...";
+  if(S.data.entry)ta.value=S.data.entry;
+  c.appendChild(ta);
+  var wc=el("p","wordcount","");
+  c.appendChild(wc);
+  var WORDS=["biosphere","atmosphere","stratosphere","lithosphere","hydrosphere","sphere","hemisphere","spherical","geosphere","cryosphere","exosphere","thermosphere","biospheric","microsphere","spheroid"];
+  var picker=el("div","field");
+  picker.appendChild(el("label",null,"Which word did you use figuratively?"));
+  var sel=document.createElement("select");
+  picker.appendChild(sel);
+  c.appendChild(picker);
+  var out=el("div"),b=el("button","act","Seal the record");
+  c.appendChild(out);c.appendChild(b);
+  function used(){var t=ta.value.toLowerCase();return WORDS.filter(function(w){return new RegExp("\\b"+w+"\\b").test(t);});}
+  function refresh(){
+    var n=ta.value.trim().split(/\s+/).filter(Boolean).length,u=used();
+    wc.textContent=n+" words written. "+u.length+" sphere word"+(u.length===1?"":"s")+" used. You need at least 50 words and 3 sphere words.";
+    var keep=sel.value;
+    sel.innerHTML='<option value="">choose one</option>';
+    u.forEach(function(w){var o=document.createElement("option");o.value=w;o.textContent=w;sel.appendChild(o);});
+    sel.value=keep;
+    b.disabled=!(n>=50&&u.length>=3);
+  }
+  ta.oninput=refresh;refresh();
+  b.onclick=function(){
+    if(!sel.value){out.innerHTML="";out.appendChild(el("div","note bad","<b>One thing missing.</b> Choose which of your sphere words you used figuratively."));return;}
+    S.data.entry=ta.value;S.data.fig=sel.value;
+    mark("entry","Writing the last entry",true,"","");
+    out.innerHTML="";
+    out.appendChild(el("div","note","<b>Sealed.</b> Colin has written you a letter in return."));
+    b.remove();done();
+  };
+}});
+
+/* ============================ closing ============================ */
+function closing(){
+  stage.innerHTML="";
+  document.body.setAttribute("data-time","dusk");
+  chapline.innerHTML="The record is closed<b>Misselthwaite</b>";
+  backBtn.disabled=false;
+  backBtn.onclick=function(){S.p=PAGES.length-1;render();};
+
+  var c=card("Colin's letter");
+  var l=el("div","letter");
+  l.innerHTML=
+    "<p>To the Keeper of the Record.</p>"+
+    "<p>You decided that a word can mean a thing I can touch and a thing I cannot, and that the second meaning grew out of the first. So my atmosphere of happiness stays in the book.</p>"+
+    "<p>You found the two wrong definitions in my glossary, and you told me the lithosphere is only the outside of the earth.</p>"+
+    "<p>You decided that the poet was right about my shadow stretching, right about it lying short at midday although he exaggerated, right about what he saw when he called it a coward but wrong about why, and exactly right about the morning before sunrise. No light, no shadow.</p>"+
+    "<p>Then you went outside and measured, which is more than I did.</p>"+
+    "<p>You found the uneven scale on my bird graph, and the flowers I had strung along a number line, and the total I had remembered instead of adding up.</p>"+
+    "<p>I have been outside for eight days now. I am beginning to think that seeing a thing and recording a thing are two different pieces of work, and that the second one is harder.</p>"+
+    "<p class='sig'>Colin Craven</p>";
+  c.appendChild(l);
+  stage.appendChild(c);
+
+  var c2=card("Your entry");
+  var box=el("div","record");
+  box.appendChild(el("p","cap","The first morning Colin came out of the house."));
+  var p=document.createElement("p");p.style.whiteSpace="pre-wrap";p.textContent=S.data.entry||"";
+  box.appendChild(p);
+  box.appendChild(el("p","cap","Used figuratively: "+(S.data.fig||"")));
+  c2.appendChild(box);
+  if(S.data.shadow){
+    var d=S.data.shadow;
+    c2.appendChild(el("p",null,"Shadow measurements: object "+d.height+" cm tall, morning "+d.m+" cm, midday "+d.n+" cm, afternoon "+d.a+" cm."));
+  }
+  var ids=Object.keys(S.audit);
+  var right=ids.filter(function(k){return S.audit[k].ok;}).length;
+  c2.appendChild(el("p",null,"Rulings made without a second try: "+right+" of "+ids.length+"."));
+  var pb=el("button","act ghost","Print this page");
+  pb.onclick=function(){window.print();};
+  c2.appendChild(pb);
+  stage.appendChild(c2);
+
+  var c3=card("The full audit");
+  c3.appendChild(el("p",null,"Every ruling of the day, in order, showing what was chosen first and what was correct. Written for a grown-up to read over."));
+  var showBtn=el("button","act ghost","Show the audit");
+  c3.appendChild(showBtn);
+  showBtn.onclick=function(){
+    showBtn.remove();
+    var a=el("div","audit");
+    ids.forEach(function(k){
+      var r=S.audit[k],row=el("div","row");
+      row.appendChild(el("div","mk "+(r.ok?"y":"n"),r.ok?"&#10003;":"&#10007;"));
+      var t=el("div");
+      t.appendChild(el("div",null,r.label));
+      if(!r.ok){
+        t.appendChild(el("div","det","Chose first: "+(r.chose||"(nothing)")));
+        if(r.right)t.appendChild(el("div","det","Correct: "+r.right));
+      }
+      row.appendChild(t);a.appendChild(row);
+    });
+    c3.appendChild(a);
+  };
+  stage.appendChild(c3);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ============================ runner ============================ */
+for(var z=0;z<12;z++)tokbox.appendChild(el("div","tok"));
+function paintTokens(){
+  for(var i=0;i<12;i++)tokbox.children[i].className="tok"+(S.done[PAGES[i].id]?" on":"");
+}
+function render(){
+  var pg=PAGES[S.p];
+  stage.innerHTML="";
+  document.body.setAttribute("data-time",pg.time);
+  chapline.innerHTML="Page "+(S.p+1)+" of 12<b>"+pg.chap+"</b>";
+  backBtn.disabled=S.p===0;
+  backBtn.onclick=function(){if(S.p>0){S.p--;render();}};
+  paintTokens();
+  var c=card(null);
+  stage.appendChild(c);
+  var already=!!S.done[pg.id],shown=false;
+  function forward(scroll){
+    if(shown)return;
+    shown=true;
+    var holder=el("div");
+    stage.appendChild(holder);
+    var b=el("button","act",S.p===PAGES.length-1?"Close the record":"Next page");
+    b.onclick=function(){
+      if(S.p===PAGES.length-1){closing();return;}
+      S.p++;render();
+    };
+    holder.appendChild(b);
+    if(scroll&&b.scrollIntoView)b.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+  pg.build(c,function(){
+    S.done[pg.id]=true;paintTokens();
+    forward(true);
+  });
+  if(already)forward(false);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("beginBtn").onclick=function(){
+  document.getElementById("title").style.display="none";
+  document.getElementById("frame").style.display="block";
+  render();
+};
+})();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>

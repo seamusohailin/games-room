@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sofia's Map of Mexico</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: a travelling map-maker's table. Sofia's map is always on the left, the story and challenge on the right; stacks on narrow screens. */
+:root{
+  --sky:#E3F4F2; --paper:#FFFFFF; --paper-2:#FFF6E3; --ink:#2A1F3D; --ink-soft:#5B5170; --line:#CBE2DF;
+  --rosa:#D6246E; --turq:#0E8C95; --maize:#F2B01E; --chile:#C2412D; --jade:#1F8A4C; --clay:#9B5B34;
+  --sea:#9ED8E2; --sea-deep:#6FC1D1; --land:#F4EBDD; --land-line:#C9B9A2; --mex:#FFFDF8;
+  --desert:#F4D03F; --highland:#C9A27A; --tropical:#1E6B3A;
+  --ok:#1F8A4C; --bad:#C2412D;
+  --display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
+  --body:"Lexend","Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{background:var(--sky);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--rosa);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-block:0 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.3rem,7vw,4.2rem);line-height:1;color:var(--rosa)}
+h2{font-size:clamp(1.5rem,3.4vw,2rem);line-height:1.1}
+h3{font-size:1.25rem;line-height:1.2}
+p{margin:0}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--turq)}
+
+/* papel picado banner */
+.picado{display:flex;gap:6px;justify-content:center;padding-top:6px;position:relative;overflow:hidden}
+.picado::before{content:"";position:absolute;left:0;right:0;top:6px;height:2px;background:var(--ink-soft);opacity:.35}
+.picado span{flex:0 0 auto;width:clamp(34px,6vw,58px);height:clamp(40px,7vw,66px);margin-top:6px;
+  clip-path:polygon(0 0,100% 0,100% 82%,87.5% 100%,75% 82%,62.5% 100%,50% 82%,37.5% 100%,25% 82%,12.5% 100%,0 82%);
+  -webkit-mask:radial-gradient(circle at 50% 42%,transparent 0 5px,#000 5.5px) ,radial-gradient(circle at 25% 22%,transparent 0 3px,#000 3.5px);
+  -webkit-mask-composite:source-in;mask-composite:intersect;
+  animation:sway 4s ease-in-out infinite;transform-origin:50% 0}
+.picado span:nth-child(5n+1){background:var(--rosa)}
+.picado span:nth-child(5n+2){background:var(--maize)}
+.picado span:nth-child(5n+3){background:var(--turq)}
+.picado span:nth-child(5n+4){background:var(--jade)}
+.picado span:nth-child(5n+5){background:var(--chile)}
+.picado span:nth-child(odd){animation-delay:-2s}
+@keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+
+/* screens */
+.screen[hidden]{display:none!important}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 0 10px}
+.topbar .brand{font-family:var(--display);font-size:1.35rem;color:var(--rosa)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--paper);border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:600;font-size:.9rem;font-variant-numeric:tabular-nums}
+.chip svg{width:18px;height:18px}
+.btn{border:0;border-radius:14px;padding:12px 20px;font-weight:700;background:var(--rosa);color:#fff;box-shadow:0 4px 0 #9c1450;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #9c1450}
+.btn.alt{background:var(--paper);color:var(--ink);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+.btn.turq{background:var(--turq);box-shadow:0 4px 0 #075e64}
+.link{background:none;border:0;padding:4px 0;text-decoration:underline;text-underline-offset:3px;color:var(--ink-soft);font-weight:500}
+
+/* title */
+.title{display:grid;grid-template-columns:1.05fr 1fr;gap:28px;align-items:center;padding-top:22px}
+.title .lede{font-size:1.12rem;max-width:34em;margin-top:14px;color:var(--ink-soft)}
+.title .cast{display:flex;gap:10px;margin:18px 0 22px;flex-wrap:wrap}
+.cast figure{margin:0;text-align:center;font-size:.8rem;font-weight:600;color:var(--ink-soft)}
+.cast figure svg{width:64px;height:64px;display:block;margin-bottom:2px}
+.title .actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.mapcard{background:var(--paper);border-radius:22px;padding:10px;box-shadow:0 10px 0 rgba(14,140,149,.15);border:3px solid var(--ink)}
+.mapcard svg{display:block;width:100%;height:auto;border-radius:14px}
+
+/* hub */
+.hub{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;align-items:start}
+.stops{display:grid;gap:10px;list-style:none;margin:0;padding:0}
+.stop{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;background:var(--paper);border:2px solid var(--line);border-radius:16px;padding:10px 12px;text-align:left;width:100%}
+.stop:hover{border-color:var(--turq)}
+.stop .num{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:1.4rem;color:#fff}
+.stop .t{font-weight:700;line-height:1.25}
+.stop .s{font-size:.86rem;color:var(--ink-soft);line-height:1.35}
+.stamp{width:46px;height:46px}
+.stop.done{background:var(--paper-2)}
+.hub-side{display:grid;gap:14px}
+.hub-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* stop screen */
+.stage{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;align-items:start}
+.stage .mapcard{position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px)}
+.maphint{font-size:.85rem;color:var(--ink-soft);padding:6px 6px 0;min-height:1.5em}
+.panel{background:var(--paper);border-radius:22px;border:3px solid var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.progress{display:flex;gap:6px}
+.progress i{flex:1;height:8px;border-radius:9px;background:var(--line)}
+.progress i.on{background:var(--maize)}
+.progress i.now{background:var(--rosa)}
+
+.say{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start}
+.say svg{width:72px;height:72px}
+.bubble{background:var(--paper-2);border-radius:16px;padding:12px 14px;position:relative;min-width:0}
+.bubble::before{content:"";position:absolute;left:-9px;top:22px;border:9px solid transparent;border-left:0;border-right-color:var(--paper-2)}
+.bubble .who{font-weight:700;font-size:.85rem;color:var(--rosa);display:block;margin-bottom:2px}
+.narr{font-style:italic;color:var(--ink-soft);background:var(--sky);border-radius:14px;padding:12px 14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+
+.q{font-weight:600;font-size:1.05rem}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:10px 14px;font-weight:500}
+.opt:hover{border-color:var(--turq)}
+.opt.sel{border-color:var(--turq);background:#E6F6F7}
+.opt.ok{border-color:var(--ok);background:#E5F4EA}
+.opt.bad{border-color:var(--bad);background:#FBE9E5}
+.opt[disabled]{cursor:default}
+.feedback{border-radius:14px;padding:10px 14px;font-size:.95rem}
+.feedback.ok{background:#E5F4EA;border-left:6px solid var(--ok)}
+.feedback.bad{background:#FBE9E5;border-left:6px solid var(--bad)}
+.feedback.info{background:#E6F6F7;border-left:6px solid var(--turq)}
+
+.cards{display:flex;flex-wrap:wrap;gap:8px}
+.card{background:var(--paper);border:2px dashed var(--clay);border-radius:12px;padding:8px 12px;font-weight:600;font-size:.95rem}
+.card.sel{border-style:solid;border-color:var(--rosa);background:#FDE8F1;transform:translateY(-2px)}
+.card.gone{display:none}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.bin{border:2px solid var(--line);border-radius:16px;padding:10px;background:var(--sky);text-align:left;min-height:84px;display:flex;flex-direction:column;gap:6px}
+.bin b{font-family:var(--display);font-weight:400;font-size:1.1rem}
+.bin small{color:var(--ink-soft);font-size:.78rem;line-height:1.3}
+.bin .in{display:flex;flex-wrap:wrap;gap:4px}
+.bin .in span{font-size:.75rem;background:var(--paper);border-radius:8px;padding:2px 7px;font-weight:600}
+.bin.armed{border-color:var(--rosa);background:#FDF2F7}
+
+.tf{display:grid;gap:8px}
+.tfrow{background:var(--paper-2);border-radius:14px;padding:10px 12px;display:grid;gap:8px}
+.tfrow .btns{display:flex;gap:8px}
+.tfrow .btns button{flex:1;border-radius:12px;border:2px solid var(--line);background:var(--paper);padding:8px;font-weight:700}
+.tfrow.answered .btns button{opacity:.55}
+.tfrow .btns button.ok{border-color:var(--ok);background:#E5F4EA;opacity:1}
+.tfrow .btns button.bad{border-color:var(--bad);background:#FBE9E5;opacity:1}
+
+.crayons{display:flex;gap:10px;flex-wrap:wrap}
+.crayon{display:flex;align-items:center;gap:8px;border:2px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 14px 6px 6px;font-weight:600}
+.crayon i{width:28px;height:28px;border-radius:50%;display:block;border:2px solid rgba(0,0,0,.15)}
+.crayon.sel{border-color:var(--ink);box-shadow:0 0 0 3px var(--maize)}
+
+.note{background:var(--paper-2);border:2px solid var(--maize);border-radius:16px;padding:14px 16px;display:grid;gap:6px}
+.note h3{color:var(--clay)}
+.note ul{margin:0;padding-left:1.1em}
+
+/* notebook + finish + parent */
+.sheet{background:var(--paper);border-radius:22px;border:3px solid var(--ink);padding:22px;display:grid;gap:16px}
+.sheet .notes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+textarea{width:100%;min-height:150px;border:2px solid var(--line);border-radius:14px;padding:12px;font:inherit;background:var(--paper-2);color:var(--ink);resize:vertical}
+.cert{text-align:center;display:grid;gap:10px;justify-items:center;padding:8px}
+.cert .seal{width:110px;height:110px}
+.checklist{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.checklist label{display:flex;gap:10px;align-items:flex-start}
+.checklist input{width:22px;height:22px;margin-top:2px;accent-color:var(--jade);flex:0 0 auto}
+.parent dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
+.parent dt{font-weight:700}
+.parent dd{margin:0}
+.parent p+p{margin-top:8px}
+
+/* map svg */
+.m-label{font-family:var(--body);font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round;fill:var(--ink)}
+.m-sea{font-family:var(--body);font-style:italic;font-weight:600;fill:#1f5f6e;paint-order:stroke;stroke:rgba(255,255,255,.7);stroke-width:4px}
+.hit{fill:none;stroke:transparent;cursor:pointer;pointer-events:stroke}
+.hitfill{fill:transparent;cursor:pointer}
+.zone{cursor:pointer}
+.pulse{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+.slot{cursor:pointer}
+.slot circle{fill:var(--maize);stroke:var(--ink);stroke-width:3}
+.slot.armed circle{fill:var(--rosa)}
+.flash-ok{animation:flashok .9s ease}
+@keyframes flashok{0%{filter:drop-shadow(0 0 0 var(--ok))}40%{filter:drop-shadow(0 0 8px var(--ok))}}
+
+@media (max-width:860px){
+  .title,.hub,.stage{grid-template-columns:1fr}
+  .stage .mapcard{position:static}
+}
+@media (max-width:480px){
+  body{font-size:16px}
+  .say{grid-template-columns:52px 1fr}
+  .say svg{width:52px;height:52px}
+  .panel,.sheet{padding:14px}
+  .parent dl{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="picado" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+<div class="wrap">
+
+  <!-- TITLE -->
+  <section class="screen" id="s-title">
+    <div class="title">
+      <div>
+        <p class="eyebrow">Exploring North America · Lesson 6</p>
+        <h1>Sofia's Map of Mexico</h1>
+        <p class="lede">Travel with Sofia from a busy market in Oaxaca, up into the mountains, to Mexico City and down to the sea. Help her finish her map of the Land of Mountains and Markets, one piece at a time.</p>
+        <div class="cast" id="cast"></div>
+        <div class="actions">
+          <button class="btn" id="b-start">Start the journey</button>
+          <button class="link" id="b-parent">For grown-ups</button>
+        </div>
+      </div>
+      <div class="mapcard" id="title-map"></div>
+    </div>
+  </section>
+
+  <!-- HUB -->
+  <section class="screen" id="s-hub" hidden>
+    <div class="topbar">
+      <span class="brand">Sofia's Map of Mexico</span>
+      <div class="chips" id="hub-chips"></div>
+    </div>
+    <div class="hub">
+      <div class="mapcard"><div id="hub-map"></div><p class="maphint" id="hub-hint"></p></div>
+      <div class="hub-side">
+        <div>
+          <h2>The journey</h2>
+          <p style="color:var(--ink-soft);margin-top:4px">Seven stops. Each one adds a piece to the map. Go in order, or pick the one you like.</p>
+        </div>
+        <ol class="stops" id="stops"></ol>
+        <div class="hub-actions">
+          <button class="btn alt" id="b-notebook">Sofia's notebook</button>
+          <button class="btn alt" id="b-finish" hidden>The finished map</button>
+          <button class="link" id="b-title">Title page</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STOP -->
+  <section class="screen" id="s-stop" hidden>
+    <div class="topbar">
+      <button class="link" id="b-back">‹ Back to the journey</button>
+      <div class="chips" id="stop-chips"></div>
+    </div>
+    <div class="stage">
+      <div class="mapcard"><div id="stop-map"></div><p class="maphint" id="stop-hint"></p></div>
+      <div class="panel" id="panel"></div>
+    </div>
+  </section>
+
+  <!-- NOTEBOOK -->
+  <section class="screen" id="s-notebook" hidden>
+    <div class="topbar"><button class="link" data-go="hub">‹ Back to the journey</button></div>
+    <div class="sheet">
+      <div><p class="eyebrow">Geography notebook</p><h2>Sofia's notebook</h2>
+      <p style="color:var(--ink-soft);margin-top:4px">A map note is added each time you finish a stop. Use these to help with your narration and your paper map.</p></div>
+      <div class="notes" id="notes"></div>
+    </div>
+  </section>
+
+  <!-- FINISH -->
+  <section class="screen" id="s-finish" hidden>
+    <div class="topbar"><button class="link" data-go="hub">‹ Back to the journey</button><div class="chips" id="fin-chips"></div></div>
+    <div class="stage">
+      <div class="mapcard"><div id="fin-map"></div></div>
+      <div class="sheet">
+        <div class="cert">
+          <svg class="seal" viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="52" fill="#F2B01E"/><circle cx="55" cy="55" r="44" fill="none" stroke="#2A1F3D" stroke-width="3" stroke-dasharray="4 5"/><path d="M28 70 L44 44 L54 58 L64 40 L82 70 Z" fill="#9B5B34"/><path d="M60 46 L64 40 L68 46 Z" fill="#fff"/><circle cx="55" cy="30" r="6" fill="#D6246E"/></svg>
+          <p class="eyebrow">Map finished</p>
+          <h2>Map-maker of Mexico</h2>
+          <p id="fin-line" style="color:var(--ink-soft)"></p>
+        </div>
+        <div>
+          <h3>Write Sofia's postcard</h3>
+          <p style="color:var(--ink-soft);margin:4px 0 8px">Write a postcard from Sofia to a friend in Australia about one day of her trip: the market, the mountains, the city or the sea. Tell it so your friend can see it.</p>
+          <label for="postcard" class="eyebrow">Postcard</label>
+          <textarea id="postcard" placeholder="Querida amiga, today Abuela and I…"></textarea>
+          <p style="font-size:.85rem;color:var(--ink-soft);margin-top:4px">Your postcard stays on this device. Copy it into your geography notebook when it's done.</p>
+        </div>
+        <div>
+          <h3>Now make the map by hand</h3>
+          <p style="color:var(--ink-soft);margin:4px 0 8px">Mapwork from page 26, on the blank North America map (page 37):</p>
+          <ul class="checklist" id="mapwork"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARENT -->
+  <section class="screen" id="s-parent" hidden>
+    <div class="topbar"><button class="link" data-go="title">‹ Back</button></div>
+    <div class="sheet parent">
+      <div><p class="eyebrow">For grown-ups</p><h2>Start over</h2></div>
+      <p>This clears the map pieces, feathers and postcard saved on this device.</p>
+      <div class="row"><button class="btn alt" id="b-reset">Start over (clears progress on this device)</button><span id="reset-msg" style="font-size:.9rem;color:var(--ink-soft)"></span></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const D = {"W":1000,"H":720,"shapes":{"mex":"M38.8,63.2L47.5,62.5L56.2,61.7L65.0,60.9L73.7,60.1L82.4,59.3L91.1,58.6L99.9,57.8L108.6,57L112.1,56.6L110.1,62.1L108.7,64.1L123.2,69.5L137.5,74.8L152.0,80.1L166.5,85.4L181.0,90.8L195.4,96.1L209.9,101.4L224.3,106.6L235.1,106.6L245.9,106.6L256.6,106.6L267.5,106.6L278.2,106.6L289.0,106.5L299.8,106.5L310.5,106.4L310.5,102.5L310.6,98.4L310.6,94.4L310.6,90.4L317.3,90.4L324.0,90.5L330.7,90.5L337.4,90.5L344.1,90.6L350.8,90.6L357.5,90.7L364.2,90.7L364.5,90.8L364.7,90.9L367.5,94.0L370.2,98.8L373.5,102.2L377.4,104.0L383.7,109.6L392.8,118.9L400.2,125.0L405.6,128.1L409.2,130.8L411.0,133.0L413.6,137.8L418.3,148.9L418.3,153.9L420.0,158.7L423.7,164.9L426.9,168.6L429.5,169.7L432.4,171.9L435.6,175.1L439.4,177.3L443.5,178.5L449.2,181.4L456.6,186.2L461.6,188.6L464.4,188.7L466.8,187.2L468.8,184.0L470.9,182.0L472.8,181.1L473.6,179.6L473.3,177.6L474.6,173.1L477.7,166.1L481.3,162.3L485.5,161.7L488.2,160.4L489.5,158.3L491.8,158.1L495.0,159.7L500.3,160.8L507.5,161.3L511.8,161.1L513.1,160.3L513.8,160.4L513.9,161.2L515.0,161.6L517.1,161.4L518.9,162.7L521.2,166.4L529.3,172.5L530.0,174.7L532.8,177.6L537.9,182.2L540.9,186.2L541.5,189.6L544.2,194.8L548.8,202.1L550.9,205.9L550.3,206.5L550.8,208.5L552.0,212.0L554.3,215.0L557.6,217.4L561.0,221.7L564.4,227.9L568.4,232.6L573.3,235.9L576.0,238.9L576.7,241.7L576.7,244.0L575.9,246.0L576.2,247.9L577.5,249.7L578.0,251.8L577.5,254.9L577.5,255.8L578.0,256.4L582.3,261.6L584.5,265.9L586.2,272.5L586.2,272.5L588.2,276.6L591.0,278.2L595.3,278.8L598.6,280.2L600.8,282.4L603.7,283.7L607.2,284.1L610.5,285.5L613.5,288.0L619.5,289.6L628.0,290.3L634.5,292.3L639.0,295.4L641.0,296.1L641.5,296.1L641.8,295.7L642.1,294.8L643.8,293.7L648.0,293.1L647.5,300.1L645.6,305.8L639.6,317.7L636.9,325.0L632.1,346.0L630.6,359.7L630.2,366.1L629.8,367.0L630.2,368.0L629.1,382.1L629.7,394.2L629.4,396.0L627.5,399.7L626.3,404.7L626.8,406.9L626.7,408.5L628.6,416.1L629.1,421.8L634.6,431.6L637.7,435.0L641.4,437.9L642.9,439.6L642.2,443.7L640.7,445.8L640.0,449.2L639.2,446.4L639.5,442.9L640.7,440.9L640.8,439.5L638.5,438.0L634.4,433.1L629.5,424.4L633.0,438.3L634.2,440.5L635.2,441.4L636.7,442.4L637.1,443.9L637.1,445.0L641.5,454.7L646.5,464.6L646.8,467.3L648.8,470.6L661.3,484.5L669.0,494.8L671.7,504.6L673.4,507.7L674.1,511.9L679.2,516.5L680.7,519.5L683.4,521.2L685.5,526.3L689.7,529.2L688.7,529.3L685.1,527.8L685.3,528.8L688.4,530.9L694.3,532.9L695.8,532.9L693.5,531.9L691.5,530.4L692.1,530.2L696.3,532.0L707.8,532.6L713.0,536.8L719.6,538.6L723.1,543.9L727.3,549.5L729.9,549.8L732.0,549.8L738.1,548.8L747.8,545.3L751.1,543.6L757.6,541.3L767.4,540.8L770.5,541.5L777.9,540.1L781.5,538.3L782.7,536.7L783.2,535.4L790.0,533.8L791.5,533.4L798.4,533.1L801.8,532.5L805.6,532.1L808.5,534.6L808.5,535.8L806.6,537.0L807.5,538.1L810.9,540.0L817.0,540.7L819.1,540.5L822.0,537.7L827.0,535.0L826.9,532.0L825.9,530.2L824.5,530.1L824.2,529.2L825.2,526.9L824.9,526.2L821.8,528.3L821.1,528.3L821.4,527.3L822.1,526.5L831.2,521.7L833.6,519.8L836.7,518.0L843.3,511.6L844.7,499.3L846.0,497.2L850.4,493.4L850.8,492.3L851.2,489.8L851.1,483.4L851.3,478.3L851.1,472.5L851.8,467.4L852.6,465.9L855.1,457.7L860.3,454.1L869.3,449.8L871.4,449.1L900.0,444.5L904.1,443.4L909.0,440.4L912.6,439.4L919.2,439.5L921.2,439.1L921.6,438.7L921.6,438.3L922.8,437.9L926.6,438.3L933.7,440.1L936.3,440.5L942.7,442.6L949.6,443.4L950.7,443.1L951.6,442.5L952.3,441.2L951.6,440.2L950.9,440.2L949.7,440.8L948.3,440.9L945.6,440.0L946.1,439.3L948.9,439.3L950.7,439.0L953.4,437.7L956.2,438.6L960.1,442.9L962.7,444.3L962.9,450.4L963.3,451.5L964.2,453.1L962.9,457.9L961.5,461.8L959.6,465.0L955.6,470.1L950.6,474.1L944.5,483.1L943.0,487.3L943.1,490.6L944.1,493.9L943.8,495.1L943.1,496.3L941.8,496.2L939.4,497.8L936.3,502.4L936.2,503.8L937.7,505.1L939.4,504.5L941.7,504.4L943.0,504.0L944.4,504.1L944.0,506.8L942.6,508.6L941.7,509.2L940.1,509.5L938.2,510.6L937.2,511.6L937.3,514.6L938.3,514.8L940.5,512.6L941.8,512.7L942.1,513.7L939.2,521.5L937.4,529.5L934.9,534.0L934.0,540.8L932.8,543.6L931.3,546.5L930.4,546.3L928.1,541.0L925.6,539.6L925.1,538.3L926.5,531.7L925.8,528.1L924.6,528.3L923.0,530.2L920.9,532.0L920.9,534.5L918.5,538.6L917.8,540.0L915.5,539.6L912.7,539.8L910.9,540.8L908.9,545.8L904.2,552.8L902.2,556.2L900.7,557.4L899.5,557.8L898.0,557.0L894.9,555.1L892.2,556.1L891.3,558.2L891.5,561.0L885.0,561.0L874.1,561.0L860.3,561.0L846.9,561.0L835.7,561.0L835.7,567.2L835.6,572.8L835.6,579.0L829.4,578.9L822.9,578.9L823.4,579.5L825.6,580.7L828.6,583.5L832.0,587.8L836.1,591.3L841.0,593.8L844.1,596.4L845.7,598.8L846.6,600.9L846.6,602.7L848.3,604.0L851.5,604.9L853.1,606.5L853.1,607.7L852.2,610.6L851.8,613.7L852.3,616.6L850.0,616.6L844.4,616.6L836.0,616.6L828.2,616.6L822.1,616.6L812.9,616.6L810.3,621.0L806.2,628.3L802.3,634.8L799.1,640.4L798.6,641.8L798.6,643.0L802.6,648.2L801.9,649.6L800.5,650.5L800.0,651.7L800.1,653.6L799.1,656.2L799.5,658.0L800.0,660.3L799.1,662.2L798.5,664.0L797.7,664.9L796.8,664.1L788.7,655.5L780.2,646.1L776.9,643.1L773.7,640.7L769.3,636.4L757.9,626.8L752.0,622.4L746.5,617.2L741.5,614.2L736.6,612.4L734.4,611.3L732.5,609.8L731.4,609.7L730.9,611.7L732.6,612.6L734.7,613.5L736.3,613.5L738.0,614.2L743.1,616.9L743.8,618.3L729.6,612.9L723.7,612.4L723.1,611.6L726.0,608.8L725.1,607.9L724.1,607.7L721.0,609.6L719.8,609.7L719.6,608.5L719.7,607.3L717.7,605.5L716.5,605.6L715.4,606.8L712.7,609.1L712.8,610.1L718.1,611.0L719.9,611.6L719.6,612.2L715.0,612.2L709.4,613.3L699.3,619.6L689.8,622.4L676.4,628.6L670.5,628.9L667.3,629.9L658.3,627.5L646.8,621.7L629.5,619.9L617.7,612.3L606.1,609.2L598.7,601.9L594.2,601.6L591.4,600.4L580.8,597.8L570.4,596.0L560.2,589.6L553.5,587.6L547.8,585.0L535.2,580.7L530.5,578.3L526.0,574.5L518.7,570.7L515.6,567.4L512.1,566.2L507.2,560.2L504.7,557.6L502.5,556.4L500.2,555.9L493.4,556.4L483.4,553.8L478.7,553.1L469.0,549.1L456.0,544.6L451.8,539.6L448.3,534.8L441.7,528.4L437.6,525.8L430.6,522.6L426.6,520.0L420.6,518.0L410.4,512.9L407.2,508.6L405.2,504.8L399.9,500.1L393.8,491.4L392.3,488.1L391.2,483.2L389.8,480.3L388.1,478.1L389.0,476.5L391.9,474.4L397.0,474.0L400.6,471.8L401.1,470.0L400.8,468.9L398.5,466.1L395.7,465.4L393.5,465.3L392.9,464.3L394.6,463.2L396.6,460.5L399.3,457.2L401.3,454.2L401.7,449.9L401.4,445.6L402.2,442.0L395.4,437.8L394.6,436.0L392.5,431.2L388.8,425.7L388.9,414.5L384.4,404.6L379.8,399.7L377.4,397.9L370.9,390.2L365.8,385.8L360.8,377.4L355.8,372.0L349.5,363.0L345.0,358.5L324.2,343.3L325.4,343.3L331.5,347L332.5,346.7L332.7,344.9L331.9,342.7L330.8,342.2L329.2,342.6L327.0,342.2L325.9,341.5L322.7,341.0L318.5,338.5L316.8,335.8L316.7,332.8L310.7,326.4L308.5,322.8L309.6,323.1L311.2,324.5L312.8,324.9L314.7,324.9L316.0,324.3L315.6,323.3L314.2,322.4L305.7,319.0L302.8,316.6L295.8,312.6L294.2,311.2L293.1,307.4L291.3,307.2L289.9,308.3L285.7,309.4L284.6,308.1L284.5,307.0L287.5,305.7L290.1,302.1L290.1,300.8L288.6,302.3L286.4,303.9L284.1,304.8L280.5,305.5L278.8,305.0L277.3,304.2L274.8,301.0L273.6,290.7L275.8,287.1L278.4,283.5L280.5,281.4L281.8,283.0L283.1,283.2L282.1,281.4L280.0,279.7L279.2,278.0L279.1,276.4L278.1,273.6L271.9,267.6L265.9,268.0L263.5,267.9L261.3,265.6L259.5,261.7L258.5,258.4L258.4,256.7L257.8,255.0L247.6,252.1L244.5,249.7L241.6,246.7L240.3,244.2L239.1,242.2L238.1,239.0L237.3,235.3L238.5,230.4L239.9,228.0L232.9,226.2L230.3,226.2L228.0,227.1L226.0,225.9L221.9,224.4L217.0,219.3L211.2,210.0L204.9,207.0L202.8,203.8L200.2,200.9L198.0,197.2L197.6,195.7L196.9,194.8L193.7,192.2L190.2,187.9L189.2,184.5L188.3,179.2L185.9,177.3L183.6,176.5L183.1,174.0L183.3,172.5L182.5,169.9L177.7,163.5L175.2,158.2L173.9,156.5L172.7,154.1L172.0,149.2L170.0,143.0L166.1,135.6L162.9,130.6L161.2,125.5L162.0,120.4L161.5,117.3L161.0,116.5L161.3,115.5L162.4,116.0L163.3,115.1L163.2,111.8L162.1,110.8L158.9,109.8L157.6,109.1L149.9,107.7L145.7,105.9L145.3,101.5L143.2,99.6L141.5,98.3L135.8,95.8L134.8,97.1L134.0,99.5L131.7,100.0L129.6,100.1L126.1,98.4L117.4,92.0L115.6,91.0L112.8,90.4L111.5,89.4L105.7,86.0L106.9,87.8L108.6,89.7L110.1,95.1L108.3,99.0L107.2,112.6L108.4,115.4L111.0,119.7L112.7,126.6L113.3,131.6L114.8,135.7L114.4,145.2L114.9,148.1L117.3,152.8L121.8,157.2L122.8,159.6L128.6,162.9L132.3,167.3L139.4,173.3L141.6,175.8L148.0,185.0L148.2,187.8L149.4,191.2L153.0,190.5L154.7,193.0L154.4,194.2L154.9,195.1L156.7,195.0L158.4,195.6L161.8,205.6L163.7,207.0L166.0,207.6L168.6,208.6L168.7,211.2L168.6,213.2L170.9,216.2L170.5,220.1L172.3,223.5L172.0,226.8L172.8,229.3L178.3,235.1L185.1,239.7L186.5,245.8L189.3,251.3L192.1,252.7L195.0,255.0L194.6,257.4L194.8,258.8L198.7,263.1L199.3,268.7L202.6,272.3L203.6,272.5L204.3,272.0L201.8,268.4L200.8,266.0L200.5,262.3L201.4,261.8L208.2,267.7L209.0,272.1L211.3,274.6L211.4,277.9L212.8,279.9L213.3,282.8L215.5,287.5L215.6,294.1L216.7,298.9L221.1,306.2L224.6,307.8L225.2,311.4L228.8,320.7L233.0,325.7L235.1,330.0L235.4,332.6L233.9,336.6L233.7,339.3L236.0,347.6L239.4,351.9L243.2,352.9L243.9,353.5L243.6,354.7L244.9,355.7L246.3,354.4L247.1,352.5L246.3,350.4L246.2,348.8L246.9,347.7L248.1,347.5L255.4,353.2L256.6,355.4L259.4,357.9L261.9,361.1L262.9,363.5L265.0,365.6L265.9,370.3L271.0,372.4L273.7,376.4L274.0,378.8L272.6,385.2L271.4,387.0L267.4,389.7L264.4,392.9L261.4,394.8L258.5,396.0L256.0,395.8L253.4,392.1L250.6,381.0L248.6,378.6L247.3,375.1L245.1,372.2L236.9,367.8L232.8,363.1L228.7,360.1L224.5,355.5L212.8,348.0L208.0,344.2L204.8,340.4L202.7,340.5L201.2,340.9L200.5,339.8L200.4,337.9L199.8,336.6L193.0,330.9L191.5,327.7L191.2,324.1L192.7,314.6L193.4,309.1L193.0,306.2L192.3,305.8L191.6,304.3L191.4,299.7L189.8,294.7L183.6,284.5L179.1,282.5L175.1,281.0L164.0,271.9L161.0,267.4L160.3,264.8L159.9,259.5L158.4,262.6L156.3,264.8L151.7,264.7L146.4,267.2L143.2,264.8L141.6,262.1L139.0,258.9L136.1,258.2L134.2,258.1L130.8,254.0L128.0,252.8L124.0,252.3L120.5,250.2L119.5,248.0L119.0,244.8L117.7,242.9L112.3,239.2L108.0,235.1L103.8,232.4L102.6,230.2L102.5,228.7L109.0,229.2L116.8,230.8L120.5,230.3L122.8,228.8L125.0,227.7L125.3,228.9L124.9,231.1L127.1,233.1L130.0,234.7L132.0,234.5L130.1,232.8L128.8,229.2L129.3,227.8L129.3,226.1L126.4,226.5L126.0,225.6L128.5,222.9L131.3,215.7L132.7,208.6L129.7,202.4L124.7,198.0L113.9,185.3L107.5,178.8L105.6,176.4L103.8,175.2L98.6,173.7L94.2,170.0L86.4,164.9L83.1,162.2L80.8,155.8L79.0,155.0L79.6,150.6L78.8,142.9L77.5,140.9L73.3,139.0L72.3,133.7L72.1,128.7L71.2,125.2L64.1,119.2L63.8,116.4L63.8,113.7L63.0,111.0L59.2,105.3L54.6,100.4L53.0,98.1L52.8,93.3L51.2,92.0L51.8,91.7L53.2,91.8L54.1,91.2L54.2,87.8L47.3,82.6L45.3,75.3L41.6,71.5L40.7,70.1ZM959.2,480.8L957.5,481.8L956.8,478.2L958.0,474.7L959.5,472.7L962.6,472.5L964.6,471.8L964.8,472.7L963.1,475.4ZM362.8,438.1L361.9,440.8L359.6,439.7L358.7,438.0L358.6,435.2L359.8,434.7L361.7,435.9L362.1,436.7ZM228.2,531.3L226.3,532.0L223.7,530.0L224.3,528.4L225.9,527.4L227.4,529.3ZM238.8,325.4L239.7,329.2L238.1,328.6L236.1,326.6L234.7,324.0L234.8,322.8L235.1,322.6L238.0,324.1ZM159.9,186.8L159.7,187.4L156.5,185.3L149.5,177.9L147.0,174.2L146.5,172.5L146.8,168.6L149.2,169.1L151.9,171.6L153.2,174.1L153.2,176.8L158.5,178.1L159.3,184.0ZM98.5,220.9L98.0,222.0L92.9,219.7L95.7,215.7L95.3,211.5L96.6,210.6L97.7,211.9L99.1,217.4ZM188.9,188.4L186.6,196.6L184.3,196.5L179.5,193.9L178.9,192.3L180.8,182.8L182.2,181.5L186.5,180.2L187.1,181.4L187.6,184.2ZM4.8,190.7L3.5,192.0L0.0,184.7L0.0,183.0L1.0,182.1L2.6,182.2L2.6,184.1L4.1,185.6L4.6,187.1ZM966.1,450.2L966.5,451.8L966.1,451.6L965.3,450.4L964.9,448.9L965.3,448.9L965.6,449.4ZM814.5,533.4L811.1,534.1L810.5,533.4L817.4,530.1L818.6,530.2L819.0,530.7L815.4,532.2ZM262.0,354.0L261.3,354.1L259.8,352.3L259.1,348.0L259.5,347.5L262.4,352.9L262.3,353.6ZM112.9,93.0L112.0,93.2L110.1,91.5L110.2,90.0L110.6,89.9L112.5,91.2L113.2,92.3ZM222.6,291.1L222.9,292.3L222.7,292.6L221.5,291.8L219.4,296.9L218.8,297.3L220.1,290.4L221.4,289.4L222.8,289.2ZM204.3,345.9L203.9,347.5L194.7,341.2L196.9,340.6L199.4,341.1ZM193.4,340.8L192.7,341.2L190.1,337.3L189.8,334.6L188.7,333.5L186.0,332.6L188.3,327.2L190.2,315.9L191.1,318.0L189.1,329.4L189.2,330.9L190.1,332.3L191.2,334.6L191.3,337.2L193.1,339.5Z","usa":"M1005,156.0L1003.0,154.4L997.7,149.3L999.2,149.5L999.7,148.4L998.0,146.9L998.8,145.3L999.9,143.5L997.7,143.7L995.7,145.0L995.6,146.5L995.3,147.7L994.2,147.5L992.2,146.1L982.4,141.9L974.0,139.5L980.5,138.4L984.0,139.3L983.7,138.0L982.8,137.2L979.9,136.2L976.4,136.6L974.1,136.1L971.8,137.1L969.4,138.6L967.1,139.4L958.3,140.5L951.2,141.6L952.4,140.4L953.6,139.6L957.7,138.4L958.4,135.9L957.4,133.5L956.3,134.0L955.1,135.9L953.7,134.6L952.1,134.6L951.7,137.6L949.6,139.6L948.7,141.6L942.8,143.2L942.1,142.7L943.8,140.8L943.7,139.7L941.6,140.6L938.3,144.3L926.7,145.4L927.2,144.6L929.8,144.5L933.3,143.3L932.5,141.3L931.2,139.2L930.0,139.0L929.1,137.7L929.2,133.8L928.4,131.4L926.5,129.0L925.8,129.5L924.5,133.6L923.3,138.9L922.7,140.7L919.2,140.8L916.1,140.4L905.7,141.1L901.9,139.2L900.2,138.9L899.2,138.9L894.7,140.6L889.5,141.9L888.3,141.5L886.5,141.4L882.8,145.7L878.4,147.8L867.2,144.1L864.5,141.2L862.0,140.6L859.0,140.2L855.8,143.8L853.3,148.6L857.2,151.3L860.5,152.6L866.0,151.5L869.1,149.2L871.6,149.2L872.8,148.7L873.9,147.5L876.0,148.5L876.1,149.5L874.6,150.8L872.7,152.0L871.5,153.3L873.7,156.1L877.1,157.0L878.4,156.6L879.2,153.5L881.2,151.6L884.1,152.0L883.8,153.2L884.1,154.4L885.4,156.4L885.3,159.3L885.5,159.9L882.5,161.1L880.1,161.6L878.3,163.3L879.3,164.2L877.4,165.0L876.2,164.7L875.5,165.0L875.3,166.0L874.3,167.0L875.8,169.8L878.6,171.6L880.7,173.9L888.8,177.0L890.8,176.9L892.8,179.9L894.3,181.0L895.8,181.5L895.7,183.6L893.0,185.2L892.2,187.0L891.6,188.1L890.4,186.7L889.1,185.8L886.3,188.7L884.9,189.3L885.5,186.2L884.4,185.0L882.8,181.8L880.5,179.9L878.7,179.3L877.4,178.1L875.9,177.6L874.4,177.7L872.1,177.0L872.0,175.3L871.4,174.1L869.6,172.6L861.1,169.9L860.9,171.0L861.6,171.9L862.8,172.4L864.2,173.6L864.2,176.8L863.6,178.2L863.4,180.2L862.8,182.3L861.7,183.9L859.4,185.0L858.3,184.1L856.7,179.7L854.2,178.3L850.5,178.2L848.0,179.2L845.2,183.4L842.9,184.1L835.3,181.9L826.5,178.5L826.7,177.5L828.1,177.1L830.8,177.5L830.6,176.4L827.9,172.7L827.5,170.9L827.8,168.9L826.9,168.9L825.3,170.6L819.7,169.2L818.1,167.5L814.8,162.5L810.2,162.4L808.1,159.4L804.3,160.6L802.4,162.0L800.8,164.1L801.5,165.3L803.1,167.1L802.3,167.9L797.0,169.2L784.4,167.7L780.7,166.4L775.9,163.6L769.1,161.4L765.8,161.0L762.6,161.4L753.2,161.7L751.1,162.3L749.2,163.3L748.0,162.2L747.5,160.3L748.6,160.0L749.8,158.8L750.9,156.6L751.0,155.3L750.2,154.4L748.8,154.3L745.6,160.1L747.3,163.3L747.2,164.5L740.9,165.2L726.4,171.7L720.8,175.2L721.0,174.1L727.8,169.5L725.5,168.8L721.5,169.9L720.1,169.5L721.8,165.7L721.3,162.4L718.5,162.3L716.7,164.9L715.5,164.9L714.0,163.7L712.8,164.1L713.6,170.0L715.4,172.5L716.8,175.7L712.9,179.6L709.1,182.8L708.8,185.9L705.1,189.9L701.6,192.2L693.5,197.5L691.0,198.6L687.4,201.2L682.3,203.0L677.4,205.9L675.8,206.4L678.9,203.9L682.6,201.4L679.4,201.8L674.6,200.6L671.5,200.6L671.5,201.5L669.2,202.7L666.9,200.9L665.9,199.6L665.4,198.5L664.4,198.3L663.4,198.8L666.9,206.4L668.4,206.7L670.1,207.5L668.0,209.2L665.8,210.6L662.3,211.5L659.3,208.7L658.7,212.2L658.3,215.7L657.3,216.6L655.7,217.9L654.9,216.9L654.5,215.6L653.5,216.8L652.0,217.7L649.5,217.8L647.7,218.3L647.7,219.8L648.1,221.2L651.4,220.1L650.2,223.8L647.2,227.5L644.7,228.3L641.0,227.8L640.1,228.1L639.2,228.9L643.6,234.7L640.9,243.3L639.0,246.4L637.8,246.8L636.5,247.0L631.7,244.2L629.0,242.0L631.3,247.8L637.7,249.6L638.0,251.8L637.9,253.6L636.7,255.9L635.5,258.8L636.4,260.9L637.4,265.9L638.2,268.2L639.1,275.3L640.2,278.3L645.9,289.4L647.9,289.6L648.1,290.7L648.0,293.1L643.8,293.7L642.1,294.8L641.8,295.7L641.5,296.1L641.0,296.1L639.0,295.4L634.5,292.3L628.0,290.3L619.5,289.6L613.5,288.0L610.5,285.5L607.2,284.1L603.7,283.7L600.8,282.4L598.6,280.2L595.3,278.8L591.0,278.2L588.2,276.6L586.2,272.5L586.2,272.5L584.5,265.9L582.3,261.6L578.0,256.4L577.5,255.8L577.5,254.9L578.0,251.8L577.5,249.7L576.2,247.9L575.9,246.0L576.7,244.0L576.7,241.7L576.0,238.9L573.3,235.9L568.4,232.6L564.4,227.9L561.0,221.7L557.6,217.4L554.3,215.0L552.0,212.0L550.8,208.5L550.3,206.5L550.9,205.9L548.8,202.1L544.2,194.8L541.5,189.6L540.9,186.2L537.9,182.2L532.8,177.6L530.0,174.7L529.3,172.5L521.2,166.4L518.9,162.7L517.1,161.4L515.0,161.6L513.9,161.2L513.8,160.4L513.1,160.3L511.8,161.1L507.5,161.3L500.3,160.8L495.0,159.7L491.8,158.1L489.5,158.3L488.2,160.4L485.5,161.7L481.3,162.3L477.7,166.1L474.6,173.1L473.3,177.6L473.6,179.6L472.8,181.1L470.9,182.0L468.8,184.0L466.8,187.2L464.4,188.7L461.6,188.6L456.6,186.2L449.2,181.4L443.5,178.5L439.4,177.3L435.6,175.1L432.4,171.9L429.5,169.7L426.9,168.6L423.7,164.9L420.0,158.7L418.3,153.9L418.3,148.9L413.6,137.8L411.0,133.0L409.2,130.8L405.6,128.1L400.2,125.0L392.8,118.9L383.7,109.6L377.4,104.0L373.5,102.2L370.2,98.8L367.5,94.0L364.7,90.9L364.5,90.8L364.2,90.7L357.5,90.7L350.8,90.6L344.1,90.6L337.4,90.5L330.7,90.5L324.0,90.5L317.3,90.4L310.6,90.4L310.6,94.4L310.6,98.4L310.5,102.5L310.5,106.4L299.8,106.5L289.0,106.5L278.2,106.6L267.5,106.6L256.6,106.6L245.9,106.6L235.1,106.6L224.3,106.6L209.9,101.4L195.4,96.1L181.0,90.8L166.5,85.4L152.0,80.1L137.5,74.8L123.2,69.5L108.7,64.1L110.1,62.1L112.1,56.6L108.6,57L99.9,57.8L91.1,58.6L82.4,59.3L73.7,60.1L65.0,60.9L56.2,61.7L47.5,62.5L38.8,63.2L38.8,63.0L38.5,59.0L37.1,57.6L35.2,58.5L34.5,53.3L34.9,50.9L34.7,48.5L32.9,42.7L28.4,35.5L18.7,26.7L13.6,23.7L9.8,19.9L7.3,18.9L4.2,18.6L3.2,20.3L-0.3,19.2L0.2,15.0L-3.3,9.1L-5,8.7L-5,-5L1005,-5ZM811.2,171.1L810.0,171.6L805.0,168.6L804.6,167.3L807.2,166.1L808.7,166.2L811.1,167.7L812.0,168.2L812.3,168.8L812.1,169.8ZM652.0,226.7L651.3,226.8L652.8,224.0L653.1,222.8L655.5,219.3L656.8,218.7L657.3,220.2L654.8,222.8ZM659.6,218.0L658.5,218.2L659.9,216.3L662.2,215.4L667.1,211.8L669.1,211.5L670.2,210.3L670.6,210.1L670.3,211.6L666.3,213.8ZM641.6,247.4L640.7,249.4L641.0,246.4L643.4,239.7L648.5,231.0L650.6,229.5L644.8,239.1ZM712.2,183.5L710.7,183.9L717.4,178.5L718.7,176.7L720.5,176.8L717.5,179.8ZM647.2,286.4L646.8,287.9L644.3,280.5L640.2,263.8L640.0,254.3L640.7,250.9L641.8,264.5L646.3,281.6ZM-5,45.2L-4.8,45.1L-3.3,47.7L0.6,51.8L1.5,52.5L1.5,52.5L-0.2,52.9L-2.2,52.2L-3.9,48.6L-5,47.1L-5,45.2ZM-5,29.2L-4.7,28.9L0.2,31.2L1.5,32.2L1.5,32.2L3.1,34.9L0.9,34.6L-1.4,34.8L-2.1,33.3L-2.8,31.2L-3.3,30.7L-4.8,30.5L-4.9,30.3L-5,30.1L-5,29.2ZM899.7,163.7L898.0,165.5L898.1,164.8L899.4,163.0L900.2,162.3ZM909.8,146.0L909.5,146.4L906.7,145.6L905.1,144.9L904.8,144.3L909.3,145.5ZM924.6,144.7L922.0,145.4L918.0,145.4L917.1,145.1L918.8,144.6L923.5,144.0ZM889.5,150.6L889.6,152.3L888.2,151.4L886.0,151.4L886.8,150.8L887.6,150.3L887.9,149.7L890.7,147.6L889.9,149.2ZM901.6,160.4L900.8,161.4L901.6,156.1L900.3,151.6L901.7,153.6L902.1,156.0Z","gtm":"M797.7,664.9L798.5,664.0L799.1,662.2L800.0,660.3L799.5,658.0L799.1,656.2L800.1,653.6L800.0,651.7L800.5,650.5L801.9,649.6L802.6,648.2L798.6,643.0L798.6,641.8L799.1,640.4L802.3,634.8L806.2,628.3L810.3,621.0L812.9,616.6L822.1,616.6L828.2,616.6L836.0,616.6L844.4,616.6L850.0,616.6L852.3,616.6L851.8,613.7L852.2,610.6L853.1,607.7L853.1,606.5L851.5,604.9L848.3,604.0L846.6,602.7L846.6,600.9L845.7,598.8L844.1,596.4L841.0,593.8L836.1,591.3L832.0,587.8L828.6,583.5L825.6,580.7L823.4,579.5L822.9,578.9L829.4,578.9L835.6,579.0L835.6,572.8L835.7,567.2L835.7,561.0L846.9,561.0L860.3,561.0L874.1,561.0L885.0,561.0L891.5,561.0L891.1,568.8L890.8,577.8L890.6,584.4L890.2,593.2L889.9,602.1L889.4,614.4L889.1,622.2L889.3,622.4L892.9,622.0L898.3,622.3L899.6,622.3L901.2,623.0L902.5,623.2L905.2,625.0L908.5,626.4L910.4,623.6L909.5,622.0L908.6,621.2L908.7,620.4L919.9,627.5L918.6,628.6L915.7,631.0L910.6,635.3L905.9,639.1L901.6,642.6L897.5,645.7L897.1,646.0L892.0,648.2L891.1,649.3L890.0,653.6L889.6,654.7L890.5,657.2L891.3,660.9L891.1,662.9L887.6,665.3L886.0,667.5L885.3,668.9L884.6,668.6L883.6,668.5L881.0,669.0L879.8,669.1L878.8,669.7L878.7,671.1L879.4,673.3L879.7,674.4L878.9,674.9L875.9,676.3L874.7,677.5L873.5,679.6L872.1,680.4L870.7,680.3L869.7,680.6L867.6,682.1L864.3,685.0L862.7,687.2L862.6,688.8L862.9,690.3L851.3,685.1L847.3,684.2L830.9,684.3L823.8,682.3L815.8,678.4L810.3,674.8Z","blz":"M891.5,561.0L891.3,558.2L892.2,556.1L894.9,555.1L898.0,557.0L899.5,557.8L900.7,557.4L902.2,556.2L904.2,552.8L908.9,545.8L910.9,540.8L912.7,539.8L915.5,539.6L917.8,540.0L916.1,543.6L917.8,544.1L919.3,543.7L922.8,543.9L924.3,547.8L923.8,551.2L920.5,560.0L920.1,563.1L918.6,567.6L920.6,570.6L918.7,574.6L918.0,577.1L917.9,580.9L918.9,588.2L917.2,598.7L914.5,603.3L912.7,605.1L909.7,609.6L905.6,611.0L900.0,618.3L899.0,620.3L899.6,622.3L898.3,622.3L892.9,622.0L889.3,622.4L889.1,622.2L889.4,614.4L889.9,602.1L890.2,593.2L890.6,584.4L890.8,577.8L891.1,568.8ZM928.3,557.5L926.9,558.1L928.1,556.2L928.2,555.1L930.0,550.1L931.1,550.2L931.4,550.6ZM931.3,573.6L929.0,578.0L928.8,576.8L929.8,573.4L931.1,572.3L932.0,571.1L932.2,569.6L933.3,570.3L932.9,571.7Z","hnd":"M1005,677.1L1003.7,678.6L1000.7,681.1L997.5,682.5L996.1,684.1L996.1,685.9L995.9,686.4L995.3,686.6L994.3,686.9L988.3,683.1L986.6,680.4L985.1,680.8L983.2,682.2L980.6,685.2L977.7,689.2L976.3,689.7L969.2,689.1L965.4,689.4L964.7,690.0L964.3,691.4L964.6,693.4L965.5,700.6L966.1,703.5L965.5,704.4L963.7,704.6L961.1,705.0L959.8,706.3L959.5,707.8L959.4,709.7L958.5,711.7L957.0,713.1L955.6,713.6L947.0,714.0L947.2,710.7L944.7,709.3L943.4,706.6L942.2,704.8L942.5,703.6L942.4,702.3L939.0,701.3L935.7,702.0L933.8,701.6L932.5,700.8L934.8,699.2L935.0,698.2L934.3,697.5L933.5,697.0L933.7,695.2L934.1,693.0L935.5,687.9L935.0,687.0L932.8,685.4L930.1,685.3L927.1,685.8L925.7,685.0L924.4,683.3L922.2,682.4L918.5,683.8L914.4,685.9L913.2,686.7L912.1,686.6L911.6,685.0L911.4,683.1L911.2,682.7L909.0,682L906.5,681.5L905.3,681.0L904.1,679.7L901.0,678.1L900.3,676.9L896.3,674.0L895.5,672.7L894.6,671.6L892.7,670.4L891.1,670.6L886.1,669.1L885.3,668.9L886.0,667.5L887.6,665.3L891.1,662.9L891.3,660.9L890.5,657.2L889.6,654.7L890.0,653.6L891.1,649.3L892.0,648.2L897.1,646.0L897.5,645.7L901.6,642.6L905.9,639.1L910.6,635.3L915.7,631.0L918.6,628.6L919.9,627.5L922.8,628.3L925.1,626.3L926.5,625.6L929.6,623.2L930.6,622.7L935.9,621.7L938.4,621.7L940.7,624.2L942.5,625.5L945.8,624.4L948.6,624.1L960.2,626.4L964.8,625.4L973.1,625.1L977.0,625.8L982.3,622.5L985.7,621.8L989.8,620.4L989.2,618.8L988.3,618.1L994.4,618.8L1003.5,622.1L1005,622.0L1005,677.1ZM975.0,606.9L970.1,609.3L968.6,609.3L970.8,607.4L974.4,605.7L977.5,604.9L980.0,605.3ZM991.8,604.2L989.5,606.0L989.0,605.2L990.1,603.5L991.6,602.6L992.9,602.6L992.5,603.4Z","slv":"M885.3,668.9L886.1,669.1L891.1,670.6L892.7,670.4L894.6,671.6L895.5,672.7L896.3,674.0L900.3,676.9L901.0,678.1L904.1,679.7L905.3,681.0L906.5,681.5L909.0,682L911.2,682.7L911.4,683.1L911.6,685.0L912.1,686.6L913.2,686.7L914.4,685.9L918.5,683.8L922.2,682.4L924.4,683.3L925.7,685.0L927.1,685.8L930.1,685.3L932.8,685.4L935.0,687.0L935.5,687.9L934.1,693.0L933.7,695.2L933.5,697.0L934.3,697.5L935.0,698.2L934.8,699.2L932.5,700.8L931.7,701.3L932.3,704.4L930.5,706.3L929.0,707.7L926.1,708.1L921.3,708.2L914.1,706.7L908.8,704.5L905.9,704.5L906.8,705.3L909.1,705.7L912.1,707.2L911.2,707.6L900.3,704.5L887.8,698.4L880.4,697.4L871.8,695.8L866.8,691.9L862.9,690.3L862.6,688.8L862.7,687.2L864.3,685.0L867.6,682.1L869.7,680.6L870.7,680.3L872.1,680.4L873.5,679.6L874.7,677.5L875.9,676.3L878.9,674.9L879.7,674.4L879.4,673.3L878.7,671.1L878.8,669.7L879.8,669.1L881.0,669.0L883.6,668.5L884.6,668.6Z","cub":"","nic":"M947.6,725L943.3,721.0L937.0,716.3L936.9,714.4L939.5,712.0L940.7,712.1L942.2,713.8L944.4,715.8L945.5,715.9L947.0,714.9L947.0,714.0L955.6,713.6L957.0,713.1L958.5,711.7L959.4,709.7L959.5,707.8L959.8,706.3L961.1,705.0L963.7,704.6L965.5,704.4L966.1,703.5L965.5,700.6L964.6,693.4L964.3,691.4L964.7,690.0L965.4,689.4L969.2,689.1L976.3,689.7L977.7,689.2L980.6,685.2L983.2,682.2L985.1,680.8L986.6,680.4L988.3,683.1L994.3,686.9L995.3,686.6L995.9,686.4L996.1,685.9L996.1,684.1L997.5,682.5L1000.7,681.1L1003.7,678.6L1005,677.1L1005,725Z"},"rivers":{"rioGrande":"M648,293.1L643.8,293.7L642.1,294.8L641.8,295.7L641.5,296.1L641,296.1L639,295.4L634.5,292.3L628,290.3L619.5,289.6L613.5,288L610.5,285.5L607.2,284.1L603.7,283.7L600.8,282.4L598.6,280.2L595.3,278.8L591,278.2L588.2,276.6L586.2,272.5L586.2,272.5L584.5,265.9L582.3,261.6L578,256.4L577.5,255.8L577.5,254.9L578,251.8L577.5,249.7L576.2,247.9L575.9,246L576.7,244L576.7,241.7L576,238.9L573.3,235.9L568.4,232.6L564.4,227.9L561,221.7L557.6,217.4L554.3,215L552,212L550.8,208.5L550.3,206.5L550.9,205.9L548.8,202.1L544.2,194.8L541.5,189.6L540.9,186.2L537.9,182.2L532.8,177.6L530,174.7L529.3,172.5L521.2,166.4L518.9,162.7L517.1,161.5L515,161.6L513.9,161.2L513.8,160.4L513.1,160.3L511.8,161.1L507.5,161.3L500.3,160.8L495,159.7L491.8,158.1L489.5,158.3L488.2,160.4L485.5,161.7L481.3,162.3L477.7,166.1L474.6,173.1L473.3,177.6L473.6,179.6L472.8,181.1L470.9,182L468.8,184L466.8,187.2L464.4,188.7L461.6,188.6L456.6,186.2L449.2,181.4L443.5,178.5L439.4,177.3L435.6,175.1L432.4,171.9L429.5,169.7L426.9,168.6L423.7,164.9L420,158.7L418.3,153.9L418.3,148.9L413.6,137.8L411,133L409.2,130.8L405.6,128.1L400.2,125L392.8,118.9L383.7,109.6L377.4,104L373.5,102.2L370.2,98.8L367.5,94L364.7,90.9L364.5,90.8L364.2,90.7","usumacinta":"M852.1,616.3L847,607.8L839.9,599.2L832.9,590.3L826.2,582.3L821.6,572.7L811,559.9L797.3,545.5L786,536.8","grijalva":"M800.3,639.4L788.1,620.4L775.9,604.6L770.7,595L760.7,583.9L766.8,571.1L776.5,555.7L780.5,545.5L784.8,536.5","balsas":"M614.3,521.3L600.6,540.7L585.4,553.5L568.6,556.7L548.8,550.3L533.5,543.9L515.2,545.5L501.5,551.9L493.9,556.7"},"ranges":{"occidental":"M292.7,121.8L317.1,188.6L344.5,247.4L378,312.1L408.5,372.4L432.9,425.3L442.1,458.1","oriental":"M487.8,202.5L524.4,271.4L551.8,315.4L570.1,365.7L582.3,418.7L606.7,464.6L640.2,516.5","sur":"M420.7,510L469.5,535.8L521.3,558.3L573.2,574.3L625,588.7L667.7,599.8L701.2,603"},"rangePts":{"occidental":[[298.8,139.5],[323.2,202.5],[350.6,257.7],[381.1,318.8],[411.6,379],[436,438.4]],"oriental":[[500,223.3],[533.5,285],[557.9,328.9],[576.2,385.7],[591.5,438.4],[622,484.1]],"sur":[[439,519.7],[490.9,545.5],[542.7,564.7],[594.5,580.7],[643.3,593.4],[686,601.4]]},"places":{"mexicoCity":[587.4,509],"oaxaca":[660.8,584.7],"popo":[603,522.2],"izta":[602.4,517.2],"teotihuacan":[596.2,500.6],"chapala":[467.4,483.5],"yucatan":[887.2,484.1],"altiplano":[469.5,312.1],"coast":[643.3,626.8]},"zones":{"highland":"M-48.8,-27.3L1048.8,-27.3L1048.8,775.7L-48.8,775.7Z","desert":"M-18.3,9.7L682.9,9.7L634.1,216.4L573.2,305.3L524.4,365.7L460.4,382.3L408.5,345.7L359.8,295.1L307.9,281.6L271.3,318.8L286.6,408.8L-18.3,441.7Z","tropical":"M591.5,315.4L615.9,288.4L667.7,281.6L926.8,325.5L1048.8,425.3L1048.8,744.6L347.6,744.6L341.5,451.5L338.4,392.3L277.4,305.3L311,295.1L350.6,339L400.9,389L420.7,458.1L448.2,503.6L530.5,522.9L573.2,531L618.9,534.2L641.8,516.5L631.1,477.6L603.7,438.4L588.4,385.7Z"},"labels":{"usa":[454.3,75.3],"gtm":[853.7,642.6],"blz":[907,579.1],"pacific":[240.9,587.1],"gulf":[774.4,339],"caribbean":[966.5,606.2]},"riverLabels":{"rioGrande":[524.4,127.1],"balsas":[533.5,531],"grijalva":[737.8,595],"usumacinta":[859.8,563.1]},"icons":{"cactus1":[210.4,167.6],"cactus2":[423.8,209.5],"cactus3":[146.3,237.1],"tree1":[804.9,612.5],"tree2":[847.6,542.3],"tree3":[713.4,567.9],"whale":[164.6,405.5],"pelican":[576.2,618.9],"jaguar":[823.2,590.3]}};
+D.labels.blz = [896, 566]; D.labels.caribbean = [962, 606];
+D.riverLabels.grijalva = [708, 626]; D.riverLabels.usumacinta = [852, 530]; D.icons.tree2 = [775, 612]; D.icons.tree3 = [730, 546];
+
+/* ---------- characters ---------- */
+const FACES = {
+  sofia:`<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="40" fill="#F7C6DA"/><path d="M18 44c0-17 9-27 22-27s22 10 22 27v6H18z" fill="#2B1B17"/><path d="M58 46c6 6 7 16 3 24" stroke="#2B1B17" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="61" cy="69" r="4" fill="#D6246E"/><circle cx="40" cy="45" r="17" fill="#C68A5E"/><path d="M23 40c4-10 12-14 22-12 6 1 11 6 12 11-10-1-20-3-26-8-2 4-5 7-8 9z" fill="#2B1B17"/><circle cx="34" cy="46" r="2.3" fill="#2A1F3D"/><circle cx="46" cy="46" r="2.3" fill="#2A1F3D"/><path d="M34 53q6 5 12 0" stroke="#2A1F3D" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="29" cy="51" r="2.6" fill="#E98A8A" opacity=".6"/><circle cx="51" cy="51" r="2.6" fill="#E98A8A" opacity=".6"/><path d="M52 26l6-4 1 7z" fill="#D6246E"/></svg>`,
+  abuela:`<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="40" fill="#A9E1E0"/><circle cx="40" cy="20" r="8" fill="#D9D4CF"/><path d="M14 80c2-14 12-20 26-20s24 6 26 20z" fill="#0E8C95"/><path d="M16 74h48M18 68h44" stroke="#F2B01E" stroke-width="3"/><circle cx="40" cy="42" r="17" fill="#B97D55"/><path d="M23 40c1-10 8-15 17-15s16 5 17 15c-6-5-12-7-17-7s-11 2-17 7z" fill="#D9D4CF"/><circle cx="33" cy="44" r="5" fill="none" stroke="#2A1F3D" stroke-width="1.8"/><circle cx="47" cy="44" r="5" fill="none" stroke="#2A1F3D" stroke-width="1.8"/><path d="M38 44h4" stroke="#2A1F3D" stroke-width="1.8"/><circle cx="33" cy="44" r="1.6" fill="#2A1F3D"/><circle cx="47" cy="44" r="1.6" fill="#2A1F3D"/><path d="M34 52q6 4 12 0" stroke="#2A1F3D" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  mateo:`<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="40" fill="#FBE0A0"/><path d="M16 80c2-13 11-19 24-19s22 6 24 19z" fill="#C2412D"/><circle cx="40" cy="43" r="17" fill="#A86F4A"/><path d="M22 40c0-12 8-18 18-18s18 6 18 18c-4-6-10-8-18-8s-14 2-18 8z" fill="#1E1210"/><path d="M30 31l4-6 3 6 4-6 3 6" stroke="#1E1210" stroke-width="3" fill="none"/><circle cx="34" cy="45" r="2.3" fill="#2A1F3D"/><circle cx="46" cy="45" r="2.3" fill="#2A1F3D"/><path d="M33 52q7 6 14 -1" stroke="#2A1F3D" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M44 40l5-2" stroke="#1E1210" stroke-width="2" stroke-linecap="round"/></svg>`,
+  pluma:`<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="40" fill="#CDEFD9"/><path d="M34 56c-6 8-14 14-26 18 10-1 20-5 28-12" fill="#17824A"/><path d="M38 58c-2 8-8 16-16 21 8-2 15-8 20-17" fill="#1E9E5A"/><ellipse cx="44" cy="44" rx="15" ry="18" fill="#1E9E5A"/><path d="M36 50c2 8 8 12 16 10 2-4 2-10 0-14z" fill="#D7263D"/><circle cx="48" cy="28" r="11" fill="#1E9E5A"/><path d="M42 18c2-6 8-8 12-6-2 2-3 4-3 7z" fill="#17824A"/><circle cx="51" cy="27" r="2.6" fill="#fff"/><circle cx="51.6" cy="27" r="1.5" fill="#2A1F3D"/><path d="M58 29l7 2-7 2z" fill="#F2B01E"/><path d="M34 40c4-4 10-4 14 0" stroke="#17824A" stroke-width="2" fill="none"/></svg>`
+};
+const NAMES = {sofia:'Sofia',abuela:'Abuela',mateo:'Cousin Mateo',pluma:'Pluma the quetzal'};
+
+const ICON_FEATHER = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 3C11 4 6 10 5 19l-2 2 1 1 2-2c9-1 15-6 16-15z" fill="#1E9E5A"/><path d="M6 18L17 7" stroke="#D7263D" stroke-width="1.6"/></svg>`;
+const ICON_STAMP = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" fill="#F2B01E"/><path d="M7 15l3-5 2 3 2-4 3 6z" fill="#9B5B34"/></svg>`;
+
+/* ---------- state ---------- */
+const KEY = 'sofia-map-mexico-v1';
+let S = {done:{}, feathers:0, postcard:'', mapwork:{}};
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+
+/* ---------- map ---------- */
+const STOP_COLOURS = ['#D6246E','#F2B01E','#0E8C95','#1F8A4C','#C2412D','#7A4FB5','#9B5B34'];
+const ZCOL = {desert:'var(--desert)', highland:'var(--highland)', tropical:'var(--tropical)'};
+const NEIGH = [
+  {id:'usa', name:'United States', kind:'land'},
+  {id:'gtm', name:'Guatemala', kind:'land'},
+  {id:'blz', name:'Belize', kind:'land'},
+  {id:'pacific', name:'Pacific Ocean', kind:'sea'},
+  {id:'gulf', name:'Gulf of Mexico', sub:'(Gulf of America)', kind:'sea'},
+  {id:'caribbean', name:'Caribbean Sea', kind:'sea'},
+];
+const RIVER_NAMES = {rioGrande:'Río Grande (Río Bravo)', balsas:'Balsas', grijalva:'Grijalva', usumacinta:'Usumacinta'};
+const RANGE_NAMES = {occidental:'Sierra Madre Occidental', oriental:'Sierra Madre Oriental', sur:'Sierra Madre del Sur'};
+
+function earnedLayers(){
+  const L = new Set();
+  if (S.done[1]) L.add('oaxaca');
+  if (S.done[2]) { L.add('ranges'); L.add('rangeLabels'); L.add('altiplano'); }
+  if (S.done[3]) { L.add('capital'); L.add('volcanoes'); L.add('teo'); }
+  if (S.done[4]) { L.add('rivers'); L.add('riverLabels'); L.add('chapala'); }
+  if (S.done[5]) L.add('zones');
+  if (S.done[6]) { L.add('yucatan'); L.add('wildlife'); }
+  if (S.done[7]) { L.add('neighbours'); L.add('mexname'); }
+  return L;
+}
+
+function rangeLabel(id){
+  const p = D.rangePts[id], a = p[0], b = p[p.length-1];
+  let ang = Math.atan2(b[1]-a[1], b[0]-a[0]) * 180/Math.PI;
+  const mx = (a[0]+b[0])/2, my = (a[1]+b[1])/2;
+  const off = id==='sur' ? 30 : id==='occidental' ? 30 : -22;
+  return `<g transform="translate(${mx},${my}) rotate(${ang.toFixed(1)}) translate(0,${off})"><text class="m-label" text-anchor="middle" font-size="19" fill="#6b3a1c">${RANGE_NAMES[id]}</text></g>`;
+}
+function peaks(id, col){
+  return D.rangePts[id].map(([x,y])=>`<path d="M${x-13},${y+9} L${x},${y-13} L${x+13},${y+9} Z" fill="${col}" stroke="#5b331a" stroke-width="1.5"/><path d="M${x-4},${y-6} L${x},${y-13} L${x+4},${y-6} Z" fill="#fff"/>`).join('');
+}
+function volcano(x,y,s=1){
+  return `<g transform="translate(${x},${y}) scale(${s})"><path d="M-14,8 L-4,-12 L4,-12 L14,8 Z" fill="#8a4b2a" stroke="#4a2614" stroke-width="1.5"/><path d="M-6,-8 L-4,-12 L4,-12 L6,-8 L2,-6 L0,-9 L-2,-6 Z" fill="#fff"/></g>`;
+}
+const ICONS = {
+  cactus:(x,y)=>`<g transform="translate(${x},${y})"><rect x="-4" y="-16" width="8" height="26" rx="4" fill="#2f8f4e"/><path d="M-4,-2 h-6 v-8" stroke="#2f8f4e" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M4,2 h6 v-9" stroke="#2f8f4e" stroke-width="5" fill="none" stroke-linecap="round"/></g>`,
+  tree:(x,y)=>`<g transform="translate(${x},${y})"><rect x="-2.5" y="-2" width="5" height="12" fill="#6b3a1c"/><ellipse cx="0" cy="-8" rx="14" ry="8" fill="#0f5a2c"/><ellipse cx="0" cy="-12" rx="9" ry="5" fill="#2f8f4e"/></g>`,
+  whale:(x,y)=>`<g transform="translate(${x},${y})"><ellipse cx="0" cy="0" rx="20" ry="9" fill="#2c5d8a"/><path d="M18,-2 L30,-10 L27,0 L30,8 Z" fill="#2c5d8a"/><circle cx="-11" cy="-2" r="1.6" fill="#fff"/><path d="M-6,-10 q-2,-8 -6,-8 M-6,-10 q2,-8 6,-8" stroke="#2c5d8a" stroke-width="2" fill="none"/></g>`,
+  pelican:(x,y)=>`<g transform="translate(${x},${y})"><path d="M-12,4 q10,-14 22,-4 q-8,8 -22,4z" fill="#f4f1ea" stroke="#5b5170" stroke-width="1.5"/><circle cx="10" cy="-6" r="4" fill="#f4f1ea" stroke="#5b5170" stroke-width="1.5"/><path d="M13,-6 L26,-2 L13,-2 Z" fill="#F2B01E"/></g>`,
+  jaguar:(x,y)=>`<g transform="translate(${x},${y})"><ellipse cx="0" cy="0" rx="15" ry="8" fill="#E9A23B"/><circle cx="15" cy="-5" r="6" fill="#E9A23B"/><circle cx="-6" cy="-2" r="2" fill="#4a2614"/><circle cx="2" cy="2" r="2" fill="#4a2614"/><circle cx="7" cy="-3" r="1.6" fill="#4a2614"/><path d="M-15,0 q-10,-2 -12,-10" stroke="#E9A23B" stroke-width="3" fill="none"/></g>`
+};
+
+let MAPN = 0;
+function buildMap(cfg={}){
+  const u = 'm'+(++MAPN);
+  const L = cfg.layers || earnedLayers();
+  const I = cfg.interactive || null;
+  const W = D.W, H = D.H, P = D.places;
+  const out = [];
+  out.push(`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Map of Mexico and its neighbours" xmlns="http://www.w3.org/2000/svg">`);
+  out.push(`<defs><clipPath id="${u}clip"><path d="${D.shapes.mex}"/></clipPath><pattern id="${u}waves" width="40" height="20" patternUnits="userSpaceOnUse"><path d="M0 12 q10 -8 20 0 t20 0" fill="none" stroke="#7fc9d6" stroke-width="2"/></pattern><pattern id="${u}hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#fffdf8"/><path d="M0 0v10" stroke="#e7dccb" stroke-width="3"/></pattern></defs>`);
+  out.push(`<rect width="${W}" height="${H}" fill="var(--sea)"/><rect width="${W}" height="${H}" fill="url(#${u}waves)" opacity=".55"/>`);
+  for (const k of ['usa','gtm','blz','hnd','slv','nic']) out.push(`<path d="${D.shapes[k]}" fill="var(--land)" stroke="var(--land-line)" stroke-width="1.5"/>`);
+  // Mexico base
+  const zoneMode = I && I.type==='zones';
+  out.push(`<path d="${D.shapes.mex}" fill="${zoneMode ? `url(#${u}hatch)` : 'var(--mex)'}"/>`);
+  // climate zones
+  if (L.has('zones') || zoneMode){
+    out.push(`<g clip-path="url(#${u}clip)">`);
+    for (const z of ['highland','desert','tropical']){
+      let fill, op = 1;
+      if (zoneMode){ const c = I.fills[z]; fill = c ? ZCOL[c] : 'transparent'; }
+      else { fill = ZCOL[z]; op = cfg.soft===false ? 1 : .55; }
+      const cls = zoneMode ? `class="zone" data-zone="${z}"` : '';
+      out.push(`<path ${cls} d="${D.zones[z]}" fill="${fill}" opacity="${op}" ${zoneMode?'stroke="#2A1F3D" stroke-width="2" stroke-dasharray="6 5"':''}/>`);
+    }
+    out.push(`</g>`);
+  }
+  out.push(`<path d="${D.shapes.mex}" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>`);
+  // rivers
+  const riverMode = I && I.type==='rivers';
+  if (L.has('rivers') || riverMode){
+    for (const [k,d] of Object.entries(D.rivers)){
+      const done = riverMode && I.found && I.found[k];
+      out.push(`<path d="${d}" fill="none" stroke="${done?'#0b5fa8':'#2d8fd5'}" stroke-width="${done?6:4.5}" stroke-linecap="round" stroke-linejoin="round"/>`);
+    }
+  }
+  if (L.has('chapala') || riverMode){
+    const [x,y] = P.chapala;
+    out.push(`<ellipse cx="${x}" cy="${y}" rx="14" ry="6" fill="#2d8fd5" stroke="#0b5fa8" stroke-width="2"/>`);
+  }
+  // ranges
+  const rangeMode = I && I.type==='ranges';
+  if (L.has('ranges') || rangeMode){
+    for (const k of Object.keys(D.ranges)){
+      const done = rangeMode && I.found && I.found[k];
+      out.push(peaks(k, done ? '#c0703f' : '#b98a62'));
+    }
+  }
+  // places
+  if (L.has('oaxaca') || cfg.showOaxaca){ const [x,y]=P.oaxaca; out.push(`<circle cx="${x}" cy="${y}" r="8" fill="var(--rosa)" stroke="#fff" stroke-width="3"/><text class="m-label" x="${x+12}" y="${y-10}" font-size="18">Oaxaca</text>`); }
+  if (L.has('volcanoes') || cfg.showVolcanoes){ out.push(volcano(P.izta[0]+20,P.izta[1]-14,1)+volcano(P.popo[0]+26,P.popo[1]+4,1.15)); }
+  if (L.has('teo')){ const [x,y]=P.teotihuacan; out.push(`<path d="M${x-9},${y-2} h18 l-3,-5 h-12 z M${x-6},${y-7} h12 l-3,-5 h-6 z" fill="#c2412d" transform="translate(-14,-6)"/>`); }
+  if (L.has('capital') || cfg.showCapital){ const [x,y]=P.mexicoCity; out.push(`<circle cx="${x}" cy="${y}" r="11" fill="#fff" stroke="var(--ink)" stroke-width="2.5"/><path d="M${x},${y-8} l2.4,5 5.4,.6 -4,3.7 1.1,5.3 -4.9,-2.7 -4.9,2.7 1.1,-5.3 -4,-3.7 5.4,-.6z" fill="var(--rosa)"/><text class="m-label" x="${x-16}" y="${y-14}" font-size="19" text-anchor="end">Mexico City</text>`); }
+  if (L.has('altiplano')){ const [x,y]=P.altiplano; out.push(`<text class="m-label" x="456" y="300" font-size="15" text-anchor="middle" font-style="italic" fill="#6b3a1c">Mexican Altiplano</text><text class="m-label" x="456" y="316" font-size="12" text-anchor="middle" fill="#6b3a1c">(high central plateau)</text>`); }
+  if (L.has('rangeLabels')) for (const k of Object.keys(D.ranges)) out.push(rangeLabel(k));
+  if (rangeMode && I.found) for (const k of Object.keys(I.found)) out.push(rangeLabel(k));
+  if (L.has('riverLabels') || riverMode){
+    for (const [k,[x,y]] of Object.entries(D.riverLabels)){
+      if (riverMode && !(I.found && I.found[k])) continue;
+      const anc = k==='grijalva' ? 'end' : k==='usumacinta' ? 'start' : 'middle';
+      out.push(`<text class="m-label" x="${x}" y="${y}" font-size="15" text-anchor="${anc}" fill="#0b4f8a">${RIVER_NAMES[k]}</text>`);
+    }
+    if (!riverMode || (I.found && I.found.chapala)){ const [x,y]=P.chapala; out.push(`<text class="m-label" x="${x}" y="${y+27}" font-size="15" text-anchor="middle" fill="#0b4f8a">Lake Chapala</text>`); }
+  }
+  if (L.has('wildlife')){
+    const ic = D.icons;
+    out.push(ICONS.cactus(...ic.cactus1)+ICONS.cactus(...ic.cactus2)+ICONS.cactus(...ic.cactus3)+ICONS.tree(...ic.tree1)+ICONS.tree(...ic.tree2)+ICONS.tree(...ic.tree3)+ICONS.whale(...ic.whale)+ICONS.pelican(...ic.pelican)+ICONS.jaguar(...ic.jaguar));
+  }
+  if (L.has('yucatan') || (I && I.type==='yucatan' && I.found)){ const [x,y]=P.yucatan; out.push(`<text class="m-label" x="${x}" y="${y-2}" font-size="17" text-anchor="middle">Yucatán</text><text class="m-label" x="${x}" y="${y+16}" font-size="17" text-anchor="middle">Peninsula</text>`); }
+  // neighbours and seas
+  const slotMode = I && I.type==='slots';
+  for (const n of NEIGH){
+    const [x,y] = D.labels[n.id];
+    const placed = L.has('neighbours') || (slotMode && I.placed[n.id]);
+    const anchor = n.id==='caribbean' ? 'end' : 'middle';
+    const tx = n.id==='caribbean' ? 996 : x;
+    if (placed){
+      const cls = n.kind==='sea' ? 'm-sea' : 'm-label';
+      const fs = n.id==='caribbean' ? 18 : n.id==='blz' ? 18 : n.kind==='sea' ? 21 : 22;
+      if (n.id==='caribbean') out.push(`<text class="${cls}" x="${tx}" y="${y}" font-size="${fs}" text-anchor="end">Caribbean</text><text class="${cls}" x="${tx}" y="${y+20}" font-size="${fs}" text-anchor="end">Sea</text>`);
+      else out.push(`<text class="${cls}" x="${tx}" y="${y}" font-size="${fs}" text-anchor="${anchor}">${n.name}</text>`);
+      if (n.sub) out.push(`<text class="${cls}" x="${tx}" y="${y+20}" font-size="15" text-anchor="${anchor}">${n.sub}</text>`);
+    } else if (slotMode){
+      out.push(`<g class="slot${I.armed===n.id?' armed':''}" data-slot="${n.id}" tabindex="0" role="button" aria-label="Empty label spot"><circle cx="${x}" cy="${y-6}" r="24"/><text x="${x}" y="${y+3}" text-anchor="middle" font-size="26" font-family="Lilita One, sans-serif" fill="#2A1F3D">?</text></g>`);
+    }
+  }
+  if (L.has('mexname')){ out.push(`<text x="502" y="422" text-anchor="middle" font-family="Lilita One, sans-serif" font-size="30" fill="var(--rosa)" opacity=".9" letter-spacing="3" paint-order="stroke" stroke="#fff" stroke-width="6" stroke-linejoin="round">MEXICO</text>`); }
+  // interactive hit layers
+  if (rangeMode) for (const [k,d] of Object.entries(D.ranges)) out.push(`<path class="hit" data-hit="${k}" d="${d}" stroke-width="54" stroke-linecap="round"/>`);
+  if (riverMode){
+    for (const [k,d] of Object.entries(D.rivers)) out.push(`<path class="hit" data-hit="${k}" d="${d}" stroke-width="30" stroke-linecap="round"/>`);
+    const [x,y]=P.chapala; out.push(`<circle class="hitfill" data-hit="chapala" cx="${x}" cy="${y}" r="24"/>`);
+  }
+  if (I && I.type==='yucatan'){ const [x,y]=P.yucatan; out.push(`<path class="hitfill" data-hit="elsewhere" d="${D.shapes.mex}" style="pointer-events:fill" opacity="0"/>`); out.push(`<circle class="hitfill" data-hit="yucatan" cx="${x}" cy="${y}" r="62"/>`); }
+  if (cfg.mark){ const [x,y]=cfg.mark; out.push(`<circle class="pulse" cx="${x}" cy="${y}" r="30" fill="none" stroke="var(--rosa)" stroke-width="5"/>`); }
+  out.push(`</svg>`);
+  return out.join('');
+}
+
+/* ---------- stops ---------- */
+const N = (who, text) => ({type:'say', who, text});
+const NARR = text => ({type:'say', who:null, text});
+
+const STOPS = [
+ {id:1, title:'The market in Oaxaca', blurb:'How Mexico earns its living, and the two heritages in its culture', mapStart:{showOaxaca:true, mark:'oaxaca'},
+  steps:[
+   NARR('Early morning in Oaxaca, in the south of Mexico. The street smells of fresh tortillas, and the market stalls are already bright with woven blankets, baskets of mangoes and papayas, and rows of clay pots.'),
+   N('sofia','Abuela, look! That man is grinding cacao beans into chocolate. It smells amazing.'),
+   N('abuela','A market is a good place to learn how a country lives, mija. Everything here comes from somewhere.'),
+   N('pluma','¡Buenos días! I\'m Pluma, a quetzal. My tail feathers are longer than the rest of me. I\'ll be your guide. Every stop we make adds a piece to Sofia\'s map, and every answer you get right first time earns you one of my feathers.'),
+   N('pluma','Mexico earns its living in four big ways: farming, factories, oil and visitors. Let\'s fill the stalls.'),
+   {type:'sort', prompt:'Tap a crate, then tap the stall it belongs in.', retry:'Not that stall. Think about where it comes from: a field, a factory, under the ground, or a place people visit.',
+    bins:[{id:'farm',label:'Farming',sub:'agriculture'},{id:'fact',label:'Factories',sub:'manufacturing'},{id:'oil',label:'Oil',sub:'oil production'},{id:'tour',label:'Visitors',sub:'tourism'}],
+    items:[
+     {t:'Maize from the fields', bin:'farm', why:'Maize is grown on farms. That\'s agriculture.'},
+     {t:'Mangoes and papayas', bin:'farm', why:'Fruit is grown on farms. That\'s agriculture.'},
+     {t:'Cars from an assembly line', bin:'fact', why:'Things made in factories are manufacturing.'},
+     {t:'Fridges and televisions', bin:'fact', why:'Things made in factories are manufacturing.'},
+     {t:'Barrels of crude oil', bin:'oil', why:'Crude oil is pumped from under the ground and the sea floor. That\'s oil production.'},
+     {t:'An oil platform at sea', bin:'oil', why:'Oil platforms drill for oil under the sea. That\'s oil production.'},
+     {t:'Visitors at the Pyramid of the Sun', bin:'tour', why:'People travelling to see a place are tourists. That\'s tourism.'},
+     {t:'Swimmers at a turquoise beach', bin:'tour', why:'Holidaymakers at the beach are tourists. That\'s tourism.'},
+    ]},
+   N('abuela','Our culture is a blend of two old ways of life, Sofia. Do you remember which two?'),
+   {type:'choice', prompt:'Mexico\'s culture blends which two?', options:[
+     {t:'Indigenous traditions and Spanish heritage', ok:true, why:'Yes. The first peoples of Mexico and the Spanish who came later both shaped its culture.'},
+     {t:'Aztec and Inca traditions', why:'The Aztecs were Indigenous to Mexico, but the Inca lived far away in South America. Think of who came from across the sea.'},
+     {t:'French and English heritage', why:'Not these two. One heritage belongs to Mexico\'s first peoples, the other came from Spain.'},
+   ]},
+   {type:'choice', multi:4, prompt:'Where can you see that blend? Find all four.', options:[
+     {t:'Languages', ok:true},{t:'Festivals', ok:true},{t:'Snow sports', why:'Not this one. Look for things people speak, celebrate, build and eat.'},{t:'Architecture', ok:true},{t:'Food', ok:true},{t:'Ice hockey', why:'Not this one. Look for things people speak, celebrate, build and eat.'}
+   ]},
+  ],
+  note:{title:'Markets and people', lines:['Mexico earns its living from agriculture, manufacturing, oil production and tourism.','Its culture blends Indigenous traditions with Spanish heritage. You can see it in languages, festivals, architecture and food.','Oaxaca is in the south, famous for its colourful markets.']}
+ },
+ {id:2, title:'Up into the Sierra Madre', blurb:'Three great mountain ranges and the high plateau between them',
+  steps:[
+   NARR('Sofia and Abuela take the bus north towards Mexico City, high in the mountains. The road climbs out of the valleys into the rugged Sierra Madre.'),
+   N('sofia','The hills outside are covered in cactus. Wait, now there are pine trees… and I need my jumper!'),
+   {type:'order', prompt:'Put what Sofia saw from the bus window in order, first to last.', items:['Cactus-covered hills','Pine forests','Cool mountain air'], why:'The higher you go, the cooler the air gets, so the plants change from cactus to pine.'},
+   N('pluma','We\'re climbing! Three great mountain ranges shape Mexico, and all three are called Sierra Madre, which means "mother mountain range".'),
+   N('pluma','Their second names tell you where they are. Occidental means western. Oriental means eastern. Del Sur means of the south.'),
+   {type:'mapTap', layer:'ranges', prompt:'Tap the range on the map.', targets:[
+     {id:'occidental', ask:'Find the Sierra Madre Occidental.', hint:'Occidental means western. Look on the west side, near the Pacific.'},
+     {id:'oriental', ask:'Find the Sierra Madre Oriental.', hint:'Oriental means eastern. Look on the east side, near the Gulf.'},
+     {id:'sur', ask:'Find the Sierra Madre del Sur.', hint:'Del Sur means of the south. Look along the southern Pacific coast.'},
+   ]},
+   {type:'choice', prompt:'The high, flat land between the western and eastern ranges is home to many of Mexico\'s big cities. What is it called?', options:[
+     {t:'The Mexican Altiplano', ok:true, why:'Yes. The Altiplano is Mexico\'s high central plateau. "Alto" means high and "plano" means flat.'},
+     {t:'The Yucatán Peninsula', why:'The Yucatán is low and flat, out in the south-east. You want the high land in the middle.'},
+     {t:'The Gulf of Mexico', why:'That\'s a body of water on the east coast. You want high land in the middle of the country.'},
+   ]},
+  ],
+  note:{title:'Mountains and plateau', lines:['Three great ranges: the Sierra Madre Occidental in the west, the Sierra Madre Oriental in the east and the Sierra Madre del Sur in the south.','Between them is the high central plateau, the Mexican Altiplano, home to many major cities.','Higher up, the air is cooler and pine forests replace cactus.']}
+ },
+ {id:3, title:'Volcanoes and the capital', blurb:'Popocatépetl, Mexico City and the pyramids of Teotihuacán', mapStart:{showCapital:true, showVolcanoes:true, mark:'popo'},
+  steps:[
+   N('abuela','Look out the window, mija. There, with the snow on its peak. That\'s Popocatépetl.'),
+   N('pluma','Popocatépetl has a snowy neighbour too: Iztaccíhuatl. The two of them stand near Mexico City.'),
+   {type:'choice', multi:2, prompt:'Which two are volcanoes? Find both.', options:[
+     {t:'Popocatépetl', ok:true},{t:'Teotihuacán', why:'Teotihuacán is an ancient city with pyramids, not a volcano.'},{t:'Iztaccíhuatl', ok:true},{t:'Chapala', why:'Chapala is Mexico\'s largest lake, not a volcano.'}
+   ]},
+   NARR('In Mexico City the streets bustle with cars, buses and bicycles, weaving between grand plazas and old colonial buildings. Sofia\'s cousin is waiting for her.'),
+   N('mateo','¡Bienvenida, prima! Welcome to the city. I know everything about it. Well, almost everything.'),
+   N('pluma','Mateo loves a tall tale. Listen carefully and decide: true, or tall tale?'),
+   {type:'tf', prompt:'True, or tall tale?', items:[
+     {t:'Mexico City is the capital of Mexico.', ok:true, why:'True. Mexico City is the capital.'},
+     {t:'Mexico City sits right on the beach.', ok:false, why:'Tall tale. Mexico City is high in the mountains, on the central plateau.'},
+     {t:'Mexico City is one of the largest cities in the world.', ok:true, why:'True. It\'s one of the biggest cities anywhere.'},
+     {t:'The Aztecs built the Pyramids of the Sun and Moon at Teotihuacán.', ok:false, why:'Tall tale. The pyramids were built long before the Aztecs.'},
+     {t:'More than 120 million people live in Mexico.', ok:true, why:'True. Mexico has more than 120 million people.'},
+     {t:'Most people in Mexico live out in the country, far from any town.', ok:false, why:'Tall tale. Most people live in cities and towns.'},
+   ]},
+   N('mateo','Fine, fine. Three tall tales. But the pyramids really are amazing. Imagine traders long ago, bringing maize, pottery and bright feathers to sell.'),
+   N('pluma','Feathers? I\'m keeping all of mine, thank you.'),
+  ],
+  note:{title:'Volcanoes and the capital', lines:['Popocatépetl and Iztaccíhuatl are snowy volcanoes near Mexico City.','Mexico City is the capital and one of the largest cities in the world. It sits high in the mountains.','The Pyramids of the Sun and Moon at Teotihuacán were built long before the Aztecs.','Mexico has more than 120 million people. Most live in cities and towns.']}
+ },
+ {id:4, title:'Pluma\'s river flight', blurb:'Four rivers and Mexico\'s largest lake',
+  steps:[
+   N('pluma','Time to fly. Close your eyes and imagine you\'re riding on my back. We\'re going to follow Mexico\'s rivers from the sky.'),
+   {type:'mapTap', layer:'rivers', prompt:'Tap the river (or lake) on the map.', targets:[
+     {id:'rioGrande', ask:'Find the Río Grande. In Mexico it\'s called the Río Bravo.', hint:'This river forms part of the border with the United States, in the north.'},
+     {id:'balsas', ask:'Find the Balsas.', hint:'The Balsas starts near Mexico City and flows west to the Pacific Ocean.'},
+     {id:'grijalva', ask:'Find the Grijalva.', hint:'The Grijalva winds through the far south, then flows north to the Gulf. It\'s the western one of the two southern rivers.'},
+     {id:'usumacinta', ask:'Find the Usumacinta.', hint:'The Usumacinta runs along part of the border with Guatemala. It\'s the eastern one of the two southern rivers.'},
+     {id:'chapala', ask:'Now find Lake Chapala, Mexico\'s largest lake.', hint:'Look west of Mexico City, in the middle of the country, for a little blue lake.'},
+   ]},
+   {type:'choice', prompt:'The river on the border with the United States has two names. What is it called in Mexico?', options:[
+     {t:'Río Bravo', ok:true, why:'Yes. It\'s the Río Grande in the United States and the Río Bravo in Mexico.'},
+     {t:'Río Balsas', why:'The Balsas is a different river, flowing west to the Pacific.'},
+     {t:'Río Chapala', why:'Chapala is a lake. Think of a word that means brave or wild.'},
+   ]},
+  ],
+  note:{title:'Rivers and lakes', lines:['The Río Grande (Río Bravo in Mexico) forms part of the border with the United States.','Other major rivers are the Usumacinta, the Balsas and the Grijalva.','Lake Chapala is Mexico\'s largest lake.']}
+ },
+ {id:5, title:'Colour the climate', blurb:'Desert, highland and tropical zones',
+  steps:[
+   N('abuela','Your map needs some colour, Sofia. Mexico has very different weather from north to south.'),
+   N('pluma','Here\'s the rule. The north is mostly dry desert. The middle has a mild highland climate. The south and the coasts are tropical.'),
+   {type:'colour', prompt:'Colour each zone the way the lesson\'s mapwork asks: desert yellow, highlands light brown, tropical dark green. Pick a crayon, then tap a zone.'},
+   {type:'choice', prompt:'The tropical south has two seasons. Which two?', options:[
+     {t:'A wet season and a dry season', ok:true, why:'Yes. In the tropics it\'s warm all year, so the seasons are about rain.'},
+     {t:'A snowy winter and a hot summer', why:'Not in the tropical south. It stays warm all year. Think about rain.'},
+     {t:'Spring and autumn', why:'Not quite. In the tropics the seasons are about rain, not temperature.'},
+   ]},
+  ],
+  note:{title:'Climate', lines:['The north is mostly dry desert (yellow on your map).','The central regions have a mild highland climate (light brown).','The south and the coastal areas are tropical, with wet and dry seasons (dark green).']}
+ },
+ {id:6, title:'Desert, jungle and sea', blurb:'Plants and animals, and the low, flat Yucatán',
+  steps:[
+   NARR('Later in the week the family travels south to the coast. The warm air smells of salt. Sofia wades into turquoise water while fishermen mend their nets under the palm trees, and pelicans swoop over the waves.'),
+   N('pluma','From cactus deserts to jungles to the sea, Mexico is full of life. Help me fill in my field notebook. Yes, I\'m in it too.'),
+   {type:'sort', prompt:'Tap a living thing, then tap the page where it lives.', retry:'Not that page. Does it need dry ground, warm wet forest, or salt water?',
+    bins:[{id:'desert',label:'Northern desert',sub:'dry and hot'},{id:'jungle',label:'Southern jungle',sub:'warm and wet'},{id:'sea',label:'Coast and sea',sub:'salt water and shore'}],
+    items:[
+     {t:'Cactus', bin:'desert', why:'Cactus grows in the dry northern deserts.'},
+     {t:'Agave', bin:'desert', why:'Agave grows in the dry northern deserts.'},
+     {t:'Hardy shrubs', bin:'desert', why:'Tough, hardy shrubs survive in the northern deserts.'},
+     {t:'Mahogany tree', bin:'jungle', why:'Mahogany grows in the southern jungles.'},
+     {t:'Ceiba tree', bin:'jungle', why:'The ceiba is a giant tree of the southern jungles.'},
+     {t:'Tropical flowers', bin:'jungle', why:'Tropical flowers bloom in the warm, wet south.'},
+     {t:'Jaguar', bin:'jungle', why:'Jaguars hunt in the southern jungles.'},
+     {t:'Ocelot', bin:'jungle', why:'Ocelots, small spotted wild cats, live in the southern jungles.'},
+     {t:'Monkeys', bin:'jungle', why:'Monkeys swing through the southern jungles.'},
+     {t:'Quetzal', bin:'jungle', why:'That\'s me! Quetzals live in the southern forests.'},
+     {t:'Whales', bin:'sea', why:'Whales swim in the seas off Mexico\'s coasts.'},
+     {t:'Pelicans', bin:'sea', why:'Pelicans swoop over the waves to catch fish.'},
+    ]},
+   N('pluma','One more special place. Out in the south-east, the Yucatán Peninsula pokes up into the sea.'),
+   {type:'mapTap', layer:'yucatan', prompt:'Tap the map.', targets:[
+     {id:'yucatan', ask:'Find the Yucatán Peninsula.', hint:'Look in the south-east, where the land sticks up like a thumb between the Gulf and the Caribbean.'}
+   ]},
+   {type:'choice', prompt:'What is the Yucatán Peninsula like?', options:[
+     {t:'Low and flat, with limestone caves and underground rivers', ok:true, why:'Yes. Under the flat ground, water has carved caves and rivers through the limestone.'},
+     {t:'High and snowy, with volcanoes', why:'That sounds like Popocatépetl. The Yucatán is low and flat.'},
+     {t:'A long chain of mountains', why:'That\'s a sierra. The Yucatán is low and flat.'},
+   ]},
+  ],
+  note:{title:'Plants, animals and the Yucatán', lines:['Northern deserts: cactus, agave and hardy shrubs.','Southern jungles: mahogany, ceiba trees and tropical flowers.','Wildlife includes jaguars, ocelots, iguanas, monkeys, whales and many birds, including the colourful quetzal.','The Yucatán Peninsula in the south-east is low and flat, with many limestone caves and underground rivers.']}
+ },
+ {id:7, title:'Borders and seas', blurb:'Finish the map: neighbours and the waters around Mexico',
+  steps:[
+   N('abuela','One last job, Sofia. A map isn\'t finished until you know what\'s all around it.'),
+   N('sofia','Mexico has three neighbours and water on both sides. I can do this.'),
+   {type:'place', prompt:'Tap a label, then tap the ? where it belongs.'},
+   {type:'choice', prompt:'Finish Sofia\'s sentence: "Mexico lies ___ of the United States, and ___ of Guatemala and Belize."', options:[
+     {t:'south … north', ok:true, why:'Yes. The United States is above Mexico, and Guatemala and Belize are below it.'},
+     {t:'north … south', why:'Look at the map again. The United States is at the top.'},
+     {t:'east … west', why:'Look at the map again. The United States is above Mexico, not beside it.'},
+   ]},
+   N('pluma','You did it. That\'s the whole map. From the mountains to the sea, from ancient ruins to modern cities.'),
+   N('sofia','It\'s my country, all in one picture.'),
+  ],
+  note:{title:'Where Mexico is', lines:['Mexico lies south of the United States and north of Guatemala and Belize.','The Pacific Ocean is to the west.','The Gulf of Mexico (also called the Gulf of America) and the Caribbean Sea are to the east.']}
+ },
+];
+
+const MAPWORK = [
+ 'Label Mexico, its capital Mexico City, and its borders with the United States, Guatemala and Belize.',
+ 'Mark the Pacific Ocean, the Gulf of Mexico (Gulf of America) and the Caribbean Sea.',
+ 'Draw and label the Sierra Madre Occidental, Sierra Madre Oriental and Sierra Madre del Sur.',
+ 'Mark Popocatépetl volcano and the Yucatán Peninsula.',
+ 'Shade the climate zones: desert yellow, highlands light brown, tropical dark green.'
+];
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s => s.hidden = (s.id !== 's-'+id));
+  window.scrollTo({top:0});
+  if (id==='hub') renderHub();
+  if (id==='title') renderTitle();
+  if (id==='notebook') renderNotebook();
+  if (id==='finish') renderFinish();
+}
+function chips(el){
+  const n = Object.keys(S.done).length;
+  el.innerHTML = `<span class="chip">${ICON_STAMP}${n} of 7 map pieces</span><span class="chip">${ICON_FEATHER}${S.feathers} feathers</span>`;
+}
+
+/* ---------- title ---------- */
+function renderTitle(){
+  $('#cast').innerHTML = ['sofia','abuela','mateo','pluma'].map(k=>`<figure>${FACES[k]}<figcaption>${NAMES[k].replace(' the quetzal','')}</figcaption></figure>`).join('');
+  const L = new Set(['zones','ranges','capital','volcanoes','oaxaca']);
+  $('#title-map').innerHTML = buildMap({layers:L});
+}
+
+/* ---------- hub ---------- */
+function renderHub(){
+  chips($('#hub-chips'));
+  $('#hub-map').innerHTML = buildMap({soft:true});
+  const n = Object.keys(S.done).length;
+  $('#hub-hint').textContent = n===0 ? 'Sofia\'s map is blank. Finish a stop to add a piece.' : n===7 ? 'The map is finished.' : `${n} of 7 pieces added. Keep going.`;
+  const next = STOPS.find(s=>!S.done[s.id]);
+  $('#stops').innerHTML = STOPS.map((s,i)=>`<li><button class="stop${S.done[s.id]?' done':''}" data-stop="${s.id}">
+     <span class="num" style="background:${STOP_COLOURS[i]}">${s.id}</span>
+     <span><span class="t">${esc(s.title)}${next && next.id===s.id ? ' <span class="eyebrow" style="color:var(--rosa)">· next</span>':''}</span><br><span class="s">${esc(s.blurb)}</span></span>
+     ${S.done[s.id] ? `<svg class="stamp" viewBox="0 0 46 46" aria-label="Done"><circle cx="23" cy="23" r="20" fill="none" stroke="${STOP_COLOURS[i]}" stroke-width="3" stroke-dasharray="3 3"/><path d="M14 24l6 6 12-14" stroke="${STOP_COLOURS[i]}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>` : '<span></span>'}
+   </button></li>`).join('');
+  $('#b-finish').hidden = n < 7;
+}
+
+/* ---------- stop engine ---------- */
+let CUR = null; // {stop, i, firstTry, mapCfg}
+function startStop(id){
+  const stop = STOPS.find(s=>s.id===id);
+  CUR = {stop, i:0, mapCfg:Object.assign({}, stop.mapStart||{}), extra:{}};
+  if (CUR.mapCfg.mark) CUR.mapCfg.mark = D.places[CUR.mapCfg.mark];
+  show('stop');
+  chips($('#stop-chips'));
+  renderStep();
+}
+function drawStopMap(cfg){
+  const base = earnedLayers();
+  if (cfg && cfg.showOaxaca) base.add('oaxaca');
+  $('#stop-map').innerHTML = buildMap(Object.assign({layers:base, soft:true}, cfg||{}));
+  const h = $('#stop-hint'); h.textContent = (cfg && cfg.hint) || ''; h.style.color = '';
+}
+function progressBar(){
+  const n = CUR.stop.steps.length;
+  return `<div class="progress" aria-hidden="true">${CUR.stop.steps.map((_,k)=>`<i class="${k<CUR.i?'on':k===CUR.i?'now':''}"></i>`).join('')}</div>`;
+}
+function head(){
+  const i = STOPS.indexOf(CUR.stop);
+  return `<div><p class="eyebrow" style="color:${STOP_COLOURS[i]}">Stop ${CUR.stop.id} of 7</p><h2>${esc(CUR.stop.title)}</h2></div>${progressBar()}`;
+}
+function nextStep(){ CUR.i++; renderStep(); }
+function feather(){ S.feathers++; save(); chips($('#stop-chips')); }
+
+function renderStep(){
+  const st = CUR.stop.steps[CUR.i];
+  const P = $('#panel');
+  if (!st){ return finishStop(); }
+  if (st.type==='say'){
+    drawStopMap(CUR.mapCfg);
+    const body = st.who ? `<div class="say">${FACES[st.who]}<div class="bubble"><span class="who">${NAMES[st.who]}</span>${esc(st.text)}</div></div>` : `<p class="narr">${esc(st.text)}</p>`;
+    P.innerHTML = head() + body + `<div class="row end"><button class="btn turq" id="go">Next ›</button></div>`;
+    $('#go').onclick = nextStep; $('#go').focus({preventScroll:true});
+    return;
+  }
+  ({sort:stepSort, choice:stepChoice, tf:stepTF, order:stepOrder, mapTap:stepMapTap, colour:stepColour, place:stepPlace})[st.type](st, P);
+}
+function doneButton(P, label='Next ›'){
+  const r = document.createElement('div'); r.className='row end';
+  r.innerHTML = `<button class="btn turq">${label}</button>`;
+  P.appendChild(r); const b = r.querySelector('button'); b.onclick = nextStep; b.focus({preventScroll:true});
+}
+function fb(P, kind, html){
+  let f = P.querySelector('.feedback');
+  if (!f){ f = document.createElement('div'); P.appendChild(f); }
+  f.className = 'feedback '+kind; f.innerHTML = html;
+  const st = CUR && CUR.stop.steps[CUR.i];
+  if (st && ['mapTap','colour','place'].includes(st.type)) { const h = $('#stop-hint'); h.textContent = f.textContent; h.style.color = kind==='bad' ? 'var(--bad)' : kind==='ok' ? 'var(--ok)' : 'var(--ink-soft)'; }
+}
+
+/* sort */
+function stepSort(st, P){
+  drawStopMap(CUR.mapCfg);
+  const items = shuffle(st.items.map((x,k)=>Object.assign({k},x)));
+  const missed = new Set(); let sel = null; let left = items.length;
+  P.innerHTML = head() + `<p class="q">${esc(st.prompt)}</p>
+    <div class="cards">${items.map(x=>`<button class="card" data-k="${x.k}">${esc(x.t)}</button>`).join('')}</div>
+    <div class="bins">${st.bins.map(b=>`<button class="bin" data-b="${b.id}"><b>${esc(b.label)}</b><small>${esc(b.sub)}</small><span class="in"></span></button>`).join('')}</div>`;
+  P.querySelectorAll('.card').forEach(c=>c.onclick=()=>{
+    P.querySelectorAll('.card').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel'); sel = +c.dataset.k;
+    P.querySelectorAll('.bin').forEach(b=>b.classList.add('armed'));
+  });
+  P.querySelectorAll('.bin').forEach(b=>b.onclick=()=>{
+    if (sel===null){ fb(P,'info','Tap a card first, then the place it belongs.'); return; }
+    const it = st.items[sel];
+    if (it.bin===b.dataset.b){
+      if (!missed.has(sel)) feather();
+      const c = P.querySelector(`.card[data-k="${sel}"]`); c.classList.add('gone');
+      b.querySelector('.in').insertAdjacentHTML('beforeend', `<span>${esc(it.t)}</span>`);
+      fb(P,'ok', esc(it.why)); left--; sel=null;
+      P.querySelectorAll('.bin').forEach(x=>x.classList.remove('armed'));
+      if (left===0){ fb(P,'ok','All sorted. '+esc(it.why)); doneButton(P); }
+    } else {
+      missed.add(sel);
+      const right = st.bins.find(x=>x.id===it.bin);
+      fb(P,'bad', esc(st.retry || 'Not that one. Try another.'));
+    }
+  });
+}
+
+/* choice (single or multi) */
+function stepChoice(st, P){
+  drawStopMap(CUR.mapCfg);
+  const opts = st.multi ? st.options.map((o,k)=>Object.assign({k},o)) : shuffle(st.options.map((o,k)=>Object.assign({k},o)));
+  let wrong = false, found = 0; const need = st.multi || 1;
+  P.innerHTML = head() + `<p class="q">${esc(st.prompt)}</p><div class="opts">${opts.map(o=>`<button class="opt" data-k="${o.k}">${esc(o.t)}</button>`).join('')}</div>`;
+  P.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    const o = st.options[+b.dataset.k];
+    if (b.disabled) return;
+    if (o.ok){
+      b.classList.add('ok'); b.disabled = true; found++;
+      if (!wrong && found===need) feather();
+      if (found===need){
+        P.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+        fb(P,'ok', esc(o.why || (st.multi ? 'You found them all.' : 'Yes.')));
+        if (st.multi && !o.why) fb(P,'ok','You found them all.');
+        doneButton(P);
+      } else fb(P,'ok', `Yes. ${need-found} more to find.`);
+    } else {
+      wrong = true; b.classList.add('bad'); b.disabled = true;
+      fb(P,'bad', esc(o.why || 'Not that one. Try again.'));
+    }
+  });
+}
+
+/* true or tall tale */
+function stepTF(st, P){
+  drawStopMap(CUR.mapCfg);
+  let left = st.items.length;
+  P.innerHTML = head() + `<div class="say">${FACES.mateo}<div class="bubble"><span class="who">Cousin Mateo</span>Here are my facts. Which ones are true?</div></div>
+   <div class="tf">${st.items.map((it,k)=>`<div class="tfrow" data-k="${k}"><span>“${esc(it.t)}”</span><div class="btns"><button data-v="1">True</button><button data-v="0">Tall tale</button></div><span class="why" hidden></span></div>`).join('')}</div>`;
+  P.querySelectorAll('.tfrow').forEach(row=>{
+    const it = st.items[+row.dataset.k]; let missed = false;
+    row.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+      if (row.classList.contains('answered')) return;
+      const v = b.dataset.v==='1';
+      const why = row.querySelector('.why'); why.hidden = false;
+      if (v===it.ok){
+        b.classList.add('ok'); row.classList.add('answered'); if (!missed) feather();
+        why.innerHTML = `<b style="color:var(--ok)">Right.</b> ${esc(it.why)}`;
+        left--; if (left===0){ doneButton(P); }
+      } else {
+        missed = true; b.classList.add('bad');
+        why.innerHTML = `<b style="color:var(--bad)">Think again.</b> Try the other button.`;
+      }
+    });
+  });
+}
+
+/* order */
+function stepOrder(st, P){
+  drawStopMap(CUR.mapCfg);
+  let items; do { items = shuffle(st.items); } while (items.join()===st.items.join());
+  let pos = 0, missed = false;
+  P.innerHTML = head() + `<p class="q">${esc(st.prompt)}</p><div class="opts">${items.map(t=>`<button class="opt" data-t="${esc(t)}">${esc(t)}</button>`).join('')}</div>`;
+  P.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if (b.disabled) return;
+    if (b.dataset.t===st.items[pos]){
+      pos++; b.classList.add('ok'); b.disabled = true; b.textContent = pos+'. '+b.dataset.t;
+      if (pos===st.items.length){ if(!missed) feather(); fb(P,'ok', esc(st.why)); doneButton(P); }
+      else fb(P,'ok','Yes. What came next?');
+    } else { missed = true; fb(P,'bad','Not yet. Think about the bus climbing higher and higher.'); }
+  });
+}
+
+/* map tap */
+function stepMapTap(st, P){
+  let t = 0; const found = {}; let missed = false;
+  function draw(){
+    const target = st.targets[t];
+    const cfg = Object.assign({}, CUR.mapCfg, {interactive:{type:st.layer, found}, hint:'Tap on the map.'});
+    if (st.layer==='yucatan') cfg.interactive.found = found.yucatan;
+    drawStopMap(cfg);
+    $('#stop-map').querySelectorAll('[data-hit]').forEach(h=>h.addEventListener('click', ()=>hit(h.dataset.hit)));
+    if (!target){ return; }
+    P.innerHTML = head() + `<div class="say">${FACES.pluma}<div class="bubble"><span class="who">Pluma</span>${esc(target.ask)}</div></div>
+      <p style="color:var(--ink-soft);font-size:.9rem">${esc(st.prompt)} ${t+1} of ${st.targets.length}.</p>
+      <div class="row"><button class="link" id="hintb">I need a hint</button></div>`;
+    $('#hintb').onclick = ()=>{ missed = true; fb(P,'info', esc(target.hint)); };
+  }
+  function hit(id){
+    const target = st.targets[t]; if (!target) return;
+    if (id===target.id){
+      if (!missed) feather();
+      found[id] = true; missed = false; t++;
+      const msg = st.layer==='ranges' ? `${RANGE_NAMES[id]}. Found it.` : st.layer==='rivers' ? (id==='chapala' ? 'Lake Chapala. Found it.' : `The ${RIVER_NAMES[id]}. Found it.`) : 'The Yucatán Peninsula. Found it.';
+      if (t < st.targets.length){ draw(); fb(P,'ok', esc(msg)); }
+      else { draw(); P.innerHTML = head() + `<div class="feedback ok">${esc(msg)} That's all of them.</div>`; doneButton(P); }
+    } else {
+      missed = true;
+      const name = st.layer==='ranges' ? RANGE_NAMES[id] : st.layer==='rivers' ? (id==='chapala' ? 'Lake Chapala' : 'the '+RIVER_NAMES[id]) : null;
+      fb(P,'bad', (name && found[id]) ? `That's ${esc(name)}, which you've already found. ${esc(target.hint)}` : name ? `Not that one. ${esc(target.hint)}` : `Not there. ${esc(target.hint)}`);
+    }
+  }
+  draw();
+}
+
+/* colour zones */
+function stepColour(st, P){
+  const fills = {desert:null, highland:null, tropical:null}; let crayon = null; let missed = new Set();
+  const CR = [{id:'desert', name:'Yellow', col:'var(--desert)'},{id:'highland', name:'Light brown', col:'var(--highland)'},{id:'tropical', name:'Dark green', col:'var(--tropical)'}];
+  const WHY = {desert:'The north is mostly dry desert, so it\'s yellow.', highland:'The middle has a mild highland climate, so it\'s light brown.', tropical:'The south and the coasts are tropical, so they\'re dark green.'};
+  P.innerHTML = head() + `<p class="q">${esc(st.prompt)}</p>
+    <div class="crayons">${CR.map(c=>`<button class="crayon" data-c="${c.id}"><i style="background:${c.col}"></i>${c.name}</button>`).join('')}</div>`;
+  P.querySelectorAll('.crayon').forEach(b=>b.onclick=()=>{ P.querySelectorAll('.crayon').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); crayon = b.dataset.c; });
+  function draw(){
+    drawStopMap(Object.assign({}, CUR.mapCfg, {interactive:{type:'zones', fills}, hint:'The dashed lines show the three zones. Tap inside one.'}));
+    $('#stop-map').querySelectorAll('.zone').forEach(z=>z.addEventListener('click', ()=>{
+      const zid = z.dataset.zone;
+      if (!crayon){ fb(P,'info','Pick a crayon first.'); return; }
+      if (fills[zid]){ fb(P,'info','That zone is already coloured. Try another.'); return; }
+      if (crayon===zid){
+        fills[zid] = zid; if (!missed.has(zid)) feather(); draw();
+        const left = Object.values(fills).filter(v=>!v).length;
+        fb(P,'ok', esc(WHY[zid]) + (left ? ` ${left} to go.` : ''));
+        if (!left) doneButton(P);
+      } else {
+        missed.add(zid);
+        const where = {desert:'the north', highland:'the middle', tropical:'the south and the coasts'}[zid];
+        fb(P,'bad', `This zone is ${where}. Which climate did Pluma say belongs there?`);
+      }
+    }));
+  }
+  draw();
+}
+
+/* place labels */
+function stepPlace(st, P){
+  const placed = {}; let armed = null; let missed = new Set();
+  const HINT = {usa:'The United States is north of Mexico, at the top of the map.', gtm:'Guatemala is south-east of Mexico, below the Yucatán.', blz:'Belize is a small country south-east of Mexico, beside the Caribbean Sea.', pacific:'The Pacific Ocean is to the west of Mexico.', gulf:'The Gulf of Mexico is to the east, curving round to the United States.', caribbean:'The Caribbean Sea is to the east of the Yucatán and Belize.'};
+  function draw(){
+    drawStopMap(Object.assign({}, CUR.mapCfg, {interactive:{type:'slots', placed, armed:null}, hint:'Pick a label, then tap a yellow ? on the map.'}));
+    $('#stop-map').querySelectorAll('[data-slot]').forEach(s=>{
+      const go = ()=>{
+        if (!armed){ fb(P,'info','Tap a label first.'); return; }
+        if (s.dataset.slot===armed){
+          placed[armed] = true; if (!missed.has(armed)) feather();
+          const nm = NEIGH.find(n=>n.id===armed).name; armed = null; draw(); renderLabels();
+          const left = NEIGH.filter(n=>!placed[n.id]).length;
+          fb(P,'ok', `${esc(nm)} is in place.` + (left ? ` ${left} to go.` : ' Every label is in place.'));
+          if (!left) doneButton(P);
+        } else { missed.add(armed); fb(P,'bad', 'Not there. ' + esc(HINT[armed])); }
+      };
+      s.addEventListener('click', go); s.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); }});
+    });
+  }
+  function renderLabels(){
+    const box = P.querySelector('.cards');
+    box.innerHTML = NEIGH.filter(n=>!placed[n.id]).map(n=>`<button class="card${armed===n.id?' sel':''}" data-n="${n.id}">${esc(n.name)}${n.sub?' '+esc(n.sub):''}</button>`).join('');
+    box.querySelectorAll('.card').forEach(c=>c.onclick=()=>{ armed = c.dataset.n; renderLabels(); });
+  }
+  P.innerHTML = head() + `<p class="q">${esc(st.prompt)}</p><div class="cards"></div>`;
+  renderLabels(); draw();
+}
+
+/* end of a stop */
+function finishStop(){
+  const stop = CUR.stop; const first = !S.done[stop.id];
+  S.done[stop.id] = true; save();
+  chips($('#stop-chips'));
+  drawStopMap({});
+  const i = STOPS.indexOf(stop);
+  $('#stop-hint').textContent = first ? 'A new piece has been added to Sofia\'s map.' : '';
+  const nextS = STOPS.find(s=>!S.done[s.id]);
+  $('#panel').innerHTML = `<div><p class="eyebrow" style="color:${STOP_COLOURS[i]}">Stop ${stop.id} complete</p><h2>Map note added</h2></div>
+    <div class="note"><h3>${esc(stop.note.title)}</h3><ul>${stop.note.lines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul></div>
+    <p style="color:var(--ink-soft)">Read the note aloud, then tell it back in your own words.</p>
+    <div class="row end">${Object.keys(S.done).length===7 ? '<button class="btn" id="fin">See the finished map</button>' : nextS ? `<button class="btn alt" id="hub">Back to the journey</button><button class="btn turq" id="nx">Next stop: ${esc(nextS.title)} ›</button>` : '<button class="btn turq" id="hub">Back to the journey</button>'}</div>`;
+  const b1 = $('#fin'), b2 = $('#hub'), b3 = $('#nx');
+  if (b1) b1.onclick = ()=>show('finish');
+  if (b2) b2.onclick = ()=>show('hub');
+  if (b3) b3.onclick = ()=>startStop(nextS.id);
+}
+
+/* notebook */
+function renderNotebook(){
+  const got = STOPS.filter(s=>S.done[s.id]);
+  $('#notes').innerHTML = got.length ? got.map(s=>`<div class="note"><p class="eyebrow">Stop ${s.id}</p><h3>${esc(s.note.title)}</h3><ul>${s.note.lines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul></div>`).join('')
+    : `<div class="note"><h3>No notes yet</h3><p>Finish a stop and its map note will appear here.</p></div>`;
+}
+
+/* finish */
+function renderFinish(){
+  chips($('#fin-chips'));
+  $('#fin-map').innerHTML = buildMap({soft:true});
+  $('#fin-line').textContent = `You finished all seven stops and earned ${S.feathers} of Pluma's feathers.`;
+  const ta = $('#postcard'); ta.value = S.postcard || '';
+  ta.oninput = ()=>{ S.postcard = ta.value; save(); };
+  $('#mapwork').innerHTML = MAPWORK.map((m,k)=>`<li><label><input type="checkbox" id="mw${k}" ${S.mapwork[k]?'checked':''}><span>${esc(m)}</span></label></li>`).join('');
+  $('#mapwork').querySelectorAll('input').forEach((c,k)=>c.onchange=()=>{ S.mapwork[k]=c.checked; save(); });
+}
+
+/* wiring */
+$('#b-start').onclick = ()=>show('hub');
+$('#b-parent').onclick = ()=>show('parent');
+$('#b-notebook').onclick = ()=>show('notebook');
+$('#b-finish').onclick = ()=>show('finish');
+$('#b-title').onclick = ()=>show('title');
+$('#b-back').onclick = ()=>show('hub');
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));
+$('#stops').addEventListener('click', e=>{ const b = e.target.closest('[data-stop]'); if (b) startStop(+b.dataset.stop); });
+let resetArmed = false;
+$('#b-reset').onclick = ()=>{
+  if (!resetArmed){ resetArmed = true; $('#reset-msg').textContent = 'Tap again to clear all progress, feathers and the postcard.'; return; }
+  S = {done:{}, feathers:0, postcard:'', mapwork:{}}; save(); resetArmed = false; $('#reset-msg').textContent = 'Progress cleared.';
+};
+show('title');
+</script>
+
+<script src="../../home.js"></script>
+</body>
+</html>
