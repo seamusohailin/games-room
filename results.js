@@ -103,6 +103,7 @@
       };
     },
     pending: function () { return queue.length; },
+    endpoint: function () { return ENDPOINT; },
     flush: flush
   };
   window.GR = GR;

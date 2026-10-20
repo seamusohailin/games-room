@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Results connection check</title>
+<script src="results.js"></script>
+<style>
+body{margin:0;background:#1F2A4D;color:#F3F0FF;font:18px/1.5 "Trebuchet MS",system-ui,sans-serif}
+main{max-width:560px;margin:0 auto;padding:32px max(16px,env(safe-area-inset-left,0px))}
+h1{color:#FFD34D;font-size:1.8rem;margin:0 0 8px}
+button{font:inherit;font-weight:700;background:#FFD34D;color:#1D1A2B;border:0;border-radius:14px;padding:12px 20px;cursor:pointer}
+#out{margin-top:18px;background:#283766;border-radius:14px;padding:14px 16px;min-height:1.5em}
+</style>
+</head>
+<body>
+<main>
+  <h1>Results connection check</h1>
+  <p>Sends one test result, marked "test", to the Games Room results sheet. It isn't linked from the Games Room.</p>
+  <button id="go">Send a test result</button>
+  <div id="out">Not sent yet.</div>
+</main>
+<script>
+document.getElementById("go").onclick = function () {
+  var out = document.getElementById("out");
+  var url = (window.GR && GR.endpoint) ? GR.endpoint() : "";
+  if (!url) { out.textContent = "No results sheet address is set in results.js."; return; }
+  out.textContent = "Sending…";
+  var t = new Date().toISOString(), id = "check-" + Date.now();
+  var events = [
+    { id: id + "-a", type: "answer", t: t, player: "test", game: "connection-check", session: id, part: "Connection check",
+      item: "Test row (safe to delete)", concept: "Setup", area: "", firstTry: true, attempts: 1, hint: false, secs: 0, wrong: [] },
+    { id: id + "-s", type: "session", t: t, started: t, player: "test", game: "connection-check", session: id, finished: true,
+      status: "finished", partsDone: 1, questions: 1, firstRight: 1, hints: 0, secs: 0, lastPart: "Connection check" }
+  ];
+  fetch(url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ k: "gr-2026-kq7", events: events }) })
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      out.textContent = res && res.ok ? "Connected. The sheet received " + res.received + " test records. Look for a row marked \"test\" on its Answers and Sessions tabs."
+        : "The sheet answered but refused the test: " + JSON.stringify(res);
+    })
+    .catch(function (e) { out.textContent = "Couldn't read a reply from the sheet (" + e.message + "). Check the sheet anyway: if a \"test\" row arrived, sending works."; });
+};
+</script>
+</body>
+</html>
