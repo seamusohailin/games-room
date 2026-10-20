@@ -34,7 +34,7 @@ A game hosted elsewhere can also go on a shelf: add an entry to `games.js` with 
 
 ## Results
 
-Each game records which girl is playing (from the name she taps), every question with whether she got it right first time, how many tries, any hint and how long it took, and whether she finished. Records are kept on the iPad and sent to the **Games Room results** Google Sheet when online. The sheet has a Summary tab (by girl and game, by girl and concept, and the questions most often missed), plus Sessions and Answers tabs.
+Each game records which girl is playing (from the name she taps), every question with whether she got it right first time, how many tries, any hint and how long it took, and whether she finished. Records are kept on the iPad and sent to the **Games Room results** Google Sheet when online. Anything she types (postcards, record entries, measurements) goes to a Writing tab, one row per girl, game, prompt and day, updated as she edits. The sheet also has a Summary tab (by girl and game, by girl and concept, and the questions most often missed), plus Sessions and Answers tabs.
 
 The sheet's script (`results-sheet-script.gs` in the Home Education copy of this folder) only adds rows; it never sends anything back. Its web address goes in `ENDPOINT` at the top of `results.js`.
 

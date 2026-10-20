@@ -163,7 +163,11 @@ function record(cap,html){
   r.insertAdjacentHTML("beforeend",html);
   return r;
 }
-var GR=window.GR||{start:function(){},part:function(){},partDone:function(){},finish:function(){},ask:function(){return {miss:function(){},hint:function(){},done:function(){}};}};
+var GR=window.GR||{key:function(k){return k;},start:function(){},part:function(){},partDone:function(){},finish:function(){},write:function(){},ask:function(){return {miss:function(){},hint:function(){},done:function(){}};}};
+var ENTRY_KEY=GR.key("shadow-keeper-entry");
+function loadEntry(){try{return localStorage.getItem(ENTRY_KEY)||"";}catch(e){return "";}}
+function keepEntry(t){try{localStorage.setItem(ENTRY_KEY,t);}catch(e){}}
+var ENTRY_PROMPT="The last entry: Colin's first morning outside, using at least three sphere words, one of them figuratively";
 var CONCEPTS={atmosphere:"Literal and figurative meanings",evidence:"Finding evidence in a text",glossary:"Checking definitions",geosphere:"Checking definitions",
   microsphere:"Building words from roots",biospheric:"Building words from roots",claim1:"Shadow length and the sun's height",claim2:"Shadow length and the sun's height",
   claim3:"How shadows form",claim4:"How shadows form",torch:"How shadows form",sunangle:"Shadow length and the sun's height",why:"Shadow length and the sun's height",
@@ -555,6 +559,7 @@ page({id:"p7",chap:"Light",time:"noon",build:function(c,done){
       return;
     }
     S.data.shadow={height:h,m:m,n:n,a:a};
+    GR.write({part:"Page 7: Light",area:"SC",prompt:"Shadow measurements (cm)",text:"Object "+h+" cm tall. Morning shadow "+m+" cm, middle of the day "+n+" cm, afternoon "+a+" cm."});
     mark("measure","Measuring shadows outside",true,m+" cm, "+n+" cm, "+a+" cm","");
     msg.appendChild(el("div","note","<b>Recorded.</b> Morning "+m+" cm, middle of the day "+n+" cm, afternoon "+a+" cm. That is your data now, not Colin's. Nobody else in the world has it."));
     b.remove();done();
@@ -726,7 +731,7 @@ page({id:"p12",chap:"Words",time:"dusk",build:function(c,done){
   c.appendChild(said("Colin","colin",["Write down what my first morning outside was like. I was there, and I still cannot find the words for it.","Use at least three of the sphere words. And do the thing you decided on the very first page: use one of them for something I could touch, and use one of them figuratively, for something I could not touch."]));
   var ta=document.createElement("textarea");
   ta.placeholder="The first morning Colin came out of the house...";
-  if(S.data.entry)ta.value=S.data.entry;
+  ta.value=S.data.entry||loadEntry();
   c.appendChild(ta);
   var wc=el("p","wordcount","");
   c.appendChild(wc);
@@ -748,10 +753,11 @@ page({id:"p12",chap:"Words",time:"dusk",build:function(c,done){
     sel.value=keep;
     b.disabled=!(n>=50&&u.length>=3);
   }
-  ta.oninput=refresh;refresh();
+  ta.oninput=function(){refresh();keepEntry(ta.value);GR.write({part:"Page 12: Words",area:"EN",prompt:ENTRY_PROMPT,text:ta.value});};refresh();
   b.onclick=function(){
     if(!sel.value){out.innerHTML="";out.appendChild(el("div","note bad","<b>One thing missing.</b> Choose which of your sphere words you used figuratively."));return;}
-    S.data.entry=ta.value;S.data.fig=sel.value;
+    S.data.entry=ta.value;S.data.fig=sel.value;keepEntry(ta.value);
+    GR.write({part:"Page 12: Words",area:"EN",prompt:ENTRY_PROMPT,text:ta.value+"\n\n[Word used figuratively: "+sel.value+"]"});
     mark("entry","Writing the last entry",true,"","");
     out.innerHTML="";
     out.appendChild(el("div","note","<b>Sealed.</b> Colin has written you a letter in return."));

@@ -315,7 +315,7 @@ const ICON_FEATHER = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 3
 const ICON_STAMP = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" fill="#F2B01E"/><path d="M7 15l3-5 2 3 2-4 3 6z" fill="#9B5B34"/></svg>`;
 
 /* ---------- state ---------- */
-const GR = window.GR || {player:()=>'unknown', key:k=>k, start(){}, part(){}, partDone(){}, finish(){}, ask(){return {miss(){},hint(){},done(){},giveUp(){}};}};
+const GR = window.GR || {player:()=>'unknown', key:k=>k, start(){}, part(){}, partDone(){}, finish(){}, ask(){return {miss(){},hint(){},done(){},giveUp(){}};}, write(){}};
 const KEY = GR.key('sofia-map-mexico-v1');
 let S = {done:{}, feathers:0, postcard:'', mapwork:{}};
 try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch(e) {}
@@ -959,7 +959,7 @@ function renderFinish(){
   $('#fin-map').innerHTML = buildMap({soft:true});
   $('#fin-line').textContent = `You finished all seven stops and earned ${S.feathers} of Pluma's feathers.`;
   const ta = $('#postcard'); ta.value = S.postcard || '';
-  ta.oninput = ()=>{ S.postcard = ta.value; save(); };
+  ta.oninput = ()=>{ S.postcard = ta.value; save(); GR.write({game:'sofias-map-of-mexico', part:'Finish', area:'EN', prompt:'Postcard from Sofia to a friend in Australia about one day of her trip', text:ta.value}); };
   $('#mapwork').innerHTML = MAPWORK.map((m,k)=>`<li><label><input type="checkbox" id="mw${k}" ${S.mapwork[k]?'checked':''}><span>${esc(m)}</span></label></li>`).join('');
   $('#mapwork').querySelectorAll('input').forEach((c,k)=>c.onchange=()=>{ S.mapwork[k]=c.checked; save(); });
 }

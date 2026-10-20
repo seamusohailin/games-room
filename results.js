@@ -15,6 +15,8 @@
        q.giveUp()                    she moved on without getting it right
      GR.partDone("Stop 2")           a part has been finished
      GR.finish()                     the whole game is finished
+     GR.write({ prompt, text, game, part, area })   save something she typed (sent a few seconds after she stops typing;
+                                     one row per girl, game, prompt and day, updated as she edits)
 */
 (function () {
   var ENDPOINT = "https://script.google.com/macros/s/AKfycbxT8gXunqCv31jiyprsQu-TfLpLuyV7akTTf2j5oypMR0v-05QTwmQ6Rvh3IpamaW7M/exec"; // the results sheet's web app address
@@ -60,6 +62,13 @@
       .then(function () { sending = false; });
   }
 
+  var drafts = {}, draftTimer = null;
+  function pushDrafts() {
+    clearTimeout(draftTimer); draftTimer = null;
+    Object.keys(drafts).forEach(function (w) { push(drafts[w]); });
+    drafts = {};
+  }
+
   var S = null; // the current session
   function sessionEvent() {
     if (!S) return;
@@ -102,6 +111,15 @@
         missed: function () { return wrong.length; }
       };
     },
+    write: function (w) {
+      if (!w || w.text == null) return;
+      var d = new Date(), day = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+      var game = w.game || (S && S.game) || "unknown";
+      var wid = [player(), game, w.prompt || "", day].join("|");
+      drafts[wid] = { type: "writing", wid: wid, game: game, session: S ? S.id : "", part: w.part || (S && S.part) || "",
+        prompt: w.prompt || "", text: String(w.text).slice(0, 5000), area: w.area || "" };
+      clearTimeout(draftTimer); draftTimer = setTimeout(pushDrafts, 4000);
+    },
     pending: function () { return queue.length; },
     endpoint: function () { return ENDPOINT; },
     flush: flush
@@ -110,11 +128,12 @@
 
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "hidden") {
+      pushDrafts();
       if (S && !S.finished) { S.status = "left part-way"; sessionEvent(); }
       flush(true);
     } else { if (S && !S.finished) S.status = "playing"; flush(); }
   });
-  window.addEventListener("pagehide", function () { flush(true); });
+  window.addEventListener("pagehide", function () { pushDrafts(); flush(true); });
   window.addEventListener("online", flush);
   setTimeout(flush, 2000);
 })();
