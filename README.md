@@ -40,6 +40,14 @@ The sheet's script (`results-sheet-script.gs` in the Home Education copy of this
 
 Only paired devices can send results. The pairing code is kept in the script's **Project Settings → Script Properties** as `PAIRING_CODE`, never in the public code. Pair a device from **For grown-ups → Pair this iPad** in the Games Room (on the iPad, from the home-screen icon, not Safari). Until a device is paired, its results wait on the device. To change the code, edit `PAIRING_CODE` and pair the iPad again.
 
+## Testing a game without recording anything
+
+Add `?test=maeve` or `?test=maggie` to a game's address, for example
+`https://seamusohailin.github.io/games-room/games/lyrebird-course/index.html?test=maeve`.
+The game plays as that girl (her version of it), but nothing is recorded or sent to the results sheet,
+and its saved progress is kept apart from hers. A red banner shows while test mode is on.
+It works for every game kept in this site, on any device, including the paired iPad.
+
 ## On the iPads
 
 Open the address in Safari, tap **Share → Add to Home Screen**. It then opens full screen from its own icon. New games appear the next time it's opened.

@@ -3,6 +3,10 @@
    It records who is playing, each question answered and whether the game was finished,
    keeps them on the iPad, and sends them to the family's results sheet when online.
 
+   Test mode (for grown-ups): add ?test=maeve or ?test=maggie to a game's address.
+   The game then plays as that girl, but nothing is recorded or sent, and its saved progress
+   is kept apart from hers. A banner shows while test mode is on.
+
    For game authors:
      GR.player()                     "maggie", "maeve" or "unknown" (from the name tapped in the Games Room)
      GR.key("my-save")               a save key that is separate for each girl
@@ -42,7 +46,11 @@
   function refused() { return store(true, BADKEY) === "1"; }
   function now() { return new Date().toISOString(); }
 
+  var TEST = null;
+  try { var m = /[?&]test(?:=(maeve|maggie))?(?:&|$)/.exec(location.search); if (m) TEST = m[1] || "maggie"; } catch (e) {}
+
   function player() {
+    if (TEST) return TEST;
     var p = null;
     try { p = sessionStorage.getItem("gamesroom-player"); } catch (e) {}
     if (!p) p = store(true, "gamesroom-last-player");
@@ -52,7 +60,7 @@
   var queue = [];
   try { queue = JSON.parse(store(true, QKEY) || "[]"); } catch (e) { queue = []; }
   function saveQueue() { if (queue.length > 3000) queue = queue.slice(-3000); store(false, QKEY, JSON.stringify(queue)); }
-  function push(ev) { ev.id = uid(); ev.t = now(); ev.player = player(); queue.push(ev); saveQueue(); schedule(); }
+  function push(ev) { if (TEST) return; ev.id = uid(); ev.t = now(); ev.player = player(); queue.push(ev); saveQueue(); schedule(); }
 
   var sending = false, timer = null;
   function schedule() { if (!timer) timer = setTimeout(function () { timer = null; flush(); }, 1500); }
@@ -94,7 +102,8 @@
 
   var GR = {
     player: player,
-    key: function (base) { return base + "::" + player(); },
+    key: function (base) { return base + "::" + (TEST ? "test-" : "") + player(); },
+    testing: function () { return !!TEST; },
     start: function (game) {
       if (S && S.game === game && !S.finished) return S.id;
       S = { id: uid(), game: game, started: now(), t0: Date.now(), part: "", partsDone: [], questions: 0, firstRight: 0, hints: 0, finished: false, status: "playing" };
@@ -160,6 +169,16 @@
     flush: flush
   };
   window.GR = GR;
+
+  if (TEST) {
+    var showBanner = function () {
+      var b = document.createElement("div");
+      b.textContent = "Test mode: playing as " + (TEST === "maeve" ? "Maeve" : "Maggie") + ". Nothing is recorded.";
+      b.style.cssText = "position:fixed;z-index:2147483001;top:0;left:0;right:0;padding:6px 12px;padding-top:calc(6px + env(safe-area-inset-top,0px));background:#C92A2A;color:#fff;font:600 14px system-ui,sans-serif;text-align:center;pointer-events:none;opacity:.92";
+      document.body.appendChild(b);
+    };
+    if (document.body) showBanner(); else document.addEventListener("DOMContentLoaded", showBanner);
+  }
 
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "hidden") {

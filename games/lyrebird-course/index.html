@@ -628,7 +628,7 @@ function buildSteps(i){
       {type:'talk',text:'<p><b>Trick 5: measuring distance.</b> A map is the land shrunk down. On a 1:10 000 map, 1 centimetre on the map is 10 000 centimetres on the ground.</p><p>That is 100 metres.</p>'},
       M_({q:'On a 1:10 000 map, the next control is 4 cm away. How far is that on the ground?',opts:['400 m','40 m','4 km'],why:'Each centimetre is 100 m, so 4 cm is 4 × 100 = 400 m.',clue:'Each centimetre is 100 metres.',concept:'Map scale and distance',area:'MA',item:'Scale 1:10 000, 4 cm'}));
       if(!E)a.push(M_({q:'Some maps are 1:15 000. Then 1 cm is 150 m. The control is 2 cm away. How far is that?',opts:['300 m','150 m','1500 m'],why:'2 × 150 = 300 m.',clue:'Each centimetre is 150 metres. There are two of them.',concept:'Map scale and distance',area:'MA',item:'Scale 1:15 000, 2 cm'}));}
-    a.push({type:'talk',text:'<p>Orienteers also count their steps. On a real course, you\'ll find out how many steps <b>you</b> take to walk 100 metres.</p><p>Then you can measure the land with your own legs!</p>',btn:'Collect my letter'});
+    a.push({type:'talk',text:'<p>Orienteers also count their steps. On the trail, you\'ll count how many steps <b>you</b> take from one stop to the next.</p><p>Then you can measure the land with your own legs!</p>',btn:'Collect my letter'});
     return a;
   }
 
@@ -815,19 +815,20 @@ function showLetter(){
 function showMission(){
   const mine=IS_MAEVE
     ?'<div class="job"><h3>Your extra job, Maeve: wildlife spotter</h3><p>Wombats, wallabies and lyrebirds have been seen along this trail. Keep your eyes open for them, and for wombat holes!</p></div>'
-    :'<div class="job"><h3>Your extra job, Maggie: course setter</h3><p>On the way back, you set two or three flags for Maeve to find. Plan them below first.</p></div>';
-  const intro='<p>Everything you just did works outside. Soon you\'ll run a real course with Dad, on the Rokeby to Crossover Rail Trail or in Warragul.</p>';
+    :'<div class="job"><h3>Your extra job, Maggie: map maker</h3><p>If there\'s no printed map, you draw the trail as you walk: the track, each bridge, seat and bend, and a north arrow. At the turnaround you hide flags for Maeve.</p></div>';
+  const intro='<p>Everything you just did works outside. Soon you\'ll go orienteering for real with Dad, on the Rokeby to Crossover Rail Trail or in Warragul.</p>';
   let h=nellHTML(intro)+`<div class="mission"><ol>
-    <li>Dad sets a course with real orange-and-white flags. Each flag has a secret letter on it.</li>
-    <li>You and your sister take turns at two jobs. Swap at every control.</li>
-    <li>Check each flag's code before you write down its letter.</li>
-    <li>The letters spell a password for a treasure tin at the finish.</li></ol>
-    <div class="jobs"><div class="job"><h3>Map Keeper</h3><p>Set the map with the compass, keep your thumb on where you are, and say which way to go.</p></div><div class="job"><h3>Compass Keeper</h3><p>Check which way is north, and count steps between controls.</p></div>${mine}</div></div>`;
-  if(!IS_MAEVE)h+=`<p class="eyebrow" style="margin-top:14px">My plan for Maeve's course</p><p style="margin-top:0">Write a clue for each flag you'd set. For example: "Control 1, beside the bench with the big tree fern behind it."</p><textarea id="plan" aria-label="My plan for Maeve's course"></textarea><p style="color:var(--muted);font-size:.95rem">This is saved, so you can come back to it.</p>`;
+    <li>At the start, set the map with the compass, and find north.</li>
+    <li>Every time you reach a bridge, a seat, a sign or a bend, stop. Find where you are on the map. Get it right and Dad gives you a secret letter.</li>
+    <li>You and your sister take turns at two jobs. Swap at every stop.</li>
+    <li>At the turnaround, hide flags for each other, mark them on the map, and find them.</li>
+    <li>On the way back, you lead. The letters spell a password for a treasure tin at the end.</li></ol>
+    <div class="jobs"><div class="job"><h3>Map Keeper</h3><p>Set the map, keep your thumb on where you are, and say what's coming next.</p></div><div class="job"><h3>Compass Keeper</h3><p>Check which way is north, say which way the trail goes, and count steps between stops.</p></div>${mine}</div></div>`;
+  if(!IS_MAEVE)h+=`<p class="eyebrow" style="margin-top:14px">My plan for Maeve's flags</p><p style="margin-top:0">At the turnaround you'll hide three flags for Maeve. Write how you'll describe each spot. For example: "Control 1, behind the seat, on the side away from the trail."</p><textarea id="plan" aria-label="My plan for Maeve's flags"></textarea><p style="color:var(--muted);font-size:.95rem">This is saved, so you can come back to it.</p>`;
   else h+='<p style="margin-top:14px"><b>Tell Dad:</b> which job would you like first, Map Keeper or Compass Keeper?</p>';
   subPage('The real course',h,intro);wireSay(main,intro);
   const ta=$('#plan');
-  if(ta){ta.value=S.plan||'';ta.oninput=()=>{S.plan=ta.value.slice(0,3000);save();G.write({prompt:"Plan clues for Maeve's real orienteering course",text:ta.value,game:GAME,part:'Treasure tin',area:'HSS'});};}
+  if(ta){ta.value=S.plan||'';ta.oninput=()=>{S.plan=ta.value.slice(0,3000);save();G.write({prompt:"Plan clues for flags to hide for Maeve on the real course",text:ta.value,game:GAME,part:'Treasure tin',area:'HSS'});};}
 }
 function showBoard(){
   const notes=[
