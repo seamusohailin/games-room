@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "lyrebird-course",
+    title: "Nell's Lyrebird Course",
+    blurb: "Learn to orienteer and find Nell's treasure tin.",
+    players: ["maggie", "maeve"],
+    subject: "Health and PE",
+    source: "Friday special activity: introduction to orienteering, before a real course on the Rokeby to Crossover Rail Trail",
+    added: "2026-10-21",
+    colour: "#B5179E",
+    href: "games/lyrebird-course/index.html"
+  },
+  {
     id: "globe-makers-apprentice",
     title: "The Globe-Maker's Apprentice",
     blurb: "Help Mistress Wren make a globe for Captain Hale.",
