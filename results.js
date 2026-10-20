@@ -17,7 +17,7 @@
      GR.finish()                     the whole game is finished
 */
 (function () {
-  var ENDPOINT = "";            // the results sheet's web app address
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbxT8gXunqCv31jiyprsQu-TfLpLuyV7akTTf2j5oypMR0v-05QTwmQ6Rvh3IpamaW7M/exec"; // the results sheet's web app address
   var KEY = "gr-2026-kq7";
   var QKEY = "gamesroom-queue-v1";
 
