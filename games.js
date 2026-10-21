@@ -82,7 +82,7 @@ window.GAMES = [
     source: "Times tables fluency",
     added: "2026-09-14",
     colour: "#E08A1E",
-    href: "https://silly-youtiao-d62f9b.netlify.app"
+    href: "games/whisker-and-pearl/index.html"
   },
   {
     id: "shadow-keeper",
