@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "puffing-mystery",
+    title: "The Puffing Mystery",
+    blurb: "Find out what happens inside you when you run, then test it on yourself.",
+    players: ["maggie", "maeve"],
+    subject: "Health and PE",
+    source: "Health and PE introduction: why the body changes during exercise (heart, lungs, heat, muscles and bones), leading into a heart-rate test",
+    added: "2026-10-21",
+    colour: "#C92E4A",
+    href: "games/puffing-mystery/index.html"
+  },
+  {
     id: "lyrebird-course",
     title: "Nell's Treasure Map",
     blurb: "Learn to read a map and use a compass, then find Nell's treasure.",

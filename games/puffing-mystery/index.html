@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>The Puffing Mystery</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
+<style>
+/* A body explorer's notebook: warm paper with a faint heartbeat trace, white panels,
+   a deep heart-red ink and a teal "oxygen" accent. */
+:root{
+  --paper:#FFF8F2; --paper-2:#F8E6DC; --ink:#2A1E22; --muted:#6B585D; --line:#EBD5CB;
+  --deep:#7A1E36; --accent:#C92E4A; --accent-d:#8E1C31; --alt:#1F7A8C; --alt-d:#135563;
+  --good:#2C8A4B; --good-bg:#E5F4E7; --soft:#FFF3EC;
+  --display:"Fredoka","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
+  --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--ink);font-family:var(--body);font-size:1.18rem;line-height:1.5;background-color:var(--paper);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='160'%3E%3Cpath d='M0 80h70l10-22 14 52 14-74 12 44h200' fill='none' stroke='%23C92E4A' stroke-opacity='.06' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E");}
+.wrap{max-width:1080px;margin:0 auto;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(84px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+button,input,textarea{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--alt);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:600;margin:0;line-height:1.15;text-wrap:balance}
+
+.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding:6px 0 14px;margin-bottom:18px;border-bottom:4px solid var(--deep)}
+.brand{display:flex;gap:12px;align-items:center}
+.brand svg{width:52px;height:52px;flex:none}
+.brand h1{font-size:clamp(1.6rem,4.6vw,2.4rem);color:var(--deep)}
+.brand p{margin:2px 0 0;font-size:.98rem;color:var(--muted)}
+.card{display:flex;gap:4px;background:#fff;border:2px solid var(--deep);border-radius:10px;padding:5px}
+.card .box{width:40px;height:44px;border:1.5px solid #e2cfc7;border-radius:6px;display:grid;place-items:center;position:relative}
+.card .box small{position:absolute;top:1px;left:4px;font-size:.62rem;color:var(--muted)}
+.card .box svg{width:24px;height:24px}
+.card .box.on{background:#FBE3E7;border-color:var(--deep)}
+
+.panel{background:#fff;border:2px solid var(--line);border-radius:16px;box-shadow:0 5px 0 var(--line);padding:20px}
+.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin:0 0 4px}
+.sec-head{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.sec-head h2{font-size:clamp(1.5rem,4.4vw,2.1rem);color:var(--deep)}
+.back{background:#fff;border:2px solid var(--deep);border-radius:999px;padding:6px 16px;min-height:46px;cursor:pointer;font-size:1rem}
+.dots{display:flex;gap:6px;margin-left:auto}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--paper-2);border:2px solid var(--line)}
+.dots i.on{background:var(--deep);border-color:var(--deep)}
+
+.guide{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:start;margin-bottom:16px}
+.guide .face{width:72px;height:72px}
+.bubble{background:var(--soft);border:2px solid var(--line);border-radius:4px 18px 18px 18px;padding:12px 16px;font-size:1.22rem}
+.bubble p{margin:0 0 .5em}.bubble p:last-child{margin:0}
+.bubble b{color:var(--deep)}
+
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{font-family:var(--display);font-weight:600;font-size:1.2rem;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:.55em 1.4em;min-height:52px;cursor:pointer;box-shadow:0 4px 0 var(--accent-d);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--accent-d)}
+.btn.alt{background:var(--alt);box-shadow:0 4px 0 var(--alt-d)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn[disabled]{opacity:.4;cursor:default}
+.next-row{margin-top:18px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px;align-items:start}
+@media (max-width:820px){.split{grid-template-columns:1fr}}
+.art{display:grid;place-items:center;margin:4px 0 14px}
+.art>svg{width:100%;max-width:520px;height:auto;max-height:44vh}
+.body-art>svg{max-width:300px;max-height:52vh}
+.q{font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,1.6rem);margin:0 0 14px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 14px;min-height:60px;cursor:pointer;font-size:1.15rem;box-shadow:0 4px 0 var(--line)}
+.opt.wrong{opacity:.38;text-decoration:line-through;cursor:default}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.picked{border-color:var(--deep);background:#FBE3E7}
+.opt[disabled]{cursor:default}
+.fb{margin-top:14px;border-radius:12px;padding:12px 16px;font-size:1.15rem;display:none}
+.fb.show{display:block}
+.fb.clue{background:#FFF4D6;border:2px solid #F1D48A}
+.fb.yes{background:var(--good-bg);border:2px solid #9ED3AE}
+.fb b{font-family:var(--display);font-weight:600}
+.hintbtn{background:#FFF4D6;border:2px solid #E3BE5C;border-radius:999px;padding:6px 16px;min-height:46px;cursor:pointer;font-size:1rem}
+.hintbtn[disabled]{opacity:.5;cursor:default}
+textarea{width:100%;min-height:120px;font-size:1.1rem;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff}
+.numin{font-family:var(--display);font-size:2rem;width:7.5ch;text-align:center;padding:6px 10px;border:3px solid var(--deep);border-radius:12px;background:#fff}
+
+.trail{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:62px;background:var(--soft);border:2px dashed var(--alt);border-radius:14px;padding:10px 12px;margin-bottom:14px}
+.trail .tag{background:var(--alt);color:#fff;border-radius:999px;padding:6px 14px;font-weight:700;font-size:1.05rem}
+.trail .arrow{color:var(--alt);font-weight:700}
+.trail .empty{color:var(--muted);font-size:1rem}
+
+.sortcard{background:var(--soft);border:3px solid var(--deep);border-radius:16px;padding:18px;text-align:center;font-family:var(--display);font-weight:600;font-size:1.5rem;margin:0 0 14px}
+.count-line{color:var(--muted);margin:0 0 10px}
+
+.ring{display:grid;place-items:center;margin:8px 0}
+.ring svg{width:min(240px,62vw);height:auto}
+.ring .big{font-family:var(--display);font-weight:700}
+
+.stops{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:6px}
+.stop{display:grid;gap:6px;justify-items:center;text-align:center;background:#fff;border:3px solid var(--line);border-radius:16px;padding:14px 10px;cursor:pointer;box-shadow:0 4px 0 var(--line);min-height:132px}
+.stop .num{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--paper-2);font-family:var(--display);font-weight:700;font-size:1.5rem;color:var(--deep)}
+.stop .num svg{width:32px;height:32px}
+.stop.done .num{background:#FBE3E7}
+.stop.next{border-color:var(--accent)}
+.stop.locked{opacity:.45;cursor:default}
+.stop b{font-family:var(--display);font-weight:600;font-size:1.1rem}
+
+.done-card{display:grid;justify-items:center;gap:10px;text-align:center;padding:10px 0}
+.done-card svg{width:110px;height:110px}
+.pop{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+.beat{animation:beat 1.1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:6px}
+.note{background:#FFFDF8;border:1px solid #EAD9CF;border-radius:6px;padding:16px;box-shadow:0 3px 8px rgba(80,30,30,.1)}
+.note h3{font-size:1.2rem;color:var(--deep);margin-bottom:4px}
+.note p{margin:0;font-size:1.05rem}
+.end{text-align:center;padding:16px 6px}
+.end h2{font-size:2rem;color:var(--deep);margin-bottom:8px}
+.who{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.who button{min-width:160px}
+.grown{margin-top:34px;padding-top:14px;border-top:2px dashed var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;color:var(--muted)}
+.grown button{background:transparent;border:2px solid var(--line);border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:.95rem}
+.grown button[aria-pressed="true"]{background:var(--deep);border-color:var(--deep);color:#fff}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="27" fill="#fff" stroke="#7A1E36" stroke-width="4"/><path d="M30 44c-9-7-17-12-17-20 0-6 5-10 10-10 3 0 6 2 7 5 1-3 4-5 7-5 5 0 10 4 10 10 0 8-8 13-17 20z" fill="#C92E4A"/><path d="M10 31h11l3-6 4 12 4-16 3 10h15" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      <div><h1>The Puffing Mystery</h1><p>What happens inside you when you run?</p></div>
+    </div>
+    <div class="card" id="card" aria-label="Your stops"></div>
+  </header>
+  <main id="main"></main>
+  <footer class="grown">
+    <span>For grown-ups:</span>
+    <button id="easy" aria-pressed="false">Easier version: off</button>
+    <button id="reset">Start over</button>
+  </footer>
+</div>
+
+<script>
+'use strict';
+const G=window.GR||{player:()=>'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask(){return {miss(){},hint(){},done(){},giveUp(){},missed:()=>0};},write(){}};
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const pick=(a,n)=>shuffle(a).slice(0,n);
+const val=x=>typeof x==='function'?x():x;
+const GAME='puffing-mystery';
+const REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const main=$('#main');
+function toTop(){try{window.scrollTo({top:0,behavior:REDUCED?'auto':'smooth'});}catch(e){window.scrollTo(0,0);}}
+
+/* ---------- who is playing ---------- */
+let PLAYER=G.player();
+function setPlayerVars(){
+  window.IS_MAEVE=PLAYER==='maeve';
+  window.FULL=!IS_MAEVE;            // Maggie gets the extra reasoning steps
+  window.NAME=IS_MAEVE?'Maeve':(PLAYER==='maggie'?'Maggie':'');
+}
+setPlayerVars();
+const SAVE='puffing-mystery-v1';
+let KEY=G.key(SAVE);
+function blank(){return {done:[0,0,0,0,0,0],easy:false,notice:[],guess:'',guessText:'',act:'',unit:'pulse',counts:{rest:null,after:null,recover:null},predict:null,report:'',tell:''};}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.done)&&v.done.length===6&&v.counts)return Object.assign(blank(),v);}catch(e){}return blank();}
+let S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ---------- words that depend on what she counted ---------- */
+const isPulse=()=>S.unit!=='breaths';
+const unitWord=()=>isPulse()?'heartbeats':'breaths';
+const bumpWord=()=>isPulse()?'beats':'breaths';
+
+/* ---------- pictures ---------- */
+const FACE='<svg class="face" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="39" fill="#FBE3E7"/><path d="M12 78c3-15 14-22 28-22s25 7 28 22" fill="#1F7A8C"/><path d="M33 56l7 7 7-7" fill="#fff"/><path d="M26 64c0 6 4 9 8 9" stroke="#C9C9C9" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="35" cy="74" r="3.4" fill="#9a9a9a"/><circle cx="40" cy="36" r="17" fill="#8D5A3B"/><path d="M21 36c-2-14 8-22 19-22s21 8 19 22c-2-3-4-5-6-6-4-6-9-8-13-8s-11 3-14 8c-2 1-4 3-5 6z" fill="#2B1B14"/><circle cx="21" cy="40" r="5" fill="#2B1B14"/><circle cx="59" cy="40" r="5" fill="#2B1B14"/><circle cx="34" cy="37" r="1.9" fill="#1b1b1b"/><circle cx="46" cy="37" r="1.9" fill="#1b1b1b"/><path d="M34 45c3 2.6 9 2.6 12 0" stroke="#3b1b12" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+const HEART_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C6 16.5 2 13.2 2 8.6 2 5.5 4.4 3 7.4 3c1.9 0 3.6 1 4.6 2.6C13 4 14.7 3 16.6 3 19.6 3 22 5.5 22 8.6c0 4.6-4 7.9-10 12.4z" fill="#C92E4A"/></svg>';
+
+/* front view of a body. f = the parts to show strongly; others fade.
+   parts: air, lungs, heart, blood, muscles. labels = true to name them. */
+function bodySVG(f,labels){
+  f=f||[];const on=k=>!f.length||f.includes(k);const op=k=>on(k)?'1':'.18';
+  const skin='#F3D2BD',edge='#C69479';
+  const limb=d=>`<path d="${d}" stroke="${edge}" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="${d}" stroke="${skin}" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+  let s=`<svg viewBox="0 0 300 440" role="img" aria-label="A picture of the inside of a body">`;
+  s+=limb('M98 132 L70 200 L62 266')+limb('M202 132 L230 200 L238 266')+limb('M128 286 L122 360 L120 418')+limb('M172 286 L178 360 L180 418');
+  s+=`<path d="M96 122 Q150 108 204 122 L214 152 L206 292 Q150 306 94 292 L86 152 Z" fill="${skin}" stroke="${edge}" stroke-width="3"/>`;
+  s+=`<rect x="137" y="94" width="26" height="26" fill="${skin}"/><circle cx="150" cy="62" r="40" fill="${skin}" stroke="${edge}" stroke-width="3"/>`;
+  s+=`<circle cx="136" cy="58" r="3.4" fill="#2A1E22"/><circle cx="164" cy="58" r="3.4" fill="#2A1E22"/><ellipse cx="150" cy="80" rx="7" ry="5" fill="#9B4B4B"/>`;
+  /* air */
+  s+=`<g opacity="${op('air')}"><path d="M150 82 V146 M150 146 L130 160 M150 146 L170 160" stroke="#4FA3C7" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M120 92q-8-5-16 0t-16 0M120 104q-8-5-16 0t-16 0" stroke="#4FA3C7" stroke-width="3" fill="none" stroke-linecap="round"/></g>`;
+  /* lungs */
+  s+=`<g opacity="${op('lungs')}"><path d="M128 150c-18 2-28 26-28 52 0 16 6 24 18 24 12 0 18-8 18-22v-46c0-6-3-8-8-8z" fill="#F4A9BA" stroke="#C2566F" stroke-width="3"/><path d="M172 150c18 2 28 26 28 52 0 16-6 24-18 24-12 0-18-8-18-22v-46c0-6 3-8 8-8z" fill="#F4A9BA" stroke="#C2566F" stroke-width="3"/></g>`;
+  /* blood vessels */
+  s+=`<g opacity="${op('blood')}" stroke="#D9485F" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="2 7"><path d="M158 222 V284 L130 300 L124 400"/><path d="M158 284 L172 300 L178 400"/><path d="M152 196 L104 140 L74 204 L66 260"/><path d="M164 196 L196 140 L226 204 L234 260"/></g>`;
+  /* muscles */
+  s+=`<g opacity="${op('muscles')}" fill="#C25B44" stroke="#8A3A2A" stroke-width="2"><ellipse cx="123" cy="330" rx="13" ry="32"/><ellipse cx="177" cy="330" rx="13" ry="32"/><ellipse cx="83" cy="166" rx="10" ry="24" transform="rotate(22 83 166)"/><ellipse cx="217" cy="166" rx="10" ry="24" transform="rotate(-22 217 166)"/></g>`;
+  /* heart (on the body's left, so it shows to the right of centre) */
+  s+=`<g opacity="${op('heart')}"><path class="${on('heart')&&f.includes('heart')?'beat':''}" d="M160 230c-11-8-22-14-22-25 0-7 5-11 11-11 4 0 8 2 11 6 3-4 7-6 11-6 6 0 11 4 11 11 0 11-11 17-22 25z" fill="#C92E4A" stroke="#7A1E36" stroke-width="2.5"/></g>`;
+  if(labels){
+    const lab=(k,x,y,t,anchor)=>on(k)?`<text x="${x}" y="${y}" text-anchor="${anchor||'start'}" font-family="Andika,sans-serif" font-weight="700" font-size="17" fill="#2A1E22" paint-order="stroke" stroke="#fff" stroke-width="5">${t}</text>`:'';
+    s+=lab('air',24,86,'air in')+lab('air',158,128,'windpipe')+lab('lungs',30,236,'lungs')+lab('heart',196,236,'heart')+lab('blood',190,310,'blood')+lab('muscles',204,372,'muscles');
+  }
+  return s+'</svg>';
+}
+function wristSVG(){
+  return `<svg viewBox="0 0 340 190" role="img" aria-label="Two fingers resting on the inside of the wrist, below the thumb">
+  <path d="M8 84 H214 Q252 70 290 84 Q318 96 300 116 Q262 132 214 124 H8 Z" fill="#F3D2BD" stroke="#C69479" stroke-width="3"/>
+  <path d="M236 82 Q258 50 286 54" stroke="#C69479" stroke-width="20" stroke-linecap="round" fill="none"/><path d="M236 82 Q258 50 286 54" stroke="#F3D2BD" stroke-width="14" stroke-linecap="round" fill="none"/>
+  <path d="M120 104 H208" stroke="#E9B9A3" stroke-width="2"/>
+  <rect x="176" y="8" width="17" height="82" rx="8.5" fill="#EBC1A6" stroke="#B5876B" stroke-width="2"/>
+  <rect x="197" y="12" width="17" height="78" rx="8.5" fill="#EBC1A6" stroke="#B5876B" stroke-width="2"/>
+  <circle class="beat" cx="196" cy="96" r="6" fill="#C92E4A"/>
+  <text x="270" y="40" text-anchor="middle" font-family="Andika,sans-serif" font-weight="700" font-size="16" fill="#6B585D">thumb</text>
+  <text x="60" y="160" font-family="Andika,sans-serif" font-weight="700" font-size="16" fill="#6B585D">palm up. two fingers, not your thumb</text></svg>`;
+}
+function armSVG(){
+  return `<svg viewBox="0 0 320 220" role="img" aria-label="A bent arm with the muscle at the front of the upper arm bulging">
+  <path d="M40 180 L150 170 L170 60" stroke="#C69479" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M40 180 L150 170 L170 60" stroke="#F3D2BD" stroke-width="38" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <ellipse cx="98" cy="158" rx="40" ry="17" fill="#C25B44" opacity=".85" transform="rotate(-5 98 158)"/>
+  <circle cx="176" cy="44" r="24" fill="#F3D2BD" stroke="#C69479" stroke-width="3"/>
+  <text x="96" y="214" text-anchor="middle" font-family="Andika,sans-serif" font-weight="700" font-size="16" fill="#6B585D">the front muscle bulges as it pulls</text></svg>`;
+}
+
+/* ---------- the stops ---------- */
+const STOPS=[
+  {title:'The mystery'},
+  {title:'Breathing in'},
+  {title:'The pump'},
+  {title:'Hot and sweaty'},
+  {title:'Getting stronger'},
+  {title:'The heart test'}
+];
+const AREA_SC='SC',AREA_HPE='HPE',AREA_MA='MA';
+
+function buildSteps(i){
+  const c=[];
+  if(i===0){
+    c.push({type:'talk',text:`<p>Hello${NAME?' '+esc(NAME):''}! I'm Dr Tilly Thump, and I study how bodies move.</p><p>I have a mystery for you. When you run fast, three things happen. <b>Your heart thumps. You puff. You get hot.</b></p><p>Why? Your own body holds the clues. Let's find them.</p>`});
+    c.push({type:'talk',btn:"I've done them",text:`<p><b>Clue time!</b> Put the iPad down somewhere safe. Stand up and do <b>${S.easy?10:(IS_MAEVE?15:20)} star jumps</b>, as fast as you can.</p><p>Then come straight back.</p>`});
+    c.push({type:'chips',q:'What did you notice? Tap everything that happened.',opts:['My heart is thumping','I\'m puffing','I feel warm','My legs feel tired','I\'m a bit sweaty','Nothing changed']});
+    c.push({type:'guess'});
+  }
+  if(i===1){
+    c.push({type:'talk',art:bodySVG(['air','lungs','muscles'],true),text:`<p>First, three words.</p><p><b>Muscles</b> are the parts of you that move you. Your legs are full of them.</p><p>Muscles need <b>oxygen</b> to work. Oxygen is part of the air. You can't see it, but you breathe it in all day and all night.</p><p><b>Blood</b> picks up the oxygen in your lungs and carries it to your muscles.</p>`});
+    c.push({type:'seq',q:'Follow the oxygen! Tap the places in order, from the air outside to your leg muscles.',
+      items:S.easy?['Nose or mouth','Lungs','Heart','Leg muscles']:['Nose or mouth','Windpipe','Lungs','Blood','Heart','Leg muscles'],
+      clues:S.easy?['Where does air go in first?','Air goes down into your chest, to the lungs.','Next comes the pump that pushes blood round.','Last stop: the muscles that do the running.']
+        :['Where does air go in first?','Next, the tube that carries air down your neck.','The windpipe leads to two big spongy bags in your chest.','In the lungs, the oxygen moves into something red.','The blood goes to the pump that pushes it round your body.','Last stop: the muscles that do the running.'],
+      help:['Start with where the air comes in, and end with your legs.','Air goes in through your nose or mouth, then down to your lungs.','Example: nose or mouth, then windpipe, then lungs. Now what picks up the oxygen?'],
+      concept:'Breathing and oxygen',area:AREA_SC,item:'Order the oxygen trail',
+      after:`<div class="art body-art">${bodySVG(['air','lungs','blood','heart','muscles'],true)}</div>`});
+    c.push({type:'talk',text:`<p>When you run, your muscles work much harder. So they need much <b>more</b> oxygen, much faster.</p><p>So you breathe faster and deeper, to get more air in. <b>That's why you puff!</b></p>${FULL?'<p>Working muscles also make a waste gas called <b>carbon dioxide</b>. Your blood takes it back to your lungs, and you breathe it out.</p>':''}`});
+    c.push({type:'mcq',q:'Why do you puff when you run?',opts:['My muscles need more oxygen, so I breathe faster','My lungs are getting tired','The air is running out'],
+      why:'Puffing brings in more air, so your blood can carry more oxygen to your busy muscles.',clue:'Think about what your muscles need to work.',
+      help:['Muscles need something from the air to work.','Muscles need oxygen. How do you get more oxygen in?','Example: a fire needs more air to burn bigger. Your muscles need more air when they work harder.'],
+      concept:'Breathing and oxygen',area:AREA_SC});
+    if(FULL)c.push({type:'mcq',q:'When you breathe out hard after running, what are you getting rid of?',opts:['Carbon dioxide, a waste gas from working muscles','Sweat','Spare blood'],
+      why:'Your muscles make carbon dioxide as they work. The blood carries it to your lungs, and out it goes.',clue:'It is a gas, and the muscles made it.',
+      help:['It is a gas you breathe out.','Muscles make a waste gas as they work.','Its name has the word "carbon" in it.'],concept:'Breathing and oxygen',area:AREA_SC});
+  }
+  if(i===2){
+    c.push({type:'talk',art:bodySVG(['heart','blood'],true),text:`<p>Your <b>heart</b> is a muscle about the size of your fist. Make a fist and look at it!</p><p>Your heart never stops. Every beat squeezes blood through tubes all around your body. The blood carries oxygen to every muscle.</p>`});
+    c.push({type:'mcq',q:'When you run, why does your heart beat faster?',opts:['To pump more blood, so my muscles get more oxygen','Because it is scared','Because it wants a rest'],
+      why:'Faster beats push more blood around, and more blood means more oxygen for your muscles.',clue:'What does the blood carry to your muscles?',
+      help:['Remember what the blood carries.','Blood carries oxygen to your muscles. Running muscles need more of it.','Example: if a shop runs out of bread faster, the truck has to bring bread more often.'],
+      concept:'Heart and blood',area:AREA_SC});
+    if(S.easy)c.push({type:'mcq',q:'Which makes your heart beat faster?',opts:['Running up a hill','Walking slowly'],why:'Running up a hill is very hard work for your legs, so they need lots of oxygen.',clue:'Which one makes your legs work hardest?',
+      help:['Which one is harder work?','Harder work means more oxygen is needed.','Running is harder than walking.'],concept:'Heart rate and effort',area:AREA_HPE});
+    else c.push({type:'seq',q:'Put these in order, from the slowest heartbeat to the fastest.',items:['Lying in bed','Walking to the letterbox','Running up a hill'],
+      clues:['Which one is the least work for your muscles?','Which one is a little bit of work?','Which one is the hardest work of all?'],
+      help:['The more work your muscles do, the faster your heart beats.','Lying in bed is the least work.','Example: lying still, then walking, then running.'],concept:'Heart rate and effort',area:AREA_HPE,item:'Order by heartbeat speed'});
+    c.push({type:'pulse'});
+  }
+  if(i===3){
+    c.push({type:'talk',text:`<p>When your muscles work hard, they make <b>heat</b>. That's why you get hot when you run.</p><p>Your body has a clever way to cool down: <b>sweat</b>. Sweat is mostly water. It comes out through your skin, and as it dries, it takes heat away with it.</p>`});
+    const cards=[
+      {t:'Sweating',yes:true,why:'Sweat dries on your skin and takes heat away.'},
+      {t:'Resting in the shade',yes:true,why:'Out of the hot sun, your body can cool down.'},
+      {t:'Putting on a thick jumper',yes:false,why:'A jumper keeps the heat in. That is great on a cold day, but not when you are hot.'},
+      {t:'Drinking water, so you can keep sweating',yes:true,why:'Your body needs water to make sweat.'},
+      {t:'Running even faster',yes:false,why:'Running faster makes your muscles make even more heat.'}
+    ];
+    c.push({type:'sort',q:'Does it help you cool down?',cards:S.easy?[cards[0],cards[2],cards[1]]:cards,concept:'Keeping cool when active',area:AREA_HPE});
+    c.push({type:'mcq',q:'Why should you drink water after running and sweating?',opts:['Sweat is mostly water, so I need to put the water back','Water makes my legs go faster','So I don\'t get hungry'],
+      why:'Sweating uses up water. Drinking puts it back, so your body can keep cooling itself.',clue:'What is sweat mostly made of?',
+      help:['Think about what sweat is made of.','Sweat is mostly water.','If water leaves your body as sweat, you need to put it back.'],concept:'Drinking water',area:AREA_HPE});
+    if(FULL)c.push({type:'mcq',q:'You finish a run and sit down in the wind, still sweaty. Soon you feel cold. Why?',opts:['The sweat keeps drying, and it keeps taking heat away','Sweat is made of cold water','The wind makes your sweat hotter'],
+      why:'Drying sweat cools you even after you stop. That is why a jumper is handy after sport, but not during it.',clue:'What does drying sweat do?',
+      help:['Remember how sweat cools you.','Sweat takes heat away as it dries.','Wind makes things dry faster, like washing on the line.'],concept:'Keeping cool when active',area:AREA_SC});
+  }
+  if(i===4){
+    c.push({type:'talk',btn:'I felt it!',art:armSVG(),text:`<p>Muscles move you by <b>pulling on your bones</b>.</p><p>Try it! Hold your arm out straight. Put your other hand on the front of your upper arm. Now slowly bend your arm.</p><p>Can you feel the muscle getting fatter and harder? It is pulling your arm up.</p>`});
+    if(FULL)c.push({type:'mcq',q:'Muscles can only pull. They can never push. So what straightens your arm again?',opts:['A muscle on the back of the upper arm pulls it straight','The front muscle pushes it straight','Your bones straighten by themselves'],
+      why:'Muscles work in pairs. One pulls your arm up, and its partner on the back pulls it straight.',clue:'If muscles can only pull, something else has to pull the other way.',
+      help:['Muscles only pull.','So a different muscle must pull the other way.','Try it: put your hand on the back of your upper arm as you straighten it.'],concept:'Muscles pull in pairs',area:AREA_SC});
+    c.push({type:'talk',art:bodySVG(['heart','muscles'],true),text:`<p>Here is something wonderful. When you use your muscles, they <b>get stronger</b>.</p><p>And your heart is a muscle too! Moving every day makes your heart stronger.</p><p>Your bones are still growing. Running, jumping and skipping now help build <b>strong bones</b> that last your whole life.</p>`});
+    c.push({type:'mcq',q:'Which of these helps build strong bones?',opts:['Jumping and skipping','Sitting still for a long time','Holding your breath'],
+      why:'Every jump gives your bones a little push to grow strong.',clue:'Bones grow strong when you move and land on your feet.',
+      help:['Think about moving, not keeping still.','Bones get stronger when you land on them, like when you jump.','Example: a skipping rope game is bone-building.'],concept:'Exercise strengthens the body',area:AREA_HPE});
+  }
+  if(i===5){
+    c.push({type:'talk',text:`<p>You're a body explorer now. Time for a <b>real test, on yourself</b>.</p><p>You'll count your ${unitWord()} three times: while you're resting, straight after moving, and after a rest.</p><p>${IS_MAEVE?'Ask a grown-up to sit with you for this one. ':''}If your sister is here, you can help each other: one watches the circle while the other counts.</p>`});
+    c.push({type:'choose'});
+    c.push({type:'timer',secs:()=>30,title:'Rest first',text:'<p>Sit down and keep still. Breathe slowly while the circle fills up.</p>',start:'Start resting',doneText:'Rested. Now get ready to count.'});
+    c.push({type:'timer',count:true,secs:()=>15,title:'Count while you rest',text:()=>isPulse()?'<p>Put two fingers on your pulse. Tap <b>Start counting</b> and count every beat until the circle says <b>Stop</b>.</p>':'<p>Sit still. Tap <b>Start counting</b>, and count every breath in until the circle says <b>Stop</b>.</p>',start:'Start counting',doneText:'Stop! Remember your number.'});
+    c.push({type:'count',k:'rest'});
+    c.push({type:'predict'});
+    c.push({type:'timer',secs:()=>S.easy?30:60,title:'Move!',text:()=>`<p>Time to <b>${esc(actText())}</b>. Tap <b>Go</b> and keep moving until the circle is full.</p>`,start:'Go!',doneText:()=>isPulse()?'Stop! Quick, find your pulse.':'Stop! Sit down, quick.'});
+    c.push({type:'timer',count:true,secs:()=>15,title:'Count straight away',text:()=>isPulse()?'<p>Fingers on your pulse, then tap <b>Start counting</b>.</p>':'<p>Tap <b>Start counting</b> and count your breaths.</p>',start:'Start counting',doneText:'Stop! Remember your number.'});
+    c.push({type:'count',k:'after'});
+    c.push({type:'timer',secs:()=>IS_MAEVE?60:120,title:'Now rest',text:'<p>Sit down and rest. Breathe slowly while the circle fills.</p>',start:'Start resting',doneText:'Rested. Get ready to count once more.'});
+    c.push({type:'timer',count:true,secs:()=>15,title:'Count after resting',text:()=>isPulse()?'<p>Fingers on your pulse, then tap <b>Start counting</b>.</p>':'<p>Tap <b>Start counting</b> and count your breaths.</p>',start:'Start counting',doneText:'Stop! Remember your number.'});
+    c.push({type:'count',k:'recover'});
+    c.push({type:'chartq'});
+    c.push({type:'calc',when:()=>IS_MAEVE&&!S.easy&&S.counts.after>S.counts.rest,
+      q:()=>`You counted ${S.counts.rest} ${bumpWord()} before, and ${S.counts.after} after moving. How many more after moving?`,
+      answer:()=>S.counts.after-S.counts.rest,
+      help:()=>['Start at the smaller number and count up to the bigger one.',`Start at ${S.counts.rest}. Count on: ${S.counts.rest+1}, ${S.counts.rest+2}, and keep going until you say ${S.counts.after}. How many numbers did you say?`,'Example: from 20 to 25 is 5 more, because you say 21, 22, 23, 24, 25.'],
+      concept:'Finding the difference',area:AREA_MA,item:'How many more after moving'});
+    c.push({type:'calc',when:()=>FULL,
+      q:()=>`You counted for 15 seconds. Before moving you counted ${S.counts.rest}. How many ${bumpWord()} is that in a whole minute?`,
+      answer:()=>S.counts.rest*4,
+      help:()=>['How many lots of 15 seconds fit in one minute?','There are four lots of 15 seconds in a minute, so multiply by 4.',`Example: if you counted 22, then 22 × 4 = 88 in a minute.`],
+      concept:'Multiplying by 4',area:AREA_MA,item:'Resting count per minute'});
+    c.push({type:'calc',when:()=>FULL,
+      q:()=>`Straight after moving you counted ${S.counts.after}. How many ${bumpWord()} a minute is that?`,
+      answer:()=>S.counts.after*4,
+      help:()=>['Same as before: four lots of 15 seconds make a minute.','Multiply your count by 4.',`Example: 30 × 4 = 120.`],
+      concept:'Multiplying by 4',area:AREA_MA,item:'After-moving count per minute'});
+    c.push({type:'calc',when:()=>FULL&&S.counts.after>S.counts.rest,
+      q:()=>`So how many more ${bumpWord()} a minute did you have after moving than at rest?`,
+      answer:()=>(S.counts.after-S.counts.rest)*4,
+      help:()=>['Take the smaller number away from the bigger one.',`Work out ${S.counts.after*4} − ${S.counts.rest*4}.`,'Example: 120 − 88 = 32.'],
+      concept:'Finding the difference',area:AREA_MA,item:'Difference per minute'});
+    c.push({type:'compare'});
+    c.push({type:'mcq',when:()=>S.counts.after>S.counts.rest,q:()=>`Why did your ${unitWord()} speed up after moving?`,
+      opts:()=>[isPulse()?'My muscles needed more oxygen, so my heart pumped faster':'My muscles needed more oxygen, so I breathed faster','I was tired of sitting','The iPad told me to'],
+      why:'Your test showed the answer to the mystery: busy muscles need more oxygen.',clue:'Think back to what muscles need.',
+      help:['What do working muscles need?','They need oxygen, carried by the blood.','Running muscles need more oxygen, so your heart and lungs speed up to bring it.'],concept:'Heart and blood',area:AREA_SC,item:'Explain the speed-up'});
+    c.push({type:'mcq',when:()=>S.counts.recover<S.counts.after,q:()=>`Why did your ${unitWord()} slow down again when you rested?`,
+      opts:['My muscles didn\'t need so much oxygen any more','My heart forgot how to beat fast','I stopped breathing'],
+      why:'Resting muscles need less oxygen, so your heart and lungs can slow down.',clue:'What were your muscles doing while you rested?',
+      help:['Were your muscles working hard while you rested?','Resting muscles need less oxygen.','Less oxygen needed means your heart and lungs can take it easy.'],concept:'Heart rate and effort',area:AREA_HPE,item:'Explain the slow-down'});
+    if(FULL)c.push({type:'mcq',q:'People who run and play a lot often have a heart that slows down quickly after exercise. What might that tell you?',
+      opts:['Their heart muscle is stronger, so each beat pumps more blood','Their heart is worn out from all that running','Their muscles don\'t need oxygen'],
+      why:'A heart that gets lots of exercise grows stronger, like any muscle. A stronger heart can do the same job with fewer beats.',clue:'Remember: the heart is a muscle, and muscles get stronger when you use them.',
+      help:['The heart is a muscle.','Muscles get stronger when you use them.','A stronger pump pushes more blood with every squeeze.'],concept:'Exercise strengthens the body',area:AREA_HPE,item:'Fitter hearts slow down faster'});
+    else c.push({type:'mcq',q:'One person walks up a hill. Another person runs up the same hill. Whose heart beats faster?',opts:['The one who runs','The one who walks','They beat the same'],
+      why:'Running is harder work, so those muscles need more oxygen, and the heart has to pump faster.',clue:'Which one is harder work for the legs?',
+      help:['Which is harder work?','Harder work needs more oxygen.','Running is harder than walking, so the runner\'s heart pumps faster.'],concept:'Heart rate and effort',area:AREA_HPE,item:'Walk or run up a hill'});
+    c.push({type:'write'});
+  }
+  return c;
+}
+const ACTS=[
+  {k:'jumps',t:'Star jumps',do:'do star jumps'},
+  {k:'spot',t:'Running on the spot',do:'run on the spot'},
+  {k:'skip',t:'Skipping (with or without a rope)',do:'skip'},
+  {k:'run',t:'Running to a tree or the fence and back, again and again',do:'run to your tree or fence and back'}
+];
+function actText(){const a=ACTS.find(x=>x.k===S.act);return a?a.do:'move fast';}
+
+/* ---------- top card and home ---------- */
+function renderCard(){
+  $('#card').innerHTML=STOPS.map((st,i)=>`<div class="box ${S.done[i]?'on':''}"><small>${i+1}</small>${S.done[i]?HEART_ICON:''}</div>`).join('');
+}
+function nextIdx(){const n=S.done.findIndex(d=>!d);return n<0?6:n;}
+function guideHTML(html){return `<div class="guide">${FACE}<div class="bubble">${html}</div></div>`;}
+function home(){
+  RUN=null;renderCard();
+  if(PLAYER==='unknown')return whoScreen();
+  const nx=nextIdx();
+  let msg;
+  if(nx===0)msg=`<p>Hello${NAME?' '+esc(NAME):''}! I'm Dr Tilly Thump. I have a mystery about your body, and you're going to help me solve it.</p><p>Tap stop 1 to begin.</p>`;
+  else if(nx<5)msg=`<p>Good work, explorer! Next is stop ${nx+1}: <b>${esc(STOPS[nx].title)}</b>.</p><p>You can stop any time. Your clues are saved.</p>`;
+  else if(nx===5)msg='<p>You have all the clues. Now test them on your own body! Tap <b>The heart test</b>.</p>';
+  else msg='<p>Mystery solved! You can visit any stop again, or do the heart test again with a different way of moving.</p>';
+  const tiles=STOPS.map((st,i)=>{const locked=i>nx;const cls=['stop',S.done[i]?'done':'',i===nx?'next':'',locked?'locked':''].join(' ');
+    return `<button class="${cls}" data-i="${i}" ${locked?'disabled aria-disabled="true"':''}><span class="num">${S.done[i]?HEART_ICON:(i+1)}</span><b>${esc(st.title)}</b><span style="font-size:.9rem;color:var(--muted)">${S.done[i]?'Done':locked?'Not yet':'Ready'}</span></button>`;}).join('');
+  main.innerHTML=`<div class="panel">${guideHTML(msg)}<div class="stops">${tiles}</div>${nx>=6?'<div class="next-row"><button class="btn alt" id="solved">See the mystery solved</button></div>':''}</div>`;
+  $$('.stop').forEach(b=>b.onclick=()=>{if(!b.disabled)openStop(+b.dataset.i);});
+  if($('#solved'))$('#solved').onclick=solvedCard;
+  toTop();
+}
+function whoScreen(){
+  main.innerHTML=`<div class="panel" style="text-align:center"><h2 style="color:var(--deep)">Who's playing?</h2><div class="who"><button class="btn" id="pMaggie">Maggie</button><button class="btn alt" id="pMaeve">Maeve</button></div></div>`;
+  const set=p=>{try{sessionStorage.setItem('gamesroom-player',p);localStorage.setItem('gamesroom-last-player',p);}catch(e){}PLAYER=p;setPlayerVars();KEY=G.key(SAVE);S=load();showEasy();home();};
+  $('#pMaggie').onclick=()=>set('maggie');$('#pMaeve').onclick=()=>set('maeve');
+}
+
+/* ---------- step runner ---------- */
+let RUN=null,TIMER=null;
+function stopTimer(){if(TIMER){cancelAnimationFrame(TIMER.raf);clearTimeout(TIMER.to);TIMER=null;}}
+function openStop(i){G.start(GAME);G.part(STOPS[i].title);RUN={i,steps:buildSteps(i),k:0};renderStep();}
+function nextStep(){if(!RUN)return;stopTimer();RUN.k++;if(RUN.k>=RUN.steps.length)stopDone();else renderStep();}
+function goBack(n){if(!RUN)return;stopTimer();RUN.k=Math.max(0,RUN.k-n);renderStep();}
+function shell(inner){
+  const st=STOPS[RUN.i];let dots='';for(let k=0;k<RUN.steps.length;k++)dots+=`<i class="${k<=RUN.k?'on':''}"></i>`;
+  main.innerHTML=`<div class="sec-head"><button class="back" id="back">&larr; All stops</button><div><p class="eyebrow">Stop ${RUN.i+1}</p><h2>${esc(st.title)}</h2></div><div class="dots" aria-hidden="true">${dots}</div></div><div class="panel" id="stage">${inner}</div>`;
+  $('#back').onclick=()=>{stopTimer();home();};toTop();return $('#stage');
+}
+function renderStep(){
+  const st=RUN.steps[RUN.k];
+  if(st.when&&!st.when()){RUN.k++;if(RUN.k>=RUN.steps.length)return stopDone();return renderStep();}
+  ({talk:stepTalk,chips:stepChips,guess:stepGuess,mcq:stepMCQ,seq:stepSeq,sort:stepSort,pulse:stepPulse,choose:stepChoose,timer:stepTimer,count:stepCount,predict:stepPredict,chartq:stepChart,calc:stepCalc,compare:stepCompare,write:stepWrite})[st.type](st);
+}
+function nextBtn(label,id){return `<div class="next-row"><button class="btn" id="${id||'next'}">${label||'Next'} &rarr;</button></div>`;}
+function stepTalk(st){shell(guideHTML(val(st.text))+(st.art?`<div class="art ${st.art.indexOf('300 440')>0?'body-art':''}">${st.art}</div>`:'')+nextBtn(st.btn));$('#next').onclick=nextStep;}
+
+/* help in three levels: a reminder, a focused hint, then a worked example */
+function helpHTML(){return '<div class="row" style="margin:0 0 12px"><button class="hintbtn" id="help">Help, please</button></div>';}
+function wireHelp(levels,q){const b=$('#help');if(!b||!levels)return;let n=0;b.onclick=()=>{if(n>=levels.length)return;q&&q.hint();const fb=$('#fb');fb.className='fb show clue';fb.innerHTML=`<b>${['Remember','Hint','Example'][n]}:</b> ${esc(levels[n])}`;n++;if(n>=levels.length)b.disabled=true;else b.textContent='More help';};}
+
+/* multiple choice (the first option listed is the right one) */
+function stepMCQ(st){
+  let opts=val(st.opts).map((t,n)=>({t,ok:n===0}));
+  if(S.easy&&opts.length>2)opts=[opts[0],pick(opts.slice(1),1)[0]];
+  opts=shuffle(opts);
+  const qtext=val(st.q);
+  shell(`<p class="q">${esc(qtext)}</p>${st.help?helpHTML():''}<div class="opts">${opts.map((op,n)=>`<button class="opt" data-n="${n}"><span>${esc(op.t)}</span></button>`).join('')}</div><div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>`);
+  const q=G.ask({item:st.item||qtext,concept:st.concept,area:st.area,part:STOPS[RUN.i].title});const fb=$('#fb');let solved=false;wireHelp(st.help,q);
+  $$('.opt').forEach(b=>b.onclick=()=>{
+    if(solved||b.classList.contains('wrong'))return;const op=opts[+b.dataset.n];
+    if(op.ok){solved=true;q.done();b.classList.add('right');$$('.opt').forEach(x=>x.disabled=true);$('#help')&&($('#help').disabled=true);fb.className='fb show yes';fb.innerHTML=`<b>${pick(['Yes!','That\'s it!','Spot on!','Well worked out!'],1)[0]}</b> ${esc(st.why||'')}`;$('#nr').hidden=false;$('#next').onclick=nextStep;}
+    else{q.miss(op.t);b.classList.add('wrong');b.disabled=true;fb.className='fb show clue';fb.innerHTML=`<b>Not that one.</b> ${esc(st.clue||'Have another look.')}`;}
+  });
+}
+
+/* tap things in order */
+function stepSeq(st){
+  const items=st.items;let got=0;
+  const cards=shuffle(items.map((t,n)=>({t,n})));
+  shell(`<p class="q">${esc(st.q)}</p>${helpHTML()}<div class="trail" id="trail"><span class="empty">Your trail will show here.</span></div><div class="opts">${cards.map(c=>`<button class="opt" data-n="${c.n}"><span>${esc(c.t)}</span></button>`).join('')}</div><div class="fb" id="fb"></div><div id="after"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>`);
+  const q=G.ask({item:st.item||st.q,concept:st.concept,area:st.area,part:STOPS[RUN.i].title});wireHelp(st.help,q);const fb=$('#fb'),trail=$('#trail');
+  $$('.opt').forEach(b=>b.onclick=()=>{
+    if(b.disabled)return;const n=+b.dataset.n;
+    if(n===got){
+      if(got===0)trail.innerHTML='';
+      if(got>0){const a=document.createElement('span');a.className='arrow';a.textContent='→';trail.appendChild(a);}
+      const t=document.createElement('span');t.className='tag';t.textContent=items[n];trail.appendChild(t);
+      b.disabled=true;b.classList.add('right');got++;fb.className='fb';
+      if(got===items.length){q.done();$('#help').disabled=true;fb.className='fb show yes';fb.innerHTML='<b>You did it!</b> That is the whole trail, in the right order.';if(st.after)$('#after').innerHTML=st.after;$('#nr').hidden=false;$('#next').onclick=nextStep;}
+    }else{q.miss(items[n]);fb.className='fb show clue';fb.innerHTML=`<b>Not yet.</b> ${esc(st.clues[got])}`;}
+  });
+}
+
+/* sort one card at a time */
+function stepSort(st){
+  let idx=0,q=null;
+  shell(`<p class="q">${esc(st.q)}</p><p class="count-line" id="cl"></p><div class="sortcard" id="sc"></div><div class="opts"><button class="opt" id="yes"><span>Yes, it helps</span></button><button class="opt" id="no"><span>No, it doesn't</span></button></div><div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>`);
+  const fb=$('#fb');
+  function show(){const c=st.cards[idx];$('#sc').textContent=c.t;$('#cl').textContent=`Card ${idx+1} of ${st.cards.length}`;['#yes','#no'].forEach(s=>{$(s).disabled=false;$(s).classList.remove('wrong','right');});
+    q=G.ask({item:'Cool down? '+c.t,concept:st.concept,area:st.area,part:STOPS[RUN.i].title});}
+  function answer(saidYes,btn){const c=st.cards[idx];
+    if(saidYes===c.yes){q.done();btn.classList.add('right');$('#yes').disabled=true;$('#no').disabled=true;fb.className='fb show yes';fb.innerHTML=`<b>${c.yes?'Yes, it helps.':'No, it doesn\'t.'}</b> ${esc(c.why)}`;
+      idx++;if(idx<st.cards.length){const nb=document.createElement('div');nb.className='next-row';nb.innerHTML='<button class="btn alt" id="nextcard">Next card &rarr;</button>';fb.appendChild(nb);$('#nextcard').onclick=()=>{fb.className='fb';show();};}
+      else{$('#nr').hidden=false;$('#next').onclick=nextStep;}}
+    else{q.miss(saidYes?'yes':'no');btn.classList.add('wrong');btn.disabled=true;fb.className='fb show clue';fb.innerHTML=`<b>Think again.</b> Does it make you hotter, or help heat get away?`;}}
+  $('#yes').onclick=()=>answer(true,$('#yes'));$('#no').onclick=()=>answer(false,$('#no'));show();
+}
+
+/* noticing: tap all that apply, no wrong answers */
+function stepChips(st){
+  shell(`<p class="q">${esc(st.q)}</p><div class="opts">${st.opts.map((t,n)=>`<button class="opt" data-n="${n}" aria-pressed="false"><span>${esc(t)}</span></button>`).join('')}</div>${nextBtn()}`);
+  const sel=new Set(S.notice.filter(t=>st.opts.includes(t)));
+  $$('.opt').forEach(b=>{const t=st.opts[+b.dataset.n];if(sel.has(t)){b.classList.add('picked');b.setAttribute('aria-pressed','true');}
+    b.onclick=()=>{if(sel.has(t))sel.delete(t);else sel.add(t);b.classList.toggle('picked');b.setAttribute('aria-pressed',sel.has(t)?'true':'false');$('#next').disabled=!sel.size;};});
+  $('#next').disabled=!sel.size;
+  $('#next').onclick=()=>{S.notice=Array.from(sel);save();G.write({prompt:'What I noticed after star jumps',text:S.notice.join('; '),game:GAME,part:STOPS[0].title,area:AREA_HPE});nextStep();};
+}
+
+/* the first guess: no right answer yet */
+function stepGuess(){
+  const opts=['My muscles need something','My heart is excited','I\'m not sure yet'];
+  shell(guideHTML('<p>Good noticing! Now here is the big question.</p>')+`<p class="q">Why do you think your heart thumps when you run? Make a guess. You'll find out later if you were right.</p><div class="opts">${opts.map((t,n)=>`<button class="opt ${S.guess===t?'picked':''}" data-n="${n}"><span>${esc(t)}</span></button>`).join('')}</div>${FULL?'<p style="margin:16px 0 6px">Or write your own guess:</p><textarea id="gt" maxlength="400" placeholder="I think..."></textarea>':''}${nextBtn()}`);
+  const nb=$('#next');nb.disabled=!(S.guess||S.guessText);
+  $$('.opt').forEach(b=>b.onclick=()=>{S.guess=opts[+b.dataset.n];save();$$('.opt').forEach(x=>x.classList.remove('picked'));b.classList.add('picked');nb.disabled=false;});
+  const gt=$('#gt');if(gt){gt.value=S.guessText||'';gt.oninput=()=>{S.guessText=gt.value.slice(0,400);save();nb.disabled=!(S.guess||S.guessText.trim());};}
+  nb.onclick=()=>{G.write({prompt:'My guess: why does your heart thump when you run?',text:[S.guess,S.guessText].filter(Boolean).join(' / '),game:GAME,part:STOPS[0].title,area:AREA_SC});nextStep();};
+}
+
+/* finding a pulse */
+function stepPulse(){
+  shell(guideHTML('<p>Every time your heart squeezes, you can feel a little bump in your wrist. That bump is your <b>pulse</b>.</p><p>Hold one hand out, palm up. Put two fingers on your wrist, just below your thumb. Press gently and keep very still.</p>')+`<div class="art">${wristSVG()}</div><div class="row" style="justify-content:center"><button class="btn" id="found">I can feel it!</button><button class="btn ghost" id="cant">I can't find it</button></div><div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>`);
+  const q=G.ask({item:'Find your pulse',concept:'Finding a pulse',area:AREA_HPE,part:STOPS[2].title});
+  const levels=['Press a little more gently, and move your fingers around slowly, just below your thumb. Keep very still and wait.','Try the side of your neck instead, just under your jaw. Press gently with two fingers, on one side only.','Do 10 star jumps, then put your hand flat on the left side of your chest. You will feel the thump. A grown-up can help you find the wrist spot too.'];
+  let n=0;
+  $('#found').onclick=()=>{q.done();$('#found').disabled=true;$('#cant').disabled=true;const fb=$('#fb');fb.className='fb show yes';fb.innerHTML='<b>Brilliant!</b> Each bump is one squeeze of your heart. You will use this in the heart test.';$('#nr').hidden=false;$('#next').onclick=nextStep;};
+  $('#cant').onclick=()=>{q.hint();const fb=$('#fb');fb.className='fb show clue';fb.innerHTML=`<b>${['Try this','Another way','The easiest way'][Math.min(n,2)]}:</b> ${esc(levels[Math.min(n,2)])}`;n++;if(n>=3){$('#cant').textContent='Still tricky';$('#nr').hidden=false;$('#next').textContent='Go on anyway →';$('#next').onclick=()=>{q.giveUp();nextStep();};}};
+}
+
+/* choosing how to move */
+function stepChoose(){
+  shell(guideHTML(FULL?'<p>Choose how you will move for the test. Which do you think will make your heart work hardest? You could test that one, or pick the one you like best.</p>':'<p>Choose how you will move for the test.</p>')+`<div class="opts">${ACTS.map((a,n)=>`<button class="opt ${S.act===a.k?'picked':''}" data-n="${n}"><span>${esc(a.t)}</span></button>`).join('')}</div>${nextBtn()}`);
+  const nb=$('#next');nb.disabled=!S.act;
+  $$('.opt').forEach(b=>b.onclick=()=>{S.act=ACTS[+b.dataset.n].k;save();$$('.opt').forEach(x=>x.classList.remove('picked'));b.classList.add('picked');nb.disabled=false;});
+  nb.onclick=()=>{G.write({prompt:'How I chose to move for the heart test',text:ACTS.find(a=>a.k===S.act).t,game:GAME,part:STOPS[5].title,area:AREA_HPE});nextStep();};
+}
+
+/* a filling circle: a measuring tool, not a race */
+function stepTimer(st){
+  const secs=val(st.secs);const R=88,C=2*Math.PI*R;
+  shell(`<p class="eyebrow">${esc(st.title)}</p>${guideHTML(val(st.text))}<div class="ring"><svg viewBox="0 0 220 220" aria-hidden="true"><circle cx="110" cy="110" r="${R}" fill="#FFF3EC" stroke="#F1DCD2" stroke-width="18"/><circle id="arc" cx="110" cy="110" r="${R}" fill="none" stroke="${st.count?'#C92E4A':'#1F7A8C'}" stroke-width="18" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 110 110)"/><text id="rt" class="big" x="110" y="124" text-anchor="middle" font-size="44" fill="#2A1E22">${secs}s</text></svg></div><p id="tmsg" style="text-align:center;font-family:var(--display);font-weight:600;font-size:1.4rem;min-height:1.6em;margin:4px 0"></p><div class="row" style="justify-content:center"><button class="btn ${st.count?'':'alt'}" id="go">${esc(st.start)}</button></div><div class="next-row" id="nr" hidden><button class="btn ghost" id="again">Do it again</button><button class="btn" id="next">Next &rarr;</button></div>`);
+  $('#go').onclick=()=>{
+    $('#go').disabled=true;$('#go').hidden=true;const t0=performance.now(),arc=$('#arc'),rt=$('#rt');
+    if(st.count)$('#tmsg').textContent='Count!';
+    const tick=()=>{const el=(performance.now()-t0)/1000,f=Math.min(1,el/secs);arc.setAttribute('stroke-dashoffset',String(C*(1-f)));rt.textContent=Math.max(0,Math.ceil(secs-el))+'s';
+      if(f<1){TIMER.raf=requestAnimationFrame(tick);}else{TIMER=null;rt.textContent=st.count?'Stop!':'Done';$('#tmsg').textContent=val(st.doneText);$('#nr').hidden=false;$('#next').onclick=nextStep;$('#again').onclick=()=>renderStep();}};
+    TIMER={raf:requestAnimationFrame(tick)};
+  };
+}
+
+/* typing in the number she counted */
+function stepCount(st){
+  const k=st.k;const label={rest:'while resting',after:'straight after moving',recover:'after resting'}[k];
+  const first=k==='rest'&&isPulse();
+  shell(`<p class="q">How many ${bumpWord()} did you count ${label}?</p><div class="row" style="justify-content:center;margin:10px 0"><input class="numin" id="num" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" aria-label="Number of ${bumpWord()}"><button class="btn" id="ok">That's my number</button></div><div class="fb" id="fb"></div><div class="row" style="justify-content:center;margin-top:12px"><button class="btn ghost" id="lost">${first?'I couldn\'t count it':'I lost count'}</button></div>`);
+  const inp=$('#num');if(S.counts[k]!=null)inp.value=S.counts[k];try{inp.focus();}catch(e){}
+  $('#ok').onclick=()=>{const v=parseInt(inp.value,10);const fb=$('#fb');
+    if(!(v>=1&&v<=80)){fb.className='fb show clue';fb.innerHTML='<b>Hmm.</b> Type the number you counted, using numbers only.';return;}
+    S.counts[k]=v;save();G.write({prompt:`Count ${label} (${bumpWord()} in 15 seconds)`,text:String(v),game:GAME,part:STOPS[5].title,area:AREA_HPE});nextStep();};
+  $('#lost').onclick=()=>{const fb=$('#fb');fb.className='fb show clue';
+    if(first)fb.innerHTML='<b>That\'s all right.</b> You can count again, or count your breaths instead. Breaths are easier to count, and they speed up too.<div class="next-row"><button class="btn ghost" id="redo">Count again</button><button class="btn alt" id="breaths">Count breaths instead</button></div>';
+    else fb.innerHTML=`<b>That's all right.</b> Type your best guess of about how many. Scientists call that an <b>estimate</b>.${k==='after'?'':'<div class="next-row"><button class="btn ghost" id="redo">Rest and count again</button></div>'}`;
+    if($('#redo'))$('#redo').onclick=()=>goBack(k==='rest'?1:2);
+    if($('#breaths'))$('#breaths').onclick=()=>{S.unit='breaths';save();goBack(1);};};
+}
+
+/* a prediction before moving */
+function stepPredict(){
+  if(FULL){
+    shell(guideHTML(`<p>Before you move, make a prediction. You counted <b>${S.counts.rest}</b> ${bumpWord()} at rest.</p>`)+`<p class="q">How many ${bumpWord()} do you think you'll count straight after moving?</p><div class="row" style="justify-content:center;margin:10px 0"><input class="numin" id="num" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" aria-label="Your prediction"><button class="btn" id="ok">That's my prediction</button></div><div class="fb" id="fb"></div>`);
+    const inp=$('#num');if(typeof S.predict==='number')inp.value=S.predict;
+    $('#ok').onclick=()=>{const v=parseInt(inp.value,10);if(!(v>=1&&v<=99)){const fb=$('#fb');fb.className='fb show clue';fb.innerHTML='<b>Hmm.</b> Type a number for your prediction.';return;}S.predict=v;save();G.write({prompt:'Prediction: count straight after moving',text:String(v),game:GAME,part:STOPS[5].title,area:AREA_SC});nextStep();};
+  }else{
+    const opts=['Bigger','Smaller','The same'];
+    shell(guideHTML(`<p>Before you move, make a guess. You counted <b>${S.counts.rest}</b> ${bumpWord()} at rest.</p>`)+`<p class="q">After moving, will your number be bigger, smaller or the same?</p><div class="opts">${opts.map((t,n)=>`<button class="opt ${S.predict===t?'picked':''}" data-n="${n}"><span>${t}</span></button>`).join('')}</div>${nextBtn()}`);
+    const nb=$('#next');nb.disabled=typeof S.predict!=='string';
+    $$('.opt').forEach(b=>b.onclick=()=>{S.predict=opts[+b.dataset.n];save();$$('.opt').forEach(x=>x.classList.remove('picked'));b.classList.add('picked');nb.disabled=false;});
+    nb.onclick=()=>{G.write({prompt:'Guess: bigger, smaller or the same after moving',text:S.predict,game:GAME,part:STOPS[5].title,area:AREA_SC});nextStep();};
+  }
+}
+
+/* the three counts as a bar graph */
+function chartSVG(){
+  const vals=[S.counts.rest,S.counts.after,S.counts.recover],labs=['Resting','After moving','After resting'],cols=['#1F7A8C','#C92E4A','#7FA7B0'];
+  const max=Math.max(10,...vals),H=200,base=240;
+  let s=`<svg viewBox="0 0 420 300" role="img" aria-label="Bar graph of your three counts">`;
+  s+=`<line x1="40" y1="${base}" x2="400" y2="${base}" stroke="#2A1E22" stroke-width="2"/>`;
+  vals.forEach((v,i)=>{const h=Math.round(H*v/max),x=60+i*120;
+    s+=`<rect x="${x}" y="${base-h}" width="80" height="${h}" rx="6" fill="${cols[i]}"/><text x="${x+40}" y="${base-h-10}" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="26" fill="#2A1E22">${v}</text><text x="${x+40}" y="${base+28}" text-anchor="middle" font-family="Andika,sans-serif" font-weight="700" font-size="17" fill="#2A1E22">${labs[i]}</text>`;});
+  s+=`<text x="220" y="292" text-anchor="middle" font-family="Andika,sans-serif" font-size="15" fill="#6B585D">${bumpWord()} counted in 15 seconds</text>`;
+  return s+'</svg>';
+}
+function stepChart(){
+  const labs=['Resting','After moving','After resting'],vals=[S.counts.rest,S.counts.after,S.counts.recover];const max=Math.max(...vals);
+  shell(guideHTML('<p>Here are your results, as a bar graph. Each bar is one of your counts.</p>')+`<div class="art">${chartSVG()}</div><p class="q">Which bar is the tallest?</p>${helpHTML()}<div class="opts">${labs.map((t,n)=>`<button class="opt" data-n="${n}"><span>${t}</span></button>`).join('')}</div><div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>`);
+  const q=G.ask({item:'Which bar is tallest',concept:'Reading a bar graph',area:AREA_MA,part:STOPS[5].title});wireHelp(['The tallest bar reaches highest up the page.','The tallest bar has the biggest number on top.',`Look for the number ${max}.`],q);
+  $$('.opt').forEach(b=>b.onclick=()=>{const n=+b.dataset.n,fb=$('#fb');if(b.disabled)return;
+    if(vals[n]===max){q.done();$$('.opt').forEach(x=>x.disabled=true);$('#help').disabled=true;b.classList.add('right');fb.className='fb show yes';fb.innerHTML=`<b>Yes!</b> ${esc(labs[n])} is the tallest bar, with ${max}.`;$('#nr').hidden=false;$('#next').onclick=nextStep;}
+    else{q.miss(labs[n]);b.classList.add('wrong');b.disabled=true;fb.className='fb show clue';fb.innerHTML='<b>Not that one.</b> Look at the numbers on top of the bars.';}});
+}
+
+/* a number answer worked out from her own results */
+function stepCalc(st){
+  const qtext=val(st.q),ans=val(st.answer),help=val(st.help);
+  shell(`<div class="art" style="max-width:420px;margin:0 auto 10px">${chartSVG()}</div><p class="q">${esc(qtext)}</p>${helpHTML()}<div class="row" style="justify-content:center;margin:10px 0"><input class="numin" id="num" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="Your answer"><button class="btn" id="ok">Check</button></div><div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>`);
+  const q=G.ask({item:st.item,concept:st.concept,area:st.area,part:STOPS[5].title});wireHelp(help,q);
+  $('#ok').onclick=()=>{const v=parseInt($('#num').value,10),fb=$('#fb');if(isNaN(v)){fb.className='fb show clue';fb.innerHTML='<b>Hmm.</b> Type a number.';return;}
+    if(v===ans){q.done();$('#ok').disabled=true;$('#num').disabled=true;$('#help').disabled=true;fb.className='fb show yes';fb.innerHTML=`<b>Yes, ${ans}!</b>`;$('#nr').hidden=false;$('#next').onclick=nextStep;}
+    else{q.miss(String(v));fb.className='fb show clue';fb.innerHTML=`<b>Not quite.</b> ${v<ans?'That is a bit too small.':'That is a bit too big.'} Try the <b>Help, please</b> button if you're stuck.`;}};
+}
+
+/* her prediction against what happened */
+function stepCompare(){
+  const r=S.counts.rest,a=S.counts.after,up=a>r;let msg;
+  if(FULL&&typeof S.predict==='number'){
+    const d=Math.abs(S.predict-a);
+    msg=`<p>You predicted <b>${S.predict}</b>, and you counted <b>${a}</b>. ${d===0?'Exactly right!':d<=4?'That was very close.':'That\'s a big difference, and that\'s useful too: now you know more than you did before.'}</p>`;
+  }else if(typeof S.predict==='string'){
+    const actual=a>r?'Bigger':a<r?'Smaller':'The same';
+    msg=`<p>You guessed <b>${esc(S.predict.toLowerCase())}</b>. Your number went from <b>${r}</b> to <b>${a}</b>, so it was <b>${esc(actual.toLowerCase())}</b>.</p>${S.predict===actual?'<p>Your guess was right!</p>':'<p>Good scientists often guess wrong at first. What matters is that you tested it.</p>'}`;
+  }else msg=`<p>Your number went from <b>${r}</b> to <b>${a}</b>.</p>`;
+  if(!up)msg+='<p>Your number didn\'t go up this time. That can happen when counting is tricky, or when the moving wasn\'t hard enough to make your muscles work. For most people it goes up after hard moving. You could try the test again another day, with a different way of moving.</p>';
+  shell(guideHTML(msg)+nextBtn());$('#next').onclick=nextStep;
+}
+
+/* the debrief: a written field report for Maggie, a tell-back for Maeve */
+function stepWrite(){
+  if(FULL){
+    shell(guideHTML('<p>Every explorer writes up what she found. Write a short <b>field report</b> for me.</p>')+`<p class="q">What happened to your ${unitWord()} in the test, and why?</p><textarea id="rep" maxlength="2000" placeholder="When I moved, my..."></textarea>${nextBtn('Send my report')}`);
+    const ta=$('#rep');ta.value=S.report||'';
+    ta.oninput=()=>{S.report=ta.value.slice(0,2000);save();G.write({prompt:'Field report: what happened in the heart test, and why?',text:ta.value,game:GAME,part:STOPS[5].title,area:'EN'});};
+  }else{
+    shell(guideHTML('<p>Now tell a grown-up what you found out.</p><p><b>What happened to your heart when you moved, and why?</b></p>')+`<p style="margin:12px 0 6px">If you like, type one sentence here too:</p><textarea id="rep" maxlength="300" style="min-height:80px" placeholder="My heart..."></textarea>${nextBtn("I've told a grown-up")}`);
+    const ta=$('#rep');ta.value=S.tell||'';
+    ta.oninput=()=>{S.tell=ta.value.slice(0,300);save();G.write({prompt:'Tell-back: what happened to your heart, and why?',text:ta.value,game:GAME,part:STOPS[5].title,area:'EN'});};
+  }
+  $('#next').onclick=nextStep;
+}
+
+/* ---------- ends ---------- */
+function stopDone(){
+  const i=RUN.i;const first=!S.done[i];S.done[i]=1;save();renderCard();G.partDone(STOPS[i].title);RUN=null;
+  if(i===5){G.finish();return solvedCard();}
+  main.innerHTML=`<div class="panel done-card"><div class="pop">${HEART_ICON.replace('<svg','<svg width="110" height="110"')}</div><h2 style="color:var(--deep)">Stop ${i+1} done!</h2><p style="font-size:1.2rem;margin:0">You've finished <b>${esc(STOPS[i].title)}</b>.</p><p style="margin:0;color:var(--muted)">${i===4?'Next: the heart test, on your own body!':'You can stop here, or go on to the next stop.'}</p><div class="next-row" style="justify-content:center"><button class="btn" id="home">Back to all stops</button></div></div>`;
+  $('#home').onclick=home;toTop();
+}
+function solvedCard(){
+  const guess=[S.guess,S.guessText].filter(Boolean).join(': ');
+  main.innerHTML=`<div class="panel end"><div class="pop" style="display:grid;place-items:center">${HEART_ICON.replace('<svg','<svg width="96" height="96" class="beat"')}</div><h2>Mystery solved!</h2>
+  ${guess?`<p style="font-size:1.15rem">At the start, you guessed: <b>${esc(guess)}</b>.</p>`:''}
+  <div class="notes" style="text-align:left">
+    <div class="note"><h3>Why your heart thumps</h3><p>Running muscles need more oxygen. Your heart beats faster to pump more blood, and the blood carries the oxygen.</p></div>
+    <div class="note"><h3>Why you puff</h3><p>You breathe faster and deeper to get more oxygen into your lungs${FULL?', and to breathe out carbon dioxide':''}.</p></div>
+    <div class="note"><h3>Why you get hot</h3><p>Working muscles make heat. Sweat dries on your skin and cools you, so drink water to put it back.</p></div>
+  </div>
+  <p style="font-size:1.15rem;margin-top:18px"><b>A question for another day:</b> ${FULL?'which way of moving makes your heart work hardest? Test a different one and compare your bar graphs.':'does skipping make your heart beat faster than star jumps? You could test it with your sister.'}</p>
+  <p style="font-size:1.25rem">Now put the iPad away and go and move. Your heart will thank you!</p>
+  <div class="row" style="justify-content:center"><button class="btn ghost" id="again">Back to all stops</button></div></div>`;
+  $('#again').onclick=home;toTop();
+}
+
+/* ---------- grown-ups ---------- */
+function showEasy(){$('#easy').setAttribute('aria-pressed',S.easy);$('#easy').textContent='Easier version: '+(S.easy?'on':'off');}
+$('#easy').onclick=()=>{S.easy=!S.easy;save();showEasy();if(RUN){RUN.steps=buildSteps(RUN.i);RUN.k=Math.min(RUN.k,RUN.steps.length-1);renderStep();}};
+let resetArmed=false;
+$('#reset').onclick=()=>{
+  if(!resetArmed){resetArmed=true;$('#reset').textContent='Tap again to start over';setTimeout(()=>{resetArmed=false;$('#reset').textContent='Start over';},4000);return;}
+  resetArmed=false;$('#reset').textContent='Start over';stopTimer();const easy=S.easy;S=blank();S.easy=easy;save();home();
+};
+showEasy();home();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>
