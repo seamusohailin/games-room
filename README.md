@@ -22,7 +22,7 @@ A copy of the site is also kept in the Home Education folder (`Curricula/Supplem
 | `manifest.webmanifest`, `icon-180.png`, `icon-512.png` | Make it look and open like an app from the iPad home screen |
 | `.nojekyll` | Tells GitHub Pages to serve the files as they are |
 
-Games already on their own Netlify addresses (Whisker & Pearl, Purrrrrfect Piano) are linked from here, not copied in. Each game saves progress against its own web address, so moving them would wipe their saved data.
+Whisker & Pearl is still on its own Netlify address and is linked from here, not copied in, because each game saves progress against its own web address. Purrrrrfect Piano was moved into this site on 21 October 2026, so Pusheens and cats earned on its old Netlify address don't carry over (they are still there at that address).
 
 ## Adding a game
 

@@ -71,7 +71,7 @@ window.GAMES = [
     source: "Rhythm and keyboard practice",
     added: "2026-10-10",
     colour: "#7A4FB5",
-    href: "https://celadon-selkie-beaaa2.netlify.app"
+    href: "games/purrrrrfect-piano/index.html"
   },
   {
     id: "whisker-and-pearl",
