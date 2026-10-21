@@ -4,19 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>Nell's Lyrebird Course</title>
+<title>Nell's Treasure Map</title>
 <script src="../../results.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
 <style>
-/* An orienteering map sheet: cream paper with faint contour lines, a white map panel in a black frame,
-   the course in overprint purple, and the orange-and-white control flag as the recurring mark. */
+/* A walker's notebook: cream paper with faint contour lines, white map panels, a forest-green ink,
+   and an orange compass-needle accent. */
 :root{
   --paper:#FBF7EC; --paper-2:#F2EAD6; --ink:#1F2B24; --muted:#5C665B; --line:#E0D5BB;
-  --forest:#1F4D35; --purple:#B5179E; --purple-d:#7D0F6D; --orange:#F26B1D; --orange-d:#B44A0C;
-  --yellow:#F9C74F; --green:#9BD58C; --green-d:#4DAF5E; --blue:#2E9BDA; --brown:#B5651D;
-  --good:#2C8A4B; --good-bg:#E5F4E7; --soft:#FFF9EC; --player:#2B6CB0;
+  --forest:#1F4D35; --accent:#D9480F; --accent-d:#9C330A; --alt:#2B6CB0; --alt-d:#1C4A7A;
+  --good:#2C8A4B; --good-bg:#E5F4E7; --soft:#FFF9EC; --gold:#FFC800;
   --display:"Fredoka","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
   --body:"Andika","Trebuchet MS",system-ui,sans-serif;
   color-scheme:light;
@@ -24,146 +23,109 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;color:var(--ink);font-family:var(--body);font-size:1.15rem;line-height:1.5;background-color:var(--paper);
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='none' stroke='%23B5651D' stroke-opacity=%27.06' stroke-width='2'%3E%3Cpath d='M-10 60c40-30 80 20 130-5s80-35 130 0'/%3E%3Cpath d='M-10 90c45-25 85 25 135 0s75-30 125 5'/%3E%3Cpath d='M-10 170c50-20 70 30 120 10s90-40 140-5'/%3E%3Cpath d='M-10 200c50-15 75 30 125 12s85-35 135-2'/%3E%3C/g%3E%3C/svg%3E");}
+body{margin:0;color:var(--ink);font-family:var(--body);font-size:1.18rem;line-height:1.5;background-color:var(--paper);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='none' stroke='%23B5651D' stroke-opacity='.06' stroke-width='2'%3E%3Cpath d='M-10 60c40-30 80 20 130-5s80-35 130 0'/%3E%3Cpath d='M-10 90c45-25 85 25 135 0s75-30 125 5'/%3E%3Cpath d='M-10 170c50-20 70 30 120 10s90-40 140-5'/%3E%3Cpath d='M-10 200c50-15 75 30 125 12s85-35 135-2'/%3E%3C/g%3E%3C/svg%3E");}
 .wrap{max-width:1080px;margin:0 auto;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(84px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 button{font:inherit;color:inherit}
-button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--purple);outline-offset:3px}
+button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--alt);outline-offset:3px}
 h1,h2,h3{font-family:var(--display);font-weight:600;margin:0;line-height:1.15;text-wrap:balance}
 
-/* header */
-.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding:6px 0 14px;margin-bottom:18px;border-bottom:4px solid var(--purple)}
+.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding:6px 0 14px;margin-bottom:18px;border-bottom:4px solid var(--forest)}
 .brand{display:flex;gap:12px;align-items:center}
 .brand svg{width:52px;height:52px;flex:none}
 .brand h1{font-size:clamp(1.6rem,4.6vw,2.4rem);color:var(--forest)}
 .brand p{margin:2px 0 0;font-size:.98rem;color:var(--muted)}
-.status{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.card{display:flex;gap:4px;background:#fff;border:2px solid var(--purple);border-radius:10px;padding:5px}
-.card .box{width:38px;height:44px;border:1.5px solid #d9c7d6;border-radius:6px;position:relative;display:grid;place-items:center;font-family:var(--display);font-size:1.35rem;color:var(--purple)}
-.card .box small{position:absolute;top:1px;left:4px;font-size:.62rem;color:var(--muted);font-family:var(--body)}
-.card .box.on{background:#FBE7F6;border-color:var(--purple)}
-.card .box.fin{width:44px}
-.toggle{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--forest);border-radius:999px;padding:5px 14px 5px 6px;min-height:46px;cursor:pointer;font-size:.95rem}
-.toggle .dot{width:30px;height:30px;border-radius:50%;background:var(--forest);color:#fff;display:grid;place-items:center}
-.toggle .dot svg{width:18px;height:18px}
-.toggle[aria-pressed="false"] .dot{background:transparent;color:var(--forest);border:2px dashed var(--forest)}
-body.no-speech .say,body.no-speech .toggle{display:none!important}
+.card{display:flex;gap:4px;background:#fff;border:2px solid var(--forest);border-radius:10px;padding:5px}
+.card .box{width:40px;height:44px;border:1.5px solid #cfd8cc;border-radius:6px;display:grid;place-items:center;position:relative}
+.card .box small{position:absolute;top:1px;left:4px;font-size:.62rem;color:var(--muted)}
+.card .box svg{width:24px;height:24px}
+.card .box.on{background:#E5F4E7;border-color:var(--forest)}
 
-/* panels and text */
 .panel{background:#fff;border:2px solid var(--line);border-radius:16px;box-shadow:0 5px 0 var(--line);padding:20px}
-.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);font-weight:700;margin:0 0 4px}
+.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin:0 0 4px}
 .sec-head{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .sec-head h2{font-size:clamp(1.5rem,4.4vw,2.1rem);color:var(--forest)}
 .back{background:#fff;border:2px solid var(--forest);border-radius:999px;padding:6px 16px;min-height:46px;cursor:pointer;font-size:1rem}
 .dots{display:flex;gap:6px;margin-left:auto}
 .dots i{width:12px;height:12px;border-radius:50%;background:var(--paper-2);border:2px solid var(--line)}
-.dots i.on{background:var(--purple);border-color:var(--purple)}
+.dots i.on{background:var(--forest);border-color:var(--forest)}
 
-.nell{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:14px;align-items:start;margin-bottom:16px}
+.nell{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:start;margin-bottom:16px}
 .nell .face{width:72px;height:72px}
-.bubble{background:var(--soft);border:2px solid var(--line);border-radius:4px 18px 18px 18px;padding:12px 16px;font-size:1.2rem}
+.bubble{background:var(--soft);border:2px solid var(--line);border-radius:4px 18px 18px 18px;padding:12px 16px;font-size:1.22rem}
 .bubble p{margin:0 0 .5em}.bubble p:last-child{margin:0}
-.say{flex:none;width:48px;height:48px;border-radius:50%;background:var(--forest);color:#fff;border:0;display:grid;place-items:center;cursor:pointer;padding:0}
-.say svg{width:24px;height:24px}
 
 .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.btn{font-family:var(--display);font-weight:600;font-size:1.2rem;background:var(--orange);color:#fff;border:0;border-radius:999px;padding:.55em 1.4em;min-height:52px;cursor:pointer;box-shadow:0 4px 0 var(--orange-d);transition:transform .08s}
-.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--orange-d)}
-.btn.alt{background:var(--purple);box-shadow:0 4px 0 var(--purple-d)}
+.btn{font-family:var(--display);font-weight:600;font-size:1.2rem;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:.55em 1.4em;min-height:52px;cursor:pointer;box-shadow:0 4px 0 var(--accent-d);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--accent-d)}
+.btn.alt{background:var(--alt);box-shadow:0 4px 0 var(--alt-d)}
 .btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
 .btn[disabled]{opacity:.4;cursor:default}
 .next-row{margin-top:18px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
 
 .art{display:grid;place-items:center;margin:4px 0 14px}
-.art>svg{width:100%;max-width:520px;height:auto;max-height:46vh}
-
-/* options */
-.q{font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,1.6rem);margin:0 0 14px;color:var(--ink)}
-.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.opt{display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 14px;min-height:60px;cursor:pointer;font-size:1.12rem;box-shadow:0 4px 0 var(--line);transition:transform .1s}
-.opt:hover{transform:translateY(-2px)}
-.opt>svg{width:56px;height:56px;flex:none}
-.opt.wrong{opacity:.38;text-decoration:line-through;cursor:default;transform:none}
+.art>svg{width:100%;max-width:560px;height:auto;max-height:46vh}
+.q{font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,1.6rem);margin:0 0 14px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 14px;min-height:60px;cursor:pointer;font-size:1.15rem;box-shadow:0 4px 0 var(--line)}
+.opt>svg{width:64px;height:64px;flex:none}
+.opt.wrong{opacity:.38;text-decoration:line-through;cursor:default}
 .opt.right{border-color:var(--good);background:var(--good-bg)}
 .opt[disabled]{cursor:default}
-.fb{margin-top:14px;border-radius:12px;padding:12px 16px;font-size:1.12rem;display:none}
+.fb{margin-top:14px;border-radius:12px;padding:12px 16px;font-size:1.15rem;display:none}
 .fb.show{display:block}
 .fb.clue{background:#FFF4D6;border:2px solid #F1D48A}
 .fb.yes{background:var(--good-bg);border:2px solid #9ED3AE}
 .fb b{font-family:var(--display);font-weight:600}
-.hintbtn{background:#FFF4D6;border:2px solid #E3BE5C;border-radius:999px;padding:6px 14px;min-height:46px;cursor:pointer;font-size:1rem;display:inline-flex;gap:6px;align-items:center}
-.hintbtn svg{width:20px;height:20px}
+.hintbtn{background:#FFF4D6;border:2px solid #E3BE5C;border-radius:999px;padding:6px 16px;min-height:46px;cursor:pointer;font-size:1rem}
+.hintbtn[disabled]{opacity:.5;cursor:default}
+textarea{width:100%;min-height:110px;font:inherit;font-size:1.1rem;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
 
-/* explore chips */
-.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:14px}
-.chip{display:grid;justify-items:center;gap:6px;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 8px;cursor:pointer;font-weight:700;font-size:1rem;position:relative;box-shadow:0 4px 0 var(--line)}
-.chip>svg{width:64px;height:64px}
-.chip.seen{border-color:var(--purple)}
-.chip.seen::after{content:"";position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:var(--purple) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 6.5' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/cover}
-.info{background:var(--soft);border:2px dashed var(--purple);border-radius:14px;padding:12px 16px;min-height:60px;font-size:1.15rem}
-
-/* maps */
-.mapbox{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px;position:relative}
-.mapbox>svg{display:block;width:100%;height:auto;max-height:64vh;touch-action:manipulation}
+.mapbox{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px}
+.mapbox>svg{display:block;width:100%;height:auto;max-height:62vh;touch-action:manipulation}
 .split{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px;align-items:start}
-@media (max-width:860px){.split{grid-template-columns:1fr}.mapbox>svg{max-height:52vh}}
-.desc{display:inline-flex;gap:10px;align-items:center;background:#fff;border:2px solid var(--purple);border-radius:10px;padding:6px 12px;font-weight:700;margin-bottom:12px}
-.desc svg{width:30px;height:30px}
+@media (max-width:860px){.split{grid-template-columns:1fr}.mapbox>svg{max-height:50vh}}
+.mapart{width:100%}
 .prompt{font-family:var(--display);font-weight:600;font-size:1.35rem;margin:0 0 10px}
 .hit{cursor:pointer}
 .flash{animation:flash .9s ease-out}
 @keyframes flash{0%{opacity:.85}100%{opacity:0}}
+.newmark{animation:pop2 .7s ease-out both;transform-box:fill-box;transform-origin:center}
+@keyframes pop2{0%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
 .rot-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
 
-/* home course */
-.homemap>svg{width:100%;height:auto;max-height:58vh;display:block;margin:0 auto}
-.hc{cursor:pointer}
-.hc.locked{cursor:default;opacity:.5}
-.pulse{animation:pulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-@keyframes pulse{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.55;transform:scale(1.18)}}
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.chip{display:flex;gap:10px;align-items:center;background:#fff;border:3px solid var(--line);border-radius:14px;padding:8px 10px;cursor:pointer;font-weight:700;font-size:1.05rem;text-align:left;box-shadow:0 4px 0 var(--line)}
+.chip>svg{width:48px;height:48px;flex:none}
+.chip.seen{border-color:var(--forest)}
+.chip.on{background:#E5F4E7}
+.info{background:var(--soft);border:2px dashed var(--forest);border-radius:14px;padding:12px 16px;min-height:60px;font-size:1.15rem}
 
-/* punch / celebration */
-.punch{display:grid;justify-items:center;gap:10px;text-align:center;padding:10px 0}
-.punch .pop>svg{width:140px;height:140px}
-.bigletter{font-family:var(--display);font-size:4rem;color:var(--purple);line-height:1}
+.see{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 12px}
+.see figure{margin:0;background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:8px 10px;text-align:center;font-weight:700;font-size:1rem}
+.see svg{width:110px;height:76px;display:block}
+
+.homemap>svg{width:100%;height:auto;max-height:56vh;display:block;margin:0 auto}
+.st{cursor:pointer}
+.st.locked{cursor:default;opacity:.45}
+.pulse{animation:pulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.5;transform:scale(1.18)}}
+
+.done-card{display:grid;justify-items:center;gap:10px;text-align:center;padding:10px 0}
+.done-card svg{width:120px;height:120px}
 .pop{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
-
-/* word puzzle and treasure */
-.slots,.tiles{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
-.slot{width:58px;height:66px;border-radius:10px;border:3px dashed var(--purple);display:grid;place-items:center;font-family:var(--display);font-size:2rem;color:var(--purple);background:#fff}
-.slot.on{border-style:solid;background:#FBE7F6}
-.tile{width:62px;height:66px;border-radius:12px;border:0;background:var(--orange);color:#fff;font-family:var(--display);font-size:2rem;cursor:pointer;box-shadow:0 4px 0 var(--orange-d)}
-.tile.used{visibility:hidden}
-.tile.shake{animation:shake .4s}
-@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
-.tin>svg{width:min(300px,70vw);height:auto}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:6px}
+.note{background:#FFFDF5;border:1px solid #E8DDBF;border-radius:4px;padding:16px;box-shadow:0 3px 8px rgba(60,40,10,.12)}
+.note h3{font-size:1.2rem;color:var(--forest);margin-bottom:4px}
+.note p{margin:0;font-size:1.05rem}
+.chest{padding-top:34px}.chest svg{width:min(280px,70vw);height:auto;overflow:visible}
 .lid{transition:transform .9s cubic-bezier(.3,1.4,.5,1);transform-box:fill-box;transform-origin:0% 100%}
-.tin.open .lid{transform:rotate(-28deg) translateY(-14px)}
-.items{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:10px}
-.item{display:grid;gap:6px;justify-items:start;text-align:left;background:#fff;border:3px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;box-shadow:0 4px 0 var(--line)}
-.item>svg{width:56px;height:56px}
-.item h3{font-size:1.3rem;color:var(--forest)}
-.item p{margin:0;font-size:1rem;color:var(--muted)}
-.item.seen{border-color:var(--purple)}
-.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
-.note{background:#FFFDF5;border:1px solid #E8DDBF;border-radius:4px;padding:14px 16px 14px;box-shadow:0 3px 8px rgba(60,40,10,.12);position:relative}
-.note::before{content:"";position:absolute;top:-8px;left:50%;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--orange);box-shadow:0 2px 0 var(--orange-d)}
-.note h3{font-size:1.2rem;color:var(--purple);margin-bottom:4px}
-.note p{margin:0;font-size:1.02rem}
-.mission ol{margin:0 0 12px;padding-left:1.4em}
-.mission li{margin-bottom:6px}
-.jobs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
-.job{border:2px solid var(--line);border-radius:12px;padding:12px;background:var(--soft)}
-.job h3{font-size:1.15rem;color:var(--forest)}
-.job p{margin:4px 0 0;font-size:1rem}
-textarea{width:100%;min-height:130px;font:inherit;font-size:1.1rem;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.chest.open .lid{transform:rotate(-26deg) translateY(-10px)}
 .end{text-align:center;padding:24px 10px}
 .end h2{font-size:2rem;color:var(--forest);margin-bottom:8px}
-
 .who{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:12px}
 .who button{min-width:160px}
-
 .grown{margin-top:34px;padding-top:14px;border-top:2px dashed var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;color:var(--muted)}
 .grown button{background:transparent;border:2px solid var(--line);border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:.95rem}
 .grown button[aria-pressed="true"]{background:var(--forest);border-color:var(--forest);color:#fff}
@@ -174,13 +136,10 @@ textarea{width:100%;min-height:130px;font:inherit;font-size:1.1rem;padding:12px;
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <svg viewBox="0 0 60 60" aria-hidden="true"><path d="M10 6v50" stroke="#5C665B" stroke-width="3"/><rect x="12" y="8" width="38" height="38" fill="#fff" stroke="#1F2B24" stroke-width="2"/><path d="M50 8v38H12z" fill="#F26B1D"/></svg>
-      <div><h1>Nell's Lyrebird Course</h1><p>Learn to orienteer and find the treasure tin.</p></div>
+      <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="27" fill="#fff" stroke="#1F4D35" stroke-width="4"/><path d="M30 8 37 30H23z" fill="#D9480F"/><path d="M30 52 37 30H23z" fill="#E6E6E6" stroke="#999" stroke-width="1"/><circle cx="30" cy="30" r="3.5" fill="#1F2B24"/></svg>
+      <div><h1>Nell's Treasure Map</h1><p>Learn to find your way with a map and a compass.</p></div>
     </div>
-    <div class="status">
-      <div class="card" id="card" aria-label="Your control card"></div>
-      <button class="toggle" id="readToggle" aria-pressed="true"><span class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16 8.5a4.5 4.5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span id="readLabel">Read to me</span></button>
-    </div>
+    <div class="card" id="card" aria-label="Your stops"></div>
   </header>
   <main id="main"></main>
   <footer class="grown">
@@ -197,7 +156,6 @@ const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const NS='http://www.w3.org/2000/svg';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const plain=s=>String(s).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const pick=(a,n)=>shuffle(a).slice(0,n);
 const GAME='lyrebird-course';
@@ -207,645 +165,443 @@ const REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').
 let PLAYER=G.player();
 function setPlayerVars(){
   window.IS_MAEVE=PLAYER==='maeve';
-  window.FULL=!IS_MAEVE;
+  window.FULL=!IS_MAEVE;            // Maggie gets the extras
   window.PCOL=IS_MAEVE?'#16A08F':(PLAYER==='maggie'?'#E2557A':'#2B6CB0');
   window.NAME=IS_MAEVE?'Maeve':(PLAYER==='maggie'?'Maggie':'');
 }
 setPlayerVars();
-let KEY=G.key('lyrebird-course-v1');
+let KEY=G.key('nells-treasure-map-v1');
+function blank(){return {done:[0,0,0,0,0,0],easy:false};}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.done)&&v.done.length===6)return v;}catch(e){}return blank();}
 let S=load();
-function blank(){return {done:[0,0,0,0,0,0],easy:false,read:null,opened:false,seen:{},plan:''};}
-function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.done)&&v.done.length===6){v.seen=v.seen||{};v.plan=v.plan||'';return v;}}catch(e){}return blank();}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
-/* ---------- speech ---------- */
-const canSpeak=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
-let voice=null;
-function pickVoice(){try{const vs=speechSynthesis.getVoices();voice=vs.find(v=>/en[-_]AU/i.test(v.lang))||vs.find(v=>/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;}catch(e){}}
-if(canSpeak){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}}else document.body.classList.add('no-speech');
-function readAloud(){return S.read==null?IS_MAEVE:!!S.read;}
-function say(t,force){if(!canSpeak||(!readAloud()&&!force))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(plain(t).replace(/Weet-Bix/g,'Weet Bix').replace(/1:10 000/g,'one to ten thousand').replace(/1:15 000/g,'one to fifteen thousand'));if(voice)u.voice=voice;u.lang=voice?voice.lang:'en-AU';u.rate=.9;u.pitch=1.05;speechSynthesis.speak(u);}catch(e){}}
-function hush(){if(canSpeak)try{speechSynthesis.cancel();}catch(e){}}
-function showRead(){const on=readAloud();$('#readToggle').setAttribute('aria-pressed',on);$('#readLabel').textContent='Read to me: '+(on?'on':'off');}
-$('#readToggle').onclick=()=>{S.read=!readAloud();save();showRead();if(!readAloud())hush();};
-
-/* ---------- small pictures ---------- */
-const SPK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16 8.5a4.5 4.5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-const BULB='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0-3.5 10.9V17h7v-3.1A6 6 0 0 0 12 3z" fill="#F9C74F" stroke="#8a6a12" stroke-width="1.5"/><path d="M9.5 19.5h5M10.5 21.5h3" stroke="#8a6a12" stroke-width="1.5" stroke-linecap="round"/></svg>';
-const NELL='<svg class="face" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="39" fill="#E4F0DC"/><path d="M12 78c3-15 14-22 28-22s25 7 28 22" fill="#B5179E"/><path d="M33 56l7 7 7-7" fill="#fff"/><circle cx="40" cy="36" r="17" fill="#F0C7A2"/><path d="M22 34c-1-13 8-20 18-20s19 7 18 20c-4-7-10-10-18-10s-14 3-18 10z" fill="#DADADA"/><circle cx="40" cy="13" r="7.5" fill="#DADADA"/><circle cx="33.5" cy="37" r="5" fill="none" stroke="#2b2b2b" stroke-width="1.7"/><circle cx="46.5" cy="37" r="5" fill="none" stroke="#2b2b2b" stroke-width="1.7"/><path d="M38.5 37h3" stroke="#2b2b2b" stroke-width="1.7"/><circle cx="33.5" cy="37.5" r="1.3" fill="#2b2b2b"/><circle cx="46.5" cy="37.5" r="1.3" fill="#2b2b2b"/><path d="M35 46c3 2.6 7 2.6 10 0" stroke="#8a3b2a" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="29" cy="43" r="2.6" fill="#E9A090" opacity=".6"/><circle cx="51" cy="43" r="2.6" fill="#E9A090" opacity=".6"/></svg>';
-function flagSVG(code,size){size=size||60;return `<svg viewBox="0 0 60 64" width="${size}" height="${size}" aria-hidden="true"><rect x="8" y="4" width="44" height="44" fill="#fff" stroke="#1F2B24" stroke-width="2"/><path d="M52 4v44H8z" fill="#F26B1D"/>${code?`<rect x="18" y="49" width="24" height="14" rx="2" fill="#fff" stroke="#1F2B24" stroke-width="1.5"/><text x="30" y="60" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="11" fill="#1F2B24">${code}</text>`:''}</svg>`;}
-const ICON={
-  tri:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 10 56 52H8z" fill="none" stroke="#B5179E" stroke-width="5" stroke-linejoin="round"/></svg>',
-  circ:'<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" fill="none" stroke="#B5179E" stroke-width="5"/></svg>',
-  num:'<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="26" cy="38" r="17" fill="none" stroke="#B5179E" stroke-width="4.5"/><text x="47" y="22" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="22" fill="#B5179E">1</text></svg>',
-  line:'<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="14" cy="48" r="10" fill="none" stroke="#B5179E" stroke-width="4"/><circle cx="50" cy="16" r="10" fill="none" stroke="#B5179E" stroke-width="4"/><path d="M21 41 43 23" stroke="#B5179E" stroke-width="4"/></svg>',
-  fin:'<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="24" fill="none" stroke="#B5179E" stroke-width="4.5"/><circle cx="32" cy="32" r="14" fill="none" stroke="#B5179E" stroke-width="4.5"/></svg>',
-  square:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="12" width="40" height="40" fill="none" stroke="#B5179E" stroke-width="5"/></svg>',
-  flag:flagSVG(31,64),
-  flagRB:'<svg viewBox="0 0 60 64" aria-hidden="true"><rect x="8" y="4" width="44" height="44" fill="#C92A2A" stroke="#1F2B24" stroke-width="2"/><path d="M8 18h44M8 33h44" stroke="#111" stroke-width="7"/></svg>',
-  flagGY:'<svg viewBox="0 0 60 64" aria-hidden="true"><rect x="8" y="4" width="44" height="44" fill="#F9C74F" stroke="#1F2B24" stroke-width="2"/><path d="M22 4v44M38 4v44" stroke="#2F9E44" stroke-width="7"/></svg>'
-};
-function swatch(kind){
-  const m={
-    white:'<rect x="6" y="6" width="52" height="52" rx="6" fill="#fff" stroke="#bbb" stroke-width="2"/><path d="M20 44v-9M20 35l-6 4M20 35l6 3M44 46v-10M44 36l-6 3M44 36l5 4" stroke="#9aa39a" stroke-width="2" stroke-linecap="round"/>',
-    yellow:'<rect x="6" y="6" width="52" height="52" rx="6" fill="#F9C74F"/>',
-    green:'<rect x="6" y="6" width="52" height="52" rx="6" fill="#9BD58C"/><rect x="18" y="18" width="28" height="28" rx="6" fill="#4DAF5E"/>',
-    blue:'<rect x="6" y="6" width="52" height="52" rx="6" fill="#fff" stroke="#bbb" stroke-width="2"/><path d="M8 40c10-10 18 6 28-4s14-6 20-10" fill="none" stroke="#2E9BDA" stroke-width="6" stroke-linecap="round"/><ellipse cx="22" cy="20" rx="10" ry="6" fill="#7CC3EC" stroke="#1E78B4" stroke-width="1.5"/>',
-    brown:'<rect x="6" y="6" width="52" height="52" rx="6" fill="#fff" stroke="#bbb" stroke-width="2"/><ellipse cx="32" cy="34" rx="22" ry="16" fill="none" stroke="#B5651D" stroke-width="2.6"/><ellipse cx="32" cy="34" rx="13" ry="9" fill="none" stroke="#B5651D" stroke-width="2.6"/><ellipse cx="32" cy="34" rx="5" ry="3.5" fill="none" stroke="#B5651D" stroke-width="2.6"/>',
-    black:'<rect x="6" y="6" width="52" height="52" rx="6" fill="#fff" stroke="#bbb" stroke-width="2"/><path d="M8 48 56 22" stroke="#222" stroke-width="4" stroke-dasharray="9 5"/><rect x="14" y="14" width="13" height="11" fill="#222"/><circle cx="44" cy="44" r="5" fill="#222"/>',
-    purple:'<rect x="6" y="6" width="52" height="52" rx="6" fill="#fff" stroke="#bbb" stroke-width="2"/><path d="M18 14 28 30H8z" fill="none" stroke="#B5179E" stroke-width="3.5"/><circle cx="44" cy="42" r="9" fill="none" stroke="#B5179E" stroke-width="3.5"/><path d="M25 31 37 37" stroke="#B5179E" stroke-width="3.5"/>'
-  };
-  return `<svg viewBox="0 0 64 64" aria-hidden="true">${m[kind]}</svg>`;
-}
+/* ---------- pictures ---------- */
+const NELL='<svg class="face" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="39" fill="#E4F0DC"/><path d="M12 78c3-15 14-22 28-22s25 7 28 22" fill="#2F7F6B"/><path d="M33 56l7 7 7-7" fill="#fff"/><circle cx="40" cy="36" r="17" fill="#F0C7A2"/><path d="M22 34c-1-13 8-20 18-20s19 7 18 20c-4-7-10-10-18-10s-14 3-18 10z" fill="#DADADA"/><circle cx="40" cy="13" r="7.5" fill="#DADADA"/><circle cx="33.5" cy="37" r="5" fill="none" stroke="#2b2b2b" stroke-width="1.7"/><circle cx="46.5" cy="37" r="5" fill="none" stroke="#2b2b2b" stroke-width="1.7"/><path d="M38.5 37h3" stroke="#2b2b2b" stroke-width="1.7"/><circle cx="33.5" cy="37.5" r="1.3" fill="#2b2b2b"/><circle cx="46.5" cy="37.5" r="1.3" fill="#2b2b2b"/><path d="M35 46c3 2.6 7 2.6 10 0" stroke="#8a3b2a" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="29" cy="43" r="2.6" fill="#E9A090" opacity=".6"/><circle cx="51" cy="43" r="2.6" fill="#E9A090" opacity=".6"/></svg>';
+const FOOT='<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="10" cy="15" rx="5" ry="7" fill="#1F4D35"/><circle cx="7" cy="5.5" r="1.8" fill="#1F4D35"/><circle cx="10.5" cy="4.5" r="1.8" fill="#1F4D35"/><circle cx="14" cy="6" r="1.6" fill="#1F4D35"/><circle cx="16" cy="8.8" r="1.4" fill="#1F4D35"/></svg>';
+const CHEST_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="10" width="18" height="10" rx="2" fill="#B5651D" stroke="#5a3d22" stroke-width="1.5"/><path d="M3 10c0-4 4-6 9-6s9 2 9 6z" fill="#C9772A" stroke="#5a3d22" stroke-width="1.5"/><rect x="10" y="11" width="4" height="5" fill="#FFC800" stroke="#5a3d22"/></svg>';
 function compassSVG(needle,size){
   return `<svg viewBox="0 0 220 220" width="${size||220}" height="${size||220}" style="max-width:${size||220}px" aria-hidden="true">
-  <circle cx="110" cy="110" r="96" fill="#E8F4FB" stroke="#5a7d92" stroke-width="4"/>
-  <circle cx="110" cy="110" r="78" fill="#fff" stroke="#1F2B24" stroke-width="4"/>
+  <circle cx="110" cy="110" r="96" fill="#E8F4FB" stroke="#5a7d92" stroke-width="4"/><circle cx="110" cy="110" r="78" fill="#fff" stroke="#1F2B24" stroke-width="4"/>
   ${[0,45,90,135,180,225,270,315].map(a=>`<path d="M110 36v${a%90?7:13}" stroke="#1F2B24" stroke-width="3" transform="rotate(${a} 110 110)"/>`).join('')}
   <g transform="rotate(${needle||0} 110 110)"><path d="M110 42 123 110H97z" fill="#D62828"/><path d="M110 178 123 110H97z" fill="#F4F4F4" stroke="#999" stroke-width="1.5"/><circle cx="110" cy="110" r="7" fill="#1F2B24"/></g></svg>`;
 }
 function roseSVG(){
-  return `<svg viewBox="0 0 300 300" aria-hidden="true"><circle cx="150" cy="150" r="96" fill="#fff" stroke="#1F2B24" stroke-width="3"/>
+  return `<svg viewBox="0 0 300 300" style="max-width:300px" aria-hidden="true"><circle cx="150" cy="150" r="96" fill="#fff" stroke="#1F2B24" stroke-width="3"/>
   <path d="M150 54 166 150 150 246 134 150z" fill="#F2EAD6" stroke="#1F2B24" stroke-width="2"/><path d="M54 150 150 134 246 150 150 166z" fill="#F2EAD6" stroke="#1F2B24" stroke-width="2"/>
   <path d="M150 54 166 150H134z" fill="#D62828"/>
-  <g font-family="Fredoka,sans-serif" font-weight="600" font-size="34" text-anchor="middle" fill="#1F2B24"><text x="150" y="40">N</text><text x="272" y="162">E</text><text x="150" y="290">S</text><text x="28" y="162">W</text></g>
-  <path d="M215 70a95 95 0 0 1 22 30" fill="none" stroke="#B5179E" stroke-width="4" marker-end="url(#ah)"/><defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#B5179E"/></marker></defs></svg>`;
+  <g font-family="Fredoka,sans-serif" font-weight="600" font-size="30" text-anchor="middle" fill="#1F2B24"><text x="150" y="40">North</text><text x="268" y="160" font-size="26">East</text><text x="150" y="290">South</text><text x="34" y="160" font-size="26">West</text></g></svg>`;
+}
+/* side views of things you might see, for "Where am I?" */
+const SIDE={
+  pond:{name:'a pond',svg:'<rect width="110" height="76" fill="#EAF5FB"/><rect y="52" width="110" height="24" fill="#CFE8B8"/><ellipse cx="55" cy="56" rx="44" ry="8" fill="#7CC3EC" stroke="#1E78B4" stroke-width="2"/><path d="M18 52v-14M22 52v-10M90 52v-12" stroke="#4DAF5E" stroke-width="2.5"/>'},
+  gumtree:{name:'a big gum tree',svg:'<rect width="110" height="76" fill="#EAF5FB"/><rect y="60" width="110" height="16" fill="#CFE8B8"/><path d="M52 62V34M55 40l12-10M52 44l-10-8" stroke="#8a6a4a" stroke-width="5"/><circle cx="55" cy="24" r="18" fill="#4DAF5E"/><circle cx="40" cy="30" r="12" fill="#4DAF5E"/><circle cx="70" cy="30" r="12" fill="#4DAF5E"/>'},
+  bridge:{name:'a bridge',svg:'<rect width="110" height="76" fill="#EAF5FB"/><rect y="56" width="110" height="20" fill="#7CC3EC"/><path d="M8 50h94" stroke="#7a5230" stroke-width="6"/><path d="M14 50V34M34 50V34M55 50V34M76 50V34M96 50V34M14 36h82" stroke="#7a5230" stroke-width="3"/><path d="M20 50v8M90 50v8" stroke="#7a5230" stroke-width="5"/>'},
+  creek:{name:'a creek',svg:'<rect width="110" height="76" fill="#EAF5FB"/><rect y="44" width="110" height="32" fill="#CFE8B8"/><path d="M0 60c20-8 35 8 55 0s35-8 55 0" fill="none" stroke="#2E9BDA" stroke-width="10"/>'},
+  hut:{name:'a hut',svg:'<rect width="110" height="76" fill="#EAF5FB"/><rect y="62" width="110" height="14" fill="#CFE8B8"/><path d="M32 62V36h46v26z" fill="#C8A27A" stroke="#5a3d22" stroke-width="2.5"/><path d="M26 38l29-22 29 22z" fill="#8a4b2a" stroke="#5a3d22" stroke-width="2.5"/><rect x="50" y="46" width="10" height="16" fill="#5a3d22"/>'},
+  path:{name:'a path',svg:'<rect width="110" height="76" fill="#EAF5FB"/><rect y="34" width="110" height="42" fill="#CFE8B8"/><path d="M40 76 52 34h6l12 42z" fill="#D9C39A"/>'},
+  rock:{name:'a big rock',svg:'<rect width="110" height="76" fill="#EAF5FB"/><rect y="58" width="110" height="18" fill="#CFE8B8"/><path d="M28 62c0-18 10-30 26-30s28 12 28 30z" fill="#8d8d8d" stroke="#555" stroke-width="2.5"/>'},
+  trees:{name:'lots of trees',svg:'<rect width="110" height="76" fill="#EAF5FB"/><rect y="60" width="110" height="16" fill="#CFE8B8"/><g fill="#3E9B4F"><path d="M20 62 32 22 44 62z"/><path d="M42 62 55 14 68 62z"/><path d="M66 62 78 24 90 62z"/></g>'}
+};
+function seeHTML(keys){return `<div class="see">${keys.map(k=>`<figure><svg viewBox="0 0 110 76" aria-hidden="true">${SIDE[k].svg}</svg>${esc(SIDE[k].name)}</figure>`).join('')}</div>`;}
+function sideTopSVG(){
+  return `<svg viewBox="0 0 660 270" style="max-width:640px" role="img" aria-label="A hut, a tree and a pond seen from the side, and the same things drawn on a map">
+  <text x="160" y="28" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="22" fill="#1F4D35">From the side</text>
+  <text x="505" y="28" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="22" fill="#D9480F">From above: a map</text>
+  <rect x="10" y="44" width="300" height="200" rx="10" fill="#EAF5FB"/><rect x="10" y="190" width="300" height="54" fill="#CFE8B8"/>
+  <path d="M40 190v-60h70v60z" fill="#C8A27A" stroke="#5a3d22" stroke-width="3"/><path d="M32 132l43-38 43 38z" fill="#8a4b2a" stroke="#5a3d22" stroke-width="3"/>
+  <rect x="160" y="140" width="12" height="50" fill="#7a5230"/><circle cx="166" cy="120" r="34" fill="#4DAF5E"/>
+  <ellipse cx="255" cy="196" rx="44" ry="8" fill="#7CC3EC" stroke="#1E78B4" stroke-width="2"/>
+  <g font-family="Andika,sans-serif" font-size="18" font-weight="700" text-anchor="middle"><text x="75" y="232">hut</text><text x="166" y="232">tree</text><text x="255" y="232">pond</text></g>
+  <path d="M318 144h22" stroke="#D9480F" stroke-width="4"/><path d="M340 134l14 10-14 10z" fill="#D9480F"/>
+  <rect x="362" y="44" width="290" height="200" rx="4" fill="#FCEBB0" stroke="#1F2B24" stroke-width="3"/>
+  <rect x="394" y="118" width="40" height="34" fill="#222"/><circle cx="505" cy="134" r="26" fill="#3E9B4F"/><ellipse cx="596" cy="136" rx="40" ry="26" fill="#7CC3EC" stroke="#1E78B4" stroke-width="2"/>
+  <g font-family="Andika,sans-serif" font-size="18" font-weight="700" text-anchor="middle"><text x="414" y="196">hut</text><text x="505" y="196">tree</text><text x="596" y="196">pond</text></g></svg>`;
+}
+function topChoice(kind){
+  const m={
+    treeTop:'<circle cx="32" cy="32" r="22" fill="#3E9B4F"/>',
+    treeSide:'<path d="M30 58V34" stroke="#7a5230" stroke-width="6"/><circle cx="31" cy="22" r="16" fill="#4DAF5E"/>',
+    triangle:'<path d="M32 8 56 54H8z" fill="#3E9B4F"/>',
+    hutTop:'<rect x="14" y="16" width="36" height="32" fill="#222"/>',
+    hutSide:'<path d="M16 56V32h32v24z" fill="#C8A27A" stroke="#5a3d22" stroke-width="2.5"/><path d="M12 34l20-18 20 18z" fill="#8a4b2a" stroke="#5a3d22" stroke-width="2.5"/>',
+    blackTri:'<path d="M32 10 54 52H10z" fill="#222"/>'
+  };
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">${m[kind]}</svg>`;
 }
 
 /* ---------- the map of Lyrebird Gully ---------- */
-const M={
-  field:'M40,40 L330,40 L350,150 L360,265 L60,285 L30,160 Z',
-  thicket:'M220,395 C280,368 362,374 402,410 C442,450 432,500 392,522 C332,542 250,527 220,492 C194,460 196,420 220,395 Z',
-  thicketCore:'M270,420 C320,404 362,420 376,450 C386,480 352,500 312,496 C276,492 256,472 256,452 C256,436 262,425 270,420 Z',
-  track:'M20,645 L100,625 C220,600 300,575 360,560 C480,530 560,560 650,600 C750,640 850,630 985,592',
-  path:'M150,615 C160,520 180,420 250,345',
-  creek:'M995,415 C880,460 780,470 700,520 C600,470 460,470 360,560 C300,600 256,630 222,652',
-  contours:[[820,270,190,130],[790,262,150,98],[762,255,112,68],[738,250,72,42]]
+const MP={
+  creek:'M0,330 C150,300 300,360 500,335 C700,310 850,360 1000,330',
+  path:'M500,690 C490,600 520,500 500,335 C485,260 505,210 500,160',
+  westWood:'M90,150 C100,90 200,70 280,85 C350,100 370,170 340,225 C300,270 170,265 115,230 C85,210 82,180 90,150Z',
+  eastWood:'M650,160 C660,105 740,90 810,100 C880,110 905,170 885,220 C860,265 760,272 700,255 C655,240 642,200 650,160Z',
+  copse:'M585,560 C590,525 640,515 675,530 C705,545 700,590 660,600 C620,608 582,590 585,560Z'
 };
-const CP=[[100,625],[360,560],[250,330],[430,190],[738,250],[700,520],[905,617]]; // start, 1-5, finish
-const CODES=[0,31,32,33,34,35];
-const FEAT=['start','bridge','hut','boulder','hilltop','creek bend'];
-const NUMOFF=[[0,0],[30,-30],[-60,-16],[28,-30],[34,-30],[-62,-10]];
-function fenceTicks(){const pts=[[330,40],[350,150],[360,265],[60,285]];let d='';for(let i=0;i<pts.length-1;i++){const[x1,y1]=pts[i],[x2,y2]=pts[i+1];const len=Math.hypot(x2-x1,y2-y1);const ux=(x2-x1)/len,uy=(y2-y1)/len,nx=uy,ny=-ux;for(let t=12;t<len;t+=24){const x=x1+ux*t,y=y1+uy*t;d+=`M${x.toFixed(1)},${y.toFixed(1)}L${(x+nx*10).toFixed(1)},${(y+ny*10).toFixed(1)}`;}}return d;}
-const TICKS=fenceTicks();
-function trim(a,b,ra,rb){const dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy);return [a[0]+dx*ra/L,a[1]+dy*ra/L,b[0]-dx*rb/L,b[1]-dy*rb/L];}
-function courseSVG(leg){
-  let s='<g fill="none" stroke="#B5179E" stroke-linecap="round">';
-  for(let i=0;i<6;i++){const t=trim(CP[i],CP[i+1],i===0?34:30,i===5?38:30);const hi=leg===i;s+=`<line x1="${t[0]}" y1="${t[1]}" x2="${t[2]}" y2="${t[3]}" stroke-width="${hi?7:4}" opacity="${leg<0||hi?1:.32}"/>`;}
-  const [sx,sy]=CP[0];s+=`<path d="M${sx},${sy-32} L${sx+28},${sy+16} L${sx-28},${sy+16} Z" stroke-width="5" stroke-linejoin="round"/>`;
-  for(let i=1;i<=5;i++){const[x,y]=CP[i];s+=`<circle cx="${x}" cy="${y}" r="28" stroke-width="5"/>`;}
-  const[fx,fy]=CP[6];s+=`<circle cx="${fx}" cy="${fy}" r="22" stroke-width="5"/><circle cx="${fx}" cy="${fy}" r="34" stroke-width="5"/>`;
-  s+='</g><g fill="#B5179E" font-family="Fredoka,sans-serif" font-weight="600" font-size="38" paint-order="stroke" stroke="#fff" stroke-width="7">';
-  for(let i=1;i<=5;i++){const[x,y]=CP[i];s+=`<text x="${x+NUMOFF[i][0]}" y="${y+NUMOFF[i][1]}" text-anchor="middle">${i}</text>`;}
-  return s+'</g>';
-}
-const ROUTECOL={A:'#E8590C',B:'#0B7285'};
+const PLACES={ // where things are, for directions and the treasure hunt
+  hut:[500,138],bridge:[500,335],gate:[500,665],pond:[170,440],gumtree:[330,470],
+  westWood:[225,170],eastWood:[770,180],rockN:[770,72],rockS:[770,292],copse:[640,562]
+};
 function mapSVG(o){
   o=o||{};
-  const vb=o.square?'-60 -210 1120 1120':'0 0 1000 700';
-  let s=`<svg viewBox="${vb}" xmlns="${NS}" role="img" aria-label="${esc(o.aria||'Orienteering map of Lyrebird Gully')}">`;
+  const vb=o.square?'-120 -270 1240 1240':'0 0 1000 700';
+  const op=k=>o.focus&&o.focus!==k?' opacity=".13"':'';
+  let s=`<svg viewBox="${vb}" xmlns="${NS}" role="img" aria-label="Map of Lyrebird Gully">`;
   s+=`<g id="mapg"${o.rot!=null?` transform="rotate(${o.rot} 500 350)"`:''}>`;
-  s+='<rect x="0" y="0" width="1000" height="700" fill="#fff"/>';
-  s+=`<path d="${M.field}" fill="#F9C74F"/>`;
-  s+=`<path d="${M.thicket}" fill="#9BD58C"/><path d="${M.thicketCore}" fill="#4DAF5E"/>`;
-  M.contours.forEach((c,i)=>{s+=`<ellipse cx="${c[0]}" cy="${c[1]}" rx="${c[2]}" ry="${c[3]}" fill="none" stroke="#B5651D" stroke-width="${i===0?3.4:2.3}"/>`;});
-  s+='<ellipse cx="180" cy="668" rx="62" ry="24" fill="#7CC3EC" stroke="#1E78B4" stroke-width="2"/>';
-  s+=`<path d="${M.creek}" fill="none" stroke="#2E9BDA" stroke-width="6" stroke-linecap="round"/>`;
-  for(const x of [120,320,520,720,920]){s+=`<path d="M${x},690V16" fill="none" stroke="#2F7FC1" stroke-width="2" opacity=".6"/><path d="M${x-13},40L${x},12L${x+13},40Z" fill="#2F7FC1" opacity=".85"/>`;}
-  s+=`<path d="M330,40 L350,150 L360,265 L60,285" fill="none" stroke="#222" stroke-width="2.6"/><path d="${TICKS}" stroke="#222" stroke-width="2"/>`;
-  s+=`<path d="${M.track}" fill="none" stroke="#222" stroke-width="5" stroke-dasharray="24 8"/>`;
-  s+=`<path d="${M.path}" fill="none" stroke="#222" stroke-width="2.6" stroke-dasharray="10 7"/>`;
-  s+='<path d="M340,546 L378,537 M344,578 L382,569" stroke="#222" stroke-width="3.5"/>';
-  s+='<rect x="237" y="319" width="26" height="22" fill="#222"/>';
-  s+='<circle cx="430" cy="190" r="9" fill="#222"/><circle cx="880" cy="560" r="6" fill="#222"/><circle cx="575" cy="95" r="6" fill="#222"/><circle cx="160" cy="430" r="5" fill="#222"/>';
-  s+='<rect x="0" y="0" width="1000" height="700" fill="none" stroke="#222" stroke-width="4"/>';
-  if(o.course)s+=courseSVG(o.leg==null?-1:o.leg);
-  if(o.routes)o.routes.forEach(r=>{const c=ROUTECOL[r.id];s+=`<g class="route" data-r="${r.id}"><path d="${r.d}" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".9"/><path d="${r.d}" fill="none" stroke="${c}" stroke-width="6.5" stroke-linecap="round" stroke-dasharray="16 11"/><circle cx="${r.badge[0]}" cy="${r.badge[1]}" r="23" fill="${c}" stroke="#fff" stroke-width="4"/><text x="${r.badge[0]}" y="${r.badge[1]+9}" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="26" fill="#fff">${r.id}</text></g>`;});
-  if(o.hits)s+=hitLayer();
-  if(o.walker)s+=`<g id="walker"><circle id="wring" cx="${o.walker[0]}" cy="${o.walker[1]}" r="20" fill="none" stroke="${PCOL}" stroke-width="3" opacity=".6"/><circle id="wdot" cx="${o.walker[0]}" cy="${o.walker[1]}" r="12" fill="${PCOL}" stroke="#fff" stroke-width="4"/></g>`;
+  s+=`<g data-layer="yellow"${op('yellow')}><rect x="0" y="0" width="1000" height="700" fill="#FCEBB0"/></g>`;
+  if(o.focus&&o.focus!=='yellow')s+='<rect x="0" y="0" width="1000" height="700" fill="#fff" opacity=".75"/>';
+  s+=`<g data-layer="green"${op('green')}><path d="${MP.westWood}" fill="#6FBF73"/><path d="${MP.eastWood}" fill="#6FBF73"/><path d="${MP.copse}" fill="#6FBF73"/><circle cx="330" cy="470" r="24" fill="#3E9B4F"/></g>`;
+  s+=`<g data-layer="green"${op('green')} font-family="Andika,sans-serif" font-style="italic" font-weight="700" font-size="24" fill="#1F4D35" text-anchor="middle"><text x="220" y="178">Fern Wood</text><text x="772" y="190">Wombat Wood</text></g>`;
+  s+=`<g data-layer="blue"${op('blue')}><path d="${MP.creek}" fill="none" stroke="#2E9BDA" stroke-width="8" stroke-linecap="round"/><ellipse cx="170" cy="440" rx="75" ry="40" fill="#7CC3EC" stroke="#1E78B4" stroke-width="2.5"/></g>`;
+  s+=`<g data-layer="black"${op('black')}><path d="${MP.path}" fill="none" stroke="#222" stroke-width="5" stroke-dasharray="18 9"/>`;
+  s+='<path d="M474,322 L526,318 M474,352 L526,348" stroke="#222" stroke-width="5"/>';
+  s+='<rect x="480" y="120" width="40" height="36" fill="#222"/>';
+  s+='<path d="M468,665 H532" stroke="#222" stroke-width="7"/><circle cx="466" cy="665" r="6" fill="#222"/><circle cx="534" cy="665" r="6" fill="#222"/>';
+  s+='<circle cx="770" cy="72" r="11" fill="#222"/><circle cx="770" cy="292" r="11" fill="#222"/></g>';
+  if(!o.square){
+    s+='<g transform="translate(715 520)"><rect width="272" height="168" rx="8" fill="#fff" stroke="#1F2B24" stroke-width="2.5"/><text x="16" y="30" font-family="Fredoka,sans-serif" font-weight="600" font-size="24" fill="#1F2B24">Key</text>';
+    s+='<g font-family="Andika,sans-serif" font-size="19" fill="#1F2B24"><path d="M16,54 C30,44 44,62 60,52" fill="none" stroke="#2E9BDA" stroke-width="6"/><text x="74" y="60">water</text>';
+    s+='<rect x="16" y="76" width="44" height="22" fill="#6FBF73"/><text x="74" y="94">trees</text>';
+    s+='<rect x="16" y="108" width="44" height="22" fill="#FCEBB0" stroke="#d8c27a"/><text x="74" y="126">open grass</text>';
+    s+='<path d="M16,150 H40" stroke="#222" stroke-width="5" stroke-dasharray="9 5"/><rect x="46" y="141" width="14" height="14" fill="#222"/><text x="74" y="157">paths, buildings, rocks</text></g></g>';
+  }
+  s+=`<g transform="translate(${o.square?500:930} ${o.square?-120:70})"><path d="M0,${o.square?60:44} V${o.square?-50:-38}" stroke="#D9480F" stroke-width="${o.square?9:6}"/><path d="M${o.square?-22:-15},${o.square?-28:-22} L0,${o.square?-62:-48} L${o.square?22:15},${o.square?-28:-22}Z" fill="#D9480F"/><text x="0" y="${o.square?104:76}" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="${o.square?40:28}" fill="#D9480F">N</text></g>`;
+  s+='<rect x="0" y="0" width="1000" height="700" fill="none" stroke="#1F2B24" stroke-width="4"/>';
+  if(o.marks)s+=o.marks;
+  if(o.hits)s+=hitLayer(o.hits);
+  if(o.walker)s+=`<g id="walker"><circle id="wring" cx="${o.walker[0]}" cy="${o.walker[1]}" r="22" fill="none" stroke="${PCOL}" stroke-width="4" opacity=".7"/><circle id="wdot" cx="${o.walker[0]}" cy="${o.walker[1]}" r="13" fill="${PCOL}" stroke="#fff" stroke-width="4"/></g>`;
   s+='</g>';
   if(o.compass!=null)s+=`<g transform="translate(368 218) scale(1.2)" opacity=".9">${compassSVG(o.compass).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</g>`;
   return s+'</svg>';
 }
-const HIT={
-  field:{name:'the open field',el:`<path d="${M.field}"/>`},
-  hill:{name:'the hill',el:'<ellipse cx="820" cy="270" rx="190" ry="130"/>'},
-  thicket:{name:'the thick scrub',el:`<path d="${M.thicket}"/>`},
-  pond:{name:'the pond',el:'<ellipse cx="180" cy="668" rx="72" ry="34"/>'},
-  creek:{name:'the creek',el:`<path d="${M.creek}" fill="none" stroke-width="30"/>`},
-  track:{name:'the old rail trail',el:`<path d="${M.track}" fill="none" stroke-width="30"/>`},
-  fence:{name:'the fence',el:'<path d="M330,40 L350,150 L360,265 L60,285" fill="none" stroke-width="26"/>'},
-  hut:{name:'the hut',el:'<rect x="222" y="304" width="56" height="52"/>'},
-  boulder:{name:'the big boulder',el:'<circle cx="430" cy="190" r="28"/>'}
-};
-const TARGETS={
-  pond:{ask:'Tap the pond.',col:'blue',say:'Blue means water.'},
-  field:{ask:'Tap the open field.',col:'yellow',say:'Yellow means open ground with no trees.'},
-  thicket:{ask:'Tap the thickest, slowest scrub.',col:'dark green',say:'Dark green is thick bush. It is very slow to push through.'},
-  hill:{ask:'Tap the hill.',col:'brown',say:'Brown rings show a hill. The smallest ring is the top.'},
-  hut:{ask:'Tap the hut.',col:'black',say:'Buildings are black.'},
-  track:{ask:'Tap the old rail trail.',col:'black',say:'The long black dashes are a track.'},
-  creek:{ask:'Tap the creek.',col:'blue',say:'A blue line is a creek.'},
-  fence:{ask:'Tap the fence.',col:'black',say:'A black line with little ticks is a fence.'},
-  boulder:{ask:'Tap the big boulder.',col:'black',say:'Rocks and boulders are black dots.'}
-};
-function hitLayer(){let s='<g fill="transparent" stroke="transparent">';for(const k of ['field','hill','thicket','pond','creek','track','fence','hut','boulder'])s+=HIT[k].el.replace(/^<(\w+)/,`<$1 class="hit" data-hit="${k}"`);return s+'</g>';}
+function callout(x,y,t,a){const w=Math.round(t.length*10.6+24);const x0=a==='end'?x-w:a==='start'?x:x-w/2;return `<g class="newmark"><rect x="${x0}" y="${y-25}" width="${w}" height="35" rx="9" fill="#fff" stroke="#1F2B24" stroke-width="2"/><text x="${x0+w/2}" y="${y}" text-anchor="middle" font-family="Andika,sans-serif" font-weight="700" font-size="21" fill="#1F2B24">${esc(t)}</text></g>`;}
+function ring(x,y,r){return `<circle class="newmark" cx="${x}" cy="${y}" r="${r||42}" fill="none" stroke="#D9480F" stroke-width="7" stroke-dasharray="12 7"/>`;}
+function arrow(x1,y1,x2,y2,col){col=col||'#D9480F';const a=Math.atan2(y2-y1,x2-x1),h=20;const p=d=>`${(x2-h*Math.cos(a+d)).toFixed(1)},${(y2-h*Math.sin(a+d)).toFixed(1)}`;return `<g class="newmark"><path d="M${x1},${y1} L${x2},${y2}" stroke="${col}" stroke-width="6"/><path d="M${x2},${y2} L${p(.45)} L${p(-.45)}Z" fill="${col}"/></g>`;}
+function spot(x,y,letter){return `<g class="spot" data-spot="${letter}" role="button"><circle cx="${x}" cy="${y}" r="24" fill="#2B6CB0" stroke="#fff" stroke-width="4"/><text x="${x}" y="${y+9}" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="26" fill="#fff">${letter}</text></g>`;}
+function mapArt(o){return `<div class="mapart"><div class="mapbox">${mapSVG(o)}</div></div>`;}
 
-/* ---------- control card ---------- */
-const SECTIONS=[
-  {id:'what',title:'What is orienteering?',letter:'B'},
-  {id:'colours',title:'The colours of the map',letter:'T'},
-  {id:'north',title:'Which way is north?',letter:'W'},
-  {id:'tricks',title:"Orienteers' tricks",letter:'A'},
-  {id:'course',title:'Run the Lyrebird Course',letter:'O'},
-  {id:'check',title:"The ranger's check",letter:'M'}
+/* tap targets on the map */
+const HIT={
+  hut:{name:'the hut',el:'<rect x="462" y="104" width="76" height="70"/>'},
+  bridge:{name:'the bridge',el:'<circle cx="500" cy="335" r="36"/>'},
+  gate:{name:'the gate',el:'<rect x="450" y="640" width="100" height="50"/>'},
+  rockN:{name:'the rock on the north side of Wombat Wood',el:'<circle cx="770" cy="72" r="30"/>'},
+  rockS:{name:'the rock on the south side of Wombat Wood',el:'<circle cx="770" cy="292" r="30"/>'},
+  pond:{name:'the pond',el:'<ellipse cx="170" cy="440" rx="84" ry="48"/>'},
+  gumtree:{name:'the big gum tree',el:'<circle cx="330" cy="470" r="34"/>'},
+  creek:{name:'the creek',el:`<path d="${MP.creek}" fill="none" stroke-width="34"/>`},
+  path:{name:'the path',el:`<path d="${MP.path}" fill="none" stroke-width="30"/>`},
+  westWood:{name:'Fern Wood',el:`<path d="${MP.westWood}"/>`},
+  eastWood:{name:'Wombat Wood',el:`<path d="${MP.eastWood}"/>`},
+  copse:{name:'the little patch of trees',el:`<path d="${MP.copse}"/>`},
+  grass:{name:'open grass',el:'<path fill-rule="evenodd" d="M0,0H1000V700H0Z M715,520H987V688H715Z"/>'}
+};
+const KIND={hut:'building',bridge:'path',gate:'path',rockN:'rock',rockS:'rock',pond:'water',creek:'water',gumtree:'trees',westWood:'trees',eastWood:'trees',copse:'trees',path:'path',grass:'grass'};
+function hitLayer(){
+  const order=['grass','westWood','eastWood','copse','pond','creek','path','gumtree','gate','bridge','hut','rockN','rockS'];
+  let s='<g fill="transparent" stroke="transparent">';for(const k of order)s+=HIT[k].el.replace(/^<(\w+)/,`<$1 class="hit" data-hit="${k}"`);return s+'</g>';
+}
+function flashEl(t,col){const c=t.cloneNode(true);c.removeAttribute('data-hit');c.classList.remove('hit');if(t.getAttribute('fill')==='none'){c.setAttribute('stroke',col);c.setAttribute('stroke-opacity','.55');}else{c.setAttribute('fill',col);c.setAttribute('fill-opacity','.4');}c.classList.add('flash');c.style.pointerEvents='none';t.parentNode.appendChild(c);setTimeout(()=>c.remove(),950);}
+
+/* ---------- stops ---------- */
+const STOPS=[
+  {id:'map',title:'What is a map?'},
+  {id:'key',title:'Colours and the key'},
+  {id:'where',title:'Where am I?'},
+  {id:'dirs',title:'North, south, east and west'},
+  {id:'compass',title:'The compass'},
+  {id:'hunt',title:"Nell's treasure hunt"}
 ];
 function renderCard(){
-  let h='';SECTIONS.forEach((s,i)=>{h+=`<div class="box${S.done[i]?' on':''}"><small>${i+1}</small>${S.done[i]?esc(s.letter):''}</div>`;});
-  h+=`<div class="box fin${S.opened?' on':''}"><small>F</small>${S.opened?'<svg viewBox="0 0 20 20" width="22" height="22"><path d="M4 10.5l4 3.8L16 6" fill="none" stroke="#B5179E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</div>`;
-  $('#card').innerHTML=h;
+  $('#card').innerHTML=STOPS.map((s,i)=>`<div class="box${S.done[i]?' on':''}" title="${esc(s.title)}"><small>${i<5?i+1:''}</small>${S.done[i]?(i<5?FOOT:CHEST_ICON):''}</div>`).join('');
 }
-const allDone=()=>S.done.every(Boolean);
 const nextIdx=()=>{const i=S.done.findIndex(d=>!d);return i<0?6:i;};
-
-/* ---------- helpers for screens ---------- */
 const main=$('#main');
-function nellHTML(text){return `<div class="nell">${NELL}<div class="bubble">${text}</div><button class="say" aria-label="Read this to me">${SPK}</button></div>`;}
-function wireSay(root,text){const b=root.querySelector('.say');if(b)b.onclick=()=>say(text,true);}
+function nellHTML(t){return `<div class="nell">${NELL}<div class="bubble">${t}</div></div>`;}
 function toTop(){window.scrollTo({top:0,behavior:REDUCED?'auto':'smooth'});}
 
-/* ---------- home: the course map of the game ---------- */
-const HP=[[90,478],[240,352],[430,470],[575,300],[790,428],[850,236],[680,100],[392,118]];
+/* home: a trail of stepping stones */
+const HS=[[110,450],[280,320],[450,450],[620,320],[790,450],[850,170]];
 function home(){
-  hush();RUN=null;renderCard();
+  RUN=null;renderCard();
   if(PLAYER==='unknown')return whoScreen();
   const nx=nextIdx();
-  let s='<svg viewBox="0 0 1000 570" role="img" aria-label="Your course: six controls and a finish">';
-  s+='<rect width="1000" height="570" rx="18" fill="#fff"/>';
-  s+='<path d="M30,30 H290 L320,190 L40,210Z" fill="#F9C74F" opacity=".55"/><path d="M470,150 C540,120 640,150 650,220 C660,290 560,330 500,300 C440,270 420,180 470,150Z" fill="#9BD58C" opacity=".55"/><path d="M120,330 C170,300 250,320 260,380 C270,430 190,450 140,420 C100,400 90,350 120,330Z" fill="#9BD58C" opacity=".45"/>';
-  s+='<g fill="none" stroke="#B5651D" stroke-width="2.2" opacity=".55"><ellipse cx="800" cy="440" rx="170" ry="100"/><ellipse cx="800" cy="440" rx="115" ry="66"/><ellipse cx="800" cy="440" rx="58" ry="32"/></g>';
-  s+='<path d="M1000,320 C900,330 860,300 760,260 C640,215 560,380 450,410 C360,435 300,520 250,570" fill="none" stroke="#2E9BDA" stroke-width="6" opacity=".6"/>';
-  s+='<path d="M0,540 C200,500 380,560 560,520 S860,560 1000,520" fill="none" stroke="#222" stroke-width="4" stroke-dasharray="20 8" opacity=".5"/>';
-  s+='<g fill="none" stroke="#B5179E" stroke-width="5" stroke-linecap="round">';
-  for(let i=0;i<7;i++){const t=trim(HP[i],HP[i+1],i===0?40:42,i===6?48:42);s+=`<line x1="${t[0]}" y1="${t[1]}" x2="${t[2]}" y2="${t[3]}" opacity="${i<nx||allDone()?1:.35}"/>`;}
-  const[sx,sy]=HP[0];s+=`<path d="M${sx},${sy-38} L${sx+34},${sy+20} L${sx-34},${sy+20} Z" stroke-linejoin="round"/></g>`;
-  s+=`<text x="${sx}" y="${sy+58}" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="24" fill="#B5179E">Start</text>`;
-  SECTIONS.forEach((sec,i)=>{
-    const[x,y]=HP[i+1];const done=!!S.done[i];const open=i<=nx;const cur=i===nx;
-    s+=`<g class="hc${open?'':' locked'}" data-i="${i}" role="button" tabindex="${open?0:-1}" aria-label="Control ${i+1}: ${esc(sec.title)}${done?', done':''}${open?'':', locked'}">`;
-    if(cur)s+=`<circle class="pulse" cx="${x}" cy="${y}" r="44" fill="#B5179E"/>`;
-    s+=`<circle cx="${x}" cy="${y}" r="40" fill="${done?'#FBE7F6':'#fff'}" stroke="#B5179E" stroke-width="6"/>`;
-    s+=done?`<text x="${x}" y="${y+15}" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="42" fill="#B5179E">${sec.letter}</text>`:`<g transform="translate(${x-17} ${y-19}) scale(.58)"><rect x="8" y="4" width="44" height="44" fill="#fff" stroke="#1F2B24" stroke-width="3"/><path d="M52 4v44H8z" fill="#F26B1D"/></g>`;
-    s+=`<text x="${x+44}" y="${y-30}" font-family="Fredoka,sans-serif" font-weight="600" font-size="36" fill="#B5179E" paint-order="stroke" stroke="#fff" stroke-width="7">${i+1}</text>`;
-    s+=`<text x="${x}" y="${y+70}" text-anchor="middle" font-family="Andika,sans-serif" font-weight="700" font-size="23" fill="#1F2B24" paint-order="stroke" stroke="#fff" stroke-width="8">${esc(sec.title)}</text></g>`;
+  let s='<svg viewBox="0 0 1000 560" role="img" aria-label="Nell\'s trail of stops">';
+  s+='<rect width="1000" height="560" rx="18" fill="#FCEBB0"/>';
+  s+='<path d="M40,80 C80,30 200,40 230,90 C250,140 160,170 90,150 C50,140 30,110 40,80Z" fill="#6FBF73" opacity=".8"/><path d="M640,60 C690,30 780,40 790,90 C800,140 700,160 660,130 C630,110 620,80 640,60Z" fill="#6FBF73" opacity=".8"/>';
+  s+='<path d="M0,232 C150,205 300,260 500,232 C700,205 850,260 1000,225" fill="none" stroke="#2E9BDA" stroke-width="7" opacity=".7"/>';
+  s+='<path d="M30,520 C60,500 90,480 110,450 C170,370 230,320 280,320 C350,320 390,450 450,450 C520,450 560,320 620,320 C690,320 730,450 790,450 C850,450 860,260 850,170" fill="none" stroke="#222" stroke-width="5" stroke-dasharray="16 9" opacity=".55"/>';
+  STOPS.forEach((st,i)=>{
+    const[x,y]=HS[i];const done=!!S.done[i];const open=i<=nx;const cur=i===nx;const last=i===5;
+    s+=`<g class="st${open?'':' locked'}" data-i="${i}" role="button" tabindex="${open?0:-1}" aria-label="Stop ${i+1}: ${esc(st.title)}${done?', done':''}${open?'':', locked'}">`;
+    if(cur)s+=`<circle class="pulse" cx="${x}" cy="${y}" r="52" fill="#D9480F"/>`;
+    s+=`<circle cx="${x}" cy="${y}" r="44" fill="${done?'#E5F4E7':'#fff'}" stroke="${last?'#B5651D':'#1F4D35'}" stroke-width="6"/>`;
+    if(last)s+=`<g transform="translate(${x-26} ${y-26}) scale(2.2)">${CHEST_ICON.replace(/<\/?svg[^>]*>/g,'')}</g>`;
+    else s+=done?`<g transform="translate(${x-20} ${y-22}) scale(1.75)">${FOOT.replace(/<\/?svg[^>]*>/g,'')}</g>`:`<text x="${x}" y="${y+15}" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="44" fill="#1F4D35">${i+1}</text>`;
+    s+=`<text x="${x}" y="${y+76}" text-anchor="middle" font-family="Andika,sans-serif" font-weight="700" font-size="23" fill="#1F2B24" paint-order="stroke" stroke="#FCEBB0" stroke-width="8">${esc(st.title)}</text></g>`;
   });
-  const[fx,fy]=HP[7];const fopen=allDone();
-  s+=`<g class="hc${fopen?'':' locked'}" data-i="fin" role="button" tabindex="${fopen?0:-1}" aria-label="Finish: the treasure tin${fopen?'':', locked'}">`;
-  if(fopen&&!S.opened)s+=`<circle class="pulse" cx="${fx}" cy="${fy}" r="50" fill="#B5179E"/>`;
-  s+=`<circle cx="${fx}" cy="${fy}" r="46" fill="#fff" stroke="#B5179E" stroke-width="6"/><circle cx="${fx}" cy="${fy}" r="30" fill="#fff" stroke="#B5179E" stroke-width="6"/>`;
-  s+=`<text x="${fx}" y="${fy+80}" text-anchor="middle" font-family="Andika,sans-serif" font-weight="700" font-size="23" fill="#1F2B24" paint-order="stroke" stroke="#fff" stroke-width="8">Finish: the treasure tin</text></g></svg>`;
+  s+='</svg>';
   let msg;
-  if(nx===0)msg=`<p>Hello${NAME?' '+NAME:''}! I'm Nell. I've been orienteering since I was a girl. Long ago I set a course in Lyrebird Gully and hid a treasure tin at the finish.</p><p>My knees are too creaky to run it now. Will you run it for me? Visit the controls in order. At each one you'll learn an orienteer's skill and collect a letter for your control card. Tap control 1 to start.</p>`;
-  else if(nx<6)msg=`<p>Well done! Your next control is number ${nx+1}: <b>${esc(SECTIONS[nx].title)}</b>. Tap it when you're ready.</p>`;
-  else if(!S.opened)msg='<p>You\'ve visited every control! Now run in to the finish. Tap the double circle to find my treasure tin.</p>';
-  else msg='<p>You found my treasure tin! Tap the finish any time to look inside again. You can also visit any control again.</p>';
+  if(nx===0)msg=`<p>Hello${NAME?' '+NAME:''}! I'm Nell. I love finding my way around the bush with a map and a compass.</p><p>A long time ago I hid a treasure in Lyrebird Gully. At my first five stops you'll learn how to read a map and use a compass. Then you can use what you've learnt to find my treasure!</p><p>Tap stop 1 to begin.</p>`;
+  else if(nx<5)msg=`<p>Well done! Your next stop is number ${nx+1}: <b>${esc(STOPS[nx].title)}</b>. Tap it when you're ready.</p>`;
+  else if(nx===5)msg='<p>You know how to read a map and use a compass. Now for my treasure hunt! Tap the treasure chest.</p>';
+  else msg='<p>You found my treasure! You can visit any stop again, or do the treasure hunt again.</p>';
   main.innerHTML=`<div class="panel">${nellHTML(msg)}<div class="homemap">${s}</div></div>`;
-  wireSay(main,msg);say(msg);
-  $$('.hc').forEach(g=>{const go=()=>{if(g.classList.contains('locked'))return;const i=g.dataset.i;if(i==='fin')treasure();else openSection(+i);};g.onclick=go;g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
+  $$('.st').forEach(g=>{const go=()=>{if(!g.classList.contains('locked'))openStop(+g.dataset.i);};g.onclick=go;g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
 }
 function whoScreen(){
   main.innerHTML=`<div class="panel" style="text-align:center"><h2 style="color:var(--forest)">Who's playing?</h2><div class="who"><button class="btn" id="pMaggie">Maggie</button><button class="btn alt" id="pMaeve">Maeve</button></div></div>`;
-  const set=p=>{try{sessionStorage.setItem('gamesroom-player',p);localStorage.setItem('gamesroom-last-player',p);}catch(e){}PLAYER=p;setPlayerVars();KEY=G.key('lyrebird-course-v1');S=load();showRead();showEasy();home();};
+  const set=p=>{try{sessionStorage.setItem('gamesroom-player',p);localStorage.setItem('gamesroom-last-player',p);}catch(e){}PLAYER=p;setPlayerVars();KEY=G.key('nells-treasure-map-v1');S=load();showEasy();home();};
   $('#pMaggie').onclick=()=>set('maggie');$('#pMaeve').onclick=()=>set('maeve');
 }
 
-/* ---------- section runner ---------- */
+/* ---------- step runner ---------- */
 let RUN=null;
-function openSection(i){
-  hush();G.start(GAME);G.part(SECTIONS[i].title);
-  RUN={i,steps:buildSteps(i),k:0};renderStep();
-}
-function nextStep(){if(!RUN)return;RUN.k++;if(RUN.k>=RUN.steps.length)sectionDone();else renderStep();}
+function openStop(i){G.start(GAME);G.part(STOPS[i].title);RUN={i,steps:buildSteps(i),k:0};renderStep();}
+function nextStep(){if(!RUN)return;RUN.k++;if(RUN.k>=RUN.steps.length)stopDone();else renderStep();}
 function shell(inner){
-  const sec=SECTIONS[RUN.i];let dots='';for(let k=0;k<RUN.steps.length;k++)dots+=`<i class="${k<=RUN.k?'on':''}"></i>`;
-  main.innerHTML=`<div class="sec-head"><button class="back" id="back">&larr; Course map</button><div><p class="eyebrow">Control ${RUN.i+1}</p><h2>${esc(sec.title)}</h2></div><div class="dots" aria-hidden="true">${dots}</div></div><div class="panel" id="stage">${inner}</div>`;
+  const st=STOPS[RUN.i];let dots='';for(let k=0;k<RUN.steps.length;k++)dots+=`<i class="${k<=RUN.k?'on':''}"></i>`;
+  main.innerHTML=`<div class="sec-head"><button class="back" id="back">&larr; All stops</button><div><p class="eyebrow">${RUN.i<5?'Stop '+(RUN.i+1):'The treasure hunt'}</p><h2>${esc(st.title)}</h2></div><div class="dots" aria-hidden="true">${dots}</div></div><div class="panel" id="stage">${inner}</div>`;
   $('#back').onclick=home;toTop();return $('#stage');
 }
-function renderStep(){
-  hush();const st=RUN.steps[RUN.k];
-  ({talk:stepTalk,explore:stepExplore,mcq:stepMCQ,maptap:stepMapTap,rotate:stepRotate,move:stepMove,course:stepCourse})[st.type](st);
-}
+function renderStep(){const st=RUN.steps[RUN.k];({talk:stepTalk,mcq:stepMCQ,maptap:stepMapTap,legend:stepLegend,where:stepWhere,rotate:stepRotate,move:stepMove,hunt:stepHunt})[st.type](st);}
 function nextBtn(label){return `<div class="next-row"><button class="btn" id="next">${label||'Next'} &rarr;</button></div>`;}
-function stepTalk(st){
-  const stage=shell(nellHTML(st.text)+(st.art?`<div class="art">${st.art}</div>`:'')+nextBtn(st.btn));
-  wireSay(stage,st.text);say(st.text);$('#next').onclick=nextStep;
-}
-function stepMove(st){
-  const stage=shell(nellHTML(st.text)+(st.art?`<div class="art">${st.art}</div>`:'')+`<div class="next-row"><button class="btn alt" id="next">${esc(st.btn)}</button></div>`);
-  wireSay(stage,st.text);say(st.text);$('#next').onclick=nextStep;
-}
-function stepExplore(st){
-  let chips='';st.items.forEach((it,n)=>{chips+=`<button class="chip" data-n="${n}">${it.icon}<span>${esc(it.label)}</span></button>`;});
-  const stage=shell(nellHTML(st.intro)+`<div class="chips">${chips}</div><div class="info" id="info">Tap a picture to find out what it means.</div>`+nextBtn());
-  wireSay(stage,st.intro);say(st.intro);
-  const seen=new Set();const nb=$('#next');nb.disabled=true;
-  $$('.chip').forEach(c=>c.onclick=()=>{const it=st.items[+c.dataset.n];c.classList.add('seen');seen.add(c.dataset.n);$('#info').innerHTML=`<b>${esc(it.label)}.</b> ${esc(it.text)}`;say(it.label+'. '+it.text,true);if(seen.size===st.items.length){nb.disabled=false;}});
-  nb.onclick=nextStep;
-}
-function mcqHTML(st,opts){
-  let o='';opts.forEach((op,n)=>{o+=`<button class="opt" data-n="${n}">${op.svg||''}<span>${esc(op.t)}</span></button>`;});
-  return `${st.art?`<div class="art">${st.art}</div>`:''}<p class="q">${esc(st.q)}</p>${st.hint?`<div class="row" style="margin-bottom:12px"><button class="hintbtn" id="hint">${BULB} Clue, please</button><button class="say" id="sayq" aria-label="Read the question">${SPK}</button></div>`:`<div class="row" style="margin-bottom:12px"><button class="say" id="sayq" aria-label="Read the question">${SPK}</button></div>`}<div class="opts">${o}</div><div class="fb" id="fb"></div>`;
-}
-function prepOpts(st){
-  let opts=st.opts.map((o,n)=>Object.assign({},typeof o==='string'?{t:o}:o,{ok:n===0}));
-  if(S.easy&&opts.length>2){const right=opts[0];opts=[right,pick(opts.slice(1),1)[0]];}
-  return shuffle(opts);
-}
-function stepMCQ(st){
-  const opts=prepOpts(st);
-  const stage=shell((st.nell?nellHTML(st.nell):'')+mcqHTML(st,opts)+`<div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>`);
-  if(st.nell)wireSay(stage,st.nell);
-  const readQ=()=>say(st.q+'. '+opts.map(o=>o.t).join('. Or, '),true);
-  $('#sayq').onclick=readQ;if(readAloud())say((st.nell?st.nell+' ':'')+st.q+'. '+opts.map(o=>o.t).join('. Or, '));
-  runMCQ(st,opts,()=>{$('#nr').hidden=false;$('#next').onclick=nextStep;});
-}
+function stepTalk(st){shell(nellHTML(st.text)+(st.art?`<div class="art">${st.art}</div>`:'')+nextBtn(st.btn));$('#next').onclick=nextStep;if(st.after)st.after();}
+function stepMove(st){shell(nellHTML(st.text)+(st.art?`<div class="art">${st.art}</div>`:'')+`<div class="next-row"><button class="btn alt" id="next">${esc(st.btn)}</button></div>`);$('#next').onclick=nextStep;}
+
+/* help in three levels: a reminder, a focused hint, then a worked example */
+function helpHTML(){return '<div class="row" style="margin:0 0 12px"><button class="hintbtn" id="help">Help, please</button></div>';}
+function wireHelp(levels,q){const b=$('#help');if(!b||!levels)return;let n=0;b.onclick=()=>{if(n>=levels.length)return;q&&q.hint();const fb=$('#fb');fb.className='fb show clue';fb.innerHTML=`<b>${['Remember','Hint','Example'][n]}:</b> ${esc(levels[n])}`;n++;if(n>=levels.length)b.disabled=true;else b.textContent='More help';};}
+/* multiple choice */
+function prepOpts(st){let opts=st.opts.map((o,n)=>Object.assign({},typeof o==='string'?{t:o}:o,{ok:n===0}));if(S.easy&&opts.length>2)opts=[opts[0],pick(opts.slice(1),1)[0]];return st.keepOrder?opts:shuffle(opts);}
+function mcqHTML(st,opts){return `${st.art?`<div class="art">${st.art}</div>`:''}<p class="q">${esc(st.q)}</p>${st.help?helpHTML():''}<div class="opts">${opts.map((op,n)=>`<button class="opt" data-n="${n}">${op.svg||''}<span>${esc(op.t)}</span></button>`).join('')}</div><div class="fb" id="fb"></div>`;}
+function stepMCQ(st){const opts=prepOpts(st);shell((st.nell?nellHTML(st.nell):'')+mcqHTML(st,opts)+'<div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>');runMCQ(st,opts,()=>{$('#nr').hidden=false;$('#next').onclick=nextStep;});}
 function runMCQ(st,opts,onRight){
-  const q=G.ask({item:st.item||st.q,concept:st.concept,area:st.area,part:RUN?SECTIONS[RUN.i].title:''});
-  const fb=$('#fb');let solved=false;
-  if(st.hint&&$('#hint'))$('#hint').onclick=()=>{q.hint();fb.className='fb show clue';fb.innerHTML=`<b>Clue:</b> ${esc(st.clue||'Read each answer carefully.')}`;say('Clue. '+(st.clue||''),true);};
+  const q=G.ask({item:st.item||st.q,concept:st.concept,area:st.area,part:RUN?STOPS[RUN.i].title:''});const fb=$('#fb');let solved=false;wireHelp(st.help,q);
   $$('.opt').forEach(b=>b.onclick=()=>{
-    if(solved||b.classList.contains('wrong'))return;
-    const op=opts[+b.dataset.n];
-    if(op.ok){solved=true;q.done();b.classList.add('right');$$('.opt').forEach(x=>x.disabled=true);
-      const why=st.why||'';fb.className='fb show yes';fb.innerHTML=`<b>${esc(pick(['Yes!','That\'s it!','Spot on!','Well done!'],1)[0])}</b> ${esc(why)}`;say(why);onRight&&onRight();}
-    else{q.miss(op.t);b.classList.add('wrong');b.disabled=true;fb.className='fb show clue';fb.innerHTML=`<b>Not that one.</b> ${esc(st.clue||'Have another look.')}`;say(st.clue||'Have another look.');}
+    if(solved||b.classList.contains('wrong'))return;const op=opts[+b.dataset.n];
+    if(op.ok){solved=true;q.done();b.classList.add('right');$$('.opt').forEach(x=>x.disabled=true);fb.className='fb show yes';fb.innerHTML=`<b>${pick(['Yes!','That\'s it!','Spot on!','Well done!'],1)[0]}</b> ${esc(st.why||'')}`;onRight&&onRight();}
+    else{q.miss(op.t);b.classList.add('wrong');b.disabled=true;fb.className='fb show clue';fb.innerHTML=`<b>Not that one.</b> ${esc(st.clue||'Have another look.')}`;}
   });
 }
 
-/* map tapping */
-function stepMapTap(st){
-  let idx=0,lock=false;const list=st.targets;
-  const stage=shell(`<div class="split"><div class="mapbox" id="map">${mapSVG({hits:true})}</div><div><p class="eyebrow">Find it on the map</p><p class="prompt" id="tp"></p><div class="row"><button class="say" id="sayt" aria-label="Read this to me">${SPK}</button><span id="tcount" style="color:var(--muted)"></span></div><div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div></div></div>`);
-  let q=null;
-  function ask(){lock=false;const k=list[idx];$('#tp').textContent=TARGETS[k].ask;$('#tcount').textContent=`${idx+1} of ${list.length}`;$('#fb').className='fb';say(TARGETS[k].ask);
-    q=G.ask({item:'Find on the map: '+HIT[k].name,concept:'Map colours and features',area:'HSS',part:SECTIONS[RUN.i].title});}
-  $('#sayt').onclick=()=>say($('#tp').textContent,true);
-  ask();
-  $('#map').onclick=e=>{
-    const t=e.target.closest('[data-hit]');if(!t||lock||idx>=list.length)return;
-    const k=t.dataset.hit,want=list[idx];
-    flashEl(t,k===want?'#2C8A4B':'#B5179E');
-    if(k===want){q.done();const fb=$('#fb');fb.className='fb show yes';fb.innerHTML=`<b>Yes! That's ${esc(HIT[k].name)}.</b> ${esc(TARGETS[k].say)}`;say(`Yes! That's ${HIT[k].name}. ${TARGETS[k].say}`);idx++;lock=true;
-      if(idx<list.length)setTimeout(ask,REDUCED?600:1900);else{$('#nr').hidden=false;$('#next').onclick=nextStep;}}
-    else{q.miss(k);const fb=$('#fb');fb.className='fb show clue';fb.innerHTML=`<b>That's ${esc(HIT[k].name)}.</b> Look for something ${esc(TARGETS[want].col)}.`;say(`That's ${HIT[k].name}. Look for something ${TARGETS[want].col}.`);}
-  };
+/* the key: tap a colour, see where it is */
+const LEGEND=[
+  {k:'blue',label:'Blue: water',sw:'<path d="M6,30 C16,20 28,40 42,28" fill="none" stroke="#2E9BDA" stroke-width="7"/>',text:'Blue means water. A blue line is a creek, and a blue patch is a pond. On my map, the blue line across the middle is the creek, and the blue patch is the pond.'},
+  {k:'green',label:'Green: trees',sw:'<rect x="4" y="10" width="40" height="28" rx="4" fill="#6FBF73"/>',text:'Green means trees. A big green patch is a lot of trees growing together. A small dark green dot is one big tree. On my map there are two woods (Fern Wood and Wombat Wood), a little patch of trees, and one big gum tree.'},
+  {k:'yellow',label:'Yellow: open grass',sw:'<rect x="4" y="10" width="40" height="28" rx="4" fill="#FCEBB0" stroke="#d8c27a"/>',text:'Pale yellow means open grass with no trees, where you can see a long way and walk easily. Most of Lyrebird Gully is open grass.'},
+  {k:'black',label:'Black: paths, buildings, rocks',sw:'<path d="M4,24 H26" stroke="#222" stroke-width="5" stroke-dasharray="8 4"/><rect x="30" y="16" width="14" height="14" fill="#222"/>',text:'Black shows paths, buildings and rocks. On my map, the dashed black line is the path, the black square is the hut, the two black dots are big rocks, the two short lines over the creek are the bridge, and the line at the bottom is the gate.'}
+];
+function stepLegend(){
+  const chips=LEGEND.map((it,n)=>`<button class="chip" data-n="${n}"><svg viewBox="0 0 48 48" aria-hidden="true">${it.sw}</svg><span>${esc(it.label)}</span></button>`).join('');
+  shell(nellHTML('<p>Tap each colour below. I\'ll show you where it is on my map.</p>')+`<div class="split"><div class="mapbox" id="lmap">${mapSVG({})}</div><div><div class="chips">${chips}</div><div class="info" id="info">Tap a colour to start.</div></div></div>`+nextBtn());
+  const seen=new Set(),nb=$('#next');nb.disabled=true;
+  $$('.chip').forEach(c=>c.onclick=()=>{const it=LEGEND[+c.dataset.n];$$('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('seen','on');seen.add(c.dataset.n);
+    $('#lmap').innerHTML=mapSVG({focus:it.k});$('#info').textContent=it.text;if(seen.size===LEGEND.length)nb.disabled=false;});
+  nb.onclick=nextStep;
 }
-function flashEl(t,col){const c=t.cloneNode(true);c.removeAttribute('data-hit');c.classList.remove('hit');const isLine=t.getAttribute('fill')==='none';if(isLine){c.setAttribute('stroke',col);c.setAttribute('stroke-opacity','.55');}else{c.setAttribute('fill',col);c.setAttribute('fill-opacity','.45');}c.classList.add('flash');c.style.pointerEvents='none';t.parentNode.appendChild(c);setTimeout(()=>c.remove(),950);}
 
-/* setting the map */
-function rotateTask(host,o,onDone){
-  const step=FULL?45:90;let rounds=o.rounds||1,round=0;
+/* find it on the map, by kind */
+const TAPS={
+  water:{ask:'Tap some water.',clue:'Water is blue.'},
+  trees:{ask:'Tap some trees.',clue:'Trees are green.'},
+  grass:{ask:'Tap some open grass.',clue:'Open grass is pale yellow, with nothing else drawn on it.'},
+  building:{ask:'Tap the building.',clue:'Buildings are black squares.'},
+  path:{ask:'Tap the path.',clue:'The path is the dashed black line.'},
+  rock:{ask:'Tap a big rock.',clue:'Rocks are black dots.'}
+};
+function stepMapTap(st){
+  let idx=0,lock=false,q=null;const list=st.targets;
+  shell(`<div class="split"><div class="mapbox" id="map">${mapSVG({hits:true})}</div><div><p class="eyebrow">Find it on the map</p><p class="prompt" id="tp"></p><p id="tcount" style="color:var(--muted);margin:0 0 10px"></p>${helpHTML()}<div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div></div></div>`);
+  function ask(){lock=false;const k=list[idx];$('#tp').textContent=TAPS[k].ask;$('#tcount').textContent=`${idx+1} of ${list.length}`;$('#fb').className='fb';q=G.ask({item:'Find on the map: '+k,concept:'Map key and colours',area:'HSS',part:STOPS[RUN.i].title});$('#help').disabled=false;$('#help').textContent='Help, please';wireHelp(['Look at the key in the bottom corner of the map.',TAPS[k].clue,'Water is blue, so the pond is water.'],q);}
+  ask();
+  $('#map').onclick=e=>{const t=e.target.closest('[data-hit]');if(!t||lock||idx>=list.length)return;const k=t.dataset.hit,want=list[idx],fb=$('#fb');
+    if(KIND[k]===want){q.done();flashEl(t,'#2C8A4B');fb.className='fb show yes';fb.innerHTML=`<b>Yes! That's ${esc(HIT[k].name)}.</b>`;idx++;lock=true;if(idx<list.length)setTimeout(ask,REDUCED?500:1500);else{$('#nr').hidden=false;$('#next').onclick=nextStep;}}
+    else{q.miss(k);flashEl(t,'#D9480F');fb.className='fb show clue';fb.innerHTML=`<b>That's ${esc(HIT[k].name)}.</b> ${esc(TAPS[want].clue)}`;}};
+}
+
+/* where am I? */
+const WHERE=[
+  {see:['pond','gumtree'],at:[262,525],not:[[500,230],[590,640]],why:'You\'re between the pond and the big gum tree.'},
+  {see:['bridge','creek'],at:[560,345],not:[[175,515],[560,600]],why:'You\'re at the bridge, where the path crosses the creek.'},
+  {see:['hut','path'],at:[560,170],not:[[560,600],[230,300]],why:'You\'re beside the hut, at the end of the path.'},
+  {see:['rock','trees','creek'],at:[815,300],not:[[815,70],[380,500]],full:true,why:'There\'s a rock beside the trees, and the creek is close by. The other rock has no creek near it.'}
+];
+function stepWhere(st){
+  const sc=st.sc;const letters=shuffle(['A','B','C']);const spots=[sc.at,...sc.not];
+  const marks=spots.map((p,n)=>spot(p[0],p[1],letters[n])).join('');
+  const opts=['A','B','C'].map(l=>({t:'Spot '+l,ok:letters[0]===l}));
+  shell(`<div class="split"><div class="mapbox" id="map">${mapSVG({marks})}</div><div><p class="prompt">You look around and you can see:</p>${seeHTML(sc.see)}<p style="margin:0 0 10px"><b>Which spot on the map are you standing at?</b></p>${helpHTML()}<div class="opts" style="grid-template-columns:repeat(3,1fr)">${opts.map((o,n)=>`<button class="opt" data-n="${n}" style="justify-content:center">${esc(o.t)}</button>`).join('')}</div><div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div></div></div>`);
+  runMCQ({item:'Where am I: '+sc.see.join(' + '),concept:'Finding yourself on the map',area:'HSS',why:sc.why,clue:'Find each thing you can see on the map. Which spot is next to all of them?',help:['Look at the pictures of what you can see. Find each one on the map, using the key.','Put a finger on each thing you found. Which lettered spot is close to all of them?','If you could see a bridge and a creek, you\'d be at the bridge, where the path crosses the creek.']},opts,()=>{$('#nr').hidden=false;$('#next').onclick=nextStep;});
+  $('#map').onclick=e=>{const g=e.target.closest('[data-spot]');if(!g)return;const n=['A','B','C'].indexOf(g.dataset.spot);const b=$(`.opt[data-n="${n}"]`);if(b&&!b.disabled)b.click();};
+}
+
+/* directions on the map */
+const DIRQ=[
+  {a:'hut',b:'bridge',d:'north',an:'The hut',bn:'the bridge'},
+  {a:'gate',b:'bridge',d:'south',an:'The gate',bn:'the bridge'},
+  {a:'eastWood',b:'hut',d:'east',an:'Wombat Wood',bn:'the hut'},
+  {a:'westWood',b:'hut',d:'west',an:'Fern Wood',bn:'the hut'}
+];
+const DIRQ8=[
+  {a:'eastWood',b:'bridge',d:'north-east',an:'Wombat Wood',bn:'the bridge'},
+  {a:'pond',b:'hut',d:'south-west',an:'The pond',bn:'the hut'},
+  {a:'westWood',b:'bridge',d:'north-west',an:'Fern Wood',bn:'the bridge'}
+];
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+function dirStep(x){
+  const all=FULL?['north','north-east','east','south-east','south','south-west','west','north-west']:['north','east','south','west'];
+  const others=FULL?pick(all.filter(d=>d!==x.d),3):all.filter(d=>d!==x.d);
+  const [ax,ay]=PLACES[x.a],[bx,by]=PLACES[x.b];
+  return {type:'mcq',art:mapArt({marks:ring(bx,by,48)+ring(ax,ay,x.a.includes('Wood')?100:52)+arrow(bx,by,ax+(bx-ax)*.25,ay+(by-ay)*.25)}),
+    q:`Which way is ${x.an.startsWith('The')?x.an.toLowerCase():x.an} from ${x.bn}?`,opts:[cap(x.d),...others.map(cap)],why:`${x.an} is ${x.d} of ${x.bn}.`,
+    clue:'Find the north arrow in the corner first. North is the way it points: the top of the map.'+(x.d.includes('-')?' This one is in between two directions.':''),concept:'Compass directions',area:'HSS',item:`Direction: ${x.an} from ${x.bn} (${x.d})`,
+    help:['North is the way the orange arrow points: the top of the map. East is right, south is down, west is left.',`Put your finger on ${x.bn}. Is ${x.an.startsWith('The')?x.an.toLowerCase():x.an} above it, below it, to the left or to the right?`+(x.d.includes('-')?' If it\'s both up and to the right, that\'s north-east.':''),'The gate is below the bridge on the map, so the gate is south of the bridge.']};
+}
+
+/* turning the map to match the land */
+function rotateTask(host,rounds,onDone){
+  const step=FULL?45:90;let round=0;
   function setup(){
-    let needle,rot;
-    do{needle=step*Math.floor(Math.random()*(360/step));}while(needle===0&&Math.random()<.7);
-    do{rot=step*Math.floor(Math.random()*(360/step));}while(rot===needle);
-    let cur=rot;
-    host.innerHTML=`<div class="split"><div class="mapbox" id="map">${mapSVG({square:true,rot:cur,compass:needle,course:o.course,leg:o.leg})}</div><div><p class="eyebrow">Set the map${rounds>1?` (${round+1} of ${rounds})`:''}</p><p class="prompt">Turn the map until its blue north lines point the same way as the red end of the needle.</p><div class="row"><button class="say" id="sayr" aria-label="Read this to me">${SPK}</button></div><div class="rot-row"><button class="btn ghost" id="rl" aria-label="Turn the map left">&#8634; Turn left</button><button class="btn ghost" id="rr" aria-label="Turn the map right">Turn right &#8635;</button></div><div class="rot-row"><button class="btn alt" id="chk">Is it set?</button></div><div class="fb" id="fb"></div></div></div>`;
-    const txt='Turn the map until its blue north lines point the same way as the red end of the needle. Then tap: is it set?';
-    $('#sayr').onclick=()=>say(txt,true);say(txt);
-    const q=G.ask({item:'Set the map (needle at '+needle+' degrees)',concept:'Setting the map',area:'HSS',part:RUN?SECTIONS[RUN.i].title:''});
+    let needle,rot;do{needle=step*Math.floor(Math.random()*(360/step));}while(needle===0);do{rot=step*Math.floor(Math.random()*(360/step));}while(rot===needle);let cur=rot;
+    host.innerHTML=`<div class="split"><div class="mapbox">${mapSVG({square:true,rot:cur,compass:needle})}</div><div><p class="eyebrow">Turn the map${rounds>1?` (${round+1} of ${rounds})`:''}</p><p class="prompt">Turn the map until its orange north arrow points the same way as the red end of the needle.</p><div class="rot-row"><button class="btn ghost" id="rl">&#8634; Turn left</button><button class="btn ghost" id="rr">Turn right &#8635;</button></div><div class="rot-row"><button class="btn alt" id="chk">Does it match?</button></div><div class="rot-row">${helpHTML()}</div><div class="fb" id="fb"></div></div></div>`;
+    const q=G.ask({item:'Turn the map to match (needle at '+needle+')',concept:'Turning the map to match the land',area:'HSS',part:STOPS[RUN.i].title});
+    wireHelp(['The red end of the needle shows north. The orange arrow shows north on the map.','Look which way the orange arrow points now. Turn the map so the arrow swings round towards the needle.','If the needle points to the right, keep turning until the orange arrow points to the right too.'],q);
     const g=$('#mapg');let anim=null;
-    function turn(d){const from=cur;cur+=d;const to=cur;const t0=performance.now(),ms=REDUCED?1:320;cancelAnimationFrame(anim);(function f(t){const k=Math.min(1,(t-t0)/ms);const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;g.setAttribute('transform',`rotate(${from+(to-from)*e} 500 350)`);if(k<1)anim=requestAnimationFrame(f);})(t0);$('#fb').className='fb';}
+    function turn(d){const from=cur;cur+=d;const to=cur,t0=performance.now(),ms=REDUCED?1:320;cancelAnimationFrame(anim);(function f(t){const k=Math.min(1,(t-t0)/ms),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;g.setAttribute('transform',`rotate(${from+(to-from)*e} 500 350)`);if(k<1)anim=requestAnimationFrame(f);})(t0);$('#fb').className='fb';}
     $('#rl').onclick=()=>turn(-step);$('#rr').onclick=()=>turn(step);
-    $('#chk').onclick=()=>{const ok=(((cur-needle)%360)+360)%360===0;const fb=$('#fb');
-      if(ok){q.done();fb.className='fb show yes';fb.innerHTML='<b>The map is set!</b> Now the map matches the land. Whatever is ahead of you on the map is ahead of you for real.';say('The map is set! Now the map matches the land.');
-        ['rl','rr','chk'].forEach(id=>$('#'+id).disabled=true);round++;
-        setTimeout(()=>{if(round<rounds)setup();else onDone();},REDUCED?700:2200);}
-      else{q.miss(String((((cur-needle)%360)+360)%360));fb.className='fb show clue';fb.innerHTML='<b>Not yet.</b> Look at the arrows on the blue lines. Keep turning until they point the same way as the red end of the needle.';say('Not yet. Keep turning until the arrows on the blue lines point the same way as the red end of the needle.');}};
+    $('#chk').onclick=()=>{const ok=(((cur-needle)%360)+360)%360===0,fb=$('#fb');
+      if(ok){q.done();fb.className='fb show yes';fb.innerHTML='<b>It matches!</b> Now the map is turned the same way as the land around you.';['rl','rr','chk'].forEach(id=>$('#'+id).disabled=true);round++;setTimeout(()=>{if(round<rounds)setup();else onDone();},REDUCED?600:1900);}
+      else{q.miss(String((((cur-needle)%360)+360)%360));fb.className='fb show clue';fb.innerHTML='<b>Not yet.</b> Keep turning until the orange arrow and the red end of the needle point the same way.';}};
   }
   setup();
 }
-function stepRotate(st){const stage=shell('<div id="rhost"></div>'+`<div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>`);rotateTask($('#rhost'),{rounds:st.rounds},()=>{$('#rhost').insertAdjacentHTML('beforeend','<div class="fb show yes"><b>Brilliant.</b> Real orienteers set their map at every control.</div>');$('#nr').hidden=false;$('#next').onclick=nextStep;});}
+function stepRotate(st){shell('<div id="rhost"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next &rarr;</button></div>');rotateTask($('#rhost'),st.rounds,()=>{$('#nr').hidden=false;$('#next').onclick=nextStep;});}
 
-/* direction scenes */
-const DIRS={N:[200,58],NE:[338,70],E:[346,200],SE:[336,330],S:[200,346],SW:[64,330],W:[54,200],NW:[64,70]};
-const DIRNAME={N:'north',NE:'north-east',E:'east',SE:'south-east',S:'south',SW:'south-west',W:'west',NW:'north-west'};
-const DFEAT={N:'the paddock',E:'the hill',S:'the pond',W:'the big gum tree',NE:'the bridge',SE:'the boulder',SW:'the gate',NW:'the lookout'};
-function featArt(k,x,y){
-  switch(k){
-    case 'N':return `<rect x="${x-34}" y="${y-22}" width="68" height="44" rx="4" fill="#F9C74F"/>`;
-    case 'E':return `<g fill="none" stroke="#B5651D" stroke-width="2.5"><ellipse cx="${x}" cy="${y}" rx="34" ry="24"/><ellipse cx="${x}" cy="${y}" rx="20" ry="13"/><ellipse cx="${x}" cy="${y}" rx="7" ry="4"/></g>`;
-    case 'S':return `<ellipse cx="${x}" cy="${y}" rx="34" ry="17" fill="#7CC3EC" stroke="#1E78B4" stroke-width="2"/>`;
-    case 'W':return `<circle cx="${x}" cy="${y-8}" r="20" fill="#4DAF5E"/><rect x="${x-3}" y="${y+8}" width="6" height="16" fill="#7a5230"/>`;
-    case 'NE':return `<path d="M${x-28},${y+14} L${x+28},${y-14}" stroke="#2E9BDA" stroke-width="5"/><path d="M${x-10},${y-18} L${x+4},${y+10} M${x+4},${y-24} L${x+18},${y+4}" stroke="#222" stroke-width="3.5"/>`;
-    case 'SE':return `<circle cx="${x}" cy="${y}" r="11" fill="#222"/>`;
-    case 'SW':return `<path d="M${x-26},${y} H${x+26}" stroke="#222" stroke-width="3"/><path d="M${x-8},${y-10} V${y+10} M${x+8},${y-10} V${y+10}" stroke="#222" stroke-width="3"/>`;
-    case 'NW':return `<path d="M${x-16},${y+14} L${x},${y-16} L${x+16},${y+14}Z" fill="none" stroke="#222" stroke-width="3"/>`;
-  }
-}
-function dirScene(keys){
-  let s='<svg viewBox="0 -46 400 448" style="max-width:440px" aria-hidden="true"><rect x="2" y="2" width="396" height="396" rx="10" fill="#fff" stroke="#ccc" stroke-width="2"/>';
-  for(let x=50;x<400;x+=50)s+=`<path d="M${x},6V394" stroke="#2F7FC1" stroke-width="1" opacity=".18"/>`;
-  s+='<g transform="translate(200 -24)"><path d="M0,18 V-16" stroke="#2F7FC1" stroke-width="3.5"/><path d="M-10,-6 L0,-20 L10,-6Z" fill="#2F7FC1"/><text x="16" y="10" font-family="Fredoka,sans-serif" font-weight="600" font-size="20" fill="#2F7FC1">North</text></g>';
-  keys.forEach(k=>{const[x,y]=DIRS[k];s+=featArt(k,x,y);s+=`<text x="${x}" y="${y+(k==='N'?40:k.startsWith('N')?32:k==='S'?36:40)}" text-anchor="middle" font-family="Andika,sans-serif" font-weight="700" font-size="15" fill="#1F2B24" paint-order="stroke" stroke="#fff" stroke-width="5">${DFEAT[k].replace('the ','')}</text>`;});
-  s+='<rect x="186" y="188" width="28" height="24" fill="#222"/><text x="200" y="234" text-anchor="middle" font-family="Andika,sans-serif" font-weight="700" font-size="15" fill="#1F2B24">hut</text></svg>';
-  return s;
-}
-function dirQuestions(n){
-  const keys=FULL?Object.keys(DIRS):['N','E','S','W'];const asks=pick(keys,n);
-  return asks.map(k=>{
-    let others;
-    if(FULL)others=pick(keys.filter(x=>x!==k),3);else others=keys.filter(x=>x!==k);
-    const opts=[DIRNAME[k],...others.map(x=>DIRNAME[x])].map(t=>t[0].toUpperCase()+t.slice(1));
-    return {type:'mcq',art:dirScene(keys),q:`Which way is ${DFEAT[k]} from the hut?`,opts,why:`${DFEAT[k][0].toUpperCase()+DFEAT[k].slice(1)} is ${DIRNAME[k]} of the hut.`,clue:'Find the north arrow first. North is the way it points.'+(k.length===2?' This one is in between two directions.':''),concept:'Compass directions',area:'HSS',item:'Direction of '+DFEAT[k]+' ('+DIRNAME[k]+')'};
-  });
-}
-
-/* ---------- the content of each control ---------- */
-function M_(o){return Object.assign({type:'mcq'},o);}
+/* ---------- what each stop teaches ---------- */
+const T=(text,art,extra)=>Object.assign({type:'talk',text,art},extra||{});
+const M_=o=>Object.assign({type:'mcq'},o);
 function buildSteps(i){
-  const E=S.easy,id=SECTIONS[i].id;
-  if(id==='what')return [
-    {type:'talk',text:'<p>Orienteering is like a treasure hunt with a map. You get a special map with a course drawn on it in purple.</p><p>Your job is to find your way to every control, one after the other. At each control there is an orange-and-white flag.</p>',art:`<svg viewBox="0 0 300 150" style="max-width:340px">${flagSVG(31,120).replace('<svg','<svg x="20" y="15"')}<g transform="translate(170 20)"><path d="M10 100 L40 20 L70 60 L100 10" fill="none" stroke="#B5179E" stroke-width="5" stroke-linejoin="round"/></g></svg>`},
-    {type:'talk',text:'<p>Have you been geocaching? In geocaching, a phone tells you where a box is hidden.</p><p>In orienteering, nothing tells you the way. And the flags aren\'t even hidden! The puzzle is reading the map to find them.</p>'},
-    {type:'explore',intro:'Here are the purple marks on an orienteering map. Tap each one to find out what it means.',items:[
-      {icon:ICON.tri,label:'Triangle',text:'The triangle is the start. You begin your course here.'},
-      {icon:ICON.circ,label:'Circle',text:'A circle shows a control. The flag stands at the very centre of the circle.'},
-      {icon:ICON.num,label:'Number',text:'The number beside a circle tells you the order: 1, then 2, then 3.'},
-      {icon:ICON.line,label:'Line',text:'Lines join the controls so you can see which comes next.'},
-      {icon:ICON.fin,label:'Double circle',text:'Two circles, one inside the other, show the finish.'},
-      {icon:ICON.flag,label:'Flag',text:'At every control there is an orange-and-white flag with a code number. Check the code, then mark your card.'}]},
-    M_({q:'Which mark shows the START?',opts:[{t:'The triangle',svg:ICON.tri},{t:'One circle',svg:ICON.circ},{t:'Two circles',svg:ICON.fin}],why:'The triangle is the start.',clue:'Think of a shape with three corners.',concept:'Orienteering map symbols',area:'HSS',item:'Start symbol'}),
-    M_({q:'Which one is an orienteering flag?',opts:[{t:'Orange and white',svg:ICON.flag},{t:'Red and black',svg:ICON.flagRB},{t:'Green and yellow',svg:ICON.flagGY}],why:'Orange and white are easy to spot among the trees.',clue:'It is half white, and half a bright colour.',concept:'Control flags',area:'HPE',item:'Recognise a control flag'}),
-    M_({q:'In what order do you visit the controls?',opts:['In number order: 1, 2, 3 …','Any order you like','Biggest number first'],why:'You go in number order.'+(FULL?' (There is one kind of event, a score event, where you choose your own order.)':''),clue:'Look at the numbers beside the circles.',concept:'Orienteering map symbols',area:'HSS',item:'Order of controls'}),
-    (FULL&&!E)?M_({q:'Why does each flag have a code number on it?',opts:["So you can check it's the right flag",'It shows how tall the flag is','It counts how many people came'],why:'Other courses may have flags nearby. Your control list tells you each code, so you check it before you mark your card.',clue:'There might be more than one flag in the forest.',concept:'Checking control codes',area:'HPE',item:'Purpose of control codes'}):null,
-    {type:'talk',text:'<p>Orienteering began in Sweden more than 100 years ago, to train soldiers to find their way. The first race that anyone could enter was held in Norway in 1897.</p><p>Now people orienteer all over the world, from under-10s to over-80s.</p>',btn:'Collect my letter'}
+  const E=S.easy,id=STOPS[i].id;
+  if(id==='map')return [
+    T('<p>A <b>map</b> is a drawing of a place as if you were a bird, looking straight down from the sky.</p><p>Here is a hut, a tree and a pond seen from the side. Next to them are the same three things seen from above, the way a map shows them.</p>',sideTopSVG()),
+    M_({q:'This is a tree seen from above. Which picture would be on a map?',opts:[{t:'A round green blob',svg:topChoice('treeTop')},{t:'A tree from the side',svg:topChoice('treeSide')},{t:'A green triangle',svg:topChoice('triangle')}],why:'From above, a tree looks like a round green blob, because you see the top of it.',clue:'Imagine you are a bird looking down on the tree.',concept:'Maps from above',area:'HSS',item:'Tree from above',help:['A map shows things the way a bird sees them, looking straight down.','From above you see only the top of the tree: its leafy crown.','From above, a round pond looks like a round blue patch.']}),
+    M_({q:'Which picture shows the hut on a map?',opts:[{t:'A black square',svg:topChoice('hutTop')},{t:'A house from the side',svg:topChoice('hutSide')},{t:'A black triangle',svg:topChoice('blackTri')}],why:'From above you only see the roof, so the hut is a square.',clue:'From above, you only see the roof.',concept:'Maps from above',area:'HSS',item:'Hut from above',help:['A map shows things the way a bird sees them, looking straight down.','From above you can\'t see the walls or the door, only the roof.','From above, a round tree looks like a round green blob.']}),
+    FULL&&!E?M_({q:'Why are maps drawn as if you were looking down from above?',opts:['So you can see where everything is, all at once','So they look like photos','Because birds made the first maps'],why:'From above, nothing is hidden behind anything else, so you can see how far apart things are and which way to go.',clue:'Think about what you can see from up high that you can\'t see from the ground.',concept:'Maps from above',area:'HSS',item:'Why maps are drawn from above'}):null,
+    T('<p>Here is my map of <b>Lyrebird Gully</b>, drawn from above. I\'ve labelled some things for you.</p><p>Everything on it is much smaller than it really is. The real hut is as big as a shed!</p>',mapArt({marks:callout(500,200,'hut')+callout(170,515,'pond')+callout(565,450,'path','start')+callout(150,285,'creek')+callout(540,668,'gate','start')}),{btn:'Finish stop 1'})
   ].filter(Boolean);
 
-  if(id==='colours'){
-    const pool=FULL?['pond','field','thicket','hill','hut','track','creek','fence','boulder']:['pond','field','thicket','hill','hut','track'];
-    let t=FULL?pick(pool,6):pick(pool,4);if(E)t=t.slice(0,3);
+  if(id==='key'){
+    let t=FULL?['water','trees','grass','building','path','rock']:['water','trees','grass','building'];t=shuffle(t);if(E)t=t.slice(0,3);
     return [
-      {type:'talk',text:'<p>An orienteering map uses colours to show what the ground is like.</p><p>Once you know the colours, you can picture the land before you get there.</p>'},
-      {type:'explore',intro:'Tap each colour to learn what it means.',items:[
-        {icon:swatch('white'),label:'White',text:'White is forest you can run through. There are trees, but not much scrub.'},
-        {icon:swatch('yellow'),label:'Yellow',text:'Yellow is open ground with no trees, like a paddock.'},
-        {icon:swatch('green'),label:'Green',text:'Green is thick bush that slows you down. The darker the green, the harder it is to get through.'},
-        {icon:swatch('blue'),label:'Blue',text:'Blue is water: creeks, ponds and swamps.'},
-        {icon:swatch('brown'),label:'Brown',text:'Brown lines show the shape of the land: hills, slopes and gullies.'},
-        {icon:swatch('black'),label:'Black',text:'Black shows paths, tracks, rocks, fences and buildings.'},
-        {icon:swatch('purple'),label:'Purple',text:'Purple is the course: the start, the controls and the finish.'}]},
+      T('<p>Maps use <b>colours</b> and little pictures called <b>symbols</b> to show what is where. A blue line might be a creek. A black square might be a building.</p><p>Every map has a <b>key</b>: a box that tells you what each colour and symbol means. Mine is in the bottom corner.</p>',mapArt({marks:`<rect class="newmark" x="708" y="513" width="286" height="182" rx="12" fill="none" stroke="#D9480F" stroke-width="7" stroke-dasharray="12 7"/>`+callout(700,500,'the key','end')})),
+      {type:'legend'},
       {type:'maptap',targets:t},
-      (FULL&&!E)?M_({q:'A big patch of dark green is between you and your control. A path goes around it. What is usually smarter?',opts:['Go around on the path','Push straight through the green','Wait for the green to go away'],why:'Dark green is very thick bush. The path is longer, but you can move much faster on it.',clue:'Think about what dark green means.',concept:'Route choice',area:'HPE',item:'Around or through dark green'}):null
-    ].filter(Boolean);
+      T('<p>Now you can read my map! When you look at a map, check the key first. Every map\'s key is a little different.</p>',null,{btn:'Finish stop 2'})
+    ];
   }
 
-  if(id==='north'){
-    const dq=dirQuestions(E?1:(FULL?3:2));
-    return [
-      {type:'talk',text:'<p>This is a compass. Its needle is a tiny magnet.</p><p>The red end always points north, wherever you are.</p>',art:compassSVG(0,200)},
-      {type:'talk',text:'<p>The four main directions go round clockwise: North, East, South, West.</p><p>Remember them with: <b>Never Eat Soggy Weet-Bix!</b></p>',art:roseSVG()},
-      ...dq,
-      (FULL&&!E)?M_({q:'You are facing north. Which way is east?',opts:['To my right','To my left','Behind me'],why:'Going clockwise from north comes east. So when you face north, east is on your right.',clue:'Never Eat Soggy Weet-Bix goes round like the hands of a clock.',concept:'Compass directions',area:'HSS',item:'East when facing north'}):null,
-      {type:'talk',text:'<p>Before setting off, orienteers <b>set the map</b>. That means turning the map so it matches the land.</p><p>Lay the compass on the map. Turn the <b>map</b>, not the needle, until the blue north lines point the same way as the red end of the needle.</p>'},
-      {type:'rotate',rounds:E?1:2},
-      {type:'move',text:'<p>Now try it for real! Ask a grown-up for the compass.</p><p>Hold it flat on your hand. Turn your whole body slowly until the red end of the needle points straight ahead of you. Now you are facing north!</p><p>What can you see to the north?</p>',art:compassSVG(0,150),btn:'I found north!'}
-    ].filter(Boolean);
-  }
-
-  if(id==='tricks'){
+  if(id==='where'){
+    let sc=shuffle(WHERE.filter(w=>FULL||!w.full));if(E)sc=sc.slice(0,2);
     const a=[
-      {type:'talk',text:'<p><b>Trick 1: thumbing.</b> Keep your thumb on the map, right where you are. Move it along as you go.</p><p>Then you never lose your place.</p>'},
-      {type:'talk',text:'<p><b>Trick 2: handrails.</b> A handrail is something long you can follow, like a path, a fence or a creek.</p><p>Following it is like holding the rail on the stairs.</p>'},
-      M_({q:'Which of these makes a good handrail?',opts:['A fence','One tree','A cloud'],why:'A fence is long, and it stays still. You can follow it all the way.',clue:'A handrail is long, and you can follow it.',concept:'Handrails and attack points',area:'HPE',item:'Good handrail'})];
-    if(!E)a.push(
-      {type:'talk',text:'<p><b>Trick 3: attack points.</b> Some flags are next to small things that are easy to miss.</p><p>First go to something big and easy to find near the flag. That is your attack point. Then go carefully for the last little bit.</p>'},
-      M_({q:'The flag is beside a small rock, near the corner of a big field. What is the best attack point?',opts:['The corner of the field','A small bush','The car park, far away'],why:'The field corner is big and easy to find, and it is close to the rock.',clue:'Choose something big that is close to the flag.',concept:'Handrails and attack points',area:'HPE',item:'Choose an attack point'}));
-    a.push(
-      {type:'talk',text:'<p><b>Trick '+(E?3:4)+': catching features.</b> A catching feature is something just past the flag that tells you you\'ve gone too far, like a road or a creek.</p>'},
-      M_({q:"Your flag is in the forest, just before a creek. You reach the creek, but you haven't seen the flag. What does that tell you?",opts:["I've gone too far. Turn back and look carefully.",'Keep going across the creek.','The flag must be missing.'],why:'The creek is your catching feature. The flag is somewhere behind you.',clue:'The flag is BEFORE the creek.',concept:'Catching features',area:'HPE',item:'Use a catching feature'}));
-    if(FULL){a.push(
-      {type:'talk',text:'<p><b>Trick 5: measuring distance.</b> A map is the land shrunk down. On a 1:10 000 map, 1 centimetre on the map is 10 000 centimetres on the ground.</p><p>That is 100 metres.</p>'},
-      M_({q:'On a 1:10 000 map, the next control is 4 cm away. How far is that on the ground?',opts:['400 m','40 m','4 km'],why:'Each centimetre is 100 m, so 4 cm is 4 × 100 = 400 m.',clue:'Each centimetre is 100 metres.',concept:'Map scale and distance',area:'MA',item:'Scale 1:10 000, 4 cm'}));
-      if(!E)a.push(M_({q:'Some maps are 1:15 000. Then 1 cm is 150 m. The control is 2 cm away. How far is that?',opts:['300 m','150 m','1500 m'],why:'2 × 150 = 300 m.',clue:'Each centimetre is 150 metres. There are two of them.',concept:'Map scale and distance',area:'MA',item:'Scale 1:15 000, 2 cm'}));}
-    a.push({type:'talk',text:'<p>Orienteers also count their steps. On the trail, you\'ll count how many steps <b>you</b> take from one stop to the next.</p><p>Then you can measure the land with your own legs!</p>',btn:'Collect my letter'});
+      T('<p>The most useful map skill of all is working out <b>where you are</b>.</p><p>Here\'s how. Look around you and spot things you can see, like a pond or a hut. Then find those same things on the map. You\'re standing near all of them!</p>'),
+      T('<p>For example: I can see a creek right below me, and a path going across it. On the map, the path crosses the creek in only one place: the bridge. So I must be <b>on the bridge</b>.</p>',mapArt({marks:ring(500,335,50)+callout(560,300,'I am here','start')})+seeHTML(['creek','path'])),
+      ...sc.map(s=>({type:'where',sc:s}))
+    ];
+    if(FULL&&!E)a.push(
+      T('<p>Another way to know where you are: <b>count your steps</b>. If you know how many steps it takes to walk somewhere, you can tell how far along you are.</p>',mapArt({marks:`<path class="newmark" d="M500,665 C495,600 520,500 500,335" fill="none" stroke="#D9480F" stroke-width="10" opacity=".55"/>`+callout(560,500,'60 steps','start')})),
+      M_({q:'It takes 60 steps to walk along the path from the gate to the bridge. You\'ve walked 30 steps from the gate. Where are you?',opts:['About halfway between the gate and the bridge','At the bridge','Still at the gate'],why:'30 is half of 60, so you\'re about halfway.',clue:'What is half of 60?',concept:'Finding yourself on the map',area:'MA',item:'Counting steps: 30 of 60',help:['The whole walk from the gate to the bridge is 60 steps.','30 steps is half of 60.','If a walk is 10 steps and you\'ve taken 5, you\'re halfway.']}));
+    a.push(T('<p>Remember: look around, find the same things on the map, and you\'ll know where you are.</p>',null,{btn:'Finish stop 3'}));
     return a;
   }
 
-  if(id==='course')return [
-    {type:'talk',text:'<p>Here is my old map of Lyrebird Gully, with the course in purple.</p><p>On each leg, choose your route. Think about the colours and the tricks you know. Your dot shows where you are.</p>',art:`<div class="mapbox" style="width:100%">${mapSVG({course:true})}</div>`},
-    {type:'course'}
-  ];
-
-  if(id==='check'){
-    const core=CHECK.filter(c=>c.core),extra=CHECK.filter(c=>!c.core);
-    let qs=FULL?shuffle([...pick(core,3),...pick(extra,3)]):pick(core,4);
-    if(E)qs=qs.slice(0,3);
-    return [
-      {type:'talk',text:'<p>Before I hand over the treasure, Ranger Kim would like to check you\'re ready for a real course.</p><p>This is practice, not a test. If you\'re not sure, tap <b>Clue, please</b>, and you can always try again.</p>'},
-      ...qs.map(c=>M_(Object.assign({hint:true},c,{item:'Ranger check: '+c.q}))),
-      {type:'talk',text:'<p>Ranger Kim says you\'re ready for a real course!</p>',btn:'Collect my letter'}
+  if(id==='dirs'){
+    let qs=FULL?[pick(DIRQ,1)[0],...pick(DIRQ8,2)]:pick(DIRQ,2);if(E)qs=qs.slice(0,1);
+    const a=[
+      T('<p>A <b>direction</b> is the way to go to get somewhere. There are four main directions: <b>north</b>, <b>east</b>, <b>south</b> and <b>west</b>.</p><p>They go round <b>clockwise</b>, which means the same way as the hands of a clock. Remember them with: <b>Never Eat Soggy Weet-Bix!</b></p>',roseSVG()),
+      T('<p>On most maps, <b>north is at the top</b>. The <b>north arrow</b> in the corner shows which way north is. Right is east, the bottom is south and left is west.</p><p>For example: the hut is above the bridge on my map, so the hut is <b>north</b> of the bridge.</p>',mapArt({marks:ring(930,68,62)+ring(500,335,46)+ring(500,138,46)+arrow(500,300,500,190)+callout(560,245,'north','start')}))
     ];
+    if(FULL)a.push(T('<p>Between the main directions are in-between directions. Halfway between north and east is <b>north-east</b>. The others are south-east, south-west and north-west.</p>',`<svg viewBox="0 0 300 300" style="max-width:280px" aria-hidden="true"><circle cx="150" cy="150" r="100" fill="#fff" stroke="#1F2B24" stroke-width="3"/>${[0,45,90,135,180,225,270,315].map(a=>`<path d="M150 150V${a%90?75:58}" stroke="${a%90?'#D9480F':'#1F2B24'}" stroke-width="${a%90?3:4}" transform="rotate(${a} 150 150)"/>`).join('')}<g font-family="Fredoka,sans-serif" font-weight="600" text-anchor="middle"><text x="150" y="40" font-size="24">N</text><text x="272" y="158" font-size="24">E</text><text x="150" y="282" font-size="24">S</text><text x="28" y="158" font-size="24">W</text><text x="236" y="74" font-size="20" fill="#D9480F">NE</text><text x="236" y="240" font-size="20" fill="#D9480F">SE</text><text x="64" y="240" font-size="20" fill="#D9480F">SW</text><text x="64" y="74" font-size="20" fill="#D9480F">NW</text></g></svg>`));
+    qs.forEach(x=>a.push(dirStep(x)));
+    a.push(T('<p>Now you can use directions on a map. Nell\'s tip: always find the north arrow first.</p>',null,{btn:'Finish stop 4'}));
+    return a;
   }
-}
-const CHECK=[
-  {core:1,q:'Which mark shows the FINISH?',opts:['Two circles, one inside the other','A triangle','A square'],why:'The double circle is the finish.',clue:'The triangle is the start. The finish has two of something.',concept:'Orienteering map symbols',area:'HSS'},
-  {core:1,q:'What does BLUE mean on an orienteering map?',opts:['Water','Thick bush','A path'],why:'Blue is water: creeks, ponds and swamps.',clue:'Think of the colour of the creek and the pond.',concept:'Map colours and features',area:'HSS'},
-  {core:1,q:'What does dark GREEN mean?',opts:['Thick bush that slows you down','Open grass','A pond'],why:'Dark green is thick, scratchy bush.',clue:'Remember the scratchy route in Lyrebird Gully.',concept:'Map colours and features',area:'HSS'},
-  {core:0,q:'What does YELLOW mean?',opts:['Open ground with no trees','Water','Rocks'],why:'Yellow is open ground, like a paddock.',clue:'Think of the field next to the hut.',concept:'Map colours and features',area:'HSS'},
-  {core:1,q:'How do you set the map?',opts:['Turn the map until its north lines point the same way as the red needle','Hold the map upside down','Turn the needle to point at the flag'],why:'Turn the map, not the needle. Then the map matches the land.',clue:'The red end of the needle always points north.',concept:'Setting the map',area:'HSS'},
-  {core:1,q:'Which of these is a handrail?',opts:['A path you can follow','A single tree','A bird flying past'],why:'A handrail is something long you can follow.',clue:'It is long, and it stays still.',concept:'Handrails and attack points',area:'HPE'},
-  {core:1,q:"You find a flag, but its code isn't the one on your list. What do you do?",opts:["Don't mark your card. Keep looking for your flag.",'Mark your card anyway.','Take the flag home.'],why:'It belongs to a different course. Yours is somewhere else nearby.',clue:'Every control has its own code.',concept:'Checking control codes',area:'HPE'},
-  {core:1,q:'You feel lost. What should you do first?',opts:['Stop, stay calm and look at the map','Run as fast as you can','Hide behind a tree'],why:'Stop and think about the last place you were sure of. On a trail, stay on the track and wait for your grown-up.',clue:'Rushing makes it worse.',concept:'Orienteering safety',area:'HPE'},
-  {core:1,q:"You can't find one of the controls. What must you still do?",opts:['Go to the finish, so everyone knows you are safe','Keep searching until dark','Go home without telling anyone'],why:'Everyone goes to the finish, even if they miss a control. That way nobody is left in the forest.',clue:'The people at the finish need to know you are safe.',concept:'Orienteering safety',area:'HPE'},
-  {core:0,q:'On a map, the brown lines are squashed close together. What does that mean?',opts:['A steep slope','Flat ground','A creek'],why:'Close contour lines mean steep. Lines far apart mean gentle.',clue:'Remember the climb up the hill to control 4.',concept:'Contour lines and steepness',area:'HSS'},
-  {core:0,q:'On a 1:10 000 map, 1 cm is 100 m. Your control is 3 cm away. How far is that?',opts:['300 m','30 m','3 km'],why:'3 × 100 = 300 m.',clue:'Multiply the centimetres by 100.',concept:'Map scale and distance',area:'MA'},
-  {core:0,q:'What is an attack point?',opts:['Something big and easy to find near the flag','The place where you start','A flag you must not touch'],why:'You go to the attack point first, then navigate carefully to the flag.',clue:'Remember the fence corner near the boulder.',concept:'Handrails and attack points',area:'HPE'},
-  {core:0,q:'What is a catching feature?',opts:["Something past the flag that tells you you've gone too far",'A net for catching flags','The finish line'],why:'If you reach it, turn back. The flag is behind you.',clue:'Remember reaching the old rail trail on leg 5.',concept:'Catching features',area:'HPE'}
-];
 
-/* ---------- the virtual course ---------- */
-const LEGS=[
-  {intro:'Leg 1: from the start triangle to control 1, at the bridge.',q:'Which way will you go?',concept:'Handrails and attack points',area:'HPE',routes:[
-    {id:'A',d:'M100,625 C220,600 300,575 360,560',good:true,label:'Follow the old rail trail',say:'The track is a handrail. It led you straight to the bridge!',badge:[230,560]},
-    {id:'B',d:'M100,625 C140,530 240,470 300,480 C350,490 330,560 360,560',good:false,label:'Cut through the forest',say:'You got muddled among the trees and had to hunt for the bridge. The track would have led you straight there.',badge:[190,500]}]},
-  {intro:'Leg 2: from the bridge to control 2, at the hut.',q:'Which way will you go?',concept:'Route choice',area:'HPE',routes:[
-    {id:'A',d:'M360,560 L250,330',good:false,slow:true,label:'Straight through the green',say:'Ouch! Scratchy! The dark green was so thick you could hardly push through. Green means slow.',badge:[322,470]},
-    {id:'B',d:'M360,560 C300,575 220,600 150,615 C160,520 180,420 250,345',good:true,label:'Track, then the little path',say:'Back along the track, then up the little path. It was longer, but you walked fast the whole way.',badge:[166,505]}]},
-  {intro:'Leg 3: from the hut to control 3, a big boulder in the forest.',setMap:true,q:'Which way will you go?',concept:'Handrails and attack points',area:'HPE',routes:[
-    {id:'A',d:'M250,330 L470,160 L430,190',good:false,label:'Straight for the boulder',say:'The boulder was hidden among the trees. You walked right past it and had to search.',badge:[330,262]},
-    {id:'B',d:'M250,330 L360,265 L353,190 L430,190',good:true,label:'Fence corner first',say:'The fence corner is big and easy to find: a perfect attack point. From there it was a few steps to the boulder.',badge:[400,232]}]},
-  {intro:'Leg 4: from the boulder to control 4, the top of the hill.',q:'Which way is easier on your legs?',concept:'Contour lines and steepness',area:'HSS',routes:[
-    {id:'A',d:'M430,190 L738,250',good:false,slow:true,label:'Straight up the steep side',say:'Phew! See how the brown lines are squashed together on that side? Close lines mean steep. That was hard work!',badge:[560,200]},
-    {id:'B',d:'M430,190 C520,330 700,400 860,360 C880,320 820,270 738,250',good:true,label:'Round to the gentle side',say:'The brown lines are spread out on this side, so the slope is gentle. A bit further, but much easier on your legs.',badge:[640,372]}]},
-  {intro:'Leg 5: from the hilltop down to control 5, at a bend in the creek.',special:'catch'},
-  {intro:'Last leg: from the creek bend to the finish!',special:'finish'}
-];
-function walk(d,ms,cb){
-  const svg=$('#map svg');const p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('fill','none');$('#mapg').appendChild(p);
-  const L=p.getTotalLength();const w=$('#wdot'),r=$('#wring');const t0=performance.now();ms=REDUCED?1:ms;
-  (function f(t){const k=Math.min(1,(t-t0)/ms);const pt=p.getPointAtLength(L*k);w.setAttribute('cx',pt.x);w.setAttribute('cy',pt.y);r.setAttribute('cx',pt.x);r.setAttribute('cy',pt.y);if(k<1)requestAnimationFrame(f);else{p.remove();cb&&cb();}})(t0);
-}
-function plen(d){const p=document.createElementNS(NS,'path');p.setAttribute('d',d);const s=document.createElementNS(NS,'svg');s.style.position='absolute';s.style.width=0;s.style.height=0;s.appendChild(p);document.body.appendChild(s);const L=p.getTotalLength();s.remove();return L;}
-function stepCourse(){
-  let L=0;const punched=[0,0,0,0,0,0];const setDone={};
-  const stage=shell('<div id="chost"></div>');const host=$('#chost');
-  function miniCard(){let h='<div class="row" style="gap:6px;margin-top:14px" aria-label="Course card">';for(let i=0;i<6;i++)h+=`<div style="width:42px;height:42px;border:2px solid ${punched[i]?'#B5179E':'#ddd'};border-radius:8px;display:grid;place-items:center;font-family:var(--display);font-weight:600;color:#B5179E;background:${punched[i]?'#FBE7F6':'#fff'}">${punched[i]?(i<5?CODES[i+1]:'F'):(i<5?i+1:'F')}</div>`;return h+'</div>';}
-  function descHTML(n){return n<6?`<div class="desc">${flagSVG(null,30)}Control ${n} &middot; code ${CODES[n]} &middot; ${FEAT[n]}</div>`:`<div class="desc">${ICON.fin.replace('<svg','<svg width="30" height="30"')}Finish</div>`;}
-  function layout(mapO,side){host.innerHTML=`<div class="split"><div class="mapbox" id="map">${mapSVG(Object.assign({course:true,leg:L,walker:CP[L]},mapO||{}))}</div><div>${descHTML(L+1)}<p class="prompt">${esc(LEGS[L].intro)}</p>${side}${miniCard()}</div></div>`;toTop();}
-  function leg(){
-    const lg=LEGS[L];G.part('Run the Lyrebird Course: leg '+(L+1));
-    if(lg.setMap&&!setDone[L]){host.innerHTML=`<p class="prompt">${esc(lg.intro)}</p><p>First, set your map so it matches the land.</p><div id="rh"></div>`;say(lg.intro+' First, set your map.');rotateTask($('#rh'),{rounds:1,course:true,leg:L},()=>{setDone[L]=true;leg();});return;}
-    if(lg.special==='catch')return legCatch();
-    if(lg.special==='finish')return legFinish();
-    const routes=lg.routes;
-    layout({routes},`<p style="margin:0 0 8px"><b>${esc(lg.q)}</b></p><div class="opts" style="grid-template-columns:1fr">${routes.map(r=>`<button class="opt" data-r="${r.id}"><span style="width:40px;height:40px;border-radius:50%;background:${ROUTECOL[r.id]};color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:600;flex:none">${r.id}</span><span>${esc(r.label)}</span></button>`).join('')}</div><div class="fb" id="fb"></div><div class="next-row" id="nr" hidden></div>`);
-    say(lg.intro+' '+lg.q+' '+routes.map(r=>'Route '+r.id+': '+r.label).join('. '));
-    const q=G.ask({item:'Lyrebird Course leg '+(L+1)+' route choice',concept:lg.concept,area:lg.area,part:'Run the Lyrebird Course'});
-    let busy=false;
-    $$('.opt').forEach(b=>b.onclick=()=>{
-      if(busy||b.classList.contains('wrong'))return;busy=true;$('#fb').className='fb';
-      const r=routes.find(x=>x.id===b.dataset.r);const len=plen(r.d);
-      walk(r.d,len*(r.slow?9:4.2),()=>{
-        const fb=$('#fb');
-        if(r.good){q.done();b.classList.add('right');$$('.opt').forEach(x=>x.disabled=true);fb.className='fb show yes';fb.innerHTML=`<b>Good route!</b> ${esc(r.say)}`;say('Good route! '+r.say);arrive();}
-        else{q.miss(r.label);b.classList.add('wrong');b.disabled=true;fb.className='fb show clue';fb.innerHTML=`<b>You made it, but…</b> ${esc(r.say)} Let's go back and try the other way.`;say('You made it, but. '+r.say+" Let's go back and try the other way.");
-          setTimeout(()=>{const w=$('#wdot'),wr=$('#wring');w.setAttribute('cx',CP[L][0]);w.setAttribute('cy',CP[L][1]);wr.setAttribute('cx',CP[L][0]);wr.setAttribute('cy',CP[L][1]);busy=false;},REDUCED?400:1800);}
-      });
-    });
+  if(id==='compass'){
+    const a=[
+      T('<p>Out in the bush, how do you know which way is north? With a <b>compass</b>.</p><p>A compass has a <b>needle</b> that can spin. The needle is a tiny magnet, and its red end always points north, wherever you are.</p>'+(IS_MAEVE?'<p>Remember the globe you made with Mistress Wren? North is the direction of the North Pole, at the top of the globe.</p>':''),compassSVG(0,180)),
+      T('<p>Once you know north, you know the rest. If you face north (the way the red needle points), then east is on your right, south is behind you and west is on your left.</p>',`<svg viewBox="0 0 300 260" style="max-width:300px" aria-hidden="true"><g font-family="Fredoka,sans-serif" font-weight="600" font-size="24" text-anchor="middle"><text x="150" y="30" fill="#D62828">North (in front)</text><text x="258" y="140">East</text><text x="258" y="166" font-size="18">(right)</text><text x="42" y="140">West</text><text x="42" y="166" font-size="18">(left)</text><text x="150" y="250">South (behind)</text></g><circle cx="150" cy="140" r="30" fill="${PCOL}"/><path d="M150 104l12 18h-24z" fill="${PCOL}"/><path d="M150 100V48" stroke="#D62828" stroke-width="4"/><path d="M140 60l10-16 10 16z" fill="#D62828"/></svg>`)
+    ];
+    if(FULL&&!E)a.push(M_({q:'You are facing north. Which way is east?',opts:['To my right','To my left','Behind me'],why:'Going clockwise from north comes east, so east is on your right.',clue:'Never Eat Soggy Weet-Bix goes round like the hands of a clock.',concept:'Using a compass',area:'HSS',item:'East when facing north'}));
+    a.push(
+      T('<p>A compass also helps you <b>turn your map to match the land</b>. When the map matches, the hut on the map is the same way as the real hut, so you can see which way to walk.</p><p>Lay the compass on the map. Then turn the <b>map</b> until its north arrow points the same way as the red end of the needle. Tap <b>Show me</b> to watch.</p>',`<div class="mapart"><div class="mapbox" id="demo">${mapSVG({square:true,rot:90,compass:0})}</div></div><div class="row" style="justify-content:center;margin-top:10px"><button class="btn alt" id="showme">Show me</button></div><div class="fb" id="demofb"></div>`,{after:()=>{const nb=$('#next');nb.disabled=true;$('#showme').onclick=()=>{$('#showme').disabled=true;const g=$('#demo #mapg'),t0=performance.now(),ms=REDUCED?1:1500;(function f(t){const k=Math.min(1,(t-t0)/ms);g.setAttribute('transform',`rotate(${90-90*k} 500 350)`);if(k<1)requestAnimationFrame(f);else{const fb=$('#demofb');fb.className='fb show yes';fb.innerHTML='<b>There!</b> The map turned until its north arrow pointed the same way as the red needle. Now it matches the land.';nb.disabled=false;}})(t0);};}}),
+      {type:'rotate',rounds:E?1:2},
+      {type:'move',text:'<p>Now try it for real! Ask a grown-up for the compass.</p><p>Hold it flat on your hand. Turn your whole body slowly until the red end of the needle points straight ahead of you. Now you are facing north!</p><p>What can you see to the north? What\'s on your right, to the east?</p>',art:compassSVG(0,150),btn:'I found north!'}
+    );
+    return a;
   }
-  function arrive(){
-    const n=L+1;const nr=$('#nr');nr.hidden=false;
-    nr.innerHTML=`<button class="btn alt" id="punch">${flagSVG(CODES[n],34).replace('<svg','<svg style="vertical-align:middle;margin-right:6px"')} Check code ${CODES[n]} and punch</button>`;
-    $('#punch').onclick=()=>{punched[L]=1;L++;leg();};
-  }
-  function legCatch(){
-    layout({},`<p>Walk south, down the gentle slope.</p><div class="next-row" id="nr"><button class="btn" id="go">Walk down the hill</button></div><div id="cq"></div>`);
-    say(LEGS[L].intro+' Walk south, down the gentle slope.');
-    $('#go').onclick=()=>{$('#go').disabled=true;walk('M738,250 L705,505 L692,612',2600,()=>{
-      $('#nr').remove();
-      const st={q:"You've reached the old rail trail, but you haven't seen the flag. What does that tell you?",opts:["I've gone too far. The creek bend is behind me.","I'm at the flag.",'Keep walking south.'],why:'The track is a catching feature. Turn back: the creek bend is just behind you.',clue:'Look where your dot is. Where is control 5?',concept:'Catching features',area:'HPE',item:'Lyrebird Course leg 5: catching feature'};
-      const opts=prepOpts(st);$('#cq').innerHTML=mcqHTML(st,opts)+'<div class="next-row" id="nr2" hidden><button class="btn" id="back5">Walk back to the creek</button></div>';
-      $('#sayq').onclick=()=>say(st.q+' '+opts.map(o=>o.t).join('. Or, '),true);say(st.q+' '+opts.map(o=>o.t).join('. Or, '));
-      runMCQ(st,opts,()=>{$('#nr2').hidden=false;$('#back5').onclick=()=>{$('#back5').disabled=true;walk('M692,612 L700,520',1100,flagCheck);};});
-    });};
-  }
-  function flagCheck(){
-    const codes=FULL&&!S.easy?shuffle([35,53,38]):shuffle([35,53]);
-    const xs=codes.length===3?[110,300,490]:[170,430];
-    let sc='<svg viewBox="0 0 600 300" style="max-width:600px;width:100%"><rect width="600" height="300" rx="12" fill="#fff" stroke="#ddd" stroke-width="2"/><path d="M-10,90 C80,60 120,200 220,190 C320,180 330,80 420,90 C510,100 520,220 610,230" fill="none" stroke="#2E9BDA" stroke-width="16" stroke-linecap="round"/>';
-    sc+='<g opacity=".5" stroke="#4DAF5E" stroke-width="3" fill="none"><path d="M40 250l10-30 10 30M520 50l10-30 10 30M300 270l10-30 10 30"/></g>';
-    codes.forEach((c,n)=>{sc+=`<g class="hit" data-code="${c}" role="button" aria-label="Flag ${c}"><rect x="${xs[n]-60}" y="110" width="120" height="150" fill="transparent"/><path d="M${xs[n]},250V140" stroke="#5C665B" stroke-width="4"/>${flagSVG(c,96).replace('<svg',`<svg x="${xs[n]-30}" y="120"`)}</g>`;});
-    sc+='</svg>';
-    host.innerHTML=`${descHTML(5)}<p class="prompt">You're at the creek bend. Which flag is yours?</p><p>Check the code on your control list before you punch.</p><div class="art" id="fc">${sc}</div><div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next5">On to the finish &rarr;</button></div>${miniCard()}`;
-    say("You're at the creek bend. Which flag is yours? Check the code on your control list: code 35.");
-    const q=G.ask({item:'Lyrebird Course: pick flag code 35',concept:'Checking control codes',area:'HPE',part:'Run the Lyrebird Course'});let done=false;
-    $('#fc').onclick=e=>{const g=e.target.closest('[data-code]');if(!g||done)return;const c=+g.dataset.code;const fb=$('#fb');
-      if(c===35){done=true;q.done();punched[4]=1;fb.className='fb show yes';fb.innerHTML='<b>Code 35. That\'s yours!</b> Punched. Orienteers always check the code.';say("Code 35. That's yours! Orienteers always check the code.");$('#nr').hidden=false;$('#next5').onclick=()=>{L=5;leg();};}
-      else{q.miss(String(c));g.style.opacity=.3;fb.className='fb show clue';fb.innerHTML=`<b>That flag says ${c}.</b> Yours is code 35. Look at each number carefully.`;say(`That flag says ${c}. Yours is code 35.`);}};
-  }
-  function legFinish(){
-    const st={q:'Which handrail leads to the finish?',opts:['The old rail trail','The creek','The fence'],why:'The track runs right past the finish.',clue:'Look at the map: which long line goes to the double circle?',concept:'Handrails and attack points',area:'HPE',item:'Lyrebird Course last leg: handrail to the finish'};
-    const opts=prepOpts(st);
-    layout({},mcqHTML(st,opts)+'<div class="next-row" id="nr" hidden></div>');
-    $('#sayq').onclick=()=>say(st.q+' '+opts.map(o=>o.t).join('. Or, '),true);say(LEGS[5].intro+' '+st.q+' '+opts.map(o=>o.t).join('. Or, '));
-    runMCQ(st,opts,()=>{walk('M700,520 L692,612 C760,632 840,628 905,617',2600,()=>{
-      const nr=$('#nr');nr.hidden=false;
-      nr.innerHTML='<div style="flex:1 1 100%"><div class="fb show yes"><b>The run-in!</b> Orienteers sprint the last bit, from the last control to the finish. Stand up and run on the spot for ten steps!</div></div><button class="btn alt" id="fin">I did my run-in!</button>';
-      say('The run-in! Orienteers sprint the last bit. Stand up and run on the spot for ten steps!');
-      $('#fin').onclick=()=>{punched[5]=1;nextStep();};
-    });});
-  }
-  leg();
+
+  if(id==='hunt')return [
+    T('<p>You know how to read a map and use a compass. Now let\'s find my treasure!</p><p>I\'ll give you my clues one at a time. Use the map to work out where each clue takes you, then tap that place. Your dot shows where you are.</p>'),
+    {type:'hunt'}
+  ];
 }
 
-/* ---------- section done ---------- */
-function sectionDone(){
-  const i=RUN.i,sec=SECTIONS[i];const first=!S.done[i];
-  S.done[i]=1;save();renderCard();G.partDone(sec.title);
-  hush();
-  const text=first?`You punched control ${i+1} and collected the letter ${sec.letter}.`:`You visited control ${i+1} again. Your letter is still ${sec.letter}.`;
-  main.innerHTML=`<div class="panel punch"><div class="pop">${flagSVG(30+i+1,140)}</div><div class="bigletter pop">${sec.letter}</div><p style="font-size:1.25rem;margin:0">${esc(text)}</p><p style="margin:0;color:var(--muted)">${allDone()?'That was the last control. Run in to the finish!':'Your letter is on your control card at the top.'}</p><div class="next-row" style="justify-content:center"><button class="btn" id="home">Back to the course map</button></div></div>`;
-  say(text);RUN=null;$('#home').onclick=home;toTop();
+/* ---------- the treasure hunt ---------- */
+function huntClues(){
+  const c=[
+    {text:'Start at the gate. Follow the path <b>north</b> until you reach the creek. Where do you stop? Tap it.',want:['bridge'],walk:'M500,665 C495,600 520,500 500,335',concept:'Following map directions',clue:'North is up the map. Follow the dashed path up from the gate until it meets the blue line.',item:'Hunt: gate north to the creek',help:['North is up the map, the way the orange arrow points.','Find the gate at the bottom. Follow the dashed path upwards until it reaches the blue line.','If you walked north from the hut, you\'d go up the map, towards the top edge.']},
+    {text:'Cross the bridge and keep going until you reach a building. Tap it.',want:['hut'],walk:'M500,335 C485,260 505,210 500,160',concept:'Map key and colours',clue:'Check the key: buildings are black squares.',item:'Hunt: to the building',help:['The key tells you what each symbol means.','Buildings are black squares. Follow the path on from the bridge.','On my map, the black square at the end of the path is the hut.']},
+    {text:'From the hut, walk <b>east</b> until you reach some trees. Tap them.',want:['eastWood'],walk:'M520,150 L652,165',concept:'Following map directions',clue:'East is to the right on the map. Trees are green.',item:'Hunt: east to the trees',help:['East is to the right on the map.','From the hut, move your finger to the right until you reach something green.','If you walked west from the hut, you\'d reach Fern Wood, on the left.']}
+  ];
+  c.push({mcq:true,text:'The treasure is on the far side of Wombat Wood. There are two ways round. Which would you choose?',opts:['Walk around the edge on the open grass, because it\'s quicker and easier','Push straight through the middle of the trees, because it\'s shorter'],why:'Thick trees are slow and scratchy, and you can\'t see far. Open grass is easy walking, even if it\'s a bit further.',clue:'Think about what it\'s like to walk through thick trees.',concept:'Choosing a way to go',item:'Hunt: around the trees or through them'});
+  c.push({text:'Last clue! My treasure is buried next to the big rock on the <b>south</b> side of Wombat Wood. Tap that rock.',want:['rockS'],walk:'M652,165 C640,230 660,300 752,300',concept:'Following map directions',clue:'There are two rocks. South is down the map.',item:'Hunt: rock on the south side',help:['South is down the map.','There are two black dots by Wombat Wood. Which one is below the trees?','The gate is at the bottom of the map, so it\'s at the south end of the path.']});
+  return c;
 }
-
-/* ---------- finish: password and treasure ---------- */
-const WORD='WOMBAT';let FINISHED=false;
+function stepHunt(){
+  const clues=huntClues();let n=0,pos=[500,665];
+  shell('<div id="hhost"></div>');const host=$('#hhost');
+  function walk(d,ms,cb){const p=document.createElementNS(NS,'path');p.setAttribute('d',d);$('#mapg').appendChild(p);const L=p.getTotalLength(),w=$('#wdot'),r=$('#wring'),t0=performance.now();ms=REDUCED?1:ms;(function f(t){const k=Math.min(1,(t-t0)/ms),pt=p.getPointAtLength(L*k);[w,r].forEach(x=>{x.setAttribute('cx',pt.x);x.setAttribute('cy',pt.y);});if(k<1)requestAnimationFrame(f);else{p.remove();pos=[pt.x,pt.y];cb&&cb();}})(t0);}
+  function show(){
+    const c=clues[n];G.part("Nell's treasure hunt: clue "+(n+1));
+    host.innerHTML=`<div class="split"><div class="mapbox" id="map">${mapSVG({hits:!c.mcq,walker:pos})}</div><div><p class="eyebrow">Clue ${n+1} of ${clues.length}</p>${nellHTML('<p>'+c.text+'</p>')}<div id="cq"></div>${c.help?helpHTML():''}<div class="fb" id="fb"></div><div class="next-row" id="nr" hidden><button class="btn" id="next">Next clue &rarr;</button></div></div></div>`;
+    toTop();
+    if(c.mcq){const opts=prepOpts({opts:c.opts});$('#cq').innerHTML=`<div class="opts" style="grid-template-columns:1fr">${opts.map((o,k)=>`<button class="opt" data-n="${k}">${esc(o.t)}</button>`).join('')}</div>`;runMCQ({item:c.item,concept:c.concept,area:'HPE',why:c.why,clue:c.clue},opts,()=>{$('#nr').hidden=false;$('#next').onclick=advance;});return;}
+    const q=G.ask({item:c.item,concept:c.concept,area:'HSS',part:"Nell's treasure hunt"});let done=false;wireHelp(c.help,q);
+    $('#map').onclick=e=>{const t=e.target.closest('[data-hit]');if(!t||done)return;const k=t.dataset.hit,fb=$('#fb');
+      if(c.want.includes(k)){done=true;q.done();flashEl(t,'#2C8A4B');fb.className='fb show yes';fb.innerHTML=`<b>Yes! ${esc(cap(HIT[k].name))}.</b> Off you go…`;walk(c.walk,2200,()=>{$('#nr').hidden=false;$('#nr').innerHTML=n+1<clues.length?'<button class="btn" id="next">Next clue &rarr;</button>':'<button class="btn" id="next">Dig for the treasure! &rarr;</button>';$('#next').onclick=advance;});}
+      else{q.miss(k);flashEl(t,'#D9480F');fb.className='fb show clue';fb.innerHTML=`<b>That's ${esc(HIT[k].name)}.</b> ${esc(c.clue)}`;}};
+  }
+  function advance(){n++;if(n<clues.length)show();else treasure();}
+  show();
+}
+const CHEST='<svg viewBox="0 0 300 220" role="img" aria-label="Nell\'s treasure chest"><g class="glow" opacity="0"><ellipse cx="150" cy="90" rx="120" ry="66" fill="#FFC800" opacity=".45"/></g><rect x="40" y="100" width="220" height="100" rx="10" fill="#B5651D" stroke="#5a3d22" stroke-width="5"/><path d="M40 130h220" stroke="#5a3d22" stroke-width="3" opacity=".5"/><rect x="128" y="120" width="44" height="40" rx="5" fill="#FFC800" stroke="#5a3d22" stroke-width="3"/><g class="lid"><path d="M34 104c0-40 50-62 116-62s116 22 116 62z" fill="#C9772A" stroke="#5a3d22" stroke-width="5"/></g></svg>';
 function treasure(){
-  hush();G.start(GAME);G.part('Treasure tin');
-  if(S.opened)return openTin(false);
-  const letters=shuffle(SECTIONS.map(s=>s.letter));let pos=0;
-  const intro='<p>My treasure tin has a lock. The password is made from the six letters on your control card.</p><p>Clue: an animal that lives near the Crossover trail and digs burrows.</p>';
-  main.innerHTML=`<div class="sec-head"><button class="back" id="back">&larr; Course map</button><div><p class="eyebrow">Finish</p><h2>Nell's treasure tin</h2></div></div><div class="panel">${nellHTML(intro)}${S.easy?`<div class="art">${WOMBAT_SVG}</div>`:''}<div class="slots">${WORD.split('').map((c,n)=>`<div class="slot" id="s${n}"></div>`).join('')}</div><div class="tiles">${letters.map((c,n)=>`<button class="tile" data-n="${n}" data-c="${c}">${c}</button>`).join('')}</div><div class="row" style="justify-content:center"><button class="hintbtn" id="hint">${BULB} Show me a picture</button></div><div class="fb" id="fb"></div></div>`;
-  $('#back').onclick=home;wireSay(main,intro);say(intro);toTop();
-  const q=G.ask({item:'Password puzzle: WOMBAT',concept:'Word puzzle',area:'EN',part:'Treasure tin'});
-  $('#hint').onclick=()=>{q.hint();$('#hint').outerHTML=`<div class="art">${WOMBAT_SVG}</div>`;};
-  $$('.tile').forEach(b=>b.onclick=()=>{
-    if(pos>=WORD.length)return;
-    if(b.dataset.c===WORD[pos]){b.classList.add('used');const s=$('#s'+pos);s.textContent=b.dataset.c;s.classList.add('on');pos++;
-      if(pos===WORD.length){q.done();$('#fb').className='fb show yes';$('#fb').innerHTML='<b>WOMBAT!</b> The lock clicks open…';say('Wombat! The lock clicks open.');setTimeout(()=>openTin(true),REDUCED?300:1500);}}
-    else{q.miss(b.dataset.c);b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');$('#fb').className='fb show clue';$('#fb').innerHTML=`<b>Not that letter yet.</b> Think about the animal's name. What sound does it start with?`;}
-  });
-}
-const WOMBAT_SVG='<svg viewBox="0 0 220 130" style="max-width:220px" aria-label="A wombat" role="img"><ellipse cx="110" cy="80" rx="78" ry="42" fill="#8B6B4E"/><ellipse cx="172" cy="70" rx="34" ry="28" fill="#8B6B4E"/><path d="M160 46l6-14 8 13M182 44l8-12 5 14" fill="#7a5c42"/><ellipse cx="198" cy="76" rx="12" ry="9" fill="#3b2b20"/><circle cx="178" cy="62" r="3.5" fill="#1b1b1b"/><path d="M60 116v8M90 118v8M140 118v8M165 112v8" stroke="#5f4632" stroke-width="10" stroke-linecap="round"/><path d="M0 128h220" stroke="#B5651D" stroke-width="3"/></svg>';
-const TIN_SVG='<svg viewBox="0 0 320 230" role="img" aria-label="Nell\'s treasure tin"><g class="glow" opacity="0"><ellipse cx="160" cy="96" rx="120" ry="70" fill="#F9C74F" opacity=".45"/></g><rect x="40" y="110" width="240" height="100" rx="10" fill="#2F7F6B" stroke="#1F4D35" stroke-width="4"/><path d="M40 140h240" stroke="#1F4D35" stroke-width="3" opacity=".5"/><g transform="translate(130 150)"><rect width="60" height="44" rx="6" fill="#F9C74F" stroke="#8a6a12" stroke-width="3"/><circle cx="30" cy="20" r="6" fill="#8a6a12"/></g><g class="lid"><rect x="34" y="78" width="252" height="40" rx="10" fill="#38917A" stroke="#1F4D35" stroke-width="4"/><g transform="translate(140 82) scale(.55)"><rect x="8" y="4" width="44" height="44" fill="#fff" stroke="#1F2B24" stroke-width="3"/><path d="M52 4v44H8z" fill="#F26B1D"/></g></g></svg>';
-function openTin(animate){
-  if(!S.opened){S.opened=true;save();renderCard();}
-  if(!FINISHED){FINISHED=true;G.partDone('Treasure tin');G.finish();}
-  const text='<p>You opened my treasure tin! There are three things inside. Have a look at each one.</p>';
-  main.innerHTML=`<div class="sec-head"><button class="back" id="back">&larr; Course map</button><div><p class="eyebrow">Finish</p><h2>Inside the treasure tin</h2></div></div><div class="panel"><div class="tin" style="display:grid;place-items:center" id="tin">${TIN_SVG}</div>${nellHTML(text)}<div class="items">
-    <button class="item${S.seen.letter?' seen':''}" data-k="letter"><svg viewBox="0 0 56 56"><rect x="6" y="12" width="44" height="32" rx="3" fill="#FFFDF5" stroke="#1F2B24" stroke-width="2.5"/><path d="M6 14l22 16 22-16" fill="none" stroke="#1F2B24" stroke-width="2.5"/></svg><h3>Nell's letter</h3><p>Read this first.</p></button>
-    <button class="item${S.seen.mission?' seen':''}" data-k="mission"><svg viewBox="0 0 56 56"><rect x="6" y="8" width="44" height="40" rx="3" fill="#fff" stroke="#1F2B24" stroke-width="2.5"/><path d="M14 38 24 22l8 10 10-16" fill="none" stroke="#B5179E" stroke-width="3"/><circle cx="42" cy="16" r="4" fill="none" stroke="#B5179E" stroke-width="2.5"/></svg><h3>The real course</h3><p>Your next mission, outside.</p></button>
-    <button class="item${S.seen.board?' seen':''}" data-k="board"><svg viewBox="0 0 56 56"><rect x="4" y="8" width="48" height="38" rx="3" fill="#D9B98A" stroke="#7a5230" stroke-width="2.5"/><rect x="10" y="14" width="16" height="12" fill="#fff"/><rect x="30" y="14" width="16" height="18" fill="#FFF4D6"/><rect x="12" y="30" width="14" height="10" fill="#FBE7F6"/></svg><h3>The orienteers' noticeboard</h3><p>Where real orienteers go.</p></button>
-  </div><div class="next-row"><button class="btn ghost" id="done">I've finished</button></div></div>`;
-  $('#back').onclick=home;wireSay(main,text);toTop();
-  if(animate){setTimeout(()=>{$('#tin').classList.add('open');$('#tin .glow').setAttribute('opacity','1');},150);}else{$('#tin').classList.add('open');$('#tin .glow').setAttribute('opacity','1');}
-  say(text);
-  $$('.item').forEach(b=>b.onclick=()=>{S.seen[b.dataset.k]=1;save();({letter:showLetter,mission:showMission,board:showBoard})[b.dataset.k]();});
+  G.partDone(STOPS[5].title);const first=!S.done[5];S.done[5]=1;save();renderCard();G.finish();
+  main.innerHTML=`<div class="sec-head"><button class="back" id="back">&larr; All stops</button><div><p class="eyebrow">The treasure hunt</p><h2>You found it!</h2></div></div><div class="panel"><div class="chest" style="display:grid;place-items:center" id="chest">${CHEST}</div>${nellHTML(`<p>You found my treasure${NAME?', '+esc(NAME):''}! And here's the real treasure: you can now read a map, find where you are, and use a compass.</p><p>Some people love doing this so much that it's their sport. It's called <b>orienteering</b>. Orienteers use a map to find orange-and-white flags hidden around a park or forest.</p>`)}
+    <p class="prompt" style="margin-top:6px">Tell it back</p>
+    ${IS_MAEVE?`<div class="note" style="margin-bottom:14px"><p><b>Tell a grown-up:</b> how do you find where you are on a map? Then show them which way is north, using the compass.</p><p style="margin-top:8px"><b>Try it at home:</b> draw a map of your bedroom, from above. Add a key and a north arrow.</p></div>`
+      :`<div class="note" style="margin-bottom:14px"><p><b>Explain it to Maeve:</b> in two or three sentences, how do you find where you are on a map?</p><textarea id="narr" aria-label="How to find where you are on a map" style="margin-top:8px"></textarea><p style="margin-top:8px"><b>Try it at home:</b> draw a map of your bedroom from above, with a key and a north arrow. Could Maeve use it to find something you've hidden?</p><p style="margin-top:8px"><b>Something to wonder about:</b> how do you think people made maps before planes and satellites? Ask Dad.</p></div>`}
+    <p class="prompt" style="margin-top:6px">Ways to try it for real</p>
+    <div class="notes">
+      <div class="note"><h3>A map walk with Dad</h3><p>Take a map and the compass on the Rokeby to Crossover Rail Trail. Stop at every bridge and bend, and find where you are on the map.</p></div>
+      <div class="note"><h3>A real orienteering course</h3><p>At Cardinia Reservoir Park there's a course with real wooden posts to find, any day you like. It's about an hour's drive away.</p></div>
+      <div class="note"><h3>On a camping trip</h3><p>Draw a map of the campsite, then hide treasure for each other and draw where it is.</p></div>
+    </div>
+    <div class="next-row"><button class="btn" id="done">I've finished</button></div></div>`;
+  $('#back').onclick=home;toTop();
+  const ta=$('#narr');if(ta){ta.value=S.narr||'';ta.oninput=()=>{S.narr=ta.value.slice(0,2000);save();G.write({prompt:'Explain to Maeve how to find where you are on a map',text:ta.value,game:GAME,part:"Nell's treasure hunt",area:'EN'});};}
+  setTimeout(()=>{$('#chest').classList.add('open');$('#chest .glow').setAttribute('opacity','1');},REDUCED?0:200);
   $('#done').onclick=endCard;
 }
-function subPage(title,inner,text){
-  main.innerHTML=`<div class="sec-head"><button class="back" id="back">&larr; Treasure tin</button><div><p class="eyebrow">Treasure tin</p><h2>${esc(title)}</h2></div></div><div class="panel">${inner}<div class="next-row"><button class="btn" id="ok">Back to the tin</button></div></div>`;
-  $('#back').onclick=()=>openTin(false);$('#ok').onclick=()=>openTin(false);toTop();if(text)say(text);
-}
-function showLetter(){
-  const t=`<p>Dear ${NAME?esc(NAME):'orienteer'},</p><p>You found my tin! Here is my real treasure: everything you've learnt today works in real forests and real streets.</p><p>Set your map. Follow your handrails. Check every code. And if you're ever unsure, stop and think.</p><p>My orienteering friends are out there nearly every week, from little kids to people in their eighties. I hope I'll see you at a start triangle one day.</p><p>Your friend,<br>Nell</p>`;
-  subPage("Nell's letter",nellHTML(t),t);wireSay(main,t);
-}
-function showMission(){
-  const mine=IS_MAEVE
-    ?'<div class="job"><h3>Your extra job, Maeve: wildlife spotter</h3><p>Wombats, wallabies and lyrebirds have been seen along this trail. Keep your eyes open for them, and for wombat holes!</p></div>'
-    :'<div class="job"><h3>Your extra job, Maggie: map maker</h3><p>If there\'s no printed map, you draw the trail as you walk: the track, each bridge, seat and bend, and a north arrow. At the turnaround you hide flags for Maeve.</p></div>';
-  const intro='<p>Everything you just did works outside. Soon you\'ll go orienteering for real with Dad, on the Rokeby to Crossover Rail Trail or in Warragul.</p>';
-  let h=nellHTML(intro)+`<div class="mission"><ol>
-    <li>At the start, set the map with the compass, and find north.</li>
-    <li>Every time you reach a bridge, a seat, a sign or a bend, stop. Find where you are on the map. Get it right and Dad gives you a secret letter.</li>
-    <li>You and your sister take turns at two jobs. Swap at every stop.</li>
-    <li>At the turnaround, hide flags for each other, mark them on the map, and find them.</li>
-    <li>On the way back, you lead. The letters spell a password for a treasure tin at the end.</li></ol>
-    <div class="jobs"><div class="job"><h3>Map Keeper</h3><p>Set the map, keep your thumb on where you are, and say what's coming next.</p></div><div class="job"><h3>Compass Keeper</h3><p>Check which way is north, say which way the trail goes, and count steps between stops.</p></div>${mine}</div></div>`;
-  if(!IS_MAEVE)h+=`<p class="eyebrow" style="margin-top:14px">My plan for Maeve's flags</p><p style="margin-top:0">At the turnaround you'll hide three flags for Maeve. Write how you'll describe each spot. For example: "Control 1, behind the seat, on the side away from the trail."</p><textarea id="plan" aria-label="My plan for Maeve's flags"></textarea><p style="color:var(--muted);font-size:.95rem">This is saved, so you can come back to it.</p>`;
-  else h+='<p style="margin-top:14px"><b>Tell Dad:</b> which job would you like first, Map Keeper or Compass Keeper?</p>';
-  subPage('The real course',h,intro);wireSay(main,intro);
-  const ta=$('#plan');
-  if(ta){ta.value=S.plan||'';ta.oninput=()=>{S.plan=ta.value.slice(0,3000);save();G.write({prompt:"Plan clues for flags to hide for Maeve on the real course",text:ta.value,game:GAME,part:'Treasure tin',area:'HSS'});};}
-}
-function showBoard(){
-  const notes=[
-    {h:'Orienteering clubs',p:'Victoria has orienteering clubs that put on events in parks, streets and the bush, nearly every week. Beginners are welcome, and bush events always have easy courses.',core:1},
-    {h:'Yarra Valley Orienteering Club',p:'This club began in Melbourne in 1972. It runs bush, street, sprint and mountain-bike orienteering, and coaches beginners. It also looks after courses with real wooden posts at Westerfolds Park and Cardinia Reservoir Park. Cardinia is about an hour\'s drive away, so you could run a real course there any day you like.',core:1},
-    {h:'MapRun',p:'MapRun is a phone app that beeps when you reach each control, so no flags are needed. Some parks, like Jells Park, have courses you can run any time.',core:1},
-    {h:'Camping trips',p:'Bush events are held in forests all over Victoria, from autumn to early spring. That could make a camping trip! At camp, draw a map of the campsite and set flags for each other.',core:1},
-    {h:'Rogaining',p:'Rogaining is the long team version of orienteering. It was invented in Melbourne in 1976. Teams get anything from a few hours to a whole day and night to find as many controls as they can.',core:0},
-    {h:'The Junior Squad',p:"Older kids can join Victoria's Junior Squad. They compete in bush, sprint, park and street events, and travel interstate.",core:0}
-  ].filter(n=>FULL||n.core);
-  const intro='<p>Here\'s where real orienteers go. Which would you like to try first? Tell Dad.</p>';
-  subPage("The orienteers' noticeboard",nellHTML(intro)+`<div class="notes">${notes.map(n=>`<div class="note"><h3>${esc(n.h)}</h3><p>${esc(n.p)}</p></div>`).join('')}</div>`,intro);wireSay(main,intro);
-}
 function endCard(){
-  hush();const t='That\'s the end of Nell\'s course. Now put the iPad away, and go and find Dad and the compass!';
-  main.innerHTML=`<div class="panel end">${flagSVG(null,110)}<h2>Course complete!</h2><p style="font-size:1.25rem">${esc(t)}</p><div class="row" style="justify-content:center"><button class="btn ghost" id="again">Back to the course map</button></div></div>`;
-  say(t);$('#again').onclick=home;toTop();
+  main.innerHTML=`<div class="panel end">${compassSVG(0,110)}<h2>Well done, navigator!</h2><p style="font-size:1.25rem">That's the end of Nell's Treasure Map. Now put the iPad away, and go and find Dad and the compass!</p><div class="row" style="justify-content:center"><button class="btn ghost" id="again">Back to all stops</button></div></div>`;
+  $('#again').onclick=home;toTop();
+}
+function stopDone(){
+  const i=RUN.i;S.done[i]=1;save();renderCard();G.partDone(STOPS[i].title);RUN=null;
+  main.innerHTML=`<div class="panel done-card"><div class="pop">${FOOT.replace('<svg','<svg width="120" height="120"')}</div><h2 style="color:var(--forest)">Stop ${i+1} done!</h2><p style="font-size:1.2rem;margin:0">You've finished <b>${esc(STOPS[i].title)}</b>.</p><p style="margin:0;color:var(--muted)">${i===4?'Next: the treasure hunt!':'Your footprint is on the card at the top.'}</p><div class="next-row" style="justify-content:center"><button class="btn" id="home">Back to all stops</button></div></div>`;
+  $('#home').onclick=home;toTop();
 }
 
 /* ---------- grown-ups ---------- */
@@ -854,10 +610,9 @@ $('#easy').onclick=()=>{S.easy=!S.easy;save();showEasy();};
 let resetArmed=false;
 $('#reset').onclick=()=>{
   if(!resetArmed){resetArmed=true;$('#reset').textContent='Tap again to start over';setTimeout(()=>{resetArmed=false;$('#reset').textContent='Start over';},4000);return;}
-  resetArmed=false;$('#reset').textContent='Start over';const easy=S.easy,read=S.read;S=blank();S.easy=easy;S.read=read;save();home();
+  resetArmed=false;$('#reset').textContent='Start over';const easy=S.easy;S=blank();S.easy=easy;save();home();
 };
-
-showRead();showEasy();home();
+showEasy();home();
 </script>
 <script src="../../home.js"></script>
 </body>

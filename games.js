@@ -20,11 +20,11 @@ window.PLAYERS = [
 window.GAMES = [
   {
     id: "lyrebird-course",
-    title: "Nell's Lyrebird Course",
-    blurb: "Learn to orienteer and find Nell's treasure tin.",
+    title: "Nell's Treasure Map",
+    blurb: "Learn to read a map and use a compass, then find Nell's treasure.",
     players: ["maggie", "maeve"],
     subject: "Health and PE",
-    source: "Friday special activity: introduction to orienteering, before a real course on the Rokeby to Crossover Rail Trail",
+    source: "Friday special activity: first steps in navigation with a map and compass, before a map walk on the Rokeby to Crossover Rail Trail",
     added: "2026-10-21",
     colour: "#B5179E",
     href: "games/lyrebird-course/index.html"
