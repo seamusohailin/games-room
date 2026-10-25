@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>The King's Tally Book</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=IM+Fell+English:ital@0;1&display=swap">
+<style>
+/* A Tudor clerk's counting room: dark oak, parchment pages, oxblood ink for headings, Maeve's teal for every action */
+:root{
+  --bg:#1d1a14; --bg-deep:#110f0b; --oak:#3a2f22; --parch:#f7eedb; --parch-2:#e6d6b2; --parch-3:#d3bd8e;
+  --ink:#2b2219; --muted:#6c5a43; --blood:#8e2a25; --gold:#d9a93b; --teal:#16A08F; --teal-deep:#0c6b5f;
+  --ok:#2f7d4f; --ok-bg:#e1f1e2; --hmm-bg:#fbeacd; --on-dark:#f2e8d3; --bar:#3f6e8f;
+  --display:"IM Fell English",Georgia,"Times New Roman",serif;
+  --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:radial-gradient(ellipse at 10% -10%,rgba(217,169,59,.18),transparent 55%);color:var(--on-dark);font-family:var(--body);font-size:1.15rem;line-height:1.45;min-height:100vh;-webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance}
+
+.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;justify-content:space-between;padding-bottom:14px;margin-bottom:18px;border-bottom:2px dashed rgba(217,169,59,.35)}
+.brand h1{color:var(--gold);font-size:clamp(1.9rem,5.6vw,2.9rem);line-height:1.05}
+.brand p{margin:.3rem 0 0;font-size:1rem;opacity:.85}
+.status{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.pips{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.pips li{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.95rem;border:2px solid var(--parch-3);color:var(--parch-3)}
+.pips li.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.pips li.now{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.toggle{display:inline-flex;align-items:center;gap:8px;background:var(--bg-deep);border:2px solid var(--parch-3);border-radius:999px;padding:6px 14px;min-height:46px;cursor:pointer;font-size:.95rem}
+.toggle .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--parch-3);display:grid;place-items:center}
+.toggle[aria-pressed="true"]{border-color:var(--teal)}
+.toggle[aria-pressed="true"] .box{background:var(--teal);border-color:var(--teal)}
+.toggle[aria-pressed="true"] .box::after{content:"";width:10px;height:6px;border:solid #fff;border-width:0 0 3px 3px;transform:rotate(-45deg) translate(1px,-1px)}
+
+.panel{background:var(--parch);color:var(--ink);border-radius:14px;padding:20px;box-shadow:0 6px 0 var(--bg-deep)}
+.panel h2{color:var(--blood);font-size:clamp(1.5rem,4.4vw,2.1rem);margin-bottom:10px}
+.hugh{display:flex;gap:12px;align-items:flex-start;margin:0 0 6px}
+.hugh .quill{flex:none;width:46px;height:46px;border-radius:50%;background:var(--oak);display:grid;place-items:center}
+.hugh .quill svg{width:28px;height:28px}
+.hugh p{margin:0;font-size:1.25rem;line-height:1.45;padding-top:6px}
+.hugh p+p{margin-top:8px}
+.text{flex:1}
+.text p{margin:0;font-size:1.25rem;line-height:1.45;padding-top:6px}
+.visual{margin:16px 0 4px}
+.btn{font-family:var(--body);font-weight:700;font-size:1.2rem;background:var(--teal);color:#fff;border:0;border-radius:999px;padding:.55em 1.4em;min-height:56px;cursor:pointer;box-shadow:0 4px 0 var(--teal-deep);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--teal-deep)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn[disabled]{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:16px}
+.hintbtn{background:#FFF4D6;border:2px solid #E3BE5C;border-radius:999px;padding:6px 16px;min-height:46px;cursor:pointer;font-size:1rem;color:var(--ink)}
+.hintbtn[disabled]{opacity:.5;cursor:default}
+
+.choices{display:grid;gap:12px;margin:16px 0 6px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.choices.wide{grid-template-columns:1fr}
+.choice{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:12px 16px;min-height:60px;font-size:1.2rem;color:var(--ink);text-align:left;cursor:pointer;box-shadow:0 4px 0 var(--parch-2);display:flex;align-items:center;gap:12px}
+.choice svg{flex:none;width:46px;height:46px}
+.choice.yes{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
+.choice.no{opacity:.38;box-shadow:none;cursor:default}
+.fb{border-radius:12px;margin:12px 0 0;scroll-margin-bottom:96px}
+.fb:empty{display:none}
+.fb.show{padding:12px 14px}
+.fb.yes{background:var(--ok-bg)}
+.fb.hmm{background:var(--hmm-bg)}
+.fb.clue{background:#FFF4D6}
+.fb p{margin:0;font-size:1.15rem}
+.fb p+p{margin-top:6px}
+
+/* the chance line */
+.line{display:grid;gap:10px;grid-template-columns:repeat(var(--n),minmax(0,1fr));position:relative;padding-top:18px}
+.line::before{content:"";position:absolute;left:4%;right:4%;top:6px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--muted),var(--parch-3) 50%,var(--muted))}
+.zone{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:10px;min-height:110px;display:flex;flex-direction:column;gap:6px;text-align:center;color:var(--ink);font-size:1rem}
+button.zone{cursor:pointer;box-shadow:0 4px 0 var(--parch-2)}
+button.zone:active{transform:translateY(2px)}
+.zone b{font-family:var(--display);font-size:1.45rem;color:var(--blood);font-weight:400}
+.zone .mean{font-size:.95rem;color:var(--muted)}
+.zone.no{opacity:.4;cursor:default}
+.zone.yes{border-color:var(--ok);background:var(--ok-bg)}
+.zone .blank{display:block;height:1.6rem;border-bottom:3px dotted var(--parch-3);margin:2px 10px 6px}
+.chip{background:var(--parch);border:1px solid var(--parch-3);border-radius:8px;padding:4px 8px;font-size:.88rem;text-align:left}
+.card{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:16px 18px;font-size:1.4rem;margin:8px 0 6px;box-shadow:4px 4px 0 var(--parch-3)}
+.card small{display:block;font-size:.9rem;color:var(--muted);margin-bottom:4px}
+@media (max-width:640px){.line{grid-template-columns:repeat(2,minmax(0,1fr))}.line::before{display:none}}
+
+/* coin and tallies */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;align-items:start}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.coinbox{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.coin{width:150px;height:150px;perspective:600px}
+.coin svg{width:100%;height:100%;display:block}
+.coin.spin svg{animation:flip .7s ease-in-out}
+@keyframes flip{0%{transform:rotateY(0)}50%{transform:rotateY(900deg) scale(.85)}100%{transform:rotateY(1800deg)}}
+@media (prefers-reduced-motion:reduce){.coin.spin svg{animation:none}}
+.sides{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.side{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:1.05rem}
+.side svg{width:96px;height:96px}
+table.tally{width:100%;border-collapse:separate;border-spacing:0 8px}
+table.tally td{background:#fff;border-top:2px solid var(--parch-2);border-bottom:2px solid var(--parch-2);padding:6px 10px;vertical-align:middle}
+table.tally td:first-child{border-left:2px solid var(--parch-2);border-radius:12px 0 0 12px;width:1%;white-space:nowrap}
+table.tally td:last-child{border-right:2px solid var(--parch-2);border-radius:0 12px 12px 0;width:1%;text-align:center;font-weight:700;font-size:1.3rem}
+table.tally th{font-size:.95rem;color:var(--muted);text-align:left;font-weight:400;padding:0 10px}
+table.tally th:last-child{text-align:center}
+.rowname{display:flex;align-items:center;gap:8px;font-weight:700}
+.rowname svg{width:36px;height:36px}
+table.tally tr.tap td{cursor:pointer;border-color:var(--teal)}
+table.tally tr.tap:active td{background:#e9f7f5}
+table.tally tr.bad td{background:var(--hmm-bg)}
+.tallies svg{height:38px;display:block}
+.strip{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-top:6px}
+.strip div{background:#fff;border:2px solid var(--parch-2);border-radius:8px;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.8rem;color:var(--muted);padding:2px}
+.strip div svg{width:26px;height:26px}
+.strip div.now{border-color:var(--gold)}
+.mini{font-size:.95rem;color:var(--muted);margin:4px 0 0}
+.runs{display:grid;gap:10px;margin:12px 0}
+.run{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:10px 12px}
+.split{position:relative;height:26px;border-radius:6px;overflow:hidden;display:flex;margin-top:6px;border:2px solid var(--ink)}
+.split .h{background:var(--parch-3)}
+.split .t{background:repeating-linear-gradient(45deg,#fff 0 6px,var(--parch-2) 6px 12px)}
+.split::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;border-left:3px dashed var(--blood)}
+
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.day{background:#fff;border:2px solid var(--parch-2);border-radius:10px;padding:4px;text-align:center;font-size:.85rem;color:var(--muted)}
+.day svg{width:100%;max-width:52px;height:auto;display:block;margin:0 auto}
+.day.now{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold)}
+.day.done{opacity:.4}
+
+/* bar charts */
+.build{display:flex;gap:6px;align-items:stretch}
+.yaxis{position:relative;width:24px;font-size:.95rem;color:var(--muted)}
+.yaxis span{position:absolute;right:4px;line-height:1;transform:translateY(50%)}
+.cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;flex:1}
+.col{display:flex;flex-direction:column}
+.cells{display:flex;flex-direction:column-reverse;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.cell{height:36px;flex:none;border:0;border-top:1px dashed var(--parch-3);background:transparent;cursor:pointer;padding:0;margin:0 6px}
+.cell.on{background:var(--bar);border-top-color:var(--bar)}
+.col.wrong .cells{background:var(--hmm-bg)}
+.col .lab{height:58px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.9rem;font-weight:700}
+.col .lab svg{width:30px;height:30px}
+.chart svg{width:100%;height:auto;display:block}
+.numpad{display:grid;grid-template-columns:repeat(5,minmax(0,62px));gap:8px;margin-top:12px}
+.numpad button{min-height:56px;border-radius:12px;border:2px solid var(--parch-3);background:#fff;font-size:1.35rem;font-weight:700;cursor:pointer;color:var(--ink)}
+.numpad button.ok{grid-column:span 2;background:var(--teal);color:#fff;border-color:var(--teal-deep)}
+.numshow{display:inline-block;min-width:96px;padding:6px 14px;border:3px solid var(--ink);border-radius:12px;background:#fff;font-size:1.8rem;font-weight:700;text-align:center;min-height:56px}
+.slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.slot{min-height:64px;border:3px dashed var(--parch-3);border-radius:12px;display:grid;place-items:center;font-family:var(--display);font-size:1.3rem;color:var(--blood);background:#fff}
+.slot.filled{border-style:solid;border-color:var(--ok)}
+.ends{display:flex;justify-content:space-between;font-size:.95rem;color:var(--muted)}
+@media (max-width:640px){.slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* home */
+.letter{background:#fbf4e3;border:2px solid var(--parch-2);max-width:820px;margin-bottom:22px}
+.letter .eyebrow{font-family:var(--display);color:var(--blood);font-size:1.4rem;margin:0 0 8px}
+.letter ol{margin:10px 0 0;padding-left:1.4em;font-size:1.2rem}
+.letter ol li+li{margin-top:6px}
+.note{font-size:.95rem;color:var(--muted);margin:14px 0 0}
+.shelf{color:var(--gold);font-size:1.5rem;margin:0 0 12px}
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.part{text-align:left;border:0;cursor:pointer;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-height:120px}
+.part[disabled]{opacity:.45;cursor:default}
+.part .n{font-family:var(--display);color:var(--blood);font-size:1.1rem}
+.part h3{font-size:1.35rem;color:var(--ink)}
+.part .tag{margin-top:auto;font-size:.9rem;font-weight:700;color:var(--muted)}
+.part.next{box-shadow:0 0 0 4px var(--gold),0 6px 0 var(--bg-deep)}
+.part.next .tag{color:var(--teal-deep)}
+.grown{margin-top:30px;padding-top:14px;border-top:2px dashed rgba(242,232,211,.25);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;opacity:.85}
+.grown button{background:transparent;border:2px solid rgba(242,232,211,.5);border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:.95rem}
+textarea{width:100%;min-height:80px;font:inherit;font-size:1.15rem;border:2px solid var(--parch-3);border-radius:12px;padding:10px;background:#fff;color:var(--ink)}
+.tell{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:12px 14px;margin-top:12px}
+.tell h3{color:var(--blood);font-size:1.3rem;margin-bottom:6px}
+.tell ul{margin:0;padding-left:1.2em}
+.tell li+li{margin-top:6px}
+.answer{background:#fff;border-left:6px solid var(--teal);border-radius:8px;padding:10px 14px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>The King's Tally Book</h1><p id="who">Hampton Court, in the time of King Henry VIII</p></div>
+    <div class="status">
+      <ol class="pips" id="pips" aria-label="Parts of the book"></ol>
+      <button class="toggle" id="easy" aria-pressed="false"><span class="box"></span>Easier version</button>
+    </div>
+  </header>
+  <main id="main"></main>
+  <footer class="grown">
+    <span>Your book saves your place after each part. You can stop any time.</span>
+    <button id="home">Contents</button>
+    <button id="reset">Start the book again</button>
+  </footer>
+</div>
+<script>
+'use strict';
+const G=window.GR||{player:()=>'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask(){return {miss(){},hint(){},done(){},giveUp(){},missed:()=>0};},write(){}};
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const rnd=n=>Math.floor(Math.random()*n);
+const GAME='kings-tally-book';
+const main=$('#main');
+let runId=0;
+const sleep=ms=>{const r=runId;return new Promise(res=>setTimeout(()=>{if(r===runId)res();},ms));};
+function toTop(){try{window.scrollTo({top:0,behavior:'auto'});}catch(e){window.scrollTo(0,0);}}
+
+/* ---------- saved progress, separate for each girl ---------- */
+const KEY=G.key('kings-tally-book-v1');
+function blank(){return {done:[],easy:false,coin:null,fortnight:null,month:null,line:null};}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.done))return Object.assign(blank(),v);}catch(e){}return blank();}
+let S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ---------- pictures ---------- */
+const QUILL='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M27 4C17 6 11 13 8 24l2 1c1-3 3-6 5-8 6-1 10-5 12-13z" fill="#f2e8d3"/><path d="M8 24l-3 5" stroke="#f2e8d3" stroke-width="2" stroke-linecap="round"/></svg>';
+const HEADS='<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#dedbd2" stroke="#6e6a60" stroke-width="3"/><circle cx="50" cy="50" r="38" fill="none" stroke="#8a867b" stroke-width="2" stroke-dasharray="2 4"/><path d="M38 72c-5-12-3-27 7-31 10-4 19 2 19 12 0 4 4 6 2 9-2 2-3 3-3 6-1 5-7 7-13 7-4 0-9-1-12-3z" fill="#9b968a"/><path d="M39 72c2 3 9 5 14 3 2-1 3-4 1-6" fill="#8a857a"/><path d="M38 42l2-13 5 8 5-10 5 10 5-8 2 13z" fill="#7a766b"/></svg>';
+const TAILS='<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#dedbd2" stroke="#6e6a60" stroke-width="3"/><path d="M50 8V92M8 50H92" stroke="#8a867b" stroke-width="5"/><path d="M34 32h32v22c0 12-8 18-16 22-8-4-16-10-16-22z" fill="#9b968a" stroke="#6e6a60" stroke-width="2.5"/><path d="M50 32v44M34 50h32" stroke="#6e6a60" stroke-width="2"/></svg>';
+const BLANKCOIN='<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#dedbd2" stroke="#6e6a60" stroke-width="3"/><circle cx="50" cy="50" r="38" fill="none" stroke="#8a867b" stroke-width="2" stroke-dasharray="2 4"/><text x="50" y="64" font-size="40" text-anchor="middle" fill="#6e6a60" font-family="Georgia,serif">?</text></svg>';
+const COIN={H:HEADS,T:TAILS};
+const COINNAME={H:'Heads',T:'Tails'};
+const COINSAYS={H:"the King's face",T:'the shield'};
+const W={
+  sun:{name:'Sunny',svg:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="9" fill="#e9b52f" stroke="#8a6512" stroke-width="2"/><g stroke="#8a6512" stroke-width="3" stroke-linecap="round"><path d="M24 4v7M24 37v7M4 24h7M37 24h7M10 10l5 5M33 33l5 5M38 10l-5 5M15 33l-5 5"/></g></svg>'},
+  cloud:{name:'Cloudy',svg:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 36h23a8 8 0 0 0 1-16 11 11 0 0 0-21-2 9 9 0 0 0-3 18z" fill="#e3e3e3" stroke="#5f5f5f" stroke-width="2.5" stroke-linejoin="round"/></svg>'},
+  rain:{name:'Rainy',svg:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 28h23a8 8 0 0 0 1-16 11 11 0 0 0-21-2 9 9 0 0 0-3 18z" fill="#cfd6dc" stroke="#4d5a66" stroke-width="2.5" stroke-linejoin="round"/><g stroke="#2f6e9c" stroke-width="3" stroke-linecap="round"><path d="M16 33l-3 7M25 33l-3 7M34 33l-3 7"/></g></svg>'},
+  storm:{name:'Stormy',svg:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 28h23a8 8 0 0 0 1-16 11 11 0 0 0-21-2 9 9 0 0 0-3 18z" fill="#8f949a" stroke="#33373c" stroke-width="2.5" stroke-linejoin="round"/><path d="M26 27l-7 10h6l-3 9 9-12h-6l3-7z" fill="#f2c94c" stroke="#7a5c00" stroke-width="1.5" stroke-linejoin="round"/></svg>'}
+};
+const WK=['sun','cloud','rain','storm'];
+
+/* tally marks: four upright marks and a fifth across them, like a gate */
+function tallySVG(n){
+  const h=38,lw=9,gw=50;let x=6,s='';
+  const g=Math.floor(n/5),r=n%5;
+  for(let i=0;i<g;i++){for(let j=0;j<4;j++)s+=`<path d="M${x+j*lw} 6V${h-4}"/>`;s+=`<path d="M${x-5} ${h-8}L${x+3*lw+5} 10"/>`;x+=gw;}
+  for(let j=0;j<r;j++)s+=`<path d="M${x+j*lw} 6V${h-4}"/>`;
+  const w=Math.max(x+r*lw+4,24);
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="${n} tally marks"><g stroke="#2b2219" stroke-width="3.2" stroke-linecap="round" fill="none">${s}</g></svg>`;
+}
+
+/* ---------- small building blocks ---------- */
+function frame(o){
+  toTop();
+  main.innerHTML=`<section class="panel">${o.title?`<h2>${o.title}</h2>`:''}
+    ${o.hugh?`<div class="hugh"><span class="quill">${QUILL}</span><div class="text">${[].concat(o.hugh).map(p=>`<p>${p}</p>`).join('')}</div></div>`:''}
+    ${o.visual?`<div class="visual">${o.visual}</div>`:''}
+    <div class="body">${o.body||''}</div>
+    <div class="fb" id="fb" aria-live="polite"></div></section>`;
+}
+function goBtn(label,id){return `<div class="row"><button class="btn" id="${id||'go'}">${label}</button></div>`;}
+function click(sel){return new Promise(res=>{const b=$(sel);if(b)b.onclick=()=>res();});}
+async function talk(o,label){frame(Object.assign({},o,{body:(o.body||'')+goBtn(label||'Go on')}));await click('#go');}
+function seen(f){try{f.scrollIntoView({block:'nearest',behavior:'auto'});}catch(e){}}
+function fb(kind,html){const f=$('#fb');if(!f)return;f.className='fb show '+kind;f.innerHTML=[].concat(html).map(p=>`<p>${p}</p>`).join('');seen(f);}
+function helpRow(){return '<div class="row"><button class="hintbtn" id="help">Help, please</button></div>';}
+/* help in three levels: a reminder, a focused hint, then a worked example */
+function wireHelp(levels,q){
+  const b=$('#help');if(!b||!levels)return;let n=0;
+  b.onclick=()=>{if(n>=levels.length)return;q&&q.hint();fb('clue',`<b>${['Remember','Hint','Example'][n]}:</b> ${levels[n]}`);n++;b.textContent=n>=levels.length?'No more help':'More help';if(n>=levels.length)b.disabled=true;};
+}
+function rightThenGo(why,label){
+  return new Promise(res=>{const f=$('#fb');f.className='fb show yes';f.innerHTML=`<p><b>Yes.</b> ${why||''}</p>`+goBtn(label||'Go on','go2');$('#go2').onclick=()=>res();seen(f);});
+}
+
+/* a question with buttons. o.answer, or o.isRight(v); o.miss(v) explains a wrong choice */
+function askChoice(o){
+  return new Promise(res=>{
+    frame({title:o.title,hugh:o.prompt,visual:o.visual,body:`<div class="choices ${o.wide?'wide':''}">${o.options.map((op,i)=>`<button class="choice" data-i="${i}">${op.html||''}${esc(op.label)}</button>`).join('')}</div>${o.help?helpRow():''}`});
+    const q=o.concept?G.ask({item:o.item,concept:o.concept,area:o.area||'MA'}):null;
+    wireHelp(o.help,q);
+    let locked=false;
+    $$('.choice').forEach(b=>b.onclick=async()=>{
+      if(locked||b.disabled)return;
+      const op=o.options[+b.dataset.i];
+      const ok=o.isRight?o.isRight(op.v):op.v===o.answer;
+      if(ok){locked=true;q&&q.done();b.classList.add('yes');$$('.choice').forEach(x=>{if(x!==b)x.disabled=true;});
+        if(o.quick){await sleep(500);res(op.v);}else{await rightThenGo(typeof o.why==='function'?o.why(op.v):o.why);res(op.v);}}
+      else{q&&q.miss(op.label);b.classList.add('no');b.disabled=true;fb('hmm',(o.miss&&o.miss(op.v))||'Not that one. Look again and try another.');}
+    });
+  });
+}
+/* a question answered with a number pad */
+function askNumber(o){
+  return new Promise(res=>{
+    frame({title:o.title,hugh:o.prompt,visual:o.visual,body:`<div class="row"><span class="numshow" id="ns" aria-live="polite"></span></div>
+      <div class="numpad">${[1,2,3,4,5,6,7,8,9,0].map(d=>`<button data-d="${d}">${d}</button>`).join('')}<button data-d="x" aria-label="Rub out">⌫</button><button class="ok" data-d="ok">Check</button></div>${o.help?helpRow():''}`});
+    const q=o.concept?G.ask({item:o.item,concept:o.concept,area:o.area||'MA'}):null;
+    wireHelp(o.help,q);
+    let v='',locked=false;const show=()=>{$('#ns').textContent=v;};
+    $$('.numpad button').forEach(b=>b.onclick=async()=>{
+      if(locked)return;const d=b.dataset.d;
+      if(d==='x'){v=v.slice(0,-1);show();return;}
+      if(d==='ok'){
+        if(v==='')return;const n=+v;
+        if(n===o.answer){locked=true;q&&q.done();await rightThenGo(typeof o.why==='function'?o.why(n):o.why);res(n);}
+        else{q&&q.miss(n);fb('hmm',(o.miss&&o.miss(n))||'Not quite. Count again carefully.');v='';show();}
+        return;
+      }
+      if(v.length<3){v=(v==='0'?'':v)+d;show();}
+    });
+  });
+}
+
+/* ---------- the parts ---------- */
+const PARTS=[
+  {id:'line',name:'The chance line',blurb:'Impossible, unlikely, likely or certain?',fn:()=>partLine()},
+  {id:'coin',name:'The lucky coin',blurb:"Test Sir Roger's coin with tallies.",fn:()=>partCoin()},
+  {id:'tally',name:'The weather tally',blurb:"Keep the King's weather tally.",fn:()=>partTally()},
+  {id:'chart',name:'The weather chart',blurb:'Draw a bar chart, then read one.',fn:()=>partChart()},
+  {id:'king',name:'Telling the King',blurb:'Answer both puzzles.',fn:()=>partKing()}
+];
+function pips(cur){
+  $('#pips').innerHTML=PARTS.map((p,i)=>`<li class="${S.done.includes(p.id)?'done':''} ${i===cur?'now':''}" title="${esc(p.name)}">${i+1}</li>`).join('');
+}
+function nextIndex(){for(let i=0;i<PARTS.length;i++)if(!S.done.includes(PARTS[i].id))return i;return -1;}
+let cur=-1;
+
+function home(){
+  runId++;cur=-1;pips(-1);toTop();
+  const nx=nextIndex();
+  main.innerHTML=`<section class="panel letter">
+      <p class="eyebrow">From the desk of Master Hugh, the King's clerk</p>
+      <div class="hugh"><span class="quill">${QUILL}</span><div class="text">
+        <p>Welcome, helper. I keep the King's Tally Book. I count things for King Henry: loaves, candles, horses, even the weather. I have two puzzles for you.</p></div></div>
+      <ol><li><b>Sir Roger says his coin is lucky.</b> He says it nearly always lands on the King's face. Is he right?</li>
+      <li><b>The King wants to go hunting next month.</b> Will he get a dry day?</li></ol>
+      <p style="margin:12px 0 0;font-size:1.2rem">We can't know for certain. But we can count, and counting tells us what is <i>likely</i>.</p>
+      <p class="note">This is a story. Master Hugh and Sir Roger are made up. King Henry VIII, his palace at Hampton Court and his coins were real.</p>
+    </section>
+    <h2 class="shelf">${nx<0?'You have finished the book':'The five parts of the book'}</h2>
+    <div class="parts">${PARTS.map((p,i)=>{const d=S.done.includes(p.id),open=d||i===nx;
+      return `<button class="panel part ${i===nx?'next':''}" data-i="${i}" ${open?'':'disabled'}><span class="n">Part ${i+1}</span><h3>${esc(p.name)}</h3><span>${esc(p.blurb)}</span><span class="tag">${d?'Done ✓ (play again)':i===nx?'Start here':'Later'}</span></button>`;}).join('')}</div>`;
+  $$('.part').forEach(b=>b.onclick=()=>{if(!b.disabled)runPart(+b.dataset.i);});
+}
+
+async function runPart(i){
+  runId++;cur=i;pips(i);
+  G.start(GAME);G.part(PARTS[i].name);
+  await PARTS[i].fn();
+  if(!S.done.includes(PARTS[i].id))S.done.push(PARTS[i].id);
+  save();G.partDone(PARTS[i].name);pips(-1);
+  if(i===PARTS.length-1)return; // the last part has its own ending
+  frame({title:`Part ${i+1} is done`,hugh:[`Well done. I've written it in the Tally Book, so your place is saved.`,`Next is Part ${i+2}: <b>${esc(PARTS[i+1].name)}</b>. You can go on now, or stop here and come back another day.`],
+    body:`<div class="row"><button class="btn" id="on">Go on to Part ${i+2}</button><button class="btn ghost" id="stop">Stop for now</button></div>`});
+  $('#on').onclick=()=>runPart(i+1);$('#stop').onclick=home;
+}
+
+/* ===== Part 1: the chance line (MYHS Maths 2B, Lesson 27) ===== */
+const WORDS={imp:{w:'Impossible',m:"It can't happen."},unl:{w:'Unlikely',m:"It could happen, but it probably won't."},lik:{w:'Likely',m:'It probably will happen.'},cer:{w:'Certain',m:'It will happen for sure.'}};
+const CARDS=[
+  {id:'horse-egg',t:'A horse will lay an egg.',a:'imp',h:'What kinds of animals lay eggs? Is a horse one of them?',why:"Horses never lay eggs. It can't happen."},
+  {id:'fish-sing',t:'The fish in the palace pond will sing a song.',a:'imp',h:'Can a fish make the sounds of a song?',why:"Fish can't sing. It can't happen."},
+  {id:'wednesday',t:'The day after Tuesday will be Wednesday.',a:'cer',h:'Say the days of the week. What comes after Tuesday, every single week?',why:'Wednesday always comes after Tuesday. It will happen for sure.'},
+  {id:'stone',t:'If you let go of a stone, it will fall.',a:'cer',h:'What always happens when you let go of something heavy?',why:'A stone you let go of always falls. It will happen for sure.'},
+  {id:'bread',t:'The palace kitchen will bake bread tomorrow.',a:'lik',h:'Does the kitchen bake most days? Could anything stop it one day?',why:"They bake bread most days, so it probably will happen. But something could stop it, so it isn't certain."},
+  {id:'bird',t:'You will see a bird outside today.',a:'lik',h:'Do you see birds most days? Is every single day sure?',why:"You see birds most days, so you probably will. But it isn't sure."},
+  {id:'snow',t:'It will snow at your house tomorrow.',a:'unl',h:'How often does it snow at your house? Most days, or hardly ever?',why:'Snow at your house is very rare. It could happen, but it probably won\'t.'},
+  {id:'gold',t:'You will find a gold coin in the garden today.',a:'unl',h:'How often do people find gold in a garden?',why:'It could happen, but it hardly ever does.'}
+];
+const LINE_EXAMPLE='Example: "A fish will climb a tree." Fish can\'t climb, so that is <b>impossible</b>. "The sun will come up tomorrow." It always does, so that is <b>certain</b>. "It will rain on Saturday" could go either way, so it sits in the middle: likely or unlikely.';
+function lineMiss(chosen,ans){
+  if(chosen==='imp')return 'Could it ever happen, even once? If it could, it isn\'t impossible.';
+  if(chosen==='cer')return 'Could anything stop it happening? If it might not happen, it isn\'t certain.';
+  if(ans==='imp')return 'Think again: could this ever really happen?';
+  if(ans==='cer')return 'Think again: is there any way it could fail to happen?';
+  if(chosen==='lik')return 'Would it happen most days? If it hardly ever happens, it\'s unlikely.';
+  return 'Does it happen most days? If it usually happens, it\'s likely.';
+}
+function lineHTML(zones,placed,opts){
+  opts=opts||{};
+  return `<div class="line" style="--n:${zones.length}">${zones.map(z=>{
+    const tag=opts.tap?'button':'div';
+    const head=opts.hide?'<span class="blank"></span>':`<b>${WORDS[z].w}</b>${opts.noMean?'':`<span class="mean">${WORDS[z].m}</span>`}`;
+    return `<${tag} class="zone" data-z="${z}">${head}${(placed||[]).filter(p=>p.z===z).map(p=>`<span class="chip">${esc(p.t)}</span>`).join('')}</${tag}>`;}).join('')}</div>`;
+}
+/* one card placed on the line */
+function placeCard(o){
+  return new Promise(res=>{
+    frame({title:o.title,hugh:o.prompt,visual:`<div class="card"><small>${o.count||''}</small>${esc(o.card.t)}</div>`+lineHTML(o.zones,o.placed,{tap:true,hide:o.hide}),body:helpRow()});
+    const q=G.ask({item:o.item,concept:o.concept,area:'MA'});
+    wireHelp(o.help,q);
+    let locked=false;
+    $$('button.zone').forEach(b=>b.onclick=async()=>{
+      if(locked||b.classList.contains('no'))return;
+      const z=b.dataset.z;
+      if(o.isRight(z)){locked=true;q.done();b.classList.add('yes');await rightThenGo(o.why);res(z);}
+      else{q.miss(WORDS[z].w);b.classList.add('no');fb('hmm',o.miss(z));}
+    });
+  });
+}
+async function partLine(){
+  const easy=S.easy;
+  const zones=easy?['imp','cer']:['imp','unl','lik','cer'];
+  const placed=[{t:'A pig will fly over the palace.',z:'imp'}];
+  await talk({title:'Part 1: The chance line',hugh:easy?["Some things <b>can't</b> happen. Some things <b>will</b> happen for sure. We have a word for each."]
+      :["Some things <b>can't</b> happen. Some things <b>will</b> happen for sure. Most things are in between.","We use four words to say how likely something is. They go in order along the chance line."],
+    visual:lineHTML(zones,[])});
+  await talk({hugh:['Watch me do the first one.','<i>"A pig will fly over the palace."</i> Pigs can\'t fly, so it can\'t happen. I put it on <b>Impossible</b>.'],visual:lineHTML(zones,placed)},'Now my turn');
+  const pool=easy?CARDS.filter(c=>c.a==='imp'||c.a==='cer'):CARDS.slice();
+  const cards=shuffle(pool);
+  for(let i=0;i<cards.length;i++){
+    const c=cards[i];
+    await placeCard({title:'Part 1: The chance line',prompt:'Where does this card go on the chance line? Tap a word.',count:`Card ${i+1} of ${cards.length}`,card:c,zones,placed,
+      item:'Chance line: '+c.t,concept:'Chance words: impossible to certain',
+      help:[easy?'Impossible means it can\'t happen. Certain means it will happen for sure.':'Impossible means it can\'t happen. Certain means it will happen for sure. Unlikely and likely sit in between.',c.h,LINE_EXAMPLE],
+      isRight:z=>z===c.a,why:c.why,miss:z=>lineMiss(z,c.a)});
+    placed.push({t:c.t,z:c.a});
+  }
+  if(!easy){
+    await askChoice({title:'Part 1: Certain, or only likely?',prompt:['I found muddy boots by the kitchen door. I said, "Someone has been out in the mud."','Is that <b>certain</b>, or only <b>likely</b>?'],
+      options:[{v:'cer',label:'Certain'},{v:'lik',label:'Only likely'}],answer:'lik',item:'Muddy boots: certain or likely',concept:'Certain or only likely',
+      help:['Certain means we know for sure. Likely means it probably happened, but we can\'t be sure.','Did Master Hugh see anyone walk in the mud? Could the boots have got muddy some other way?','Example: "The cake tin is empty, so someone ate the cake." Probably! But the cook might have moved the cake. So it\'s likely, not certain.'],
+      miss:()=>'Did anyone see it happen? Maybe the boots were muddy from yesterday, or someone carried them in.',
+      why:'Most likely someone went out in the mud. But nobody saw it, so we can\'t be certain. When we can\'t be sure, we say "probably".'});
+  }
+  await talk({title:'Your chance line',hugh:'Here is your finished chance line, from <b>impossible</b> to <b>certain</b>.',visual:lineHTML(zones,placed)},'Finish Part 1');
+}
+
+/* ===== Part 2: the lucky coin (MYHS Maths 2B, Lessons 25 and 26) ===== */
+function coinRecord(){if(!S.coin)S.coin={games:[],runs:[],fifth:false};return S.coin;}
+function tallyTable(rows,opts){
+  opts=opts||{};
+  return `<table class="tally"><tr><th></th><th>Tally</th><th>${opts.total?'Total':''}</th></tr>${rows.map(r=>`<tr data-k="${r.k}" class="${opts.tap?'tap':''}"><td><span class="rowname">${r.icon||''}${esc(r.name)}</span></td><td class="tallies">${tallySVG(r.n)}</td><td>${opts.total&&r.showTotal?r.n:''}</td></tr>`).join('')}</table>`;
+}
+function coinRows(game,showTotal){const h=game.filter(t=>t.r==='H').length,t=game.filter(t=>t.r==='T').length;
+  return [{k:'H',name:'Heads',icon:`<span style="width:36px;height:36px;display:inline-block">${HEADS}</span>`,n:h,showTotal},{k:'T',name:'Tails',icon:`<span style="width:36px;height:36px;display:inline-block">${TAILS}</span>`,n:t,showTotal}];}
+function strip(game,n,now){
+  let s='<div class="strip">';
+  for(let i=0;i<n;i++){const t=game[i];s+=`<div class="${i===now?'now':''}">${t&&t.g?`guess ${t.g}`:'&nbsp;'}${t&&t.r?COIN[t.r]+`<b>${t.r}</b>`:''}</div>`;}
+  return s+'</div><p class="mini">Each box: your guess, then what the coin did. H is Heads, T is Tails.</p>';
+}
+/* one game of tosses: guess, toss, then she adds the tally mark herself */
+function playTosses(gi,N){
+  return new Promise(res=>{
+    const rec=coinRecord();const game=[];rec.games[gi]=game;
+    const q=G.ask({item:`Coin game ${gi+1}: making the tally`,concept:'Making tally marks',area:'MA'});
+    let k=0,stage='guess',result=null;
+    const draw=(msg,kind)=>{
+      frame({title:`Part 2: Game ${gi+1}`,body:`<div class="two"><div class="coinbox">
+          <p style="margin:0;font-size:1.2rem"><b>Toss ${Math.min(k+1,N)} of ${N}</b></p>
+          <div class="coin" id="coin">${result?COIN[result]:BLANKCOIN}</div>
+          <div id="ctl"></div></div>
+          <div><div id="tt">${tallyTable(coinRows(game.slice(0,k)),{tap:stage==='mark'})}</div>${strip(game,N,k)}</div></div>`});
+      if(msg)fb(kind||'clue',msg);
+    };
+    const step=()=>{
+      if(k>=N){q.done();save();res(game);return;}
+      result=null;stage='guess';draw();
+      $('#ctl').innerHTML=`<p style="margin:0 0 8px">What's your guess?</p><div class="row" style="justify-content:center;margin:0"><button class="btn" id="gH">Heads</button><button class="btn" id="gT">Tails</button></div>`;
+      $('#gH').onclick=()=>guess('H');$('#gT').onclick=()=>guess('T');
+    };
+    const guess=g=>{
+      game[k]={g};stage='toss';draw();
+      $('#ctl').innerHTML=`<p style="margin:0 0 8px">You guessed ${COINNAME[g]}. Now toss!</p><button class="btn" id="toss">Toss the coin</button>`;
+      $('#toss').onclick=async()=>{
+        $('#toss').disabled=true;const c=$('#coin');c.classList.add('spin');
+        await sleep(700);
+        result=Math.random()<0.5?'H':'T';
+        game[k].r=result;stage='mark';draw();
+        $('#ctl').innerHTML=`<p style="margin:0">It landed on <b>${COINSAYS[result]}</b>.</p><p style="margin:6px 0 0">The coin decides. A guess is never wrong.</p><p style="margin:10px 0 0"><b>Now tap the right row to add a tally mark.</b></p>`;
+        wireRows();
+      };
+    };
+    const wireRows=()=>{
+      $$('table.tally tr[data-k]').forEach(tr=>tr.onclick=async()=>{
+        if(stage!=='mark')return;
+        if(tr.dataset.k!==result){q.miss(COINNAME[tr.dataset.k]+' row');tr.classList.add('bad');fb('hmm',`The coin shows ${COINSAYS[result]}. Which row is for ${COINSAYS[result]}?`);return;}
+        const count=game.filter((t,i)=>i<=k&&t.r===result).length;
+        if(count===5&&!rec.fifth){stage='fifth';await fifthMark(result,k);rec.fifth=true;save();}
+        k++;step();
+      });
+    };
+    step();
+  });
+}
+/* the first time a row reaches five, she decides where the fifth mark goes */
+function fifthMark(r,k){
+  return new Promise(res=>{
+    const q=G.ask({item:'Where the 5th tally mark goes',concept:'Making tally marks',area:'MA'});
+    $('#ctl').innerHTML=`<p style="margin:0 0 8px"><b>This is the 5th mark in the ${COINNAME[r]} row. Where does it go?</b></p>
+      <div class="choices wide" style="margin:0"><button class="choice" id="up">Straight up, next to the others</button><button class="choice" id="across">Across the four, like a gate</button></div>`;
+    $('#up').onclick=()=>{q.miss('straight up');$('#up').classList.add('no');$('#up').disabled=true;fb('hmm','Look at the gate tally Master Hugh showed you. The 5th mark goes across the first four, so we can count in fives.');};
+    $('#across').onclick=()=>{q.done();res();};
+  });
+}
+async function partCoin(){
+  const easy=S.easy;const rec=coinRecord();rec.games=[];rec.runs=[];save();
+  await talk({title:'Part 2: The lucky coin',hugh:["Sir Roger says, \"My coin is lucky. It nearly always lands on the King's face!\"",'Let\'s test it. King Henry\'s silver coins really did have his face on one side and his shield on the other.'],
+    visual:`<div class="sides"><div class="side">${HEADS}<b>Heads</b><span>the King's face</span></div><div class="side">${TAILS}<b>Tails</b><span>the shield</span></div></div>`});
+  await talk({title:'How to keep a tally',hugh:['We keep count with <b>tally marks</b>: one line for each toss.','Four lines stand up. The 5th line goes <b>across</b> them, like a gate. Then we can count in fives.','This tally says 7: one gate is 5, then 6, 7.'],visual:`<div class="tallies" style="background:#fff;border-radius:12px;padding:12px;display:inline-block">${tallySVG(7)}</div>`});
+  const warm=easy?6:pickOne([6,8,9]);
+  await askNumber({title:'How to keep a tally',prompt:'How many does this tally say?',visual:`<div class="tallies" style="background:#fff;border-radius:12px;padding:12px;display:inline-block">${tallySVG(warm)}</div>`,
+    answer:warm,item:`Read a tally of ${warm}`,concept:'Reading tally marks',
+    help:['A gate is 5 marks: four up and one across.','Say "5" for the gate. Then count on for each mark after it.','Example: a gate and 1 more is 5, 6. So that tally says 6.'],
+    miss:n=>n===warm-5?'That counts the marks after the gate. Don\'t forget the gate is 5!':'Count the gate as 5, then count on for each single mark.',why:'Five in the gate, then count on.'});
+  await talk({title:'Part 2: Game 1',hugh:['Here is how each toss works:','<b>1.</b> Guess Heads or Tails. <b>2.</b> Toss the coin. <b>3.</b> Add a tally mark in the right row.','We do 10 tosses.']},'Start game 1');
+  const g1=await playTosses(0,10);
+  await coinQuestions(g1,1);
+  let g2=null;
+  if(!easy){
+    await talk({title:'Part 2: Game 2',hugh:['Let\'s play another game of 10 tosses, just the same.','Do you think it will come out the same as game 1?']},'Start game 2');
+    g2=await playTosses(1,10);
+    await coinQuestions(g2,2);
+    const h1=g1.filter(t=>t.r==='H').length,h2=g2.filter(t=>t.r==='H').length;
+    await askChoice({title:'Part 2: Two games',prompt:'Look at both tallies. Did game 2 come out the same as game 1?',
+      visual:`<div class="two"><div><p class="mini">Game 1</p>${tallyTable(coinRows(g1,true),{total:true})}</div><div><p class="mini">Game 2</p>${tallyTable(coinRows(g2,true),{total:true})}</div></div>`,
+      options:[{v:true,label:'Yes, the same'},{v:false,label:'No, different'}],answer:h1===h2,item:'Two games: same or different',concept:'Two games can come out differently',
+      miss:()=>'Look at the Heads totals for game 1 and game 2. Are they the same number?',
+      why:h1===h2?'This time they matched. That is quite rare! Usually two games come out different.':'The games came out different. That\'s what usually happens with a coin.'});
+  }
+  await askChoice({title:'Part 2: The next toss',prompt:['Here comes the next toss.','Which is more likely: Heads, Tails, or are they the same?'],
+    options:[{v:'H',label:'Heads is more likely',html:`<span style="width:46px;height:46px;display:inline-block">${HEADS}</span>`},{v:'T',label:'Tails is more likely',html:`<span style="width:46px;height:46px;display:inline-block">${TAILS}</span>`},{v:'S',label:'Both the same'}],
+    wide:true,answer:'S',item:'Next toss: which is more likely',concept:'Each coin toss is a 50-50 chance',
+    help:['A coin has two sides, and each side has the same chance.','Can the coin remember what happened in the last game?','Example: a coin came up Tails 4 times in a row. On the next toss, Heads and Tails still have the same chance. The coin doesn\'t know about the last 4.'],
+    miss:()=>'The coin can\'t remember the last tosses. Every toss is a fresh start.',
+    why:'Every toss, Heads and Tails have the same chance. We call that a <b>50-50 chance</b>: half and half.'});
+  await sirRoger(easy);
+  rec.done=true;save();
+}
+function pickOne(a){return a[rnd(a.length)];}
+async function coinQuestions(game,n){
+  const h=game.filter(t=>t.r==='H').length,t=game.length-h,match=game.filter(x=>x.g===x.r).length;
+  const vis=()=>tallyTable(coinRows(game),{});
+  const tallyHelp=['A gate is 5 marks. Count the gate as 5, then count on.','Start at the gate. Say "5", then count on for every mark after it.','Example: a gate and 2 more marks is 5, 6, 7.'];
+  await askNumber({title:`Part 2: Game ${n}`,prompt:'Count your tally. How many <b>Heads</b>?',visual:vis(),answer:h,item:`Coin game ${n}: count Heads`,concept:'Reading tally marks',help:tallyHelp,
+    miss:x=>x===t?'That\'s the Tails row. Look at the Heads row.':'Count the gate as 5, then count on.',why:`${h} Heads.`});
+  await askNumber({title:`Part 2: Game ${n}`,prompt:'How many <b>Tails</b>?',visual:vis(),answer:t,item:`Coin game ${n}: count Tails`,concept:'Reading tally marks',help:tallyHelp,
+    miss:x=>x===h?'That\'s the Heads row. Look at the Tails row.':'Count the gate as 5, then count on.',why:`${t} Tails. ${h} and ${t} make 10, one for each toss.`});
+  await askChoice({title:`Part 2: Game ${n}`,prompt:'Half of 10 is 5. Did your game come out exactly half: 5 Heads and 5 Tails?',visual:tallyTable(coinRows(game,true),{total:true}),
+    options:[{v:true,label:'Yes, exactly 5 and 5'},{v:false,label:'No, not exactly half'}],answer:h===5,item:`Coin game ${n}: exactly half?`,concept:'Comparing with half',
+    miss:()=>'Look at the totals. Are they both 5?',
+    why:h===5?'Exactly half this time! It doesn\'t always happen.':`${h} and ${t}. Not exactly half. A short game often wobbles a bit.`});
+  await talk({title:`Part 2: Game ${n}`,hugh:[`Your guesses matched the coin ${match} times out of 10.`,'The coin can\'t hear guesses, so nobody can guess it every time. Most people match about half the time, just like you.']});
+}
+async function sirRoger(easy){
+  const rec=coinRecord();
+  const opts=easy?[10,100]:[10,20,100];
+  const gamesH=rec.games.reduce((a,g)=>a+(g?g.filter(t=>t.r==='H').length:0),0),gamesN=rec.games.reduce((a,g)=>a+(g?g.length:0),0);
+  const runsHTML=()=>`<div class="runs">${rec.runs.map(r=>`<div class="run"><b>${r.n} tosses:</b> ${r.h} Heads and ${r.n-r.h} Tails
+      <div class="split" role="img" aria-label="${r.h} Heads and ${r.n-r.h} Tails"><span class="h" style="width:${100*r.h/r.n}%"></span><span class="t" style="width:${100*(r.n-r.h)/r.n}%"></span></div></div>`).join('')}</div>
+      <p class="mini">Plain part: Heads. Striped part: Tails. The dashed line is exactly half.</p>`;
+  let first=true;
+  while(true){
+    const left=opts.filter(n=>!rec.runs.some(r=>r.n===n));
+    const choose=await new Promise(res=>{
+      frame({title:"Part 2: Sir Roger's coin",hugh:first?["Now let's test Sir Roger's coin properly. I'll toss it for you and write the tallies in my book.",'<b>You choose:</b> how many tosses shall I do?']
+          :['Do you want to test the coin some more? You choose.'],
+        visual:rec.runs.length?runsHTML():'',
+        body:`<div class="row">${left.map(n=>`<button class="btn" data-n="${n}">${n} tosses</button>`).join('')}</div>`});
+      $$('[data-n]').forEach(b=>b.onclick=()=>res(+b.dataset.n));
+    });
+    first=false;
+    let h=0;for(let i=0;i<choose;i++)if(Math.random()<0.5)h++;
+    rec.runs.push({n:choose,h});save();
+    frame({title:"Part 2: Sir Roger's coin",hugh:`Toss, toss, toss... Here are ${choose} tosses.`,visual:`<div class="tallies" style="background:#fff;border-radius:12px;padding:12px">
+      <p class="mini" style="margin:0">Heads</p><div style="display:flex;flex-wrap:wrap;gap:2px">${chunks(h)}</div><p class="mini">Tails</p><div style="display:flex;flex-wrap:wrap;gap:2px">${chunks(choose-h)}</div></div>`,body:goBtn('Count them up')});
+    await click('#go');
+    const big=rec.runs.find(r=>r.n===100);
+    if(!big){
+      await talk({title:"Part 2: Sir Roger's coin",hugh:[`${h} Heads out of ${choose}.`,'Hmm. That\'s not very many tosses. Small tests wobble. A bigger test tells us more.'],visual:runsHTML()},'Choose again');
+      continue;
+    }
+    const totH=rec.runs.reduce((a,r)=>a+r.h,0)+gamesH,totN=rec.runs.reduce((a,r)=>a+r.n,0)+gamesN;
+    if(Math.abs(big.h-50)>12&&left.length>1){ // a very rare big wobble: test again before deciding
+      await talk({title:"Part 2: Sir Roger's coin",hugh:[`${big.h} Heads out of 100. That is a big wobble! Even a fair coin does that, once in a long while.`,'Let\'s test some more before we decide.'],visual:runsHTML()},'Test more');
+      continue;
+    }
+    rec.totH=totH;rec.totN=totN;save();
+    await askChoice({title:"Part 2: Is the coin lucky?",prompt:['Sir Roger says the King\'s face <b>nearly always</b> comes up. Look at your tests.','Is he right?'],visual:runsHTML(),
+      options:[{v:'yes',label:"Yes, the King's face nearly always comes up"},{v:'no',label:'No, it comes up about half the time'}],wide:true,answer:'no',
+      item:"Sir Roger's coin: lucky or not",concept:'Testing a claim with a tally',
+      help:['Nearly always would mean almost every toss is Heads.','Look at the 100-toss test. Is the plain part nearly all of the bar, or close to the dashed line?','Example: if 90 out of 100 were Heads, that would be nearly always. 50 out of 100 is half.'],
+      miss:()=>'Look at the 100-toss bar. Is it nearly all Heads, or close to the dashed half-way line?',
+      why:`In all your tosses, the King's face came up ${totH} times out of ${totN}. That's about half. Sir Roger's coin is just an ordinary coin.`});
+    await askChoice({title:'Part 2: Big tests and small tests',prompt:'Which test tells us more about a coin?',visual:runsHTML(),
+      options:[{v:10,label:'10 tosses'},{v:100,label:'100 tosses'}],answer:100,item:'Which test tells us more',concept:'More tosses come closer to half',
+      help:['A short game can wobble a lot.','Which bar came out closest to the dashed line?','Example: 10 tosses might give 7 Heads. 100 tosses usually give somewhere near 50.'],
+      miss:()=>'Small tests wobble. Which test has more tosses to count?',
+      why:'The more times we toss, the closer we usually get to half. A big tally tells us more than a small one.'});
+    return;
+  }
+}
+function chunks(n){let s='';const per=25;for(let i=0;i<n;i+=per)s+=tallySVG(Math.min(per,n-i));return s||'<span class="mini">none</span>';}
+
+/* ===== Part 3: the weather tally (MYHS Maths 2B, Lesson 26) ===== */
+function makeFortnight(easy){
+  const vals=easy?shuffle([3,2,1,1]):shuffle([6,4,3,1]);
+  const counts={};WK.forEach((k,i)=>counts[k]=vals[i]);
+  let days=[];WK.forEach(k=>{for(let i=0;i<counts[k];i++)days.push(k);});
+  days=shuffle(days);
+  return {days,counts};
+}
+function weatherRows(tally,showTotal,keys){return (keys||WK).map(k=>({k,name:W[k].name,icon:W[k].svg,n:tally[k],showTotal:showTotal&&showTotal[k]}));}
+async function partTally(){
+  const easy=S.easy;const F=makeFortnight(easy);S.fortnight=F;save();
+  const N=F.days.length;
+  await talk({title:'Part 3: The weather tally',hugh:[`Each day I draw the weather in my book. Here are the last ${N} days.`,'Now we need a <b>tally</b>, so we can see how many days of each weather there were.',"Go day by day. Look at the picture, then tap that weather's row to add a mark."],
+    visual:calHTML(F.days,-1)},'Start the tally');
+  const tally={sun:0,cloud:0,rain:0,storm:0};
+  const q=G.ask({item:'Weather tally: making the tally',concept:'Making tally marks',area:'MA'});
+  for(let d=0;d<N;d++){
+    await new Promise(res=>{
+      frame({title:'Part 3: The weather tally',hugh:`<b>Day ${d+1}.</b> Which weather is it? Tap its row to add a tally mark.`,
+        visual:`<div class="two"><div>${calHTML(F.days,d)}</div><div>${tallyTable(weatherRows(tally),{tap:true})}</div></div>`});
+      $$('table.tally tr[data-k]').forEach(tr=>tr.onclick=()=>{
+        const k=tr.dataset.k;
+        if(k!==F.days[d]){q.miss(`Day ${d+1}: ${W[k].name}`);tr.classList.add('bad');fb('hmm',`Look at the picture for day ${d+1} again. Which row has the same picture?`);return;}
+        tally[k]++;res();
+      });
+    });
+  }
+  q.done();
+  const shown={};
+  for(const k of WK){
+    await askNumber({title:'Part 3: Count up the totals',prompt:`Count the <b>${W[k].name}</b> tally. How many ${W[k].name.toLowerCase()} days?`,
+      visual:tallyTable(weatherRows(tally,shown),{total:true}),answer:tally[k],item:`Weather tally: count ${W[k].name}`,concept:'Reading tally marks',
+      help:['A gate is 5 marks. Count the gate as 5, then count on.',`Find the ${W[k].name} row. Put your finger on each mark as you count.`,'Example: a gate and 3 more is 5, 6, 7, 8.'],
+      miss:()=>`Count the ${W[k].name} row again. If there's a gate, start from 5.`,why:`${tally[k]} ${W[k].name.toLowerCase()} days.`});
+    shown[k]=true;
+  }
+  await talk({title:'Part 3: Your tally is done',hugh:[`Altogether that's ${N} days, one tally mark for each day.`],visual:tallyTable(weatherRows(tally,shown),{total:true})});
+  // Master Hugh's mistake: she checks his count
+  const m=easy?pickOne([{n:6,said:5},{n:7,said:6}]):pickOne([{n:11,said:10},{n:8,said:7},{n:12,said:10},{n:9,said:10}]);
+  const mv=`<table class="tally"><tr><td><span class="rowname">Windy days</span></td><td class="tallies">${tallySVG(m.n)}</td><td></td></tr></table>`;
+  await askChoice({title:'Part 3: Check my tally',prompt:['Here is my tally of windy days last month.',`I counted it and wrote <b>${m.said}</b>. Am I right?`],visual:mv,
+    options:[{v:true,label:`Yes, it's ${m.said}`},{v:false,label:"No, that's not right"}],answer:false,item:"Check Master Hugh's tally",concept:'Checking a tally',
+    help:['Count the gates in fives first, then the single marks.',`Count it yourself. Do you get ${m.said}?`,'Example: two gates and 1 more is 5, 10, 11.'],
+    miss:()=>`Count it yourself, slowly. Gates first, in fives. Do you really get ${m.said}?`,why:'I made a mistake! Good checking.'});
+  await askNumber({title:'Part 3: Check my tally',prompt:'How many windy days does the tally really say?',visual:mv,answer:m.n,item:"Fix Master Hugh's tally",concept:'Reading tally marks',
+    help:['Count each gate as 5.','Count the gates: 5, 10... then count on for the single marks.','Example: two gates and 2 more is 5, 10, 11, 12.'],
+    miss:()=>'Count the gates in fives, then count on for each single mark.',why:`${m.n} windy days. Thank you for fixing my book!`});
+  S.fortnight.tally=tally;save();
+}
+function calHTML(days,now){
+  return `<div class="cal">${days.map((k,i)=>`<div class="day ${i===now?'now':''} ${now>=0&&i<now?'done':''}">${W[k].svg}<span>Day ${i+1}</span></div>`).join('')}</div>`;
+}
+
+/* ===== Part 4: the weather chart (MYHS Maths 2B, Lesson 28) ===== */
+function makeMonth(easy){
+  for(let tries=0;tries<2000;tries++){
+    const vals=[];
+    while(vals.length<4){const v=easy?2*(1+rnd(8)):2+rnd(15);if(!vals.includes(v))vals.push(v);}
+    if(vals.reduce((a,b)=>a+b,0)!==30)continue;
+    if(!easy&&!vals.some(v=>v%2))continue;          // at least one bar ends between the lines
+    if(Math.max(...vals)>16)continue;
+    const m={};WK.forEach((k,i)=>m[k]=vals[i]);
+    if(m.sun+m.cloud===15)continue;                 // a dry day must be clearly likely or unlikely
+    return m;
+  }
+  return easy?{sun:12,cloud:8,rain:6,storm:4}:{sun:11,cloud:8,rain:7,storm:4};
+}
+function monthChart(m){
+  const W0=110,W1=620,H=46,top=10,max=16,sx=v=>W0+(W1-W0)*v/max;
+  let s=`<svg viewBox="0 0 640 ${top+4*H+40}" role="img" aria-label="Bar chart: weather over a month">`;
+  for(let v=0;v<=max;v+=2){s+=`<line x1="${sx(v)}" y1="${top}" x2="${sx(v)}" y2="${top+4*H}" stroke="#c9b48a" stroke-width="${v===0?2.5:1.2}"/><text x="${sx(v)}" y="${top+4*H+24}" font-size="16" text-anchor="middle" fill="#2b2219" font-family="Andika,sans-serif">${v}</text>`;}
+  for(let v=1;v<max;v+=2)s+=`<line x1="${sx(v)}" y1="${top+4*H}" x2="${sx(v)}" y2="${top+4*H+7}" stroke="#2b2219" stroke-width="1.5"/>`;
+  WK.forEach((k,i)=>{const y=top+i*H+9;
+    s+=`<rect x="${W0}" y="${y}" width="${sx(m[k])-W0}" height="${H-18}" fill="#3f6e8f" stroke="#1f3a4d" stroke-width="2"/>`;
+    s+=`<g transform="translate(6 ${y-6}) scale(.8)">${W[k].svg.replace('<svg viewBox="0 0 48 48" aria-hidden="true">','<svg width="48" height="48" viewBox="0 0 48 48">')}</g><text x="${W0-8}" y="${y+H/2-4}" font-size="16" text-anchor="end" fill="#2b2219" font-family="Andika,sans-serif" font-weight="700">${W[k].name}</text>`;});
+  s+=`<line x1="${W0}" y1="${top+4*H}" x2="${W1}" y2="${top+4*H}" stroke="#2b2219" stroke-width="2.5"/></svg>`;
+  return `<div class="chart" style="background:#fff;border-radius:12px;padding:10px"><p style="margin:0 0 4px;font-family:var(--display);font-size:1.3rem;text-align:center;color:var(--blood)">Weather last month (30 days)</p>${s}<p class="mini" style="text-align:center">Number of days</p></div>`;
+}
+async function partChart(){
+  const easy=S.easy;
+  if(!S.fortnight||!S.fortnight.tally){S.fortnight=makeFortnight(easy);S.fortnight.tally=Object.assign({},S.fortnight.counts);}
+  const tally=S.fortnight.tally;
+  await talk({title:'Part 4: The weather chart',hugh:['A tally is good for counting. A <b>bar chart</b> is good for seeing.','Each weather gets a bar. The taller the bar, the more days.','Let\'s turn your tally into a bar chart.']});
+  await buildChart(tally);
+  const M=makeMonth(easy);S.month=M;save();
+  await talk({title:'Part 4: Reading a chart',hugh:['Here is my bar chart for the whole of last month: 30 days.','This chart\'s numbers go up in twos. If a bar stops <b>between</b> two lines, it\'s the number in between. Between 6 and 8 is 7.'],visual:monthChart(M)});
+  const keys=WK.slice().sort((a,b)=>M[b]-M[a]);
+  const most=keys[0],least=keys[3];
+  const odd=WK.filter(k=>M[k]%2);
+  const hm=easy?pickOne(WK):(odd.length?pickOne(odd):pickOne(WK));
+  const pairs=[];for(const a of WK)for(const b of WK)if(M[a]>M[b])pairs.push([a,b]);
+  const [dA,dB]=pickOne(pairs);
+  let tp=shuffle(WK).slice(0,2);while((tp[0]==='sun'&&tp[1]==='cloud')||(tp[0]==='cloud'&&tp[1]==='sun'))tp=shuffle(WK).slice(0,2); // sun + cloud is saved for the King
+  const qs=[
+    ()=>askChoice({title:'Part 4: Reading a chart',prompt:'Which weather happened <b>most often</b> last month?',visual:monthChart(M),options:WK.map(k=>({v:k,label:W[k].name,html:W[k].svg})),answer:most,
+      item:'Month chart: most common',concept:'Reading a bar graph',help:['Most often means the longest bar.','Look for the bar that reaches furthest along.','Example: if Windy reached 10 and Calm reached 4, Windy happened more often.'],
+      miss:()=>'Is that the longest bar? Find the one that reaches furthest.',why:`${W[most].name} has the longest bar.`}),
+    ()=>askChoice({title:'Part 4: Reading a chart',prompt:'Which weather happened <b>least often</b>?',visual:monthChart(M),options:WK.map(k=>({v:k,label:W[k].name,html:W[k].svg})),answer:least,
+      item:'Month chart: least common',concept:'Reading a bar graph',help:['Least often means the shortest bar.','Look for the bar that stops soonest.','Example: if Windy reached 10 and Calm reached 4, Calm happened less often.'],
+      miss:()=>'Is that the shortest bar? Find the one that stops soonest.',why:`${W[least].name} has the shortest bar.`}),
+    ()=>askNumber({title:'Part 4: Reading a chart',prompt:`How many days were <b>${W[hm].name.toLowerCase()}</b>?`,visual:monthChart(M),answer:M[hm],item:`Month chart: how many ${W[hm].name}`,concept:'Reading a bar graph',
+      help:['Find the end of the bar, then look straight down to the numbers.',M[hm]%2?`The ${W[hm].name} bar stops halfway between ${M[hm]-1} and ${M[hm]+1}. What number is in between?`:`The ${W[hm].name} bar stops right on a line. Which number is under that line?`,'Example: a bar that stops halfway between 6 and 8 means 7 days.'],
+      miss:n=>Math.abs(n-M[hm])===1?'So close! Look again: does the bar stop on a line, or between two lines?':`Put your finger at the end of the ${W[hm].name} bar and slide it straight down to the numbers.`,why:`${M[hm]} ${W[hm].name.toLowerCase()} days.`})
+  ];
+  if(!easy){
+    qs.push(()=>askNumber({title:'Part 4: Reading a chart',prompt:`How many <b>more</b> days were ${W[dA].name.toLowerCase()} than ${W[dB].name.toLowerCase()}?`,visual:monthChart(M),answer:M[dA]-M[dB],item:`Month chart: ${W[dA].name} minus ${W[dB].name}`,concept:'Finding the difference',
+      help:['"How many more" means find the difference between the two bars.',`First find how many ${W[dA].name.toLowerCase()} days, then how many ${W[dB].name.toLowerCase()} days. Take the smaller number from the bigger one.`,'Example: 9 windy days and 4 calm days. 9 take away 4 is 5, so there were 5 more windy days.'],
+      miss:n=>n===M[dA]?`That's how many ${W[dA].name.toLowerCase()} days. Now take away the ${W[dB].name.toLowerCase()} days.`:n===M[dB]?`That's how many ${W[dB].name.toLowerCase()} days. How many more is ${M[dA]}?`:n===M[dA]+M[dB]?'That\'s both added together. "How many more" means take away.':'Find both numbers first. Then take the smaller from the bigger.',
+      why:`${M[dA]} take away ${M[dB]} is ${M[dA]-M[dB]}.`}));
+    qs.push(()=>askNumber({title:'Part 4: Reading a chart',prompt:`How many days were ${W[tp[0]].name.toLowerCase()} or ${W[tp[1]].name.toLowerCase()} <b>altogether</b>?`,visual:monthChart(M),answer:M[tp[0]]+M[tp[1]],item:`Month chart: ${W[tp[0]].name} plus ${W[tp[1]].name}`,concept:'Adding two bars',
+      help:['"Altogether" means add them.',`Find how many ${W[tp[0]].name.toLowerCase()} days and how many ${W[tp[1]].name.toLowerCase()} days. Then add them.`,'Example: 6 windy days and 5 calm days. 6 and 5 make 11 altogether.'],
+      miss:n=>n===M[tp[0]]||n===M[tp[1]]?'That\'s just one of the bars. Now add the other one.':n===Math.abs(M[tp[0]]-M[tp[1]])?'That\'s the difference. "Altogether" means add.':'Find both numbers first, then add them together.',
+      why:`${M[tp[0]]} and ${M[tp[1]]} make ${M[tp[0]]+M[tp[1]]}.`}));
+  }
+  for(const f of shuffle(qs))await f();
+}
+/* she draws each bar up to her own tally total */
+function buildChart(tally){
+  return new Promise(res=>{
+    const max=8;const h={sun:0,cloud:0,rain:0,storm:0};
+    const q=G.ask({item:'Make a bar chart from the tally',concept:'Making a bar graph',area:'MA'});
+    let help=0;
+    const draw=wrong=>{
+      frame({title:'Part 4: Draw the bars',hugh:'Make each bar as tall as its total. Tap a square to make the bar reach it. Your tally is beside the chart.',
+        visual:`<div class="two"><div class="build"><div class="yaxis">${Array.from({length:max+1},(_,i)=>`<span style="bottom:${58+2+i*36}px">${i}</span>`).join('')}</div><div class="cols">${WK.map(k=>`<div class="col ${wrong&&wrong.includes(k)?'wrong':''}" data-k="${k}"><div class="cells">${Array.from({length:max},(_,i)=>`<button class="cell ${i<h[k]?'on':''}" data-v="${i+1}" aria-label="${W[k].name} ${i+1}"></button>`).join('')}</div><div class="lab">${W[k].svg}${W[k].name}</div></div>`).join('')}</div></div>
+        <div>${tallyTable(weatherRows(tally,{sun:1,cloud:1,rain:1,storm:1}),{total:true})}</div></div>`,
+        body:`<div class="row"><button class="btn" id="chk">Check my chart</button><button class="hintbtn" id="help">${help?'More help':'Help, please'}</button></div>`});
+      $$('.col').forEach(c=>c.querySelectorAll('.cell').forEach(b=>b.onclick=()=>{const k=c.dataset.k,v=+b.dataset.v;h[k]=(h[k]===v?v-1:v);draw();}));
+      $('#help').onclick=()=>{const lv=['Each bar should be as tall as the total in your tally.','Find a total in the tally, say the Sunny total. Then find that number on the side of the chart, and tap the Sunny square at that height.','Example: if there were 3 rainy days, tap the third square up in the Rainy column. The bar fills up to 3.'];if(help<3){q.hint();fb('clue',`<b>${['Remember','Hint','Example'][help]}:</b> ${lv[help]}`);help++;$('#help').textContent=help>=3?'No more help':'More help';}};
+      $('#chk').onclick=async()=>{
+        const bad=WK.filter(k=>h[k]!==tally[k]);
+        if(!bad.length){q.done();draw();$('#chk').disabled=true;await rightThenGo('Every bar matches your tally. The tallest bar shows the most common weather.');res();return;}
+        q.miss(bad.map(k=>`${W[k].name} ${h[k]}`).join(', '));draw(bad);
+        fb('hmm',`Look again at the ${bad.map(k=>W[k].name).join(' and ')} bar${bad.length>1?'s':''}. Check the total in your tally, then make the bar reach that number.`);
+      };
+    };
+    draw();
+  });
+}
+
+/* ===== Part 5: telling the King (brings it all together) ===== */
+async function partKing(){
+  const easy=S.easy;
+  const M=S.month||(S.month=makeMonth(easy));
+  const dry=M.sun+M.cloud;const likely=dry>15;
+  await talk({title:'Part 5: Telling the King',hugh:['Now we can answer the King.','He wants to hunt on one day next month. He wants a <b>dry</b> day: no rain and no storms. Sunny days and cloudy days are dry.'],visual:monthChart(M)});
+  await askNumber({title:'Part 5: Telling the King',prompt:'How many <b>dry</b> days were there last month? (Sunny and cloudy days altogether.)',visual:monthChart(M),answer:dry,item:'Dry days: sunny plus cloudy',concept:'Adding two bars',
+    help:['Dry days are the sunny days and the cloudy days.','Find how many sunny days and how many cloudy days, then add them.','Example: 9 sunny days and 4 cloudy days make 13 dry days.'],
+    miss:n=>n===M.sun||n===M.cloud?'That\'s only one of them. Add the other one too.':'Find the sunny bar and the cloudy bar. Add the two numbers.',why:`${M.sun} and ${M.cloud} make ${dry} dry days, out of 30.`});
+  await askChoice({title:'Part 5: Telling the King',prompt:[`${dry} of last month's 30 days were dry. Half of 30 is 15.`,'If next month is like last month, a dry day for the hunt is...'],
+    options:['imp','unl','lik','cer'].map(z=>({v:z,label:WORDS[z].w})),answer:likely?'lik':'unl',item:'Dry hunting day: how likely',concept:'Data tells us what is likely',
+    help:['More than half the days means likely. Fewer than half means unlikely.',`Is ${dry} more than 15, or fewer than 15?`,'Example: if 20 of 30 days were dry, a dry day is likely. If only 8 were dry, it\'s unlikely.'],
+    miss:z=>z==='cer'?'Could it rain on the King\'s day? Some days last month did. So it isn\'t certain.':z==='imp'?`There were ${dry} dry days, so it could happen. It isn't impossible.`:`Were more than half of the 30 days dry, or fewer than half? Half of 30 is 15.`,
+    why:likely?`More than half the days were dry, so a dry day is <b>likely</b>.`:`Fewer than half the days were dry, so a dry day is <b>unlikely</b>. The King might stay in!`});
+  await askChoice({title:'Part 5: Telling the King',prompt:'Can Master Hugh <b>promise</b> the King a dry day?',options:[{v:true,label:'Yes, he can promise'},{v:false,label:'No, he can\'t promise'}],answer:false,
+    item:'Can we promise the weather',concept:'Certain or only likely',
+    miss:()=>'Some days last month were rainy or stormy. Could next month\'s hunting day be one of those?',
+    why:likely?'We can say a dry day is likely, but not certain. Weather can surprise us.':'We can say a dry day is unlikely, but not impossible. He might be lucky!'});
+  // return round: the chance words from memory
+  if(easy){
+    await askChoice({title:'Part 5: From memory',prompt:'Which word means <b>it can\'t happen</b>?',options:shuffle(['imp','cer']).map(z=>({v:z,label:WORDS[z].w})),answer:'imp',item:'Recall: impossible',concept:'Chance words in order',
+      miss:()=>'Certain means it will happen for sure. Which word means the opposite?',why:'Impossible means it can\'t happen.'});
+    await askChoice({title:'Part 5: From memory',prompt:'Which word means <b>it will happen for sure</b>?',options:shuffle(['imp','cer']).map(z=>({v:z,label:WORDS[z].w})),answer:'cer',item:'Recall: certain',concept:'Chance words in order',
+      miss:()=>'Impossible means it can\'t happen. Which word means it will happen for sure?',why:'Certain means it will happen for sure.'});
+  }else{
+    await orderWords();
+  }
+  const zones=easy?['imp','cer']:['imp','unl','lik','cer'];
+  const transfer=easy?[{t:'You toss a coin and it lands on a side with a cow on it.',a:'imp',h:'What is on each side of the King\'s coin?',why:'The coin has the King\'s face and a shield. No cow! It can\'t happen.'}]
+    :[{t:'You toss a coin 100 times. The King\'s face comes up about half the time.',a:'lik',h:'What happened in your 100-toss test?',why:'That\'s what usually happens with lots of tosses. It\'s likely. (Not certain: it can wobble a bit.)'},
+      {t:'You toss a coin 100 times. The King\'s face comes up every single time.',a:'unl',h:'Could it happen? Every toss could be Heads... but how often would that happen?',why:'It could happen, just. But it\'s very, very unlikely.'}];
+  for(const c of transfer){
+    await placeCard({title:'Part 5: One more thing',prompt:'Put this card on the chance line.',count:'A new card',card:c,zones,placed:[],item:'Transfer: '+c.t,concept:'Chance words: impossible to certain',
+      help:['Impossible: can\'t happen. Unlikely: probably won\'t. Likely: probably will. Certain: will for sure.',c.h,LINE_EXAMPLE],isRight:z=>z===c.a,why:c.why,
+      miss:z=>c.a==='unl'&&z==='imp'?'Could every toss come up Heads, even if it almost never would? If it could, it isn\'t impossible.':lineMiss(z,c.a)});
+  }
+  await ending(likely,dry);
+}
+/* tap the four words in order, from can't happen to will happen for sure */
+function orderWords(){
+  return new Promise(res=>{
+    const order=['imp','unl','lik','cer'];let n=0;
+    const q=G.ask({item:'Recall: put the chance words in order',concept:'Chance words in order',area:'MA'});
+    frame({title:'Part 5: From memory',hugh:['Can you remember the chance line without looking?','Tap the four words in order, starting with the one that means <b>it can\'t happen</b>.'],
+      visual:`<div class="ends"><span>can't happen</span><span>will happen for sure</span></div><div class="slots">${order.map((_,i)=>`<div class="slot" id="s${i}"></div>`).join('')}</div>`,
+      body:`<div class="choices">${shuffle(order).map(z=>`<button class="choice" data-z="${z}">${WORDS[z].w}</button>`).join('')}</div>${helpRow()}`});
+    wireHelp(['There are four words: impossible, unlikely, likely, certain.','Start with the word for "can\'t happen". Next is "probably won\'t".','Example: impossible comes first and certain comes last. The two in the middle: which means "probably won\'t"?'],q);
+    $$('.choice').forEach(b=>b.onclick=async()=>{
+      if(b.disabled)return;const z=b.dataset.z;
+      if(z===order[n]){$('#s'+n).textContent=WORDS[z].w;$('#s'+n).classList.add('filled');b.disabled=true;b.classList.add('yes');n++;$('#fb').className='fb';$('#fb').innerHTML='';
+        if(n===4){q.done();await rightThenGo('Impossible, unlikely, likely, certain. You remembered the whole chance line.');res();}}
+      else{q.miss(WORDS[z].w+' in place '+(n+1));fb('hmm',order.indexOf(z)>n?`${WORDS[z].w} comes later on the line. Which word comes before it?`:'Look at the line so far. Which word comes next?');}
+    });
+  });
+}
+async function ending(likely,dry){
+  const rec=coinRecord();const h=rec.totH,n=rec.totN;
+  frame({title:'The Tally Book is finished',hugh:['Thank you, helper. Here are our answers for the King.'],
+    visual:`<div class="answer"><b>Sir Roger's coin:</b> ${n?`In your tosses the King's face came up ${h} times out of ${n}. That's about half.`:'It came up about half the time.'} It isn't lucky. It's an ordinary coin.</div>
+      <div class="answer"><b>The King's hunt:</b> ${dry} of last month's 30 days were dry, so a dry day is <b>${likely?'likely':'unlikely'}</b>. ${likely?'Likely, but not certain.':'Unlikely, but not impossible.'} No one can promise the weather.</div>
+      <div class="answer"><b>How we found out:</b> we guessed, then counted with tallies, drew a bar chart, read it, and said how likely.</div>`,
+    body:`<div class="tell"><h3>Tell a grown-up</h3><ul>
+        <li>How did you find out whether Sir Roger's coin was lucky?</li>
+        <li>What could we tally at home this week? What would it tell us?</li>
+        <li>A question for another day: would a dice land on 6 as often as a coin lands on Heads?</li></ul></div>
+      <p style="margin:14px 0 6px">If you like, write one sentence for the Tally Book: what did you find out about the coin?</p>
+      <textarea id="note" maxlength="300" placeholder="The coin..."></textarea>
+      <div class="tell"><h3>Now put the iPad away</h3><p style="margin:0">Find a real coin. With a grown-up, toss it 20 times and keep a tally on paper. Does your real coin come out near half?</p></div>
+      ${goBtn('Close the book')}`});
+  const NK=G.key('kings-tally-book-note');
+  const ta=$('#note');try{ta.value=localStorage.getItem(NK)||'';}catch(e){}
+  ta.oninput=()=>{try{localStorage.setItem(NK,ta.value);}catch(e){}G.write({prompt:'What did you find out about the coin?',text:ta.value,game:GAME,part:'Telling the King',area:'MA'});};
+  if(!S.done.includes('king'))S.done.push('king');save();G.partDone(PARTS[4].name);G.finish();
+  await click('#go');home();
+}
+
+/* ---------- grown-up controls ---------- */
+function setEasy(){$('#easy').setAttribute('aria-pressed',S.easy?'true':'false');}
+$('#easy').onclick=()=>{S.easy=!S.easy;save();setEasy();if(cur>=0)runPart(cur);};
+$('#home').onclick=home;
+let armed=false;
+$('#reset').onclick=()=>{
+  if(!armed){armed=true;$('#reset').textContent='Tap again to start again';setTimeout(()=>{armed=false;$('#reset').textContent='Start the book again';},4000);return;}
+  armed=false;$('#reset').textContent='Start the book again';const e=S.easy;S=blank();S.easy=e;save();home();
+};
+setEasy();home();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>

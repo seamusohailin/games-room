@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "kings-tally-book",
+    title: "The King's Tally Book",
+    blurb: "Help the King's clerk test a lucky coin and read the weather.",
+    players: ["maeve"],
+    subject: "Maths",
+    source: "MYHS Maths 2B, Lessons 25 to 28: chance (heads or tails; impossible, unlikely, likely, certain), tally marks and reading a bar chart",
+    added: "2026-10-25",
+    colour: "#8E2A25",
+    href: "games/kings-tally-book/index.html"
+  },
+  {
     id: "puffing-mystery",
     title: "The Puffing Mystery",
     blurb: "Find out what happens inside you when you run, then test it on yourself.",
