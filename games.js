@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "invisible-theatre",
+    title: "The Invisible Theatre",
+    blurb: "Direct the dancers so your stage behaves like ice, water and air.",
+    players: ["maggie"],
+    subject: "Science",
+    source: "Science Strands Year 5, Part 2 Chemistry, Lesson 9: The Hidden World of Particles",
+    added: "2026-10-25",
+    colour: "#7B2037",
+    href: "games/invisible-theatre/index.html"
+  },
+  {
     id: "kings-tally-book",
     title: "The King's Tally Book",
     blurb: "Help the King's clerk test a lucky coin and read the weather.",

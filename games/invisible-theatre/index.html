@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="robots" content="noindex">
+<title>The Invisible Theatre</title>
+<script src="../../results.js"></script>
+<style>
+/* A small gaslit theatre. Velvet and gold around the edges, cream playbill panels for reading,
+   and one dark stage where the dancers (the particle model) perform. */
+:root{
+  --night:#1b0e15; --velvet:#5b1527; --velvet-2:#7b2037; --gold:#d6ad55; --gold-2:#f1d68f;
+  --paper:#f8f1e3; --paper-2:#efe4cc; --ink:#2a1c14; --soft:#665446; --line:#d9c9a8;
+  --ok:#2c7448; --ok-bg:#e3f0e4; --bad:#a3392d; --bad-bg:#f6e2dc;
+  --stage:#20161c; --dancer:#f1cf7a; --dancer-edge:#8a6420;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  min-height:100vh;color:var(--ink);font-family:var(--serif);font-size:19px;line-height:1.55;
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.45),rgba(0,0,0,0) 9%,rgba(0,0,0,0) 91%,rgba(0,0,0,.45)),
+    repeating-linear-gradient(90deg,var(--velvet) 0 22px,var(--velvet-2) 22px 30px,var(--velvet) 30px 44px);
+}
+html{background:#4a1020}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--gold-2);outline-offset:2px}
+#frame{max-width:820px;margin:0 auto;padding:0 14px 110px}
+header.bar{position:sticky;top:0;z-index:5;margin:0 -14px 16px;padding:10px 16px 10px;
+  padding-top:calc(10px + env(safe-area-inset-top,0px));
+  background:rgba(27,14,21,.94);color:var(--gold-2);display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  border-bottom:2px solid var(--gold)}
+header.bar .t{font-size:17px;letter-spacing:.08em;text-transform:uppercase;flex:1;min-width:180px}
+.pips{display:flex;gap:6px;align-items:center}
+.pips i{display:block;width:30px;height:8px;border-radius:4px;background:#4a2a35;border:1px solid #8c6a3a}
+.pips i.on{background:var(--gold)}
+.pips small{color:#d9c39a;font-size:14px;margin-left:6px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:22px 22px 24px;
+  box-shadow:0 6px 0 rgba(0,0,0,.25),inset 0 0 0 6px var(--paper),inset 0 0 0 7px var(--line);margin-bottom:16px}
+.panel+.panel{margin-top:0}
+h1,h2,h3{font-weight:600;line-height:1.2;margin:0 0 10px}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:clamp(24px,4.4vw,30px)}
+h3{font-size:20px;margin-top:4px}
+p{margin:0 0 12px}
+.eyebrow{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--velvet-2);margin:0 0 4px}
+.muted{color:var(--soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:12px 24px;
+  border-radius:4px;border:2px solid var(--velvet);background:var(--velvet);color:#fff8e8;font-size:19px}
+.btn.alt{background:transparent;color:var(--velvet)}
+.btn.gold{background:var(--gold);border-color:#a8822f;color:#2a1c0a}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.choice{display:block;width:100%;text-align:left;min-height:54px;padding:12px 16px;margin:0 0 10px;
+  background:#fffaf0;border:2px solid var(--line);border-radius:4px;font-size:18px;line-height:1.35}
+.choice.sel{border-color:var(--velvet);background:#f7e6e4;box-shadow:inset 4px 0 0 var(--velvet)}
+.choice.ok{border-color:var(--ok);background:var(--ok-bg)}
+.choice.no{border-color:var(--bad);background:var(--bad-bg);opacity:.75}
+.choice:disabled{cursor:default}
+.note{border-radius:4px;padding:12px 16px;margin:12px 0 0;font-size:18px}
+.note.ok{background:var(--ok-bg);border-left:5px solid var(--ok)}
+.note.bad{background:var(--bad-bg);border-left:5px solid var(--bad)}
+.note.hint{background:#fbf3d9;border-left:5px solid var(--gold)}
+.note p:last-child{margin-bottom:0}
+/* playbill */
+.playbill{text-align:center}
+.playbill .presents{letter-spacing:.2em;text-transform:uppercase;font-size:15px;color:var(--soft);margin:0}
+.playbill h1{letter-spacing:.04em;margin:6px 0 2px}
+.playbill .states{font-size:20px;letter-spacing:.18em;text-transform:uppercase;color:var(--velvet-2);margin:0 0 6px}
+.rule{height:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-top:3px;margin:16px auto;max-width:360px}
+.acts{display:grid;gap:10px;margin-top:6px;text-align:left}
+.act{display:flex;align-items:center;gap:14px;min-height:64px;padding:12px 16px;background:#fffaf0;border:2px solid var(--line);border-radius:4px;width:100%;text-align:left}
+.act .n{flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--gold);font-size:17px;color:var(--velvet)}
+.act.done .n{background:var(--gold);color:#2a1c0a}
+.act.next{border-color:var(--velvet)}
+.act b{display:block;font-weight:600;font-size:19px}
+.act span.s{font-size:16px;color:var(--soft)}
+.act:disabled{opacity:.5;cursor:default}
+.linkish{background:none;border:none;color:var(--velvet-2);text-decoration:underline;font-size:16px;padding:8px;min-height:44px}
+#frame>.row .linkish,main>.row .linkish{color:var(--gold-2)}
+/* the stage */
+.grid2{display:grid;gap:18px;grid-template-columns:1fr}
+@media (min-width:760px){.grid2{grid-template-columns:300px 1fr;align-items:start}}
+.stagebox{background:var(--night);border-radius:6px;padding:16px 12px 12px;border:3px solid var(--gold);position:relative;overflow:hidden}
+.stagebox::before,.stagebox::after{content:"";position:absolute;top:0;bottom:0;width:18px;
+  background:repeating-linear-gradient(90deg,#5b1527 0 6px,#7b2037 6px 10px)}
+.stagebox::before{left:0}.stagebox::after{right:0}
+.stagewrap{width:250px;height:280px;margin:0 auto}
+.stagewrap canvas{width:250px;height:280px;display:block}
+.caption{color:var(--gold-2);text-align:center;font-size:16px;min-height:50px;margin:12px 6px 0;line-height:1.35}
+.opt-group{margin-bottom:12px}
+.opt-group h3{font-size:18px}
+.evi{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:6px 0 4px;font-size:17px}
+.evi .mk{font-weight:700;width:26px;text-align:center}
+.evi .mk.y{color:var(--ok)}.evi .mk.n{color:var(--bad)}
+/* clipping */
+.clip{background:#f3ead2;border:1px solid #cdbb8f;padding:16px 18px;font-size:20px;font-style:italic;position:relative;margin:4px 0 10px;
+  box-shadow:2px 3px 0 rgba(0,0,0,.12)}
+.clip .mast{font-style:normal;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft);display:block;margin-bottom:6px;border-bottom:1px solid #cdbb8f;padding-bottom:6px}
+/* tricky roles */
+.letter{background:#fffaf0;border:1px dashed #c9b48a;padding:14px 16px;margin:6px 0 12px}
+.tests{display:grid;gap:10px;grid-template-columns:1fr}
+@media (min-width:640px){.tests{grid-template-columns:1fr 1fr 1fr}}
+.test{min-height:60px;padding:10px 12px;border-radius:4px;border:2px solid var(--gold);background:#fff4d6;font-size:17px;line-height:1.3}
+.test:disabled{opacity:.55;cursor:default}
+.found{background:#fffaf0;border-left:5px solid var(--gold);padding:10px 14px;margin:10px 0 0;font-size:18px}
+.found b{display:block;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--velvet-2);font-weight:600}
+textarea{width:100%;font:inherit;font-size:19px;line-height:1.5;padding:12px 14px;border:2px solid var(--line);border-radius:4px;background:#fffdf7;color:var(--ink);resize:vertical}
+textarea:focus{outline:none;border-color:var(--velvet)}
+.cover{font-size:17px;margin:4px 0 10px;padding-left:20px}
+/* the script (reference card) */
+.modal{position:fixed;inset:0;background:rgba(20,8,14,.72);z-index:20;display:flex;align-items:flex-start;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 12px 20px;overflow:auto}
+.modal .panel{max-width:760px;width:100%}
+.script3{display:grid;gap:12px;grid-template-columns:1fr}
+@media (min-width:640px){.script3{grid-template-columns:1fr 1fr 1fr}}
+.script3 div{background:#fffaf0;border:1px solid var(--line);padding:10px 12px;border-radius:4px;font-size:17px}
+.script3 svg{width:100%;height:auto;background:var(--stage);border-radius:3px;margin-bottom:6px}
+.curtaincall{text-align:center}
+.parent{font-size:17px}
+.parent dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0 0 12px}
+.parent dt{font-weight:600}.parent dd{margin:0}
+.parent ul,.parent ol{margin:0 0 12px;padding-left:22px}
+@media (max-width:560px){.parent dl{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="frame">
+  <header class="bar"><div class="t">The Invisible Theatre</div><div class="pips" id="pips" aria-label="Progress"></div></header>
+  <main id="main"></main>
+</div>
+
+
+<script>
+'use strict';
+const G=window.GR||{player:()=>'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask(){return {miss(){},hint(){},done(){},giveUp(){},missed:()=>0};},write(){},testing:()=>false};
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const GAME='invisible-theatre';
+const main=$('#main');
+function toTop(){try{window.scrollTo(0,0);}catch(e){}}
+
+/* ---------- who is playing ---------- */
+let PLAYER=G.player();
+const NAME=()=>PLAYER==='maggie'?'Maggie':(PLAYER==='maeve'?'Maeve':'');
+const SAVE='invisible-theatre-v1';
+let KEY=G.key(SAVE);
+function blank(){return {acts:[0,0,0,0,0],reh:[0,0,0],cri:0,tri:{order:{sand:[],sponge:[],honey:[]},done:[0,0,0]},op:{step:0,note:'',pred:'',why:''},finished:0};}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.acts)&&v.acts.length===5)return Object.assign(blank(),v);}catch(e){}return blank();}
+let S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+const ACTS=[
+  {t:'The briefing',s:'Meet the company and learn how directing works'},
+  {t:'Act I: Rehearsal',s:'Stage Ice, Water and Air'},
+  {t:'Act II: The critic',s:'Mend a muddled review'},
+  {t:'Act III: Tricky roles',s:'Sand, a sponge and honey'},
+  {t:'Act IV: Opening night',s:'A last puzzle, your programme note and a prediction'}
+];
+function nextAct(){const i=S.acts.indexOf(0);return i<0?5:i;}
+function pips(){const n=S.acts.filter(Boolean).length;$('#pips').innerHTML=S.acts.map(d=>`<i class="${d?'on':''}"></i>`).join('')+`<small>${n} of 5</small>`;}
+
+/* ---------- words for the dancers ---------- */
+const SPACING={rows:'Packed tightly in neat rows',close:'Close together, but jumbled',far:'Spread far apart'};
+const MOVE={vibrate:'Vibrate on the spot',slide:'Slide past one another',dash:'Dash about fast in every direction'};
+
+/* =========================================================
+   THE STAGE: a small particle model.
+   Every dancer is the same size in every scene: particles don't change, only their arrangement and movement.
+   ========================================================= */
+const W=210,H=250,R=8,N=40,D=2*R+1,CW=250,CH=280,SCALE=.86,TILT=22;
+const rnd=()=>Math.random();
+let LIVE=null; // the stage currently animating
+function Stage(host){
+  this.wrap=document.createElement('div');this.wrap.className='stagewrap';
+  this.cv=document.createElement('canvas');this.wrap.appendChild(this.cv);host.appendChild(this.wrap);
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  this.dpr=dpr;this.cv.width=CW*dpr;this.cv.height=CH*dpr;this.ctx=this.cv.getContext('2d');
+  this.ps=[];this.closed=true;this.tilt=0;this.tiltTarget=0;this.ceil=0;this.ceilTarget=0;this.blocked=false;
+  this.sp='rows';this.mv='vibrate';this.raf=0;this.last=0;
+  this.draw();
+}
+Stage.prototype.lattice=function(){const a=[],x0=(W-7*D)/2;for(let r=0;r<5;r++)for(let c=0;c<8;c++)a.push({x:x0+c*D,y:H-R-1-r*D});return a;};
+Stage.prototype.spread=function(){const a=[],cw=W/8,ch=H/5;for(let r=0;r<5;r++)for(let c=0;c<8;c++)a.push({x:(c+.5)*cw+(rnd()-.5)*8,y:(r+.5)*ch+(rnd()-.5)*18});return a;};
+Stage.prototype.set=function(sp,mv){
+  this.sp=sp;this.mv=mv;this.closed=false;this.tilt=0;this.tiltTarget=0;this.ceil=0;this.ceilTarget=0;this.blocked=false;
+  let pos;
+  if(sp==='rows')pos=this.lattice();
+  else if(sp==='far')pos=this.spread();
+  else{ // close and jumbled: let a liquid settle, then use where the dancers land
+    pos=this.lattice().map(p=>({x:p.x+(rnd()-.5)*6,y:p.y-(rnd()*6)}));
+    const keep=[this.sp,this.mv];this.sp='close';this.mv='slide';
+    this.ps=pos.map(p=>({x:p.x,y:p.y,vx:(rnd()-.5)*40,vy:(rnd()-.5)*40,jx:0,jy:0,hx:0,hy:0}));
+    for(let k=0;k<360;k++)this.step(1/120);
+    pos=this.ps.map(p=>({x:p.x,y:p.y}));this.sp=keep[0];this.mv=keep[1];
+  }
+  const sp0=mv==='dash'?170:(mv==='slide'?40:0);
+  this.ps=pos.map(p=>{const a=rnd()*Math.PI*2;return {x:p.x,y:p.y,hx:p.x,hy:p.y,jx:0,jy:0,vx:Math.cos(a)*sp0,vy:Math.sin(a)*sp0};});
+  this.draw();
+};
+Stage.prototype.close=function(){this.closed=true;this.ps=[];this.tiltTarget=0;this.tilt=0;this.ceil=0;this.ceilTarget=0;this.draw();};
+Stage.prototype.tip=function(on){this.tiltTarget=(on?TILT:0)*Math.PI/180;};
+Stage.prototype.piston=function(on){this.ceilTarget=on?(this.sp==='far'?H*0.58:H*0.86):0;if(!on)this.blocked=false;};
+Stage.prototype.step=function(dt){
+  const ps=this.ps;if(!ps.length)return;
+  // tilt eases toward its target, in step with the picture turning
+  this.tilt+=(this.tiltTarget-this.tilt)*Math.min(1,dt*3.2);
+  const far=this.sp==='far';
+  // the lid
+  if(this.ceil<this.ceilTarget&&!this.blocked)this.ceil=Math.min(this.ceilTarget,this.ceil+85*dt);
+  else if(this.ceil>this.ceilTarget)this.ceil=Math.max(this.ceilTarget,this.ceil-140*dt);
+  if(this.mv==='vibrate'){
+    let top=Infinity;
+    for(const p of ps){
+      p.jx=(p.jx+(rnd()-.5)*1.3)*.8;p.jy=(p.jy+(rnd()-.5)*1.3)*.8;
+      const hy=far?this.ceil+p.hy*(H-this.ceil)/H:p.hy;
+      p.x=p.hx+p.jx;p.y=hy+p.jy;if(p.y<top)top=p.y;
+    }
+    if(!far&&this.ceilTarget>0&&this.ceil>top-R-1){this.ceil=Math.max(0,top-R-1);this.blocked=true;}
+    return;
+  }
+  const liquid=this.mv==='slide'&&!far;
+  const T=this.mv==='dash'?170:(liquid?38:26);
+  const e=this.mv==='dash'?1:.3;
+  const g=liquid?520:0,gx=g*Math.sin(this.tilt),gy=g*Math.cos(this.tilt);
+  for(const p of ps){p.vx+=gx*dt;p.vy+=gy*dt;if(this.mv==='slide'){p.vx+=(rnd()-.5)*1400*dt;p.vy+=(rnd()-.5)*1400*dt;}}
+  const d0=2*R,d02=d0*d0,reach=d0*1.45;
+  for(let i=0;i<ps.length;i++){const a=ps[i];
+    for(let j=i+1;j<ps.length;j++){const b=ps[j];
+      const dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;
+      if(d2<d02&&d2>1e-6){
+        const d=Math.sqrt(d2),nx=dx/d,ny=dy/d,ov=(d0-d)/2;
+        a.x-=nx*ov;a.y-=ny*ov;b.x+=nx*ov;b.y+=ny*ov;
+        const vn=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
+        if(vn>0){const k=vn*(1+e)/2;a.vx-=k*nx;a.vy-=k*ny;b.vx+=k*nx;b.vy+=k*ny;}
+      }else if(liquid&&d2<reach*reach){
+        const d=Math.sqrt(d2),nx=dx/d,ny=dy/d,f=260*(d-d0)/(reach-d0)*dt;
+        a.vx+=nx*f;a.vy+=ny*f;b.vx-=nx*f;b.vy-=ny*f;
+      }
+    }
+  }
+  let top=Infinity;
+  for(const p of ps){
+    p.x+=p.vx*dt;p.y+=p.vy*dt;
+    if(p.x<R){p.x=R;p.vx=Math.abs(p.vx)*e;}
+    if(p.x>W-R){p.x=W-R;p.vx=-Math.abs(p.vx)*e;}
+    if(p.y>H-R){p.y=H-R;p.vy=-Math.abs(p.vy)*e;}
+    if(p.y<this.ceil+R){p.y=this.ceil+R;p.vy=Math.abs(p.vy)*e+(far?40:0);}
+    if(liquid){p.vx*=.995;p.vy*=.995;}
+    if(p.y<top)top=p.y;
+  }
+  // keep the dancers at their speed
+  let s=0;for(const p of ps)s+=p.vx*p.vx+p.vy*p.vy;const v=Math.sqrt(s/ps.length);
+  if(v>0){const f=1+.06*(T/v-1);for(const p of ps){p.vx*=f;p.vy*=f;}}
+  if(!far&&this.ceilTarget>0&&!this.blocked&&this.ceil>top-R-1.5){this.ceil=Math.max(0,top-R-1.5);this.blocked=true;}
+};
+Stage.prototype.draw=function(){
+  const c=this.ctx,dpr=this.dpr;
+  c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,CW,CH);
+  c.translate(CW/2,CH/2);c.rotate(this.tilt);c.scale(SCALE,SCALE);c.translate(-W/2,-H/2);
+  const gr=c.createRadialGradient(W/2,H*.35,10,W/2,H*.5,H*.75);gr.addColorStop(0,'#3b2a2f');gr.addColorStop(1,'#1a1015');
+  c.fillStyle=gr;c.fillRect(0,0,W,H);
+  if(this.closed){ // curtain
+    for(let x=0;x<W;x+=14){c.fillStyle=(x/14)%2?'#6d1b30':'#58142a';c.fillRect(x,0,14,H);}
+    c.fillStyle='rgba(241,214,143,.9)';c.font='600 15px '+getComputedStyle(document.body).fontFamily;c.textAlign='center';
+    c.fillText('The curtain is down',W/2,H/2);return;
+  }
+  // the lid (piston)
+  if(this.ceil>0.5){c.fillStyle='#8e7a5a';c.fillRect(W/2-5,0,10,this.ceil);c.fillStyle='#c9a24f';c.fillRect(0,this.ceil-7,W,7);}
+  else{c.fillStyle='#c9a24f';c.fillRect(0,0,W,3);}
+  c.strokeStyle='rgba(214,173,85,.8)';c.lineWidth=3;c.strokeRect(1.5,1.5,W-3,H-3);
+  for(const p of this.ps){c.beginPath();c.arc(p.x,p.y,R-.6,0,Math.PI*2);c.fillStyle='#f1cf7a';c.fill();c.lineWidth=1.4;c.strokeStyle='#8a6420';c.stroke();}
+};
+Stage.prototype.run=function(){
+  const self=this;cancelAnimationFrame(this.raf);LIVE=this;this.last=0;
+  const loop=t=>{if(LIVE!==self)return;const dt=self.last?Math.min(.05,(t-self.last)/1000):1/60;self.last=t;
+    const n=Math.max(1,Math.round(dt*120));for(let k=0;k<n;k++)self.step(dt/n);self.draw();self.raf=requestAnimationFrame(loop);};
+  this.raf=requestAnimationFrame(loop);
+};
+function stopStage(){LIVE=null;}
+
+/* What the model does, as the audience sees it */
+function tipResult(sp,mv){return mv==='vibrate'?'keep':(mv==='dash'?'fill':(sp==='far'?'drift':'flow'));}
+function lidResult(sp){return sp==='far'?'squash':'firm';}
+const SAYS={keep:'kept its own shape',flow:'flowed to the low side and took the shape of the box',drift:'drifted slowly about the box',fill:'spread out to fill the whole box',squash:'squashed into a smaller space',firm:'wouldn’t squash: there was no room between the dancers'};
+
+/* timers for one run of the tests */
+let RUNT=[];function clearRun(){RUNT.forEach(clearTimeout);RUNT=[];}
+function later(ms,f){RUNT.push(setTimeout(f,ms));}
+/* the audience's two tests, then a callback */
+function perform(stage,sp,mv,caption,done){
+  clearRun();stage.set(sp,mv);stage.run();
+  caption.textContent='Curtain up. The dancers take their places.';
+  later(1700,()=>{caption.textContent='Test 1: the audience tips the stage.';stage.tip(true);});
+  later(4700,()=>{stage.tip(false);caption.textContent='Back to level.';});
+  later(6000,()=>{caption.textContent='Test 2: the audience pushes down the lid.';stage.piston(true);});
+  later(9200,()=>{caption.textContent='Look at what your stage did.';done&&done();});
+}
+
+/* =========================================================
+   THE COMPANY'S SCRIPT (reference card)
+   ========================================================= */
+function miniSVG(kind){
+  let s='<svg viewBox="0 0 120 90" aria-hidden="true">',dots=[];
+  if(kind==='solid'){for(let r=0;r<4;r++)for(let c=0;c<6;c++)dots.push([24+c*14.4,80-r*14.4]);}
+  else if(kind==='liquid'){const pts=[[14,80],[28,81],[42,79],[57,80],[71,81],[86,80],[100,79],[21,67],[35,66],[50,68],[64,66],[79,67],[93,68],[107,67],[16,54],[30,53],[45,55],[59,53],[73,55],[88,54],[101,53]];dots=pts;}
+  else{dots=[[18,16],[62,12],[100,22],[38,42],[84,44],[14,70],[56,74],[104,72],[70,30]];}
+  for(const d of dots)s+=`<circle cx="${d[0]}" cy="${d[1]}" r="6.4" fill="#f1cf7a" stroke="#8a6420" stroke-width="1.2"/>`;
+  if(kind==='gas'){s+='<path d="M24 16h12M68 12l9-5M40 42l-9 6M90 44h10M60 74l8 4" stroke="#f1d68f" stroke-width="1.6" stroke-linecap="round"/>';}
+  return s+'</svg>';
+}
+const SCRIPT={
+  solid:{t:'A solid, like ice',a:'Packed tightly in neat rows.',m:'Vibrate on the spot. They never move from place to place, but they are never perfectly still.',b:'So a solid keeps its own shape, and it’s hard to squash because there’s no room between the particles.'},
+  liquid:{t:'A liquid, like water',a:'Close together, but jumbled, not locked in place.',m:'Slide past one another.',b:'So a liquid can be poured and takes the shape of its container, but it’s hard to squash because there’s very little space between the particles.'},
+  gas:{t:'A gas, like air',a:'Spread far apart, with lots of empty space between them.',m:'Dash about fast in every direction.',b:'So a gas spreads out to fill any space, and it can be squashed because there’s so much room between the particles.'}
+};
+function scriptBlock(k){const x=SCRIPT[k];return `<div>${miniSVG(k)}<b>${esc(x.t)}</b><p style="margin:6px 0 4px"><i>How close:</i> ${esc(x.a)}</p><p style="margin:0 0 4px"><i>How they move:</i> ${esc(x.m)}</p><p style="margin:0" class="muted">${esc(x.b)}</p></div>`;}
+function showScript(only){
+  const m=document.createElement('div');m.className='modal';
+  const keys=only?[only]:['solid','liquid','gas'];
+  m.innerHTML=`<div class="panel" role="dialog" aria-label="The company's script"><p class="eyebrow">The company’s script</p><h2>How our dancers play each state</h2><div class="script3">${keys.map(scriptBlock).join('')}</div><div class="row"><button class="btn" id="closeScript">Close the script</button></div></div>`;
+  document.body.appendChild(m);$('#closeScript').onclick=()=>m.remove();
+}
+
+/* =========================================================
+   HOME: the playbill
+   ========================================================= */
+function home(){
+  stopStage();clearRun();pips();
+  const nx=nextAct();
+  let msg;
+  if(nx===0)msg=`Welcome${NAME()?', '+esc(NAME()):''}. You are the new director of the Invisible Theatre. Start with the briefing.`;
+  else if(nx<5)msg=`Next: <b>${esc(ACTS[nx].t)}</b>. You can stop whenever you like. Everything is saved.`;
+  else msg='The play is finished. You can visit any act again.';
+  const tiles=ACTS.map((a,i)=>{const locked=i>nx;const cls=['act',S.acts[i]?'done':'',i===nx?'next':''].join(' ');
+    return `<button class="${cls}" data-i="${i}" ${locked?'disabled':''}><span class="n">${S.acts[i]?'✓':(i===0?'★':i)}</span><span><b>${esc(a.t)}</b><span class="s">${locked?'Not yet':esc(a.s)}</span></span></button>`;}).join('');
+  const parentBtn=document.getElementById('parent-notes')?'<button class="linkish" id="forParent">For the parent</button>':'';
+  main.innerHTML=`<div class="panel playbill">
+    <p class="presents">The Invisible Theatre presents</p>
+    <h1>The Three States</h1>
+    <p class="states">Ice &middot; Water &middot; Air</p>
+    <p class="muted" style="margin:0">${NAME()?'Directed by '+esc(NAME()):'A play about things too small to see'}</p>
+    <div class="rule"></div>
+    <p>${msg}</p>
+    <div class="acts">${tiles}</div>
+    ${nx>=5?'<div class="row" style="justify-content:center"><button class="btn gold" id="again">See the curtain call</button></div>':''}
+    ${parentBtn}
+  </div>`;
+  $$('.act').forEach(b=>b.onclick=()=>{if(!b.disabled)openAct(+b.dataset.i);});
+  if($('#again'))$('#again').onclick=curtainCall;
+  if($('#forParent'))$('#forParent').onclick=parentScreen;
+  toTop();
+}
+function parentScreen(){
+  const t=document.getElementById('parent-notes');if(!t)return home();
+  main.innerHTML='';main.appendChild(t.content.cloneNode(true));
+  const r=document.createElement('div');r.className='row';r.innerHTML='<button class="btn" id="backHome">Back to the playbill</button>';main.querySelector('.panel').appendChild(r);
+  $('#backHome').onclick=home;toTop();
+}
+function whoScreen(){
+  main.innerHTML=`<div class="panel" style="text-align:center"><p class="eyebrow">The Invisible Theatre</p><h2>This play is Maggie’s to direct</h2><p>Tap your name to begin.</p><div class="row" style="justify-content:center"><button class="btn" id="pMaggie">Maggie</button></div></div>`;
+  $('#pMaggie').onclick=()=>{PLAYER='maggie';try{sessionStorage.setItem('gamesroom-player','maggie');localStorage.setItem('gamesroom-last-player','maggie');}catch(e){}KEY=G.key(SAVE);S=load();home();};
+}
+function openAct(i){G.start(GAME);G.part(ACTS[i].t);[briefing,rehearsal,critic,tricky,opening][i]();}
+function actDone(i,html){
+  S.acts[i]=1;save();G.partDone(ACTS[i].t);pips();
+  main.innerHTML=`<div class="panel" style="text-align:center"><p class="eyebrow">${esc(ACTS[i].t)}</p><h2>Finished</h2>${html}<div class="row" style="justify-content:center"><button class="btn" id="toBill">Back to the playbill</button></div><p class="muted" style="margin-top:12px;font-size:16px">You can stop here, or carry on. Everything is saved.</p></div>`;
+  $('#toBill').onclick=home;toTop();
+}
+function header(i,extra){return `<p class="eyebrow">${esc(ACTS[i].t)}${extra?' &middot; '+extra:''}</p>`;}
+function backRow(){return '<div class="row"><button class="linkish" id="toBill2">← Back to the playbill</button></div>';}
+function wireBack(){const b=$('#toBill2');if(b)b.onclick=home;}
+
+/* =========================================================
+   THE BRIEFING
+   ========================================================= */
+function briefing(){
+  stopStage();clearRun();
+  main.innerHTML=`<div class="panel">${header(0)}<h2>Welcome to the company</h2>
+    <p>Our theatre puts on plays about things far too small to see. Tonight’s play is <i>The Three States</i>: Ice, Water and Air. You are the director.</p>
+    <h3>What every director here must know</h3>
+    <ul>
+      <li><b>Matter</b> is anything that takes up space and has weight. Your desk is matter. So is the water you drink, and so is the air you breathe.</li>
+      <li>All matter is made of <b>particles</b>, far too small to see, even with an ordinary microscope. They are always moving, even when a thing looks perfectly still.</li>
+      <li>Because we can’t see particles, scientists picture them with a <b>model</b>. A model is a simple way of picturing something. It isn’t the real thing.</li>
+      <li>In this theatre, <b>our dancers are the model</b>. Each dancer plays one particle. Every dancer is the same size in every scene.</li>
+    </ul>
+    <p>How a material behaves depends on two things: <b>how close</b> its particles are, and <b>how they move</b>. Those are your two stage directions.</p>
+  </div>
+  <div class="panel">
+    <h3>How directing works</h3>
+    <p>Last season’s director chose <b>“${esc(SPACING.far)}”</b> and <b>“${esc(MOVE.vibrate)}”</b>. That isn’t Ice, Water or Air. Raise the curtain and watch the audience test it.</p>
+    <div class="grid2">
+      <div class="stagebox"><div id="host"></div><p class="caption" id="cap">Tap “Raise the curtain”.</p></div>
+      <div>
+        <p>The audience always runs two tests:</p>
+        <ol>
+          <li><b>Tip the stage.</b> Does it keep its shape, flow, or fill the space?</li>
+          <li><b>Push down the lid.</b> Does it squash into a smaller space?</li>
+        </ol>
+        <div class="row"><button class="btn" id="go">Raise the curtain</button></div>
+        <div id="after"></div>
+      </div>
+    </div>
+  </div>`;
+  const st=new Stage($('#host')),cap=$('#cap');
+  $('#go').onclick=()=>{$('#go').disabled=true;$('#after').innerHTML='';
+    perform(st,'far','vibrate',cap,()=>{
+      $('#go').disabled=false;$('#go').textContent='Watch again';
+      $('#after').innerHTML=`<div class="note hint"><p>When the stage tipped, it <b>${SAYS.keep}</b>, because the dancers stayed in their places. When the lid came down, it <b>${SAYS.squash}</b>, because there was room between the dancers.</p><p>So stage directions change how the stage behaves. In rehearsal, you’ll choose the directions that make the stage behave like real ice, water and air.</p></div><div class="row"><button class="btn gold" id="ready">I’m ready to rehearse</button></div>`;
+      $('#ready').onclick=()=>actDone(0,'<p>You know how directing works. Next comes Act I: Rehearsal.</p>');
+    });
+  };
+  toTop();
+}
+
+/* =========================================================
+   ACT I: REHEARSAL
+   ========================================================= */
+const SCENES=[
+  {k:'solid',title:'The Ice Palace',thing:'ice',Thing:'Ice',sp:'rows',mv:'vibrate',
+   real:'Real ice keeps its own shape, even when you tip its box. And you can’t squash it any smaller.',
+   want:{tip:'keep',lid:'firm'},
+   hints:['Ice keeps its shape. For a shape to stay put, do the dancers need to stay in their places, or move around?',
+          'In a solid, the particles don’t move from place to place, but they are never perfectly still. And they are packed so tightly there’s no room to squash them.'],
+   win:'Packed tightly in neat rows, vibrating on the spot. The dancers never leave their places, so the ice keeps its shape. There’s no room between them, so it can’t be squashed.'},
+  {k:'liquid',title:'The Water Glass',thing:'water',Thing:'Water',sp:'close',mv:'slide',
+   real:'Real water takes the shape of whatever it’s in. Tip its box and it flows to the low side. But it’s very hard to squash.',
+   want:{tip:'flow',lid:'firm'},
+   hints:['Water can be poured, but not squashed. Pouring means the dancers must be able to move past each other. Not squashing means…?',
+          'In a liquid, the particles are still close together, but they aren’t locked in place.'],
+   win:'Close together but jumbled, sliding past one another. Sliding lets water flow and take the shape of its container. The dancers are still close, so there’s no room to squash it.'},
+  {k:'gas',title:'The Open Air',thing:'air',Thing:'Air',sp:'far',mv:'dash',
+   real:'Real air spreads out to fill any space, the whole room if it can. And you can squash a lot of it into a small space, like the air in a bike tyre.',
+   want:{tip:'fill',lid:'squash'},
+   hints:['Air fills the whole room, and a tyre can hold lots of it. What would leave room to squeeze?',
+          'In a gas, there’s lots of empty space between the particles, and they move very quickly.'],
+   win:'Spread far apart, dashing fast in every direction. Fast dancers with nothing holding them spread out to fill the box. All that space between them is why air can be squashed.'}
+];
+const CONCEPT={solid:'Particle model: solids',liquid:'Particle model: liquids',gas:'Particle model: gases'};
+function missWhy(sc,sp,mv){
+  // one short prompt for each wrong direction; the evidence rows above already say what happened
+  const out=[],tr=tipResult(sp,mv);
+  if(mv!==sc.mv){
+    if(sc.k==='solid')out.push('How they move: dancers who leave their places can\u2019t hold a shape. In a solid, do the particles move from place to place?');
+    if(sc.k==='liquid')out.push(tr==='keep'?'How they move: dancers who only stay in their places hold a shape, like ice. For water to flow, what must they be able to do?':(tr==='fill'?'How they move: those dancers are moving too wildly. Water stays in the bottom of its glass.':'How they move: water flows to the low side when it\u2019s tipped. What lets it flow?'));
+    if(sc.k==='gas')out.push(tr==='drift'?'How they move: real gas particles aren\u2019t lazy. How fast do they move, and in which directions?':'How they move: real air spreads out to fill any space. What would its dancers have to do to fill the whole box?');
+  }
+  if(sp!==sc.sp){
+    if(sc.k==='solid')out.push(sp==='far'?'How close: the lid squashed your ice. What spacing would leave no room at all?':(mv===sc.mv?'How close: your ice behaved well, but look at how your dancers stood. Are a solid\u2019s particles jumbled, or in orderly rows?':'How close: are a solid\u2019s particles jumbled, or in orderly rows?'));
+    if(sc.k==='liquid')out.push(sp==='far'?'How close: the lid squashed your water. Real water hardly squashes at all. How much space is there between its particles?':'How close: dancers who slide past one another can\u2019t keep neat rows. How are water\u2019s particles arranged?');
+    if(sc.k==='gas')out.push('How close: the lid couldn\u2019t squash your air. But you can pump lots of air into a tyre. What spacing would leave room to squeeze?');
+  }
+  return out;
+}
+let REH=null;
+function rehearsal(){
+  stopStage();clearRun();
+  if(S.reh.indexOf(0)<0){S.reh=[0,0,0];save();}
+  let i=S.reh.indexOf(0);
+  REH={i,sp:null,mv:null,asks:null,hintLevel:0};
+  renderScene();
+}
+function renderScene(){
+  stopStage();clearRun();
+  const sc=SCENES[REH.i];
+  REH.sp=null;REH.mv=null;REH.hintLevel=0;
+  REH.asks={sp:G.ask({item:sc.Thing+': how close',concept:CONCEPT[sc.k],area:'SC'}),mv:G.ask({item:sc.Thing+': how they move',concept:CONCEPT[sc.k],area:'SC'})};
+  REH.closed={sp:false,mv:false};
+  const opts=(obj,name)=>Object.keys(obj).map(k=>`<button class="choice" data-g="${name}" data-v="${k}">${esc(obj[k])}</button>`).join('');
+  main.innerHTML=`<div class="panel">${header(1,'Scene '+(REH.i+1)+' of 3')}<h2>${esc(sc.title)}</h2><p>${esc(sc.real)}</p><p>Give the dancers their stage directions so the stage behaves like real ${esc(sc.thing)}. Choose from memory.</p></div>
+  <div class="panel"><div class="grid2">
+    <div class="stagebox"><div id="host"></div><p class="caption" id="cap">Choose both directions, then raise the curtain.</p></div>
+    <div>
+      <div class="opt-group"><h3>How close are the dancers?</h3>${opts(SPACING,'sp')}</div>
+      <div class="opt-group"><h3>How do they move?</h3>${opts(MOVE,'mv')}</div>
+      <div class="row"><button class="btn" id="go" disabled>Raise the curtain</button><button class="btn alt" id="hint">Need a hint?</button></div>
+      <div id="hintbox"></div>
+    </div></div>
+    <div id="verdict"></div>
+  </div>${backRow()}`;
+  wireBack();
+  const st=new Stage($('#host')),cap=$('#cap');REH.stage=st;
+  $$('.choice').forEach(b=>b.onclick=()=>{if(REH.busy)return;const g=b.dataset.g;REH[g]=b.dataset.v;
+    $$(`.choice[data-g="${g}"]`).forEach(x=>x.classList.toggle('sel',x===b));
+    $('#go').disabled=!(REH.sp&&REH.mv);});
+  $('#hint').onclick=()=>{
+    REH.hintLevel=Math.min(3,REH.hintLevel+1);
+    if(!REH.closed.sp)REH.asks.sp.hint();if(!REH.closed.mv)REH.asks.mv.hint();
+    const hb=$('#hintbox');
+    if(REH.hintLevel<3){hb.innerHTML=`<div class="note hint"><p><b>${REH.hintLevel===1?'A reminder':'A closer hint'}:</b> ${esc(sc.hints[REH.hintLevel-1])}</p></div>`;
+      $('#hint').textContent=REH.hintLevel===1?'Another hint?':'Show me the script';}
+    else{hb.innerHTML='<div class="note hint"><p>Here is the company’s script for this state. Read it, close it, then set the directions yourself.</p></div>';showScript(sc.k);$('#hint').textContent='Show the script again';}
+  };
+  $('#go').onclick=()=>{
+    REH.busy=true;$('#go').disabled=true;$$('.choice').forEach(x=>x.disabled=true);$('#verdict').innerHTML='';
+    const sp=REH.sp,mv=REH.mv;
+    perform(st,sp,mv,cap,()=>{REH.busy=false;verdict(sc,sp,mv);});
+  };
+  toTop();
+}
+function verdict(sc,sp,mv){
+  const tr=tipResult(sp,mv),lr=lidResult(sp);
+  const okTip=tr===sc.want.tip,okLid=lr===sc.want.lid;
+  const right=sp===sc.sp&&mv===sc.mv;
+  // record against the two questions
+  if(!REH.closed.sp){if(sp===sc.sp&&right){REH.asks.sp.done();REH.closed.sp=true;}else if(sp!==sc.sp)REH.asks.sp.miss(SPACING[sp]);}
+  if(!REH.closed.mv){if(mv===sc.mv&&right){REH.asks.mv.done();REH.closed.mv=true;}else if(mv!==sc.mv)REH.asks.mv.miss(MOVE[mv]);}
+  if(right){if(!REH.closed.sp){REH.asks.sp.done();REH.closed.sp=true;}if(!REH.closed.mv){REH.asks.mv.done();REH.closed.mv=true;}}
+  const realTip={keep:'keeps its shape',flow:'flows and takes the shape of its box',fill:'fills the whole space'}[sc.want.tip];
+  const realLid=sc.want.lid==='squash'?'can be squashed':'won’t squash';
+  let h=`<div class="note ${right?'ok':'bad'}"><p><b>What the audience saw</b></p><div class="evi">
+    <span class="mk ${okTip?'y':'n'}">${okTip?'✓':'✗'}</span><span>Tipping the stage: your ${esc(sc.thing)} ${esc(SAYS[tr])}. Real ${esc(sc.thing)} ${esc(realTip)}.</span>
+    <span class="mk ${okLid?'y':'n'}">${okLid?'✓':'✗'}</span><span>Pushing the lid: your ${esc(sc.thing)} ${esc(SAYS[lr])}. Real ${esc(sc.thing)} ${esc(realLid)}.</span></div>`;
+  if(right){h+=`<p style="margin-top:10px"><b>Bravo.</b> ${esc(sc.win)}</p></div><div class="row"><button class="btn gold" id="nextScene">${REH.i<2?'Next scene':'Finish the rehearsal'}</button><button class="btn alt" id="replay">Watch again</button></div>`;}
+  else{h+=missWhy(sc,sp,mv).map(t=>`<p style="margin-top:10px">${esc(t)}</p>`).join('')+'<p style="margin-top:10px">Change the directions and raise the curtain again.</p></div>';}
+  $('#verdict').innerHTML=h;
+  if(right){
+    S.reh[REH.i]=1;save();
+    $('#nextScene').onclick=()=>{const n=S.reh.indexOf(0);if(n<0)actDone(1,'<p>Ice, Water and Air are ready for the stage.</p><p>Next, the newspaper critic has been to a preview. Mr Crabbe has some muddled ideas.</p>');else{REH.i=n;renderScene();}};
+    $('#replay').onclick=()=>{$('#replay').disabled=true;perform(REH.stage,sp,mv,$('#cap'),()=>{const r=$('#replay');if(r)r.disabled=false;});};
+  }else{
+    $$('.choice').forEach(x=>x.disabled=false);$('#go').disabled=false;$('#go').textContent='Raise the curtain again';
+  }
+  $('#verdict').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* =========================================================
+   ACT II: THE CRITIC
+   ========================================================= */
+const REVIEW=[
+  {line:'In the Ice Palace the dancers stood perfectly still, as they should, for the particles of a solid never move.',ok:false,concept:'Particles are always moving',
+   ifRight:'Look again. Think of an ice cube on a plate. It looks still, but what are its particles doing?',
+   fix:['The particles of a solid vibrate on the spot. They are never perfectly still.','The particles of a solid slide slowly past one another.','The particles of a solid are spread far apart.'],
+   fixWhy:['','If they slid past each other, the ice would flow like water.','If they were far apart, you could squash the ice.']},
+  {line:'In the Water Glass, the dancers stayed close together but slipped past one another. That is why water can be poured.',ok:true,concept:'Why liquids can be poured',
+   ifMuddled:'Look again. Close together, slipping past one another, so it can be poured. That matches the particle model.',
+   yes:'Right. For once, Mr Crabbe has it exactly.'},
+  {line:'The Open Air was the dullest scene of all: an empty stage. Air, after all, is nothing.',ok:false,concept:'Air is matter',
+   ifRight:'Look again. Can you feel the wind? What happens when you blow up a balloon?',
+   fix:['Air is matter. It takes up space and has weight. Its particles are just far apart and too small to see.','Air is nothing, but it can still push things.','Air is a liquid that you can’t see.'],
+   fixWhy:['','If air were nothing, it couldn’t fill a balloon or push on your face in the wind.','Air doesn’t stay in the bottom of its container the way a liquid does. It fills the whole space.']},
+  {line:'When the Ice Palace melted into the Water Glass, the dancers swelled to twice their size.',ok:false,concept:'Particles stay the same when matter changes state',
+   ifRight:'Look again. In the theatre, did any dancer grow between scenes?',
+   fix:['The particles stay the same. What changes is how they are arranged and how they move.','The dancers shrank to half their size instead.','Melting makes brand new particles.'],
+   fixWhy:['','The particles don’t change size at all, in either direction.','Melted ice is the same particles as before, just moving differently.']},
+  {line:'One could squeeze the whole of the Open Air into a little box, for there is so much room between its dancers.',ok:true,concept:'Why gases can be compressed',
+   ifMuddled:'Look again. Lots of room between the dancers means they can be pushed closer. That’s why a tyre can hold so much air.',
+   yes:'Right. That space between gas particles is why air can be squashed.'},
+  {line:'The dancers of the Ice Palace were packed so tightly that the ice could easily be squashed smaller.',ok:false,concept:'Why solids are hard to compress',
+   ifRight:'Look again. If the dancers are already packed tightly, is there any room left to squash them into?',
+   fix:['Because the particles are packed so tightly, there’s almost no room, so a solid is hard to squash.','A solid is hard to squash because its particles are hard little balls.','Ice can be squashed easily, but only when it’s cold.'],
+   fixWhy:['','It isn’t that each particle is hard. It’s that there’s no space between them.','Cold ice is still hard to squash. It has no space between its particles.']}
+];
+function critic(){
+  stopStage();clearRun();
+  if(S.cri>=REVIEW.length)S.cri=0;
+  renderLine();
+}
+function renderLine(){
+  const L=REVIEW[S.cri];
+  const q=G.ask({item:'Review line '+(S.cri+1)+': right or muddled',concept:L.concept,area:'SC'});
+  main.innerHTML=`<div class="panel">${header(2,'Line '+(S.cri+1)+' of '+REVIEW.length)}<h2>Mr Crabbe’s review</h2>
+    <p>The critic from <i>The Evening Lantern</i> saw a preview. Some of what he wrote is right, and some is muddled. Mark each line.</p>
+    <div class="clip"><span class="mast">The Evening Lantern &middot; Theatre notes</span>“${esc(L.line)}”</div>
+    <div class="row"><button class="btn" id="vRight">Right</button><button class="btn alt" id="vMud">Muddled</button></div>
+    <div id="out"></div></div>${backRow()}`;
+  wireBack();
+  const finish=()=>{S.cri++;save();
+    $('#out').insertAdjacentHTML('beforeend',`<div class="row"><button class="btn gold" id="nextLine">${S.cri<REVIEW.length?'Next line':'Finish the review'}</button></div>`);
+    $('#nextLine').onclick=()=>{if(S.cri>=REVIEW.length){S.cri=REVIEW.length;actDone(2,'<p>You’ve mended Mr Crabbe’s review. A corrected copy has gone to <i>The Evening Lantern</i>.</p><p>Next, three actors want to play some very tricky roles.</p>');}else renderLine();};
+    $('#nextLine').scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+  const verdictBtns=on=>{$('#vRight').disabled=!on;$('#vMud').disabled=!on;};
+  $('#vRight').onclick=()=>{
+    if(L.ok){q.done();verdictBtns(false);$('#out').innerHTML=`<div class="note ok"><p>${esc(L.yes)}</p></div>`;finish();}
+    else{q.miss('right');$('#out').innerHTML=`<div class="note bad"><p>${esc(L.ifRight)}</p></div>`;}
+  };
+  $('#vMud').onclick=()=>{
+    if(!L.ok){q.done();verdictBtns(false);fixStep(L,finish);}
+    else{q.miss('muddled');$('#out').innerHTML=`<div class="note bad"><p>${esc(L.ifMuddled)}</p></div>`;}
+  };
+  toTop();
+}
+function fixStep(L,finish){
+  const q=G.ask({item:'Review line '+(S.cri+1)+': the correction',concept:L.concept,area:'SC'});
+  const order=shuffle([0,1,2]);
+  $('#out').innerHTML=`<div class="note ok"><p>Yes, that line is muddled. Which correction should go to the newspaper?</p></div><div id="fixes" style="margin-top:12px">${order.map(k=>`<button class="choice" data-k="${k}">${esc(L.fix[k])}</button>`).join('')}</div><div id="fixOut"></div>`;
+  $$('#fixes .choice').forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.k;
+    if(k===0){q.done();$$('#fixes .choice').forEach(x=>{x.disabled=true;if(x===b)x.classList.add('ok');});$('#fixOut').innerHTML='<div class="note ok"><p>That’s the correction. Sent to the newspaper.</p></div>';finish();}
+    else{q.miss(L.fix[k]);b.classList.add('no');b.disabled=true;$('#fixOut').innerHTML=`<div class="note bad"><p>${esc(L.fixWhy[k])} Try another.</p></div>`;}
+  });
+}
+
+/* =========================================================
+   ACT III: TRICKY ROLES
+   ========================================================= */
+const TESTS=[{k:'tip',t:'Tip it into a new jar'},{k:'squash',t:'Squash it'},{k:'look',t:'Look closely at one bit'}];
+const ROLES=[
+  {k:'sand',who:'Mr Gritt',title:'Sand',answer:'solid',best:'look',
+   letter:'Dear Director, I am to play Sand. Sand pours, just like water! Surely I should dance with the liquid dancers? Yours, Mr Gritt.',
+   found:{tip:'It pours into the new jar! But it lands in a heap with a sloping top. Water would settle flat.',
+          squash:'Squeeze a handful hard: it hardly gets any smaller.',
+          look:'Each grain is a tiny, hard piece of rock with its own shape. Tip a single grain over and it keeps that shape.'},
+   no:{liquid:'Sand does pour. But it lands in a heap, not flat, and each grain keeps its own shape. Have you looked closely at one bit?',
+       gas:'Sand doesn’t spread out to fill the jar. It sits in a heap at the bottom.'},
+   hint:'Think about one grain on its own, and then about a whole heap of grains.',
+   reasons:['Each grain is a tiny solid. A heap can pour because the grains are separate pieces that tumble past each other. Inside each grain, the particles stay packed in their places.',
+            'Sand is a liquid, because it pours.',
+            'Sand is half solid and half liquid.'],
+   rno:['','Pouring alone doesn’t make something a liquid. What does each grain do?','Each grain is completely solid. It’s the grains, not their particles, that tumble past each other.']},
+  {k:'sponge',who:'Miss Pumice',title:'A sponge',answer:'solid',best:'look',
+   letter:'Dear Director, I am to play a Sponge. A sponge squashes! Only gases squash, so I must belong with the gas dancers. Yours, Miss Pumice.',
+   found:{tip:'It stays sponge-shaped. It doesn’t flow, and it doesn’t spread out to fill the jar.',
+          squash:'It squashes to half its size! Squeeze it under water, and bubbles come out.',
+          look:'It’s full of tiny holes, and the holes are full of air.'},
+   no:{gas:'It does squash, like a gas. But tip it: it keeps its sponge shape. And what’s inside its holes?',
+       liquid:'A sponge doesn’t flow or take the shape of its jar.'},
+   hint:'When you squeeze it under water, where do the bubbles come from?',
+   reasons:['The sponge’s solid parts don’t shrink. Squeezing pushes air out of its holes, and air is a gas.','A sponge is a gas, because it squashes.','Squeezing makes the sponge’s particles smaller.'],
+   rno:['','Squashing alone doesn’t make something a gas. What gets pushed out when you squeeze it?','Particles don’t change size. Something else leaves the sponge when you squeeze it.']},
+  {k:'honey',who:'Mrs Comb',title:'Honey',answer:'liquid',best:'tip',
+   letter:'Dear Director, I am to play Honey. Honey is so thick and slow, it hardly moves at all. I must be a solid, surely? Yours, Mrs Comb.',
+   found:{tip:'Slowly, slowly, it flows to the low side and takes the jar’s shape. Wait long enough and its top goes flat.',
+          squash:'Push hard on runny honey in a closed jar: it won’t get any smaller.',
+          look:'It looks the same all the way through. No grains, and no holes.'},
+   no:{solid:'It is thick and slow. But tip the jar and wait: does it keep its own shape, or flow?',
+       gas:'Honey stays at the bottom of the jar. It doesn’t spread out to fill the space.'},
+   hint:'Slow isn’t the same as still. What happens if you wait?',
+   reasons:['It flows and takes the shape of its container, only slowly. Its particles are close together but can still slide past one another.','It’s a solid, because it’s thick and sticky.','It’s a gas, because it changes shape.'],
+   rno:['','Thick and sticky isn’t the test. Does it keep its own shape?','A gas spreads out to fill the whole space. Honey stays in the bottom of the jar.']}
+];
+function tricky(){
+  stopStage();clearRun();
+  let i=S.tri.done.indexOf(0);if(i<0){S.tri.done=[0,0,0];S.tri.order={sand:[],sponge:[],honey:[]};i=0;save();}
+  renderRole(i);
+}
+function renderRole(i){
+  const R0=ROLES[i];
+  const seen=S.tri.order[R0.k]=S.tri.order[R0.k]||[];
+  let classified=false,hintN=0;
+  const qc=G.ask({item:R0.title+': solid, liquid or gas?',concept:'Classifying tricky materials',area:'SC'});
+  main.innerHTML=`<div class="panel">${header(3,'Role '+(i+1)+' of 3')}<h2>${esc(R0.title)}</h2>
+    <div class="letter">${esc(R0.letter)}</div>
+    <p>Before you cast ${esc(R0.who)}, run some tests. You choose which, and in what order.</p>
+    <div class="tests">${TESTS.map(t=>`<button class="test" data-t="${t.k}">${esc(t.t)}</button>`).join('')}</div>
+    <div id="found"></div>
+    <div id="decide"></div>
+    <div class="row"><button class="linkish" id="scr">Open the company’s script</button></div>
+  </div>${backRow()}`;
+  wireBack();
+  $('#scr').onclick=()=>showScript();
+  const showFound=k=>{const t=TESTS.find(x=>x.k===k);$('#found').insertAdjacentHTML('beforeend',`<div class="found"><b>${esc(t.t)}</b>${esc(R0.found[k])}</div>`);
+    const b=$(`.test[data-t="${k}"]`);if(b)b.disabled=true;};
+  seen.forEach(showFound);
+  const showDecide=()=>{
+    if($('#decideBox'))return;
+    $('#decide').innerHTML=`<div id="decideBox" style="margin-top:16px"><h3>Your decision: which dancers should ${esc(R0.who)} join?</h3>
+      <div class="row" id="states"><button class="btn alt" data-s="solid">The solid dancers</button><button class="btn alt" data-s="liquid">The liquid dancers</button><button class="btn alt" data-s="gas">The gas dancers</button></div>
+      <div class="row"><button class="linkish" id="h3">Need a hint?</button></div><div id="dOut"></div><div id="why"></div></div>`;
+    $('#h3').onclick=()=>{hintN++;if(!classified)qc.hint();
+      const best=TESTS.find(t=>t.k===R0.best);
+      const msg=hintN===1&&seen.indexOf(R0.best)<0?'Try another test: “'+best.t+'” might help.':R0.hint;
+      $('#dOut').innerHTML=`<div class="note hint"><p>${esc(msg)}</p></div>`;};
+    $$('#states .btn').forEach(b=>b.onclick=()=>{
+      if(classified)return;const s=b.dataset.s;
+      if(s===R0.answer){classified=true;qc.done();$$('#states .btn').forEach(x=>{x.disabled=x!==b;if(x===b){x.classList.remove('alt');}});
+        $('#dOut').innerHTML=`<div class="note ok"><p>Yes: ${esc(R0.title.toLowerCase())} is a ${esc(s)}. Now, what will you tell ${esc(R0.who)}? Choose the reason.</p></div>`;reasonStep();}
+      else{qc.miss(s);$('#dOut').innerHTML=`<div class="note bad"><p>${esc(R0.no[s])}</p></div>`;}
+    });
+  };
+  if(seen.length)showDecide();
+  $$('.test').forEach(b=>b.onclick=()=>{const k=b.dataset.t;if(seen.indexOf(k)<0){seen.push(k);save();}showFound(k);showDecide();});
+  function reasonStep(){
+    const qr=G.ask({item:R0.title+': the reason',concept:'Explaining with the particle model',area:'SC'});
+    const order=shuffle([0,1,2]);
+    $('#why').innerHTML=`<div id="rs" style="margin-top:12px">${order.map(k=>`<button class="choice" data-k="${k}">${esc(R0.reasons[k])}</button>`).join('')}</div><div id="rOut"></div>`;
+    $$('#rs .choice').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;
+      if(k===0){qr.done();$$('#rs .choice').forEach(x=>{x.disabled=true;if(x===b)x.classList.add('ok');});
+        S.tri.done[i]=1;save();
+        const n=S.tri.done.indexOf(0);
+        $('#rOut').innerHTML=`<div class="note ok"><p>${esc(R0.who)} is cast with the ${esc(R0.answer)} dancers.</p></div><div class="row"><button class="btn gold" id="nextRole">${n<0?'Finish Act III':'Next role'}</button></div>`;
+        $('#nextRole').onclick=()=>{if(n<0)actDone(3,'<p>All three tricky roles are cast. Something that pours can still be a solid, and something that squashes isn’t always a gas. The tests tell you why.</p><p>Next: opening night.</p>');else renderRole(n);};
+        $('#nextRole').scrollIntoView({behavior:'smooth',block:'nearest'});}
+      else{qr.miss(R0.reasons[k]);b.classList.add('no');b.disabled=true;$('#rOut').innerHTML=`<div class="note bad"><p>${esc(R0.rno[k])}</p></div>`;}
+    });
+  }
+  toTop();
+}
+
+/* =========================================================
+   ACT IV: OPENING NIGHT
+   ========================================================= */
+const PUMP={q:'Before the show, the stage manager blocks the end of a bicycle pump with her thumb and pushes the handle. When the pump is full of air, the handle goes down a fair way, then springs back. When it’s full of water, the handle hardly moves. Why?',
+  opts:['Air particles have lots of space between them, so they can be pushed closer together. Water particles are already close, so there’s no room.','Water is heavier than air, so it’s harder to push.','Air particles are soft, and squash like little sponges.'],
+  no:['','Heaviness isn’t the reason. Even a small amount of water in the pump won’t squash. Think about the space between particles.','Particles don’t squash or change size. What is there plenty of between air particles?']};
+const NOTE_PROMPT='Programme note: the particle model';
+const PRED_PROMPT='Prediction: does air have mass?';
+const PRED_OPTS={full:'The end with the blown-up balloon goes down',flat:'The end with the flat balloon goes down',level:'The ruler stays level'};
+function words(t){return (String(t).trim().match(/\S+/g)||[]).length;}
+function opening(){
+  stopStage();clearRun();
+  if(S.acts[4]){S.op.step=0;save();}
+  const st=S.op.step||0;
+  if(st===0)pumpStep();else if(st===1)noteStep();else predStep();
+}
+function pumpStep(){
+  const q=G.ask({item:'Bicycle pump: air or water',concept:'Why gases can be compressed',area:'SC'});
+  const order=shuffle([0,1,2]);
+  main.innerHTML=`<div class="panel">${header(4,'1 of 3')}<h2>Backstage puzzle</h2><p>${esc(PUMP.q)}</p>
+    <div id="opts">${order.map(k=>`<button class="choice" data-k="${k}">${esc(PUMP.opts[k])}</button>`).join('')}</div><div id="out"></div></div>${backRow()}`;
+  wireBack();
+  $$('#opts .choice').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;
+    if(k===0){q.done();$$('#opts .choice').forEach(x=>{x.disabled=true;if(x===b)x.classList.add('ok');});
+      $('#out').innerHTML='<div class="note ok"><p>Exactly. It’s the same reason your Open Air scene squashed under the lid and your Water Glass didn’t.</p></div><div class="row"><button class="btn gold" id="on">On to the programme</button></div>';
+      $('#on').onclick=()=>{S.op.step=1;save();noteStep();};}
+    else{q.miss(PUMP.opts[k]);b.classList.add('no');b.disabled=true;$('#out').innerHTML=`<div class="note bad"><p>${esc(PUMP.no[k])}</p></div>`;}
+  });
+  toTop();
+}
+function noteStep(){
+  main.innerHTML=`<div class="panel">${header(4,'2 of 3')}<h2>The director’s note</h2>
+    <p>Every programme has a note from the director. Write yours for tonight’s audience. Explain how the particle model makes sense of what they will see:</p>
+    <ul class="cover"><li>why the Ice Palace keeps its shape;</li><li>why the Water Glass can be poured;</li><li>why the Open Air fills the whole theatre.</li></ul>
+    <p class="muted" style="font-size:17px">Three or four clear sentences is plenty. You can use your own words, and you can come back and change it later.</p>
+    <textarea id="note" rows="7" aria-label="Your director's note" placeholder="Dear audience,"></textarea>
+    <div class="row"><button class="btn gold" id="pin" disabled>Pin it to the programme</button><span class="muted" id="wc" style="font-size:16px"></span></div></div>${backRow()}`;
+  wireBack();
+  const ta=$('#note');ta.value=S.op.note||'';
+  const upd=()=>{const n=words(ta.value);$('#pin').disabled=n<15;$('#wc').textContent=n<15?'Keep going: a few sentences, please.':'Ready when you are.';};
+  ta.oninput=()=>{S.op.note=ta.value;save();G.write({prompt:NOTE_PROMPT,text:ta.value,area:'SC'});upd();};
+  upd();
+  $('#pin').onclick=()=>{G.write({prompt:NOTE_PROMPT,text:ta.value,area:'SC'});S.op.step=2;save();predStep();};
+  toTop();
+}
+function predStep(){
+  main.innerHTML=`<div class="panel">${header(4,'3 of 3')}<h2>A prediction for next week</h2>
+    <p>In next week’s experiment you’ll tie a blown-up balloon to one end of a ruler and a flat balloon to the other, then balance the ruler in the middle.</p>
+    <p>Before you try it, make a prediction. There’s no wrong answer here: you’ll find out next week.</p>
+    <div id="opts">${Object.keys(PRED_OPTS).map(k=>`<button class="choice" data-k="${k}">${esc(PRED_OPTS[k])}</button>`).join('')}</div>
+    <h3 style="margin-top:14px">Why do you think so?</h3>
+    <textarea id="why" rows="3" aria-label="Why you think so"></textarea>
+    <div class="row"><button class="btn gold" id="done" disabled>Seal my prediction</button></div></div>${backRow()}`;
+  wireBack();
+  const ta=$('#why');ta.value=S.op.why||'';
+  const mark=()=>{$$('#opts .choice').forEach(x=>x.classList.toggle('sel',x.dataset.k===S.op.pred));};
+  const send=()=>{if(S.op.pred)G.write({prompt:PRED_PROMPT,text:PRED_OPTS[S.op.pred]+'. Because: '+ta.value,area:'SC'});};
+  const upd=()=>{$('#done').disabled=!(S.op.pred&&words(ta.value)>=4);};
+  $$('#opts .choice').forEach(b=>b.onclick=()=>{S.op.pred=b.dataset.k;save();mark();send();upd();});
+  ta.oninput=()=>{S.op.why=ta.value;save();send();upd();};
+  mark();upd();
+  $('#done').onclick=()=>{send();S.acts[4]=1;save();G.partDone(ACTS[4].t);S.finished=1;save();G.finish();pips();curtainCall();};
+  toTop();
+}
+
+/* =========================================================
+   CURTAIN CALL
+   ========================================================= */
+function curtainCall(){
+  stopStage();clearRun();pips();
+  main.innerHTML=`<div class="panel curtaincall"><p class="eyebrow">Opening night</p><h2>Curtain call</h2>
+    <div class="clip" style="text-align:left"><span class="mast">The Evening Lantern &middot; Theatre notes</span>“I must correct myself. The particles of ice were never still, and the air was never nothing. The Invisible Theatre’s new director has shown us, with the same dancers in every scene, that how close they stand and how they move is the whole secret of ice, water and air.”</div>
+    <p>The play is finished. Your note and your prediction are saved.</p></div>
+  <div class="panel"><h3>Talk with a grown-up</h3>
+    <ul><li>Which tricky role surprised you, and which test helped you decide?</li>
+    <li>Our dancers are a model. Where is the dancer model <i>unlike</i> real particles?</li></ul>
+    <h3>Try at home</h3>
+    <ul><li>Squeeze a dry kitchen sponge under water in the sink. Watch where the bubbles come from.</li>
+    <li>Be the particles: in the yard, direct the family as Ice, then Water, then Air.</li></ul>
+    <h3>Something to wonder about</h3>
+    <p style="margin:0">What do you think happens to the dancers in the Ice Palace when the sun warms it? Keep that question for a later lesson.</p>
+    <div class="row"><button class="btn" id="bill">Back to the playbill</button></div></div>`;
+  $('#bill').onclick=home;toTop();
+}
+
+/* ---------- start ---------- */
+pips();
+if(PLAYER==='unknown')whoScreen();else home();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>
