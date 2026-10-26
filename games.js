@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "daniels-island-chart",
+    title: "Daniel's Island Chart",
+    blurb: "Finish Daniel's sea chart and find out why no two Caribbean islands are alike.",
+    players: ["maggie"],
+    subject: "Geography",
+    source: "Exploring North America (Pleasant Talk of Places), Lesson 7: Islands of Sun and Sea",
+    added: "2026-10-27",
+    colour: "#0F7C80",
+    href: "games/daniels-island-chart/index.html"
+  },
+  {
     id: "invisible-theatre",
     title: "The Invisible Theatre",
     blurb: "Direct the dancers so your stage behaves like ice, water and air.",

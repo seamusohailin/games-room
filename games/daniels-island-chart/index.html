@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daniel's Island Chart</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: a sea-chart table. The chart (or the part's picture) sits on the left, Daniel's notebook on the right; they stack on narrow screens. */
+:root{
+  --paper:#FBF6EA; --card:#FFFFFF; --ink:#1E2B3A; --ink-soft:#56636F; --line:#E4D9C2;
+  --sea:#CDE7E5; --sea-line:#A9D3D0; --land:#F3E5C2; --main:#E9D8AE; --land-line:#8C6B3F;
+  --teal:#0F7C80; --teal-dark:#0A5A5D; --coral:#D9573A; --coral-dark:#A63E26; --sun:#EFB23A; --palm:#3E7D3A; --rain:#3A7FB8; --storm:#5B4B8A;
+  --ok:#2E7D4F; --okbg:#E6F3EA; --bad:#B4462F; --badbg:#FBEAE4;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Lexend","Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance;letter-spacing:-.005em}
+h1{font-size:clamp(2.2rem,6.4vw,3.6rem);line-height:1.02;color:var(--teal-dark)}
+h2{font-size:clamp(1.45rem,3.2vw,1.9rem);line-height:1.15}
+h3{font-size:1.15rem;line-height:1.25}
+p{margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 96px max(16px,env(safe-area-inset-left,0px))}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--coral)}
+.muted{color:var(--ink-soft)}
+.screen[hidden]{display:none!important}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 0 10px;border-bottom:2px dashed var(--line);margin-bottom:16px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.3rem;color:var(--teal-dark)}
+.pips{display:flex;gap:6px;align-items:center}
+.pip{width:14px;height:14px;border-radius:50%;border:2px solid var(--teal);background:transparent}
+.pip.on{background:var(--teal)}
+.btn{border:0;border-radius:14px;padding:12px 20px;font-weight:600;background:var(--teal);color:#fff;box-shadow:0 4px 0 var(--teal-dark);min-height:50px;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--teal-dark)}
+.btn.coral{background:var(--coral);box-shadow:0 4px 0 var(--coral-dark)}
+.btn.ghost{background:var(--card);color:var(--teal-dark);border:2px solid var(--teal);box-shadow:none}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.small{min-height:40px;padding:8px 14px;font-size:.92rem}
+
+/* intro */
+.intro{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center;padding-top:10px}
+.intro .lead{font-size:1.1rem}
+.quote{background:var(--card);border-left:6px solid var(--sun);border-radius:12px;padding:14px 18px;font-family:var(--display);font-style:italic;font-size:1.2rem}
+.bigq{font-family:var(--display);font-weight:700;font-size:clamp(1.4rem,3.4vw,2rem);color:var(--coral-dark);line-height:1.15}
+.note{font-size:.9rem;color:var(--ink-soft)}
+.stack>*+*{margin-top:14px}
+
+/* chart */
+.chart-card{background:var(--card);border-radius:18px;padding:10px;box-shadow:0 2px 0 var(--line),0 0 0 2px var(--line) inset}
+.chart-card svg{display:block;width:100%;height:auto;border-radius:12px;touch-action:manipulation}
+.chart-foot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.8rem;color:var(--ink-soft);padding:6px 4px 0}
+svg .land{stroke:var(--land-line);stroke-width:1.2;stroke-linejoin:round}
+svg .land.main{fill:var(--main)}
+svg .land.isl{fill:var(--land)}
+svg .tap .land{cursor:pointer}
+svg .hit{fill:none;stroke:transparent;stroke-width:22;pointer-events:stroke;cursor:pointer}
+svg .glow{fill:#FFE3A6!important;stroke:var(--coral)!important;stroke-width:2.5!important;animation:pulse 1.2s ease-in-out infinite}
+svg .glow-sea{fill:#FFE3A6;opacity:.65;animation:pulse 1.2s ease-in-out infinite;pointer-events:none}
+svg .found{fill:#D7EBC9!important}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+@media (prefers-reduced-motion:reduce){svg .glow,svg .glow-sea{animation:none}}
+svg text{font-family:var(--body);paint-order:stroke;stroke:#FBF6EA;stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+svg .lab-sea{font-family:var(--display);font-style:italic;fill:#245F72;font-weight:500}
+svg .lab-land{fill:#4A3A22;font-weight:600;letter-spacing:.08em}
+svg .lab-isl{fill:var(--ink);font-weight:600}
+svg .lab-new{fill:var(--coral-dark)}
+svg .lab-group{font-family:var(--display);font-style:italic;fill:var(--teal-dark);font-weight:700;letter-spacing:.06em}
+
+/* hub */
+.hub{display:grid;grid-template-columns:1.55fr 1fr;gap:22px;align-items:start}
+.parts{display:grid;gap:10px}
+.part-tile{display:flex;gap:12px;align-items:center;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 14px;min-height:64px;width:100%}
+.part-tile .num{flex:0 0 40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:1.2rem;background:var(--sea);color:var(--teal-dark)}
+.part-tile.done .num{background:var(--teal);color:#fff}
+.part-tile[disabled]{opacity:.5;cursor:default}
+.part-tile .t{font-weight:600}
+.part-tile .s{font-size:.85rem;color:var(--ink-soft)}
+.part-tile .st{margin-left:auto;font-size:.8rem;font-weight:700;color:var(--teal)}
+.part-tile.letter .num{background:#FCE6CF;color:var(--coral-dark)}
+
+/* play */
+.play{display:grid;grid-template-columns:1.45fr 1fr;gap:22px;align-items:start}
+.notebook{background:var(--card);border-radius:18px;padding:18px;border:2px solid var(--line);position:sticky;top:12px}
+.notebook .qcount{font-size:.8rem;font-weight:700;color:var(--ink-soft);letter-spacing:.06em;text-transform:uppercase}
+.prompt{font-size:1.12rem;font-weight:500;margin:6px 0 12px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:#F7F2E6;border:2px solid var(--line);border-radius:12px;padding:11px 14px;min-height:50px;font-weight:500}
+.opt.sel{border-color:var(--teal);background:#E3F2F1}
+.opt.wrong{border-color:var(--bad);background:var(--badbg);opacity:.75}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt[disabled]{cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.fb{margin-top:12px;border-radius:12px;padding:12px 14px;font-size:.98rem}
+.fb.bad{background:var(--badbg);border-left:5px solid var(--bad)}
+.fb.ok{background:var(--okbg);border-left:5px solid var(--ok)}
+.fb .h{font-weight:700;display:block;margin-bottom:2px}
+.helpbox{margin-top:12px;background:#FFF6DE;border-left:5px solid var(--sun);border-radius:12px;padding:12px 14px;font-size:.96rem}
+.helpbox .h{font-weight:700;display:block;margin-bottom:2px}
+.helpbtn{margin-top:12px;background:none;border:2px dashed var(--sun);color:#7A5410;border-radius:12px;padding:8px 14px;font-weight:600;min-height:44px}
+.helpbtn.nudge{background:#FFF1C8}
+.tapnote{font-size:.9rem;color:var(--ink-soft)}
+.card-to-sort{background:#FFFDF6;border:2px solid var(--ink);border-radius:14px;padding:14px 16px;font-weight:600;font-size:1.1rem;text-align:center;box-shadow:3px 3px 0 var(--ink)}
+
+/* stage pictures */
+.stage{background:var(--card);border-radius:18px;padding:16px;border:2px solid var(--line)}
+.cols{display:grid;gap:10px}
+.cols.c3{grid-template-columns:repeat(3,1fr)}
+.cols.c4{grid-template-columns:repeat(4,1fr)}
+.bin{background:#F7F2E6;border-radius:14px;padding:10px;min-height:120px}
+.bin h3{font-size:1rem;margin-bottom:6px;color:var(--teal-dark)}
+.chip{display:block;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:6px 8px;font-size:.85rem;margin-top:6px;line-height:1.3}
+.months{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:10px}
+.mon{position:relative;border:2px solid var(--line);border-radius:12px;background:#F7F2E6;min-height:86px;padding:6px 2px 4px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;font-weight:600;font-size:.85rem}
+.mon .ic{height:30px;display:grid;place-items:center}
+.mon.dry{background:#FFF0C9;border-color:var(--sun)}
+.mon.wet{background:#DDEBF7;border-color:#9DC0E0}
+.mon.pick{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral) inset}
+.mon.storm::after{content:"";position:absolute;inset:auto 4px 4px auto;width:10px;height:10px;border-radius:50%;background:var(--storm)}
+.mon[disabled]{cursor:default}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--ink-soft);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:16px;height:16px;border-radius:4px;display:inline-block;border:1.5px solid var(--line)}
+
+/* letter */
+.letter-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:22px;align-items:start}
+.paper{background:#FFFDF6;border-radius:6px;padding:22px 24px;box-shadow:0 2px 0 var(--line),4px 6px 0 rgba(30,43,58,.08);font-family:var(--display);font-size:1.1rem;line-height:1.6;transform:rotate(-.6deg)}
+textarea{width:100%;min-height:240px;border:2px solid var(--line);border-radius:14px;padding:14px;font:inherit;font-size:1.05rem;line-height:1.6;background:#FFFEFA;resize:vertical}
+details{background:#FFF6DE;border-radius:12px;padding:10px 14px}
+summary{font-weight:600;cursor:pointer}
+details ul{margin:8px 0 0;padding-left:20px}
+
+/* end */
+.why{display:grid;gap:10px}
+.why .item{background:var(--card);border-radius:14px;border:2px solid var(--line);padding:12px 14px}
+.why .item b{color:var(--teal-dark)}
+.talk{background:#FCEFE2;border-radius:18px;padding:18px;border:2px solid #F3D3B5}
+.talk li+li{margin-top:10px}
+.reveal{margin-top:8px;background:var(--card);border-radius:12px;padding:10px 12px;border-left:5px solid var(--teal)}
+
+@media (max-width:900px){
+  .intro,.hub,.play,.letter-grid{grid-template-columns:1fr}
+  .notebook{position:static}
+  .months{grid-template-columns:repeat(6,1fr)}
+  .cols.c4{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:520px){ .cols.c3{grid-template-columns:1fr} body{font-size:16px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- INTRO -->
+<section class="screen" id="sIntro">
+  <div class="intro">
+    <div class="stack">
+      <p class="eyebrow">Exploring North America · Lesson 7</p>
+      <h1>Daniel's Island Chart</h1>
+      <p class="quote">Gran says: "The islands are small, Daniel, but no two of them are quite alike."</p>
+      <p class="lead">In your lesson, Daniel travels the Caribbean with his grandmother. Now he is drawing a sea chart for his cousin, and he wants it to answer one question:</p>
+      <p class="bigq">Why isn't every Caribbean island the same?</p>
+      <p>There are five parts, and each one adds to the chart. Start with Part 1, then do the others in any order. At the end, you'll write a letter back to Daniel's cousin.</p>
+      <p class="note">You can stop whenever you like: the chart is saved on this device. Daniel and his grandmother come from the story in your lesson. They're made up, but the places are real.</p>
+      <div class="row"><button class="btn coral" id="btnOpen">Open the chart</button></div>
+    </div>
+    <div class="chart-card" id="introChart"></div>
+  </div>
+</section>
+
+<!-- HUB -->
+<section class="screen" id="sHub" hidden>
+  <div class="topbar"><span class="brand">Daniel's Island Chart</span><div class="pips" id="pipsHub"></div></div>
+  <div class="hub">
+    <div>
+      <div class="chart-card" id="hubChart"></div>
+      <div class="chart-foot"><span>The Equator is about 900 km south of the bottom edge of this chart.</span><span>Map outlines: Natural Earth</span></div>
+    </div>
+    <div class="stack">
+      <h2>Why isn't every island the same?</h2>
+      <p class="muted" id="hubNote"></p>
+      <div class="parts" id="partList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAY -->
+<section class="screen" id="sPlay" hidden>
+  <div class="topbar"><span class="brand" id="playTitle"></span><div class="row"><div class="pips" id="pipsPlay"></div><button class="btn ghost small" id="btnToChart">Back to the chart</button></div></div>
+  <div class="play">
+    <div id="stage"></div>
+    <div class="notebook" id="notebook" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- LETTER -->
+<section class="screen" id="sLetter" hidden>
+  <div class="topbar"><span class="brand">A letter for Daniel's cousin</span><button class="btn ghost small" id="btnLetterBack">Back to the chart</button></div>
+  <div class="letter-grid">
+    <div class="paper" id="cousinLetter">
+      <p>Dear Daniel,</p>
+      <p style="margin-top:10px">Next year Gran says I can come with you both on your island trip! I have three questions.</p>
+      <p style="margin-top:10px">1. Which month should I come?<br>2. Can we swim under a waterfall <i>and</i> visit a little coral cay?<br>3. What will we eat, and what music will we hear?</p>
+      <p style="margin-top:10px">Write back soon!<br>Your cousin</p>
+    </div>
+    <div class="stack">
+      <h2>Write Daniel's reply</h2>
+      <p>Answer at least two of the questions. For each one, give a reason from what you've found out.</p>
+      <details id="ideas"><summary>Need ideas?</summary><ul id="ideaList"></ul></details>
+      <textarea id="letterText" aria-label="Daniel's reply" placeholder="Dear cousin,"></textarea>
+      <p class="note" id="wordCount">0 words</p>
+      <div class="row"><button class="btn coral" id="btnSendLetter" disabled>Send the letter and finish the chart</button></div>
+      <p class="note">Your letter is saved as you type, so you can come back to it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- END -->
+<section class="screen" id="sEnd" hidden>
+  <div class="topbar"><span class="brand">Daniel's chart is finished</span><button class="btn ghost small" id="btnEndChart">Look at the chart</button></div>
+  <div class="hub">
+    <div class="stack">
+      <div class="chart-card" id="endChart"></div>
+      <div class="talk">
+        <h3>Talk it over with a grown-up</h3>
+        <ol style="margin:10px 0 0;padding-left:22px">
+          <li>Which clue helped you most to work out the hurricane months?</li>
+          <li>Northern Australia gets the same kind of storm, but there it's called a cyclone. Use Gran's rule, late summer and autumn, but for <i>our</i> half of the world. Which months would you predict?
+            <div><button class="btn ghost small" id="btnReveal" style="margin-top:8px">Show the real answer</button></div>
+            <div class="reveal" id="revealBox" hidden>Australia's cyclone season runs from November to April. How close did Gran's rule get you? Which months did it miss?</div>
+          </li>
+          <li>One question you'd like to find out about the Caribbean:
+            <textarea id="followQ" style="min-height:80px;margin-top:6px" aria-label="A question to follow up" placeholder="I wonder..."></textarea>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="stack">
+      <h2>Why isn't every Caribbean island the same?</h2>
+      <div class="why">
+        <div class="item"><b>How it was made.</b> Some are mountainous volcanic islands, with misty peaks, short rushing rivers and waterfalls. Others are flat coral cays that get their fresh water from rain and from water held underground.</div>
+        <div class="item"><b>How big it is.</b> The four Greater Antilles (Cuba, Hispaniola, Jamaica and Puerto Rico) are large. The Lesser Antilles are small, and curve away to the south-east.</div>
+        <div class="item"><b>Who settled it.</b> Spanish settlers built Cuba's old plazas, so Cuba and the Dominican Republic speak Spanish. Jamaica speaks English, and Haiti speaks French and Creole. African, European and Indigenous peoples blended to make the islands' music, food and festivals.</div>
+        <div class="item"><b>What they share.</b> Warm weather all year, a dry season from December to April, a wet season from May to November, and hurricanes in late summer and autumn. That's August to November up there, with September usually the busiest.</div>
+      </div>
+      <p class="muted">Lesson 8 takes you to Costa Rica, which has a Caribbean coast too.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+<script>
+const MAP = {"W":1000,"H":639,"shapes":{"sam":"M908.1,602.7L909.1,600.3L914.5,599.5L911.8,601.6ZM818.2,540.6L815.1,544.3L812.7,544.5L807.5,542.0L799.9,541.3L801.6,538.9L805.8,537.8L809.0,540.5L811.6,540.6L815.8,535.2ZM774.6,543.7L769.8,543.7L768.3,542.7L771.8,541.5ZM904.4,611.2L904.1,607.9L908.9,603.9L911.0,606.3L910.6,607.8ZM942.8,628.9L942.2,630.8L937.8,633.6L936.5,637.2L925.6,644.6L921.4,645.1L915.0,654.2L918.5,661.2L917.7,664.8L919.3,666.6L926.7,666.8L926.4,671.7L610.8,671.7L602.0,668.8L593.8,671.7L574.3,670.6L565.0,671.7L559.9,668.5L556.0,659.6L550.2,658.1L547.8,654.5L548.6,640.1L551.3,636.1L550.3,629.5L549.5,626.4L541.7,618.4L537.6,602.6L532.5,601.8L529.4,597.7L525.2,599.8L519.8,599.8L531.0,580.3L535.3,557.3L540.9,546.0L548.6,536.9L554.7,534.2L563.8,518.8L583.8,512.4L578.5,517.1L563.8,522.0L564.2,527.1L567.7,534.4L573.7,540.2L570.9,540.8L575.2,551.9L573.0,558.9L563.9,569.9L559.0,579.5L563.2,588.1L570.0,595.2L569.3,598.0L572.3,603.8L577.0,604.6L586.2,600.9L591.1,594.8L592.1,583.1L591.2,578.9L585.6,568.7L581.7,564.8L578.3,555.9L576.7,547.9L579.3,546.0L579.1,541.8L585.5,540.7L599.4,533.8L617.7,528.4L622.0,523.6L628.6,526.1L631.1,525.1L632.1,522.9L630.7,518.6L619.0,520.2L616.0,511.6L618.7,504.7L624.9,502.1L629.4,506.1L632.4,518.5L636.5,524.9L649.0,523.7L661.6,526.5L675.0,535.4L679.0,544.6L677.4,546.9L678.2,550.8L683.1,557.3L691.5,557.9L719.1,553.4L742.3,552.7L746.7,554.6L747.2,557.9L754.6,565.0L777.2,571.1L785.9,570.2L806.6,558.4L817.7,558.7L820.9,556.9L816.8,555.1L807.6,554.4L804.8,555.6L803.2,552.6L828.2,552.3L853.1,548.8L867.4,550.5L878.8,549.1L877.5,551.1L867.7,552.6L863.1,555.5L846.5,556.0L848.7,556.8L848.7,559.7L853.6,563.9L854.3,566.9L851.9,571.6L856.2,569.6L856.2,566.3L857.8,566.8L865.0,580.5L868.1,577.3L870.2,579.3L870.1,574.1L872.6,574.2L877.9,577.7L883.3,585.5L882.3,579.5L886.7,579.4L887.8,576.9L896.6,585.4L905.8,587.9L912.7,594.4L911.2,597.5L905.5,601.1L898.5,619.3L886.9,619.4L896.7,625.5L900.2,623.0L905.1,622.8L912.5,619.5L922.5,621.0L926.9,618.3L932.3,618.7L937.0,620.9ZM926.5,671.6L926.7,666.8L919.3,666.6L917.7,664.8L918.5,661.2L915.0,654.2L921.4,645.1L925.6,644.6L936.5,637.2L938.6,632.7L942.2,630.8L942.8,628.9L937.0,620.9L942.6,626.7L947.9,627.1L962.5,636.5L980.4,653.8L985.1,661.0L984.4,671.7ZM582.6,512.8L563.8,518.8L554.7,534.2L548.6,536.9L540.9,546.0L535.3,557.3L531.0,580.3L519.8,599.8L525.2,599.8L529.4,597.7L532.5,601.8L537.6,602.6L541.7,618.4L549.5,626.4L550.3,629.5L551.3,636.1L548.6,640.1L547.8,654.5L550.2,658.1L556.0,659.6L559.9,668.5L565.0,671.7L384.1,671.7L378.1,664.2L380.4,657.2L383.0,654.1L382.4,648.8L384.2,649.1L387.9,653.9L389.4,653.2L395.3,648.6L395.4,644.3L400.1,639.8L391.3,622.6L394.0,617.8L410.9,636.0L409.0,637.9L409.5,640.9L412.9,641.2L414.3,638.9L413.4,628.8L411.9,623.7L408.7,620.1L428.8,606.5L433.3,597.5L436.6,594.2L440.5,592.1L448.8,591.4L449.9,588.5L447.5,582.3L450.2,573.7L450.1,569.3L451.9,566.7L451.3,565.7L446.6,568.7L451.4,562.7L454.8,553.4L471.2,538.8L473.6,537.1L485.8,541.0L489.7,540.8L484.6,542.8L483.9,545.2L487.5,548.3L495.5,530.1L510.1,531.8L521.5,531.0L539.9,517.3L553.9,511.5L558.3,501.7L563.4,500.1L571.4,494.1L578.3,493.7L585.6,496.9L588.9,502.5L589.5,506.4ZM567.4,671.7L574.3,670.6L584.3,671.7ZM599.7,669.2L604.5,669.0L610.8,671.7L593.8,671.7Z","lesser":"M783.8,300.8L780.5,299.2L783.1,298.7L784.7,299.0L786.1,300.5ZM789.8,300.5L787.9,300.1L789.0,299.1L791.9,299.7ZM791.2,319.5L794.4,319.5L791.1,320.9L784.7,321.1L784.9,318.7L788.6,318.0ZM838.7,305.7L839.0,304.7L842.9,302.4L844.4,302.6L843.7,304.0ZM799.3,296.3L798.6,295.8L799.2,294.5L802.4,294.3ZM791.5,298.2L790.8,297.8L792.2,296.8L795.5,296.9L793.9,298.1ZM804.0,288.1L800.5,287.3L799.6,286.7L802.4,286.6L803.5,287.0ZM870.2,354.5L868.1,353.9L868.0,352.2L869.5,350.3L870.4,352.6ZM899.9,470.5L897.6,468.2L897.9,465.7L900.6,463.5L901.9,463.4L902.4,465.5L902.0,468.5ZM898.7,475.6L897.6,475.2L898.8,475.2L898.5,474.5L900.0,473.4L900.2,473.9ZM907.8,451.6L904.4,449.5L904.0,446.8L904.3,445.1L906.4,442.0L909.1,439.3L909.8,442.0L909.5,448.2ZM856.8,340.8L855.5,339.8L855.8,337.5L857.0,337.5L858.3,338.5L858.4,340.1ZM854.5,336.7L853.1,334.7L850.8,334.1L848.8,332.9L849.2,331.4L850.2,330.9L852.7,332.5L855.0,335.5L855.3,336.2ZM911.4,428.0L910.6,428.4L909.4,426.8L904.3,427.0L903.4,425.0L905.9,422.6L903.0,422.0L901.8,421.0L899.4,416.0L899.6,414.5L900.6,413.8L902.3,413.7L905.4,415.3L907.7,417.6L908.5,417.6L908.8,418.3L908.3,419.9L910.3,422.2L911.7,426.1ZM892.3,369.6L889.9,369.3L889.4,367.0L890.6,365.0L889.7,362.6L890.3,361.2L891.5,360.2L893.5,361.5L893.9,363.3L895.1,364.9L900.9,368.4ZM885.3,378.1L884.1,377.6L882.5,374.8L881.4,367.0L882.9,365.2L886.2,366.1L889.0,367.9L888.3,369.4L888.6,375.3L887.8,376.6ZM899.0,380.4L896.5,380.3L896.3,378.3L898.4,376.6L899.6,378.1L899.9,379.4ZM839.9,309.0L840.2,308.3L841.8,307.5L843.5,307.9L843.4,309.0ZM848.5,315.4L847.7,313.8L850.0,314.3L849.4,315.0ZM843.4,309.0L843.0,310.7L839.9,309.2L839.9,309.0Z","pri":"M746.9,297.3L747.9,297.3L747.1,295.9L747.8,295.9L753.8,296.7L757.6,298.1L761.6,298.8L761.8,303.3L758.8,305.2L755.2,309.4L750.9,312.1L742.3,313.0L739.8,312.5L737.2,312.9L734.0,311.7L725.9,311.7L723.8,312.8L721.9,313.0L718.3,312.3L714.3,312.4L712.6,311.5L713.4,303.9L710.5,299.3L713.4,297.0L713.8,294.9L716.9,294.2L724.6,295.1L744.1,295.7L745.2,295.9ZM765.5,308.0L763.9,307.8L763.4,306.8L766.3,305.9L769.8,306.0L772.0,306.9ZM691.2,309.4L689.7,308.4L689.7,307.5L691.8,307.3L692.4,307.6Z","usa":"M296.1,-32.3L294.2,-25.3L298.2,-13.1L293.4,-22.2L293.5,-32.8ZM292.5,-32.8L291.7,-28.7L290.8,-27.7L289.7,-32.8ZM288.3,-32.8L305.4,9.6L309.7,16.6L311.2,30.5L308.6,54.6L307.5,53.1L303.1,61.6L301.0,71.1L297.4,74.4L289.5,76.8L277.8,77.4L276.0,74.4L277.0,71.8L282.3,74.6L283.1,73.3L277.7,69.9L269.8,54.7L258.9,49.7L255.9,44.4L254.2,34.9L251.3,33.1L255.4,26.6L250.9,31.1L248.8,31.1L247.9,19.9L249.6,17.6L244.3,18.5L244.4,21.6L240.9,20.6L227.7,0.0L230.1,-0.8L236.5,-8.9L237.3,-11.9L236.1,-13.2L233.7,-12.4L230.1,-15.8L228.9,-15.2L231.4,-12.2L230.9,-9.1L226.8,-6.9L223.6,-11.3L229.4,-32.8ZM247.7,35.1L244.2,33.4L243.7,31.2L246.4,34.0L248.8,34.3ZM247.3,33.0L245.8,29.8L244.7,26.2L246.2,27.3ZM294.4,83.4L301.4,74.3L301.5,72.2L304.5,70.5L300.6,77.3ZM271.2,92.2L269.4,93.8L268.1,90.1ZM286.0,88.3L287.5,87.0L288.0,87.3L287.9,87.8ZM281.6,90.8L277.0,91.4L283.4,89.8ZM261.5,95.3L263.1,94.1L263.7,92.1L264.6,94.6ZM307.2,9.7L300.7,-4.7L298.8,-11.5L300.1,-9.7Z","cym":"M270.7,267.7L272.0,267.3L272.3,266.6L277.2,267.2L277.9,268.5L274.2,268.6L271.8,269.6L268.6,269.4L268.2,266.2L269.0,265.9ZM313.3,255.3L311.9,255.4L309.6,256.7L308.6,256.6L309.9,255.4L312.8,254.9ZM316.6,255.7L315.4,255.5L319.2,253.4L320.6,253.7Z","bhs":"M573.0,188.4L567.8,187.1L567.3,185.3L572.9,185.7ZM565.7,185.8L561.9,182.9L562.2,181.8L564.6,181.8ZM552.1,185.1L558.0,187.0L552.0,188.1ZM385.7,107.3L382.6,109.3L384.9,110.8L387.0,107.6L388.7,110.2L390.0,119.0L388.3,123.2L382.1,122.8L379.6,113.4L375.0,107.5L384.3,105.3ZM398.5,52.6L393.7,48.3L398.5,44.0L399.8,33.1L398.8,30.8L390.3,21.4L376.8,19.5L379.3,18.3L389.6,19.5L397.9,26.6L398.2,28.2L404.2,31.8L405.1,38.2L401.0,41.3L400.3,50.6ZM529.4,209.1L526.1,213.7L510.6,215.0L510.0,213.8L510.0,209.6L514.9,206.7L523.9,207.9L529.4,202.7L530.9,203.2ZM383.0,91.5L383.0,99.5L373.6,105.3L370.4,98.5L366.9,98.9L361.4,94.1L364.4,93.6L365.0,95.3L367.4,93.3L365.7,90.0L370.0,81.2L368.4,75.6L369.9,75.3L375.8,79.1L375.8,81.8ZM363.4,26.3L376.8,24.8L377.4,26.5L351.8,32.7L344.2,26.6L350.1,30.1L355.2,27.6L356.3,23.0ZM391.9,82.1L388.7,80.9L392.1,79.3L397.8,80.5ZM498.9,157.1L496.9,158.4L491.4,156.9L490.4,152.7ZM484.1,116.0L482.8,115.7L483.5,111.2L485.9,110.6L486.6,112.5ZM491.3,174.2L502.0,164.6L502.9,162.9L500.8,157.9L504.7,156.3L503.8,157.9L505.1,162.6L500.8,168.4ZM422.4,69.6L426.8,71.0L433.5,77.3L432.2,93.4L427.5,87.9L430.8,87.7L432.5,78.0L426.0,71.7L418.1,67.8L413.1,67.9L415.3,63.4ZM448.0,132.7L436.3,127.7L437.2,125.5ZM473.5,151.8L469.6,145.2L461.8,142.0L464.3,140.7L464.7,138.7L458.9,125.5L465.4,136.5L466.7,142.5L473.6,147.5ZM459.3,109.8L453.0,110.1L456.0,106.0L445.5,93.2L446.0,92.1L448.3,92.4ZM527.3,165.3L536.5,167.6L539.1,169.5L538.0,170.7L534.7,168.4L526.2,167.7ZM529.7,198.0L529.3,196.1L531.4,194.6L533.9,196.4Z","tto":"M912.2,535.1L912.4,533.8L915.3,531.6L921.1,530.0L920.4,532.0ZM900.8,570.9L887.6,571.3L882.1,570.6L877.9,571.1L885.6,567.1L886.5,565.4L890.6,564.6L891.7,555.8L891.3,553.6L890.7,552.5L885.9,549.9L887.8,548.9L891.7,548.4L894.7,547.3L900.8,547.1L903.8,546.2L908.8,545.9L905.2,551.5L905.6,555.1L905.1,557.6L905.7,560.8L907.2,562.8L906.3,564.8L905.9,569.0Z","cam":"M394.0,617.8L391.3,622.6L400.1,639.8L395.4,644.3L395.3,648.6L389.4,653.2L387.9,653.9L384.2,649.1L382.4,648.8L383.0,654.1L380.4,657.2L378.1,664.2L369.7,653.9L363.2,642.2L361.8,636.9L366.0,635.9L367.0,634.4L366.2,630.8L370.6,626.3L373.5,629.6L382.5,634.6L374.6,628.3L371.9,622.7L368.0,626.0L367.0,624.1L362.5,622.4L363.5,625.7L362.2,627.3L358.9,618.4L341.1,606.3L336.0,605.5L327.9,607.2L322.3,611.1L318.3,618.0L320.3,619.4L308.6,627.5L301.0,629.5L298.2,631.9L298.2,636.4L310.2,649.9L312.1,655.3L309.0,657.5L303.5,657.8L298.8,662.7L291.7,664.3L286.1,664.5L284.3,662.6L279.3,642.2L276.3,643.7L275.1,649.8L272.9,651.2L265.5,648.1L258.5,634.4L250.8,631.9L245.0,632.6L243.0,631.4L242.6,628.8L238.6,629.9L228.8,628.4L222.9,630.9L222.5,636.6L221.5,632.4L217.9,627.9L223.1,624.1L223.3,618.1L221.3,614.7L227.3,608.9L225.5,606.5L220.6,604.2L220.6,591.5L225.0,586.8L229.9,589.6L232.4,587.3L238.4,592.1L239.4,599.3L244.1,599.9L242.4,605.1L247.6,608.3L256.9,607.6L253.3,601.6L259.0,605.6L264.2,611.8L270.2,613.4L286.3,609.9L295.4,603.5L308.5,599.3L325.7,586.6L340.2,588.6L345.9,592.1L359.2,592.9L372.4,598.4L380.3,603.9L384.5,609.8ZM346.3,631.3L345.0,624.7L347.4,623.9L348.8,627.5ZM262.4,660.8L254.6,656.9L255.9,652.3L257.7,651.3L260.3,654.6L259.5,657.8L262.1,659.3ZM242.4,595.2L239.9,592.5L241.9,592.1ZM340.3,632.1L339.8,630.7L341.1,629.3L341.7,630.6ZM213.8,409.8L210.0,415.7L208.0,412.8L205.8,415.3L209.4,417.8L212.9,431.2L205.9,442.5L201.0,464.6L202.8,494.4L200.1,494.9L199.2,492.8L200.2,484.5L199.2,487.8L195.2,491.4L198.4,498.5L197.5,507.1L194.8,505.9L194.7,510.1L192.8,512.4L196.7,513.6L198.4,519.6L195.5,522.1L191.6,530.8L194.8,540.3L198.7,543.4L196.5,547.7L190.0,549.3L182.2,547.8L176.6,541.3L165.6,538.9L159.1,542.4L138.0,534.4L133.0,538.6L126.2,529.8L110.3,516.5L101.4,502.7L72.9,478.3L72.8,476.2L75.5,473.7L81.6,477.7L83.2,475.8L91.9,475.4L95.0,473.4L96.3,467.8L102.8,464.8L100.9,452.2L102.1,450.1L114.6,449.9L120.3,442.5L123.7,440.7L125.5,443.5L131.7,447.4L133.3,447.0L134.9,442.9L149.7,432.1L151.2,425.1L155.1,422.4L156.7,417.7L160.6,415.8L170.7,421.6L178.4,419.8L180.0,417.8L182.8,418.7L185.4,416.6L191.6,416.3L205.8,409.3ZM205.8,409.3L191.6,416.3L185.4,416.6L182.8,418.7L180.0,417.8L179.2,419.5L173.3,421.3L167.3,420.7L160.6,415.8L156.7,417.7L155.1,422.4L151.2,425.1L150.6,431.1L134.9,442.9L133.3,447.0L131.7,447.4L125.5,443.5L123.7,440.7L120.3,442.5L114.6,449.9L101.3,450.7L102.8,464.8L97.7,466.4L95.0,473.4L91.9,475.4L83.2,475.8L83.4,472.3L80.9,470.9L78.2,466.1L78.5,463.6L68.3,462.0L70.7,460.3L69.3,458.0L71.4,448.5L68.7,446.0L62.8,446.3L57.8,442.8L47.4,447.1L46.5,443.0L40.4,441.3L27.5,430.2L19.9,428.7L25.9,422.5L24.3,414.0L26.8,407.2L32.5,404.6L55.4,385.7L58.4,386.6L66.4,380.8L71.8,379.7L74.4,379.8L78.5,383.7L84.8,382.2L96.6,384.6L113.9,383.9L127.0,378.3L125.4,376.0L141.1,380.1L151.1,379.5L157.1,377.1L167.3,380.6L170.0,383.3L174.2,382.4L171.3,381.0L179.3,382.6L194.8,396.3L188.3,392.6L184.0,393.4L184.5,396.4L189.8,396.7L195.0,402.4L200.3,400.9L203.2,402.3L198.6,397.5L207.2,401.7L209.7,407.0L213.8,409.8ZM117.0,362.8L105.3,366.9L111.3,363.3ZM126.6,363.6L127.4,361.0L130.2,360.1L129.0,361.7ZM-30.6,374.5L-14.0,374.4L-13.0,364.0L-19.8,360.1L-22.2,353.6L-31.2,347.7L-30.9,317.3L26.2,317.3L23.8,380.3L34.6,380.4L43.6,384.5L45.7,381.7L43.9,378.4L55.4,385.7L32.5,404.6L26.8,407.2L24.3,414.0L25.9,422.5L19.9,428.7L13.3,429.6L14.2,434.4L-1.5,445.5L-3.3,447.8L-3.0,451.0L-19.0,444.7L-31.2,444.8ZM20.7,428.9L27.5,430.2L40.4,441.3L46.5,443.0L47.4,447.1L57.8,442.8L62.8,446.3L68.7,446.0L70.9,447.6L69.3,458.0L70.9,459.3L67.6,462.5L68.1,465.8L64.7,469.2L56.9,469.7L41.1,465.9L47.4,468.7L46.5,469.1L35.4,465.8L22.6,459.4L6.1,456.8L-3.0,451.0L-3.3,447.8L-1.5,445.5L14.2,434.4L13.3,429.6ZM232.2,587.9L229.9,589.6L225.0,586.8L220.6,591.5L220.6,604.2L225.5,606.5L227.3,608.9L221.3,614.7L223.3,618.1L223.1,624.1L217.9,627.9L221.5,632.4L222.5,636.6L214.9,627.4L213.7,619.7L209.8,617.2L204.1,615.8L209.4,622.3L209.6,625.6L199.9,623.2L195.8,618.8L199.6,612.6L198.8,605.0L195.7,601.3L180.6,591.0L169.3,587.6L166.9,585.0L167.4,580.3L165.2,576.7L155.5,569.6L148.0,565.0L148.9,569.9L151.2,572.8L157.4,575.6L159.8,579.3L152.7,587.1L146.4,579.6L136.7,576.6L131.4,569.1L129.7,563.8L130.3,560.4L135.5,552.6L135.4,549.0L127.9,544.0L132.7,541.1L133.0,538.6L138.0,534.4L159.1,542.4L165.6,538.9L176.6,541.3L182.2,547.8L190.0,549.3L196.5,547.7L198.7,543.4L207.9,563.1L225.7,584.2L230.9,586.0ZM23.8,380.3L27.1,312.2L29.7,311.3L34.4,314.1L37.3,312.4L46.2,296.7L48.1,295.7L53.3,295.8L51.6,299.5L58.4,299.8L59.5,307.3L54.0,324.1L56.1,327.1L53.5,333.8L54.3,345.3L52.7,356.1L44.9,367.3L40.8,368.7L35.0,376.3L34.6,380.4ZM62.6,314.4L65.7,306.2L66.9,306.2L64.0,313.7ZM64.7,334.8L65.5,330.1L67.9,326.1L68.8,328.3Z","abc":"M679.6,506.8L678.7,505.2L678.5,502.3L677.9,501.1L675.9,499.4L676.0,498.0L680.6,500.3L681.1,503.1ZM844.9,328.5L843.8,327.8L843.8,326.7L845.7,327.8ZM628.3,494.0L626.8,493.5L622.9,490.0L623.9,487.8L625.8,489.3L627.8,492.1ZM662.4,506.4L656.4,503.2L651.4,498.1L651.3,495.4L652.5,495.7L653.9,496.7L655.8,500.3L661.6,502.7L664.0,505.9Z","mex":"M-31.2,274.3L-23.1,267.0L-21.7,254.6L-15.4,247.5L-14.3,222.4L-11.0,212.7L-5.7,209.0L5.6,204.0L35.0,199.4L44.2,195.3L58.4,192.8L85.9,198.3L88.6,196.1L87.9,195.1L81.7,194.9L89.7,192.6L99.2,199.2L100.9,208.0L98.0,216.7L80.6,238.2L79.2,242.4L79.9,250.3L75.4,253.0L72.3,257.6L73.6,260.4L80.5,259.4L78.7,264.0L73.2,267.0L73.3,270.1L76.5,268.0L78.1,269.1L67.1,302.5L60.7,294.1L62.2,287.5L61.5,283.8L60.2,283.9L56.4,287.7L53.3,295.8L46.2,296.7L37.3,312.4L34.4,314.1L29.7,311.3L27.1,312.2L26.2,317.3L-30.9,317.3L-31.2,335.8ZM-31.2,347.7L-22.2,353.6L-19.8,360.1L-13.0,364.0L-14.0,374.4L-31.2,374.5ZM94.0,236.8L93.1,233.2L94.4,229.7L96.0,227.7L101.1,226.8Z","jam":"M401.9,297.5L409.1,298.5L412.7,301.3L415.6,302.9L426.6,306.3L430.9,314.1L428.1,315.2L421.1,315.7L416.6,313.7L413.3,313.2L414.1,312.4L410.8,312.1L408.0,316.2L405.1,316.1L404.0,314.5L402.5,315.2L401.3,316.4L399.8,320.6L395.0,316.7L391.8,316.0L385.3,315.9L382.2,315.3L378.7,310.7L376.2,309.7L373.6,305.6L372.7,305.0L365.8,304.1L364.4,301.9L364.8,299.8L368.2,296.6L372.0,296.7L375.7,296.0L379.0,294.2L392.1,296.0L398.1,296.3Z","hti":"M570.1,256.0L571.7,264.7L570.2,267.9L570.4,269.1L573.5,272.1L573.6,273.2L573.2,274.2L568.5,278.9L569.2,281.1L570.8,283.2L571.0,285.0L570.5,287.3L566.7,291.2L562.9,291.3L562.5,291.7L566.5,297.6L569.9,300.1L570.7,302.4L569.9,304.6L569.7,310.0L564.2,305.2L560.6,303.8L546.8,304.1L542.7,305.5L535.1,306.3L519.2,303.1L511.1,303.8L507.9,305.0L505.5,307.3L505.0,309.4L503.6,309.9L497.3,304.2L493.9,302.5L486.9,299.9L485.6,298.4L485.1,296.5L487.9,290.8L492.9,289.6L504.3,292.4L509.8,292.8L512.8,294.2L537.8,297.0L540.8,295.9L543.2,293.2L549.4,293.0L550.7,292.5L551.7,290.8L551.6,289.2L548.0,286.9L542.2,282.0L537.2,276.2L539.3,274.2L538.5,270.6L540.5,264.1L529.6,258.5L521.4,257.6L518.9,256.9L517.6,254.9L518.7,252.1L521.4,250.5L527.6,248.9L535.1,248.1L542.6,249.0L555.6,254.1L563.9,254.9L567.7,255.7L569.4,255.0ZM536.8,288.1L528.8,285.4L522.3,281.9L522.6,280.0L525.9,279.6L533.8,283.1L537.4,285.8ZM543.0,245.3L542.5,246.2L536.1,244.6L534.4,244.7L532.5,243.7L534.2,242.9L537.8,242.7Z","grd":"M881.8,507.6L882.6,506.4L882.8,504.3L883.9,501.8L885.6,500.1L887.3,500.6L886.7,506.1L883.9,507.5Z","dom":"M569.9,304.6L570.7,302.4L569.9,300.1L566.5,297.6L562.5,291.7L562.9,291.3L566.7,291.2L570.5,287.3L571.0,285.0L570.8,283.2L569.2,281.1L568.5,278.9L573.2,274.2L573.6,273.2L573.5,272.1L570.4,269.1L570.2,267.9L571.7,264.7L571.5,262.6L570.1,256.0L569.4,255.0L570.8,254.4L572.9,250.7L576.3,249.2L579.9,249.2L585.0,250.8L586.4,250.7L595.2,248.6L598.9,249.4L605.1,253.1L611.4,253.2L615.5,256.4L618.9,257.6L621.0,257.7L624.6,256.5L626.3,256.5L628.4,259.2L628.8,263.0L630.5,266.5L633.1,268.7L646.1,267.8L649.0,269.6L648.0,271.1L646.2,271.9L637.3,271.7L636.8,274.7L640.4,275.0L651.2,277.6L659.3,278.9L666.1,281.6L675.6,289.3L676.9,291.2L676.3,293.7L673.6,297.6L672.1,298.9L669.9,299.6L668.4,301.2L666.9,304.0L666.0,304.2L665.0,304.1L663.2,302.6L661.9,300.2L658.3,297.9L654.0,298.2L647.7,296.9L640.0,297.7L632.2,296.7L624.4,299.0L619.3,303.0L610.0,304.2L604.9,300.3L601.3,300.0L592.9,302.3L591.6,303.1L591.2,303.9L591.2,307.1L590.4,309.0L585.4,316.2L582.6,321.3L581.4,322.9L580.0,323.2L577.6,320.3L574.0,318.7L573.2,317.1L572.7,312.8L571.5,311.1L569.7,310.0Z","dma":"M894.5,402.1L893.3,396.5L891.2,392.4L891.9,388.8L896.2,390.4L897.6,392.3L898.4,397.4L897.4,401.4Z","cub":"M263.3,143.6L273.1,142.3L276.7,145.6L292.2,144.1L301.1,149.3L318.1,151.2L317.2,153.1L322.6,155.9L326.6,161.3L335.1,166.9L353.5,168.2L370.5,176.6L379.2,183.5L386.3,186.9L390.7,187.2L388.0,183.8L390.7,184.4L401.7,191.9L400.6,193.4L394.8,192.9L398.3,197.1L403.2,193.7L411.4,199.9L410.4,202.2L414.8,201.2L417.3,203.7L429.4,205.5L435.2,208.6L446.2,209.3L450.1,213.2L448.0,216.3L450.1,218.3L445.6,219.1L446.1,222.3L462.1,222.4L472.4,224.4L484.0,233.1L494.8,236.2L495.2,240.2L492.1,243.1L480.2,243.8L465.1,249.0L464.0,245.5L459.7,249.3L451.5,249.3L444.8,247.0L432.5,246.1L383.9,250.5L388.9,243.1L403.0,232.4L402.9,229.6L399.1,224.7L375.1,222.3L371.4,220.8L359.7,211.2L357.0,199.4L352.3,193.6L349.3,192.7L337.8,194.9L332.6,193.8L305.3,184.4L297.3,176.2L296.9,178.1L280.1,177.8L275.5,171.4L274.3,175.5L272.4,176.6L270.1,176.8L267.5,174.2L254.7,173.2L247.6,167.5L259.1,163.9L259.3,160.8L255.0,158.2L226.9,157.6L206.9,172.9L190.6,174.6L186.5,182.1L171.8,187.6L171.8,182.5L161.3,185.9L159.8,184.9L170.9,179.2L177.3,177.8L175.5,171.8L176.2,167.8L183.7,159.9L210.7,148.5L229.2,146.0L246.8,141.2ZM384.1,182.8L378.1,179.0L377.5,177.3L386.4,178.4ZM373.5,171.4L369.4,169.7L366.5,166.3L370.3,166.1ZM353.3,162.7L364.0,162.6L366.1,165.3L357.9,165.0ZM377.7,176.1L373.7,173.6L375.0,170.4L379.9,175.3ZM232.4,194.3L220.0,198.5L214.3,195.6L213.1,192.6L217.0,195.0L219.6,193.6L216.2,187.1L219.0,182.1L227.7,183.8L232.3,192.6ZM332.9,159.3L327.4,156.9L324.1,153.8L325.7,153.8Z","brb":"M952.4,473.1L949.6,471.8L948.7,470.2L948.5,465.2L950.3,464.7L953.5,468.7L955.4,470.1Z","atg":"M882.9,344.1L879.4,343.6L878.7,342.0L878.5,340.8L880.7,338.5L883.2,339.5L884.8,340.8L884.5,342.4ZM882.4,326.1L879.9,324.5L879.1,321.6L879.6,320.7L882.0,321.4L882.8,322.4L882.9,325.2Z"},"cent":{"lesser":[881.7,386.7],"pri":[737.3,303.6],"cym":[273.1,268.1],"bhs":[363.2,27.9],"tto":[898.4,559.2],"abc":[656.7,501.5],"jam":[401.4,308.0],"hti":[554.7,280.0],"grd":[885.2,503.1],"dom":[621.1,286.1],"dma":[895.1,394.4],"cub":[376.3,195.7],"brb":[951.5,469.4],"atg":[881.7,341.3]},"tropic":133.0,"pts":{"kingston":[412.8,311.6],"havana":[238.4,143.2],"santo":[627.2,295.6],"samana":[645.9,272.0]},"carib":[[75.0,199.9],[159.4,186.8],[265.6,206.4],[390.6,249.0],[490.6,252.3],[537.5,308.0],[675.0,301.5],[762.5,304.7],[796.9,298.2],[843.8,317.8],[887.5,367.0],[906.3,442.3],[896.9,507.9],[881.3,573.4],[625.0,573.4],[453.1,606.2],[406.3,642.2],[387.5,625.8],[328.1,593.1],[265.6,609.5],[203.1,580.0],[206.2,409.6],[62.5,380.1],[53.1,294.9]],"gulf":[[0.0,0.0],[275.0,0.0],[281.3,81.9],[300.0,144.2],[159.4,186.8],[75.0,199.9],[0.0,213.0]],"pac":[[0.0,655.3],[0.0,435.8],[93.8,475.1],[131.3,540.6],[171.9,589.8],[250.0,632.4],[343.8,655.3]]};
+
+/* ---------- projection (matches the map data) ---------- */
+const PC = Math.cos(17.5*Math.PI/180), PK = 1000/(32*PC);
+function proj(lon,lat){ return [(lon+90)*PC*PK, (27.5-lat)*PK]; }
+
+/* ---------- results hooks ---------- */
+const GR = window.GR || {player:()=>'unknown', key:k=>k, testing:()=>false, start(){}, part(){}, partDone(){}, finish(){}, ask(){return {miss(){},hint(){},done(){},giveUp(){}};}, write(){}};
+const GAME = 'daniels-island-chart';
+const KEY = GR.key('daniels-island-chart-v1');
+const fresh = () => ({started:false, done:{}, pos:{}, labels:[], placed3:{}, placed5:{}, dry:false, storm:false, month:null, letter:'', followQ:'', finished:false});
+let S = fresh();
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+
+const $ = s => document.querySelector(s);
+function el(tag, attrs, text){ const e = document.createElement(tag); if (attrs) for (const k in attrs){ if (k==='class') e.className = attrs[k]; else e.setAttribute(k, attrs[k]); } if (text != null) e.textContent = text; return e; }
+function show(id){ for (const s of document.querySelectorAll('.screen')) s.hidden = (s.id !== id); window.scrollTo(0,0); }
+
+/* ---------- the chart ---------- */
+const ISL = ['cub','jam','hti','dom','pri','bhs','cym','lesser','brb','atg','dma','grd','tto','abc'];
+const MAINL = ['sam','cam','mex','usa'];
+const SMALL = ['jam','pri','cym','lesser','brb','atg','dma','grd','tto','abc','bhs'];
+const NAMES = {
+  usa:'Florida, part of the United States', mex:'Mexico', cam:'Central America', sam:'South America',
+  cub:'Cuba', jam:'Jamaica', hti:'Haiti, on the island of Hispaniola', dom:'the Dominican Republic, on the island of Hispaniola',
+  pri:'Puerto Rico', bhs:'the Bahamas, low islands out in the Atlantic', cym:'the Cayman Islands, three tiny islands',
+  lesser:'one of the small islands of the Lesser Antilles', brb:'Barbados, one of the Lesser Antilles', atg:'Antigua, one of the Lesser Antilles',
+  dma:'Dominica, one of the Lesser Antilles', grd:'Grenada, one of the Lesser Antilles', tto:'Trinidad and Tobago, near South America',
+  abc:'Aruba, Curaçao or Bonaire, small islands off South America',
+  carib:'the Caribbean Sea', gulf:'the Gulf of Mexico', atl:'the open Atlantic Ocean', pac:'the Pacific Ocean'
+};
+const T = (x,y,txt,cls,size,extra) => `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" class="${cls}" font-size="${size}" text-anchor="middle" ${extra||''}>${txt}</text>`;
+function L(lon,lat){ return proj(lon,lat); }
+const LABELS = {
+  carib: () => { const [x,y]=L(-75.2,14.6); return T(x,y,'Caribbean Sea','lab-sea',30); },
+  cam:   () => { const [x,y]=L(-86.6,14.6); return T(x,y,'CENTRAL','lab-land',15)+T(x,y+18,'AMERICA','lab-land',15); },
+  sam:   () => { const [x,y]=L(-68.5,9.0); return T(x,y,'SOUTH AMERICA','lab-land',17); },
+  cub:   () => { const [x,y]=L(-78.6,22.2); return T(x,y,'Cuba','lab-isl',17); },
+  jam:   () => { const [x,y]=L(-78.05,17.35); return T(x,y,'Jamaica','lab-isl',16); },
+  hisp:  () => { const [x,y]=L(-71.6,20.35); return T(x,y,'Hispaniola','lab-isl',16); },
+  pri:   () => { const [x,y]=L(-66.4,17.45); return T(x,y,'Puerto Rico','lab-isl',15); },
+  groups:() => { const [x,y]=L(-80.4,20.55); const [a,b]=L(-60.3,14.6);
+                 return T(x,y,'Greater Antilles','lab-group',18) + `<text x="${a.toFixed(1)}" y="${b.toFixed(1)}" class="lab-group" font-size="17" text-anchor="middle" transform="rotate(78 ${a.toFixed(1)} ${b.toFixed(1)})">Lesser Antilles</text>`; },
+  countries:() => { const [x,y]=L(-73.25,19.35); const [a,b]=L(-70.35,18.95); return T(x,y,'Haiti','lab-isl',12)+T(a,b,'Dominican Rep.','lab-isl',11); },
+  kingston:() => { const [x,y]=MAP.pts.kingston; return `<circle cx="${x}" cy="${y}" r="5" fill="var(--coral)" stroke="#fff" stroke-width="2"/>`+T(x+10,y+17,'Kingston','lab-isl lab-new',12,'text-anchor="start"').replace('text-anchor="middle" ',''); },
+  route: () => { const [x1,y1]=L(-77.0,18.65); const [x2,y2]=L(-77.6,20.25); return `<path d="M${x1},${y1} Q${x1-26},${(y1+y2)/2} ${x2},${y2}" fill="none" stroke="var(--coral)" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round"/><path d="M${x2-7},${y2+9} L${x2},${y2} L${x2+8},${y2+7}" fill="none" stroke="var(--coral)" stroke-width="3" stroke-linecap="round"/>`; }
+};
+function compass(x,y){
+  return `<g transform="translate(${x},${y})" aria-hidden="true"><circle r="30" fill="#FBF6EA" stroke="#8C6B3F" stroke-width="1.5"/><path d="M0,-27 L6,0 L0,27 L-6,0Z" fill="#1E2B3A"/><path d="M-27,0 L0,-6 L27,0 L0,6Z" fill="#8C6B3F"/><path d="M0,-27 L6,0 L-6,0Z" fill="#D9573A"/><text y="-34" text-anchor="middle" font-size="14" font-weight="700" fill="#1E2B3A">N</text></g>`;
+}
+let CH = 0;
+function chartSVG(o){
+  o = o || {};
+  const id = 'c'+(++CH), W = MAP.W, H = MAP.H, labs = new Set(o.labels || S.labels);
+  const out = [];
+  out.push(`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sea chart of the Caribbean" class="${o.tap?'tap':''}">`);
+  out.push(`<defs><pattern id="${id}w" width="44" height="22" patternUnits="userSpaceOnUse"><path d="M0 13 q11 -8 22 0 t22 0" fill="none" stroke="#B5DAD7" stroke-width="1.6"/></pattern></defs>`);
+  out.push(`<rect data-sea="1" width="${W}" height="${H}" fill="var(--sea)"/><rect width="${W}" height="${H}" fill="url(#${id}w)" opacity=".7" pointer-events="none"/>`);
+  if (o.glowSea){ const poly = MAP[o.glowSea]; out.push(`<polygon class="glow-sea" points="${poly.map(p=>p.join(',')).join(' ')}"/>`); }
+  // tropic of cancer
+  const ty = MAP.tropic;
+  out.push(`<line x1="0" x2="${W}" y1="${ty}" y2="${ty}" stroke="#7D8C96" stroke-width="1.4" stroke-dasharray="8 6" pointer-events="none"/>`);
+  out.push(T(905,ty-7,'Tropic of Cancer','lab-sea',13));
+  for (const k of MAINL.concat(ISL)){
+    const d = MAP.shapes[k]; if (!d) continue;
+    const cls = ['land', MAINL.includes(k)?'main':'isl'];
+    if (o.glow && o.glow.includes(k)) cls.push('glow');
+    if (o.found && o.found.includes(k)) cls.push('found');
+    out.push(`<path data-r="${k}" class="${cls.join(' ')}" d="${d}"/>`);
+  }
+  if (o.tap) for (const k of SMALL){ if (MAP.shapes[k]) out.push(`<path data-r="${k}" class="hit" d="${MAP.shapes[k]}"/>`); }
+  if (o.ring){ const c = MAP.cent[o.ring]; out.push(`<circle cx="${c[0]}" cy="${c[1]}" r="24" fill="none" stroke="var(--coral)" stroke-width="3.5" stroke-dasharray="6 4" pointer-events="none"/><circle cx="${c[0]}" cy="${c[1]}" r="31" fill="none" stroke="#fff" stroke-width="2" opacity=".8" pointer-events="none"/>`); }
+  // fixed labels (worked examples)
+  let [x,y] = L(-86.6,25.0); out.push(T(x,y,'Gulf of Mexico','lab-sea',21)+T(x,y+19,'(Gulf of America)','lab-sea',13));
+  [x,y] = L(-67.5,24.6); out.push(T(x,y,'Atlantic Ocean','lab-sea',24));
+  [x,y] = L(-88.2,10.2); out.push(T(x,y,'Pacific','lab-sea',14)+T(x,y+15,'Ocean','lab-sea',14));
+  [x,y] = L(-89.1,19.9); out.push(T(x,y,'MEXICO','lab-land',13));
+  [x,y] = L(-81.2,26.2); out.push(T(x,y,'FLORIDA','lab-land',12)+T(x,y+14,'(USA)','lab-land',11));
+  for (const k of Object.keys(LABELS)) if (labs.has(k)) out.push(LABELS[k]());
+  out.push(compass(950,62));
+  out.push('</svg>');
+  return out.join('');
+}
+function inPoly(x,y,poly){ let c=false; for (let i=0,j=poly.length-1;i<poly.length;j=i++){ const [xi,yi]=poly[i],[xj,yj]=poly[j]; if (((yi>y)!==(yj>y)) && (x < (xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+function seaZone(x,y){ if (inPoly(x,y,MAP.carib)) return 'carib'; if (inPoly(x,y,MAP.gulf)) return 'gulf'; if (inPoly(x,y,MAP.pac)) return 'pac'; return 'atl'; }
+function attachTap(host, cb){
+  const svg = host.querySelector('svg');
+  svg.addEventListener('click', ev => {
+    const t = ev.target.closest('[data-r]');
+    if (t){ cb(t.getAttribute('data-r')); return; }
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    cb(seaZone(p.x,p.y));
+  });
+}
+
+/* ---------- small pictures ---------- */
+const ICON = {
+  sun:'<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="6" fill="#EFB23A"/><g stroke="#EFB23A" stroke-width="2.2" stroke-linecap="round"><path d="M13 1.5v3.5M13 21v3.5M1.5 13H5M21 13h3.5M4.8 4.8l2.4 2.4M18.8 18.8l2.4 2.4M4.8 21.2l2.4-2.4M18.8 7.2l2.4-2.4"/></g></svg>',
+  rain:'<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M7 14a5 5 0 0 1 1-9.9A6.5 6.5 0 0 1 20 7a4 4 0 0 1 0 7z" fill="#9DB9D2"/><g stroke="#3A7FB8" stroke-width="2.2" stroke-linecap="round"><path d="M8 17l-1.5 4M13 17l-1.5 4M18 17l-1.5 4"/></g></svg>',
+  storm:'<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><g fill="none" stroke="#5B4B8A" stroke-width="2.6" stroke-linecap="round"><path d="M13 13m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M13 4c-5 0-9 3-9.5 7"/><path d="M13 22c5 0 9-3 9.5-7"/></g></svg>'
+};
+function islandsPicture(placed){
+  const col = bin => CARDS3.filter(c => placed[c.id] === bin).map(c => `<span class="chip">${c.short}</span>`).join('');
+  return `<div class="stage">
+    <svg viewBox="0 0 640 190" width="100%" role="img" aria-label="Two islands side by side: a tall mountain island and a low flat coral cay">
+      <rect width="640" height="190" fill="#EAF4F2" rx="12"/>
+      <rect y="132" width="640" height="58" fill="#CDE7E5"/>
+      <path d="M20,140 C60,130 80,90 115,60 C130,48 140,30 160,22 C178,30 186,52 205,46 C222,40 232,24 250,36 C272,58 290,100 330,138 Z" fill="#E9D8AE" stroke="#8C6B3F" stroke-width="2"/>
+      <path d="M150,26 l10,-6 l10,6 M240,32 l10,-6 l10,8" fill="none" stroke="#8C6B3F" stroke-width="2"/>
+      <path d="M430,136 C450,128 560,128 600,136 Z" fill="#F3E5C2" stroke="#8C6B3F" stroke-width="2"/>
+      <g stroke="#3E7D3A" stroke-width="2" fill="none"><path d="M500,130 q-2,-14 4,-22"/></g>
+      <path d="M504,108 q-10,-2 -16,4 M504,108 q10,-4 16,2 M504,108 q-4,-8 -12,-10 M504,108 q6,-8 14,-8" stroke="#3E7D3A" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <text x="175" y="176" text-anchor="middle" font-family="Lexend,sans-serif" font-size="15" font-weight="600" fill="#1E2B3A">Mountain island (volcanic)</text>
+      <text x="515" y="176" text-anchor="middle" font-family="Lexend,sans-serif" font-size="15" font-weight="600" fill="#1E2B3A">Flat coral cay</text>
+    </svg>
+    <div class="cols c3" style="margin-top:12px">
+      <div class="bin"><h3>Mountain island</h3>${col('A')}</div>
+      <div class="bin"><h3>Both</h3>${col('both')}</div>
+      <div class="bin"><h3>Coral cay</h3>${col('B')}</div>
+    </div></div>`;
+}
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DRY = [11,0,1,2,3];
+function hemisphereSVG(){
+  return `<svg viewBox="0 0 300 150" width="100%" style="max-width:340px;display:block;margin:0 auto" role="img" aria-label="A globe with the Equator across the middle. The Caribbean is above it; Gippsland is below it.">
+    <circle cx="150" cy="75" r="66" fill="#CDE7E5" stroke="#1E2B3A" stroke-width="2"/>
+    <line x1="84" x2="216" y1="75" y2="75" stroke="#D9573A" stroke-width="2.5"/>
+    <text x="226" y="80" font-family="Lexend,sans-serif" font-size="13" fill="#A63E26" font-weight="600">Equator</text>
+    <circle cx="128" cy="52" r="6" fill="#1E2B3A"/><text x="40" y="44" font-family="Lexend,sans-serif" font-size="13" font-weight="600" fill="#1E2B3A">Caribbean</text>
+    <circle cx="190" cy="112" r="6" fill="#1E2B3A"/><text x="200" y="134" font-family="Lexend,sans-serif" font-size="13" font-weight="600" fill="#1E2B3A">Gippsland</text>
+  </svg>`;
+}
+function monthsHTML(opts){
+  const o = opts || {};
+  return `<div class="months" id="monthGrid">${MONTHS.map((m,i)=>{
+    const cls = ['mon'];
+    let ic = '';
+    if (o.showSeasons){ cls.push(DRY.includes(i)?'dry':'wet'); ic = DRY.includes(i)?ICON.sun:ICON.rain; }
+    if (o.showStorm && [7,8,9,10].includes(i)) { cls.push('storm'); }
+    if (o.sel && o.sel.has(i)) cls.push('pick');
+    return `<button class="${cls.join(' ')}" data-m="${i}" ${o.locked?'disabled':''} aria-label="${MONTHS_FULL[i]}"><span>${m}</span><span class="ic">${ic}</span></button>`;
+  }).join('')}</div>
+  <div class="legend">${o.showSeasons?`<span><i class="sw" style="background:#FFF0C9;border-color:#EFB23A"></i>Dry season</span><span><i class="sw" style="background:#DDEBF7;border-color:#9DC0E0"></i>Wet season</span>`:''}${o.showStorm?`<span><i class="sw" style="background:#5B4B8A;border-radius:50%"></i>Hurricane months (August to November)</span>`:''}<span><i class="sw" style="box-shadow:0 0 0 3px #D9573A inset"></i>Your choice</span></div>`;
+}
+function marketPicture(placed){
+  const bins = [['grown','Grown here'],['cooked','Cooked'],['played','Played'],['spoken','Spoken']];
+  return `<div class="stage"><h3 style="margin-bottom:10px">Gran's market notebook</h3><div class="cols c4">${bins.map(([b,t])=>`<div class="bin"><h3>${t}</h3>${CARDS5.filter(c=>placed[c.id]===b).map(c=>`<span class="chip">${c.t}</span>`).join('')}</div>`).join('')}</div></div>`;
+}
+
+/* ---------- the parts ---------- */
+const PARTS = [
+  {n:1, title:'Where in the world?', sub:'The seas, the land around them and the big islands', name:'Part 1: Where in the world?'},
+  {n:2, title:'Following Daniel', sub:"Daniel's journey, and a clue about language", name:'Part 2: Following Daniel'},
+  {n:3, title:'Two kinds of island', sub:'Mountains, coral cays and fresh water', name:'Part 3: Two kinds of island'},
+  {n:4, title:'The Caribbean year', sub:"Dry, wet and stormy months, and whose summer it is", name:'Part 4: The Caribbean year'},
+  {n:5, title:"Gran's market stories", sub:'What grows, what\'s cooked, played and spoken', name:"Part 5: Gran's market stories"}
+];
+
+/* card lists for the sorting parts */
+const CARDS3 = [
+  {id:'mist', t:'Peaks often wrapped in mist', short:'Misty peaks', bin:'A', why:{B:"A cay barely rises above the waves, so there's nothing tall enough for mist to wrap around.", both:"Only one of these islands has peaks. A cay is flat."}, ok:'Mist gathers on the high mountain tops, like the misty peaks Daniel saw behind Seven Mile Beach.'},
+  {id:'rivers', t:'Short rivers and streams rushing down to the sea', short:'Short rushing rivers', bin:'A', why:{B:'A river needs high ground to run down from. A flat cay has none.', both:'A river needs high ground to run down from. Does a flat cay have any?'}, ok:'Rivers start high in the mountains and rush down to the sea. On a small island they don\'t have far to go, so they are short.'},
+  {id:'falls', t:'Waterfalls in a lush, green interior', short:'Waterfalls', bin:'A', why:{B:'For water to fall, it needs a river and a steep drop. A cay is flat all over.', both:'For water to fall, it needs a river and a steep drop. Could that happen on a flat cay?'}, ok:'Where a mountain river tumbles over a steep edge, you get a waterfall.'},
+  {id:'flat', t:'Low, flat land, barely above the waves', short:'Low, flat land', bin:'B', why:{A:'A mountain island rises steeply out of the sea. This describes the other kind.', both:'A mountain island is anything but flat!'}, ok:'A coral cay is a low island of sand and coral, only just above the sea.'},
+  {id:'sand', t:'White sand beaches', short:'White sand beaches', bin:'both', why:{A:'Cays have beaches too. Most of a cay is beach!', B:'Mountain islands have beaches too. Remember Seven Mile Beach in Jamaica, with mountains behind it.'}, ok:'Both. Seven Mile Beach is on mountainous Jamaica, and a cay is mostly beach.'},
+  {id:'reef', t:'Coral reefs offshore', short:'Coral reefs', bin:'both', why:{A:'A cay is made from coral, so reefs are all around it.', B:'Daniel took a boat out to a reef off Jamaica, and Jamaica is a mountain island.'}, ok:'Both. Daniel visited a reef off Jamaica, and a cay is built from coral.'}
+];
+const CARDS5 = [
+  {id:'sugar', t:'Sugarcane', bin:'grown', why:{cooked:'Sugarcane is a crop: a tall grass grown in fields. Sugar is made from it later.', played:'Sugarcane is a plant, not a kind of music.', spoken:'Sugarcane is a plant, not a language.'}, ok:'Sugarcane is one of the crops the lesson names, with bananas and coffee.'},
+  {id:'coffee', t:'Coffee', bin:'grown', why:{cooked:'You brew coffee, but first it has to be grown: the lesson names it as a crop.', played:'Coffee is a crop, not music.', spoken:'Coffee is a crop, not a language.'}, ok:'Coffee is grown on the islands. The lesson lists it with sugarcane and bananas.'},
+  {id:'jerk', t:'Jerk chicken', bin:'cooked', why:{grown:'Chicken is cooked with hot, spicy "jerk" seasoning. It\'s a dish, not a crop.', played:'Jerk chicken is food!', spoken:'Jerk chicken is food, not a language.'}, ok:'Jerk chicken: chicken cooked with a hot, spicy seasoning. It\'s one of the dishes in the lesson.'},
+  {id:'calypso', t:'Calypso', bin:'played', why:{grown:'Calypso sounds as if it could be a fruit, but it\'s a style of music.', cooked:'Calypso sounds as if it could be a dish, but it\'s a style of music.', spoken:'Calypso is something you listen to, but it\'s music, not a language.'}, ok:'Calypso is a style of Caribbean music. The lesson names it with reggae.'},
+  {id:'reggae', t:'Reggae', bin:'played', why:{grown:'Reggae was playing on the radios at the Kingston market. It\'s music.', cooked:'Reggae was playing on the radios at the Kingston market. It\'s music.', spoken:'You hear reggae, but it\'s music, not a language.'}, ok:'Reggae: the song the guitarist sang at the Kingston market.'},
+  {id:'french', t:'French', bin:'spoken', why:{grown:'French is a language. Remember Haiti?', cooked:'French cooking exists, but here it means the language. Remember Haiti?', played:'French is a language. Remember Haiti?'}, ok:'French is spoken in Haiti, along with Creole.'}
+];
+const BIN5 = {grown:'Grown here', cooked:'Cooked', played:'Played', spoken:'Spoken'};
+const BIN3 = {A:'Mountain island', both:'Both', B:'Coral cay'};
+
+/* each question: {id, kind, prompt, concept, ...} */
+const Q = {
+1: [
+  {id:'p1-sea', kind:'tap', concept:'Locating the Caribbean Sea', prompt:'Nothing is labelled yet, so this is all from memory. The Gulf of Mexico and the Atlantic are done for you. Tap the Caribbean Sea.',
+   ok:['carib'], earn:['carib'], right:'Yes. The Caribbean Sea: warm, tropical water.',
+   wrong:{gulf:"That's the Gulf of Mexico. The Caribbean is further south, on the other side of Cuba.", atl:"That's the open Atlantic Ocean, outside the ring of islands. The Caribbean is the sea the islands wrap around.", pac:"That's the Pacific Ocean, on the far side of Central America.", land:"That's land. The Caribbean Sea is water: tap the sea."},
+   hints:['The lesson calls the Caribbean Sea "a warm tropical body of water", with islands on its northern and eastern edges.', 'Look for the big stretch of water south of Cuba and Jamaica.', 'The Caribbean Sea is the water below Cuba, Jamaica and Hispaniola, inside the curve of small islands. It\'s shining on the chart now. Tap it.'], glowSea:'carib'},
+  {id:'p1-west', kind:'tap', concept:'Borders of the Caribbean Sea', prompt:'The lesson says the Caribbean Sea is bordered by land on two sides. Tap the land on its west side.',
+   ok:['cam'], earn:['cam'], right:'Yes. Central America is on the west: the narrow land from Belize down to Panama, joining Mexico to South America.',
+   wrong:{mex:"That's Mexico, part of North America. The land on the Caribbean's west is a little further south.", sam:"That's to the south. West is to the left on this chart.", usa:"That's Florida, far to the north.", isl:"That's an island. The Caribbean's west side is mainland.", sea:"That's sea. Tap the land on the west side."},
+   hints:['West is to the left of the chart. The compass shows north at the top.', 'Look for the narrow strip of land that joins North America to South America.', 'Central America is the narrow land on the left, from Belize down to Panama. It\'s shining now. Tap it.'], glow:['cam']},
+  {id:'p1-south', kind:'tap', concept:'Borders of the Caribbean Sea', prompt:'Now tap the land that borders the Caribbean Sea on its south side.',
+   ok:['sam'], earn:['sam'], right:'Yes. South America is on the south side. The tip you see here is Colombia and Venezuela.',
+   wrong:{cam:'Central America is the west side. South is towards the bottom of the chart.', mex:'Mexico is to the north-west. South is towards the bottom of the chart.', usa:'Florida is far to the north. South is towards the bottom.', isl:"That's an island. Tap the big land to the south.", sea:"That's sea. Tap the land to the south."},
+   hints:['South is towards the bottom of the chart.', 'It\'s a whole continent, and only its northern coast fits on this chart.', 'South America runs along the bottom of the chart. It\'s shining now. Tap it.'], glow:['sam']},
+  {id:'p1-largest', kind:'tap', concept:'Caribbean islands on the map', prompt:'Tap the largest island in the Caribbean.',
+   ok:['cub'], earn:[], right:'Yes. That long island is the largest of them all.', found:['cub'],
+   wrong:{hti:'Hispaniola is big, but there is a longer island further west.', dom:'Hispaniola is big, but there is a longer island further west.', jam:'That island is quite small. Look for a long island stretching across the north of the sea.', pri:'That one is small. Look further west.', bhs:'Those are the Bahamas, a scatter of low islands. Look for one long island.', cym:'Those are tiny. Look for a long island.', isl:'That one is small. Look for a long island stretching across the north.', main:"That's mainland, not an island.", sea:"That's sea. Tap an island."},
+   hints:['The lesson names the largest Caribbean island in "Major Landforms".', 'It is long and thin, like a lizard, lying across the top of the Caribbean Sea.', 'The largest island stretches for about 1,200 km across the north of the Caribbean. It\'s shining now. Tap it.'], glow:['cub']},
+  {id:'p1-name', kind:'choice', concept:'Caribbean islands on the map', prompt:'What is the largest island called?', ring:'cub',
+   opts:[{t:'Cuba', ok:true},{t:'Jamaica', why:'Jamaica is the smaller island just south of it.'},{t:'Hispaniola', why:'Hispaniola is the next island east.'},{t:'Puerto Rico', why:'Puerto Rico is much smaller, further east.'}],
+   earn:['cub'], right:'Cuba. Daniel\'s boat is heading there tomorrow.',
+   hints:['In the story, Daniel and Gran plan to sail there next.', 'It\'s the island with "colourful streets and old Spanish plazas".', 'The largest Caribbean island is Cuba.']},
+  {id:'p1-jam', kind:'tap', concept:'Caribbean islands on the map', prompt:"Tap Jamaica, where Daniel's story begins.",
+   ok:['jam'], earn:['jam'], right:'Jamaica. Its capital, Kingston, is on the south coast.',
+   wrong:{cub:'Cuba is the big one. Jamaica is smaller.', hti:"That's Hispaniola, further east.", dom:"That's Hispaniola, further east.", pri:"That's Puerto Rico, far to the east.", cym:'Those are the tiny Cayman Islands. Jamaica is bigger, a little further east.', isl:"That's one of the small islands. Jamaica is one of the bigger ones.", main:"That's mainland. Jamaica is an island.", sea:"That's sea. Tap an island."},
+   hints:['Jamaica is one of the big islands, the Greater Antilles.', 'It sits just south of the eastern end of Cuba.', 'Jamaica is the oval island south of Cuba\'s eastern end. It\'s shining now. Tap it.'], glow:['jam']},
+  {id:'p1-hisp', kind:'tap', concept:'Caribbean islands on the map', prompt:'Tap Hispaniola.',
+   ok:['hti','dom'], earn:['hisp'], right:'Hispaniola: the second-largest island, between Cuba and Puerto Rico. There\'s something unusual about it, which you\'ll find out when you follow Daniel.',
+   wrong:{cub:"That's Cuba. Hispaniola is the next big island east.", jam:"That's Jamaica. Hispaniola is east of it.", pri:"That's Puerto Rico, a smaller island further east.", isl:'That one is too small. Hispaniola is one of the big four.', bhs:'Those are the Bahamas. Look further south.', main:"That's mainland.", sea:"That's sea. Tap an island."},
+   hints:['Hispaniola is one of the four big islands, the Greater Antilles.', 'It lies east of Cuba and Jamaica, and west of Puerto Rico.', 'Hispaniola is the large island between Cuba and Puerto Rico. It\'s shining now. Tap it.'], glow:['hti','dom']},
+  {id:'p1-pri', kind:'tap', concept:'Caribbean islands on the map', prompt:'Tap Puerto Rico, the smallest of the four big islands.',
+   ok:['pri'], earn:['pri'], right:'Puerto Rico. With Cuba, Jamaica and Hispaniola, it makes the four Greater Antilles.',
+   wrong:{jam:"That's Jamaica, further west.", cub:"That's Cuba, the largest.", hti:"That's Hispaniola. Puerto Rico is the next island east.", dom:"That's Hispaniola. Puerto Rico is the next island east.", isl:'That one is even smaller. Puerto Rico is just east of Hispaniola.', main:"That's mainland.", sea:"That's sea. Tap an island."},
+   hints:['Puerto Rico is the last of the four big islands as you go east.', 'It\'s a small rectangle just east of Hispaniola.', 'Puerto Rico is just east of Hispaniola. It\'s shining now. Tap it.'], glow:['pri']},
+  {id:'p1-s-brb', kind:'choice', concept:'Greater and Lesser Antilles', prompt:'Gran\'s book says the islands come in two groups. Is the ringed island, Barbados, in the Greater Antilles or the Lesser Antilles?', ring:'brb',
+   opts:[{t:'Greater Antilles', why:'The Greater Antilles are the four big islands you\'ve just tapped. Barbados is tiny, out at the eastern end of the curve of small islands.'},{t:'Lesser Antilles', ok:true}],
+   right:'Lesser Antilles. Barbados is one of the small ones, right out on the eastern edge.',
+   hints:['"Greater" means bigger, "lesser" means smaller.', 'Is Barbados one of the four big islands you tapped?', 'Barbados is small and far east, so it belongs to the Lesser Antilles.']},
+  {id:'p1-s-pri', kind:'choice', concept:'Greater and Lesser Antilles', prompt:'And Puerto Rico?', ring:'pri',
+   opts:[{t:'Greater Antilles', ok:true},{t:'Lesser Antilles', why:'Puerto Rico is the smallest of the big four, but it\'s still one of them: Cuba, Jamaica, Hispaniola and Puerto Rico.'}],
+   right:'Greater Antilles: the smallest of the four big islands.',
+   hints:['Think back to the four islands you tapped.', 'The lesson lists the Greater Antilles: Cuba, Jamaica, Hispaniola and Puerto Rico.', 'Puerto Rico is one of the four Greater Antilles.']},
+  {id:'p1-s-atg', kind:'choice', concept:'Greater and Lesser Antilles', prompt:'And Antigua, the lesson\'s other example of a small island?', ring:'atg',
+   opts:[{t:'Greater Antilles', why:'Antigua is tiny. The lesson names it with Barbados as a much smaller island.'},{t:'Lesser Antilles', ok:true}],
+   earn:['groups'], right:'Lesser Antilles. Look at the chart: the small islands curve away to the south-east, all the way down towards South America.',
+   hints:['The lesson names Antigua with Barbados.', 'Barbados and Antigua are both "much smaller" islands.', 'Antigua is in the Lesser Antilles, in the curve of small islands.']}
+],
+2: [
+  {id:'p2-kingston', kind:'tap', concept:"Following the lesson's journey", prompt:'Daniel\'s story begins at a busy market in Kingston, the capital, where mangoes, papayas and coconuts are piled high. Tap the island he\'s on.',
+   ok:['jam'], earn:['kingston'], right:'Jamaica. Kingston is on its south coast.',
+   wrong:{cub:'Cuba comes later: the boat goes there tomorrow.', hti:'Daniel\'s cousin lives on that island, but the story starts somewhere else.', dom:'Daniel\'s cousin lives on that island, but the story starts somewhere else.', isl:'Not that one.', main:"That's mainland. Daniel is on an island.", sea:"That's sea. Tap an island.", pri:'Not that one: further west.'},
+   hints:['Kingston is the capital of Jamaica.', 'Jamaica is the island just south of Cuba\'s eastern end.', 'Kingston is in Jamaica. It\'s shining now. Tap it.'], glow:['jam']},
+  {id:'p2-apple', kind:'choice', concept:'Tropical climate and crops', prompt:'One of these would be hard to find growing on the islands. Which one, and why?',
+   opts:[{t:'Mango', why:'Mangoes love heat. Daniel smelt them at the Kingston market.'},{t:'Papaya', why:'Papayas were piled high on the market stalls. They need warmth all year.'},{t:'Coconut', why:'Coconut palms grow all over the islands. The lesson names them.'},{t:'Apple', ok:true}],
+   right:'Apples. Apple trees need a cold winter to fruit well, and the Caribbean is warm all year round. Mangoes, papayas and coconuts need warmth.',
+   hints:['The lesson says the Caribbean has warm temperatures all year.', 'Three of these need heat. One needs a cold winter.', 'Apples need a cold winter, so they are hard to grow in the tropics.']},
+  {id:'p2-cousin', kind:'tap', concept:'Countries that share an island', prompt:'Daniel\'s cousin lives in the Dominican Republic. Tap where the cousin lives.',
+   ok:['dom'], earn:['countries'], right:'Yes. Here\'s the unusual thing about Hispaniola: it\'s one island shared by two countries. The Dominican Republic is the eastern part, and Haiti is the western part.',
+   wrong:{hti:"Close: that's the right island, but the wrong country! Hispaniola is shared by two countries. That part is Haiti. The Dominican Republic is the other part.", cub:'Not Cuba. The Dominican Republic is on Hispaniola.', jam:'Not Jamaica. The Dominican Republic is on Hispaniola.', pri:'Close by, but the Dominican Republic is on Hispaniola, just west of here.', isl:'Not that one. The Dominican Republic is on Hispaniola.', main:"That's mainland.", sea:"That's sea."},
+   hints:['The Dominican Republic is on Hispaniola.', 'Hispaniola is shared by two countries. The Dominican Republic is the eastern part, and the bigger one.', 'The Dominican Republic is the eastern part of Hispaniola. It\'s shining now. Tap it.'], glow:['dom']},
+  {id:'p2-north', kind:'choice', concept:'Compass directions', prompt:'Tomorrow the boat sails from Jamaica to Cuba. Which way will it go?',
+   opts:[{t:'North', ok:true},{t:'South', why:'South of Jamaica is open sea, then South America. Cuba is the other way.'},{t:'East', why:'East of Jamaica is Hispaniola. Check the compass on the chart.'},{t:'West', why:'West of Jamaica is open sea, then Central America. Check the compass.'}],
+   earn:['route'], right:'North. Cuba is just north of Jamaica, only about 150 km across the water.',
+   hints:['Use the compass on the chart.', 'Is Cuba above or below Jamaica on the chart?', 'Cuba is above Jamaica, and north is at the top, so the boat sails north.']},
+  {id:'p2-spanish', kind:'choice', concept:'Inferring from evidence', prompt:'In Cuba, "colourful streets and old Spanish plazas" are waiting. From that clue, which language do you predict Daniel will hear in Cuba?',
+   opts:[{t:'English', why:'English is what Daniel hears in Jamaica. Look at the clue again: whose plazas?'},{t:'Spanish', ok:true},{t:'French', why:'French is spoken in Haiti. Look at the clue again: whose plazas?'},{t:'Dutch', why:'Dutch is spoken on a few tiny islands, but look at the clue: whose plazas?'}],
+   right:'Spanish. Spanish settlers built those old plazas long ago, and Spanish is still Cuba\'s language. It\'s spoken in the Dominican Republic too. In Jamaica, Daniel hears English, and in Haiti, French and Creole.',
+   hints:['Look closely at the clue. What kind of plazas are they?', 'Whoever built a town\'s old buildings often brought their language too.', 'Spanish plazas were built by Spanish settlers, so Cuba speaks Spanish.']},
+  {id:'p2-why', kind:'choice', concept:'Why the islands differ', prompt:'So why don\'t all the islands speak the same language? Pick the best explanation.',
+   opts:[{t:'Bigger islands speak Spanish, and smaller ones speak English.', why:'Test it with Jamaica. It\'s one of the big Greater Antilles, but Daniel hears English there. So size can\'t be the reason.'},{t:'Settlers from different countries in Europe took over different islands, and their languages stayed.', ok:true},{t:'The sea between the islands made everyone forget their old words.', why:'Daniel\'s family sails between islands easily. The sea doesn\'t make people forget.'}],
+   right:'Yes. Settlers from Spain, Britain, France and other countries took over different islands, and their languages stayed. Creole languages grew up from a mix of African and European languages.',
+   hints:['Think about the Spanish plazas clue. Who built them?', 'Test each answer against what you know. Jamaica is big. What does Daniel hear there?', 'Different European countries settled different islands, and their languages stayed.']}
+],
+3: CARDS3.map(c => ({id:'p3-'+c.id, kind:'sort', concept:'Island types: volcanic and coral cay', card:c, bins:BIN3, prompt:'The lesson says the islands range from flat coral cays to mountainous volcanic peaks. Where would you find this?',
+   hints:['Think about what a mountain island has that a flat island doesn\'t.', c.bin==='both' ? 'Some things can be found on both kinds of island. Think of Daniel\'s day in Jamaica.' : 'Does this need high ground, or not?', 'It goes under "'+BIN3[c.bin]+'". '+c.ok]})).concat([
+  {id:'p3-water', kind:'choice', concept:'Fresh water sources', prompt:'A flat coral cay has no mountains, so it has no rivers. Where do people on a cay get fresh water?',
+   opts:[{t:'From rivers that flow down from the mountains', why:'There are no mountains on a cay to start a river.'},{t:'Straight from the sea', why:'Sea water is salty, and drinking it makes you thirstier.'},{t:'From rain, and from water held underground in rock and sand', ok:true},{t:'From melting snow', why:'It\'s warm all year in the Caribbean. There\'s no snow.'}],
+   right:'Rain, and aquifers: layers of rock or sand underground that soak up rainwater and hold it, a bit like a sponge. The lesson says the islands get fresh water from rainfall and underground aquifers.',
+   hints:['Look at the lesson\'s "Rivers & Water Sources" section.', 'The lesson names two sources. One falls from the sky.', 'Rain, and water held underground in aquifers.']},
+  {id:'p3-waterfall', kind:'choice', concept:'Island types: cause and effect', prompt:'Daniel\'s cousin wants to swim under a waterfall. Which island should they choose, and why?',
+   opts:[{t:'The coral cay, because it has water all around it.', why:'Sea all around isn\'t a river. A waterfall needs a river and a steep drop.'},{t:'The mountain island, because rivers run down from its peaks and drop over steep edges.', ok:true},{t:'Either one, because all tropical islands have waterfalls.', why:'A flat cay has no high ground for water to fall from.'}],
+   right:'The mountain island. Rivers start high up and tumble down to the sea, and where a river drops over a steep edge, you get a waterfall.',
+   hints:['What does a waterfall need?', 'A waterfall needs a river, and a river needs high ground to run down from.', 'Only the mountain island has the high ground that rivers and waterfalls need.']}
+]),
+4: [
+  {id:'p4-dry', kind:'months', concept:'Caribbean wet and dry seasons', prompt:'Mark the dry season. Tap each dry month, then tap Check. The months you leave will be the wet season.',
+   hints:['The lesson gives the dry season as a run of months that goes over New Year.', 'It starts in December and lasts five months.', 'Dry is December, January, February, March and April. Wet is the other seven months, May to November. Tap those five, then Check.']},
+  {id:'p4-hemi', kind:'choice', concept:'Northern and Southern Hemisphere seasons', prompt:'Gran says hurricanes may come in "late summer and autumn". But careful: whose summer? The Caribbean is north of the Equator. When is summer there?',
+   opts:[{t:'December to February, like Gippsland', why:'That\'s summer in the Southern Hemisphere, where we live. North of the Equator, the seasons are the other way round.'},{t:'March to May', why:'That\'s spring in the north, and autumn for us.'},{t:'June to August', ok:true},{t:'There\'s no summer in the tropics', why:'It\'s warm all year, but the northern summer still falls in the middle of the year.'}],
+   right:'June to August. Our winter is their summer. So their late summer is August, and their autumn is September to November.',
+   hints:['Look at the globe. Which half is the Caribbean in?', 'In the Northern Hemisphere, the seasons are the opposite of ours.', 'Our summer is December to February, so the north\'s summer is June to August.']},
+  {id:'p4-storm', kind:'months', concept:'Hurricane season', prompt:'Now mark the hurricane months: late summer and autumn, north of the Equator. Tap them, then Check.',
+   hints:['Late summer is the last month of their summer. Autumn is the three months after it.', 'Their summer is June to August, so late summer is August.', 'Late summer is August. Autumn is September, October and November. Tap those four, then Check.']},
+  {id:'p4-inside', kind:'choice', concept:'Hurricane season', prompt:'Look at your year. Where do the hurricane months fall?',
+   opts:[{t:'Inside the wet season', ok:true},{t:'Inside the dry season', why:'Look again at the colours behind the purple dots.'},{t:'Half in each', why:'Look again: are any of the purple dots on a dry month?'}],
+   right:'Inside the wet season. The stormiest months are part of the rainy season.',
+   hints:['Find the purple dots.', 'Are the dotted months blue (wet) or yellow (dry)?', 'All the hurricane months are blue, so they\'re inside the wet season.']},
+  {id:'p4-trip', kind:'month1', concept:'Caribbean wet and dry seasons', prompt:'Daniel\'s cousin wants a dry, calm trip out to the reef. Tap the month you would choose, then tap Check.',
+   hints:['A dry, calm month: not wet, and certainly not stormy.', 'Choose a yellow month.', 'Any month from December to April is dry and well away from the hurricane months.']}
+],
+5: CARDS5.map(c => ({id:'p5-'+c.id, kind:'sort', concept:'Caribbean people and culture', card:c, bins:BIN5, prompt:'Gran says the islands are full of things from many peoples. Sort what Daniel came across.',
+   hints:['Is it something you grow, eat, hear or speak?', 'Think of the lesson\'s "People & Settlement" section.', 'It goes under "'+BIN5[c.bin]+'". '+c.ok]})).concat([
+  {id:'p5-blend', kind:'pick', need:3, concept:'Caribbean people and culture', prompt:'Gran says the music, food and festivals come from a blend of peoples. Which three? Tap three, then Check.',
+   opts:[{t:'African', ok:true},{t:'Aztec', why:'The Aztecs lived in Mexico, not on the islands.'},{t:'European', ok:true},{t:'Roman', why:'The Romans never reached the Americas.'},{t:'Indigenous, the islands\' first peoples', ok:true}],
+   right:'African, European and Indigenous. That blend is why the islands have reggae and calypso, jerk chicken and rice and peas.',
+   hints:['The lesson names three peoples in Gran\'s story.', 'One group was there first. Two came from across the Atlantic Ocean.', 'African, European and Indigenous.']},
+  {id:'p5-tourism', kind:'pick', need:2, concept:'Why tourism', prompt:'Tourism is the main way the islands earn a living. Pick the two best reasons visitors come. Tap two, then Check.',
+   opts:[{t:'It\'s warm all year', ok:true},{t:'Snow on the mountain peaks', why:'The peaks are wrapped in mist, not snow. It\'s warm all year.'},{t:'White beaches and coral reefs full of fish', ok:true},{t:'Hurricanes in September', why:'Hurricanes keep visitors away!'},{t:'Music and festivals', ok:true}],
+   right:'Good reasons. Warm weather, beaches and reefs, and lively music and festivals all bring visitors. That\'s why the islands earn so much from tourism.',
+   hints:['Think about what makes a good holiday.', 'Two of these would put visitors off, not bring them.', 'Any two of these: warm all year, beaches and reefs, music and festivals.']}
+])
+};
+
+const ITEM = {'p1-sea':'Tap the Caribbean Sea','p1-west':'Land on the west (Central America)','p1-south':'Land on the south (South America)','p1-largest':'Tap the largest island','p1-name':'Name the largest island (Cuba)','p1-jam':'Tap Jamaica','p1-hisp':'Tap Hispaniola','p1-pri':'Tap Puerto Rico','p1-s-brb':'Greater or Lesser: Barbados','p1-s-pri':'Greater or Lesser: Puerto Rico','p1-s-atg':'Greater or Lesser: Antigua','p2-kingston':'Kingston is in Jamaica','p2-apple':'Which fruit would struggle (apple)','p2-cousin':'Tap the Dominican Republic','p2-north':'Jamaica to Cuba: which way','p2-spanish':'Spanish plazas: predict the language','p2-why':'Why the languages differ','p3-water':'Fresh water on a coral cay','p3-waterfall':'Waterfall: which island and why','p4-dry':'Mark the dry season','p4-hemi':'When is summer in the north','p4-storm':'Mark the hurricane months','p4-inside':'Hurricanes fall in the wet season','p4-trip':'Choose a dry month for the reef','p5-blend':'The three peoples in the blend','p5-tourism':'Why visitors come'};
+function itemName(q){ if (q.kind==='sort') return (cur.part===3?'Island type: ':'Market: ')+q.card.t; return ITEM[q.id] || q.id; }
+
+/* ---------- hub ---------- */
+function pips(host){ host.innerHTML=''; for (const p of PARTS){ const d = el('span',{class:'pip'+(S.done[p.n]?' on':''),title:p.title}); host.appendChild(d); } }
+function renderHub(){
+  $('#hubChart').innerHTML = chartSVG();
+  pips($('#pipsHub'));
+  const list = $('#partList'); list.innerHTML = '';
+  const n = Object.keys(S.done).length;
+  $('#hubNote').textContent = !S.done[1] ? 'Start with Part 1. It lays out the chart for the rest.' : (n < 5 ? 'Choose any part. The ticks show what you\'ve done.' : 'All five parts are done. Time to write back to Daniel\'s cousin.');
+  for (const p of PARTS){
+    const locked = p.n > 1 && !S.done[1];
+    const b = el('button',{class:'part-tile'+(S.done[p.n]?' done':'')});
+    if (locked) b.disabled = true;
+    const num = el('span',{class:'num'}, String(p.n));
+    const txt = el('span'); txt.appendChild(el('span',{class:'t'},p.title)); txt.appendChild(el('br')); txt.appendChild(el('span',{class:'s'},p.sub));
+    const st = el('span',{class:'st'}, S.done[p.n] ? 'Done ✓' : (S.pos[p.n] ? 'Carry on' : (locked ? 'After Part 1' : '')));
+    b.append(num, txt, st);
+    b.addEventListener('click', () => startPart(p.n));
+    list.appendChild(b);
+  }
+  const all = n === 5;
+  const lb = el('button',{class:'part-tile letter'+(S.finished?' done':'')});
+  if (!all) lb.disabled = true;
+  const txt = el('span'); txt.appendChild(el('span',{class:'t'},'Write back to the cousin')); txt.appendChild(el('br')); txt.appendChild(el('span',{class:'s'}, all ? 'Answer the letter using what you\'ve found out' : 'Opens when all five parts are done'));
+  lb.append(el('span',{class:'num'},'✉'), txt, el('span',{class:'st'}, S.finished ? 'Sent ✓' : ''));
+  lb.addEventListener('click', openLetter);
+  list.appendChild(lb);
+  show('sHub');
+}
+
+/* ---------- playing a part ---------- */
+let cur = null; // {part, i, q, rec, help, missed, settled}
+function startPart(n){
+  if (S.done[n] && (S.pos[n]||0) >= Q[n].length) { S.pos[n] = 0; if (n===3) S.placed3 = {}; if (n===5) S.placed5 = {}; if (n===4){ S.dry=false; S.storm=false; S.month=null; } save(); }
+  GR.start(GAME); GR.part(PARTS[n-1].name);
+  $('#playTitle').textContent = PARTS[n-1].title;
+  pips($('#pipsPlay'));
+  cur = {part:n, i:S.pos[n]||0};
+  show('sPlay');
+  nextQ();
+}
+function nextQ(){
+  const list = Q[cur.part];
+  if (cur.i >= list.length) return partComplete();
+  const q = list[cur.i];
+  cur.q = q; cur.help = 0; cur.missed = 0; cur.settled = false; cur.sel = new Set();
+  cur.rec = GR.ask({item:itemName(q), concept:q.concept, area:'HSS'});
+  renderStage(); renderNotebook();
+}
+function renderStage(extra){
+  const q = cur.q, st = $('#stage');
+  extra = extra || {};
+  if (cur.part <= 2){
+    const isTap = q.kind === 'tap' && !cur.settled;
+    const glow = (q.kind==='tap' && cur.help>=3 && !cur.settled) ? q.glow : null;
+    const glowSea = (q.kind==='tap' && cur.help>=3 && !cur.settled) ? q.glowSea : null;
+    st.innerHTML = `<div class="chart-card">${chartSVG({tap:isTap, glow:glow, glowSea:glowSea, ring:q.ring, found: (cur.settled && q.found) ? q.found : null})}</div><div class="chart-foot"><span>${isTap?'Tap the chart to answer.':'&nbsp;'}</span><span>Map outlines: Natural Earth</span></div>`;
+    if (isTap) attachTap(st, onTap);
+  } else if (cur.part === 3){
+    st.innerHTML = islandsPicture(S.placed3);
+  } else if (cur.part === 4){
+    let h = '<div class="stage">';
+    if (q.id === 'p4-hemi') h += hemisphereSVG();
+    h += '<h3 style="margin-top:6px">The Caribbean year</h3>';
+    const sel = cur.sel;
+    const showSeasons = S.dry || (q.id==='p4-dry' && cur.settled);
+    const showStorm = S.storm || (q.id==='p4-storm' && cur.settled);
+    h += monthsHTML({showSeasons, showStorm, sel: (q.kind==='months'||q.kind==='month1') ? sel : (q.id==='p4-trip'&&S.month!=null? new Set([S.month]) : null), locked: !(q.kind==='months'||q.kind==='month1') || cur.settled});
+    h += '</div>';
+    st.innerHTML = h;
+    if ((q.kind==='months'||q.kind==='month1') && !cur.settled){
+      for (const b of st.querySelectorAll('[data-m]')) b.addEventListener('click', () => {
+        const m = +b.getAttribute('data-m');
+        if (q.kind==='month1'){ cur.sel = new Set([m]); }
+        else { if (cur.sel.has(m)) cur.sel.delete(m); else cur.sel.add(m); }
+        clearFeedback(); renderStage(); updateCheck();
+      });
+    }
+  } else if (cur.part === 5){
+    st.innerHTML = marketPicture(S.placed5);
+  }
+}
+function clearFeedback(){ const f = $('#fb'); if (f && !cur.settled) f.remove(); }
+function updateCheck(){ const b = $('#btnCheck'); if (!b) return; const q = cur.q; b.disabled = q.kind==='pick' ? cur.sel.size !== q.need : (q.kind==='month1' ? cur.sel.size!==1 : cur.sel.size===0); }
+function renderNotebook(){
+  const q = cur.q, nb = $('#notebook'), list = Q[cur.part];
+  nb.innerHTML = '';
+  nb.appendChild(el('p',{class:'qcount'}, PARTS[cur.part-1].title+' · '+(cur.i+1)+' of '+list.length));
+  if (q.kind === 'sort'){
+    nb.appendChild(el('p',{class:'prompt'}, q.prompt));
+    nb.appendChild(el('div',{class:'card-to-sort'}, q.card.t));
+    const opts = el('div',{class:'opts',style:'margin-top:12px'});
+    for (const [k,t] of Object.entries(q.bins)){
+      const b = el('button',{class:'opt','data-k':k}, t);
+      b.addEventListener('click', () => answerSort(k, b));
+      opts.appendChild(b);
+    }
+    nb.appendChild(opts);
+  } else {
+    nb.appendChild(el('p',{class:'prompt'}, q.prompt));
+    if (q.kind === 'tap') nb.appendChild(el('p',{class:'tapnote'}, 'Tap your answer on the chart.'));
+    if (q.kind === 'choice' || q.kind === 'pick'){
+      const opts = el('div',{class:'opts'});
+      q.opts.forEach((o,i) => {
+        const b = el('button',{class:'opt','data-i':i}, o.t);
+        b.addEventListener('click', () => q.kind==='choice' ? answerChoice(i, b) : togglePick(i, b));
+        opts.appendChild(b);
+      });
+      nb.appendChild(opts);
+    }
+    if (q.kind === 'pick' || q.kind === 'months' || q.kind === 'month1'){
+      const row = el('div',{class:'row',style:'margin-top:12px'});
+      const c = el('button',{class:'btn',id:'btnCheck'}, 'Check');
+      c.disabled = true;
+      c.addEventListener('click', () => q.kind==='pick' ? checkPick() : (q.kind==='month1' ? checkTrip() : checkMonths()));
+      row.appendChild(c); nb.appendChild(row);
+      if (q.kind==='months' || q.kind==='month1') nb.appendChild(el('p',{class:'tapnote',style:'margin-top:8px'}, 'Tap the months in the calendar.'));
+    }
+  }
+  const hb = el('button',{class:'helpbtn',id:'btnHelp'}, 'Help, please');
+  hb.addEventListener('click', giveHelp);
+  nb.appendChild(hb);
+}
+function giveHelp(){
+  const q = cur.q; if (cur.settled || cur.help >= 3) return;
+  cur.help++; cur.rec.hint();
+  let box = $('#helpBox');
+  if (!box){ box = el('div',{class:'helpbox',id:'helpBox'}); $('#btnHelp').before(box); }
+  box.innerHTML = '';
+  box.appendChild(el('span',{class:'h'}, cur.help===1?'A reminder':(cur.help===2?'A hint':'Here\'s how')));
+  box.appendChild(el('span',null, q.hints[cur.help-1]));
+  const hb = $('#btnHelp');
+  hb.classList.remove('nudge');
+  if (cur.help >= 3) hb.remove(); else hb.textContent = 'More help';
+  if (cur.help === 3 && q.kind === 'tap') renderStage();
+  if (cur.help === 3 && q.kind==='choice'){
+    for (const b of document.querySelectorAll('#notebook .opt')){ const o = q.opts[+b.getAttribute('data-i')]; if (o && o.ok) b.classList.add('sel'); }
+  }
+}
+function feedback(ok, head, text){
+  let f = $('#fb'); if (f) f.remove();
+  f = el('div',{class:'fb '+(ok?'ok':'bad'),id:'fb'});
+  f.appendChild(el('span',{class:'h'}, head)); f.appendChild(el('span',null,text));
+  const hb = $('#btnHelp'), hbox = $('#helpBox');
+  const anchor = hbox || hb;
+  if (anchor) anchor.before(f); else $('#notebook').appendChild(f);
+  return f;
+}
+function miss(given, text){
+  cur.missed++; cur.rec.miss(given);
+  feedback(false, cur.missed>1 ? 'Not yet' : 'Not quite', text + (cur.missed>=2 && cur.help<3 ? ' Try again, or ask for help.' : ' Try again.'));
+  const hb = $('#btnHelp'); if (hb) hb.classList.add('nudge');
+}
+function settle(text){
+  cur.settled = true; cur.rec.done();
+  const q = cur.q;
+  if (q.earn) for (const k of q.earn) if (!S.labels.includes(k)) S.labels.push(k);
+  cur.i++; S.pos[cur.part] = cur.i; save();
+  renderStage();
+  const hb = $('#btnHelp'); if (hb) hb.remove();
+  const f = feedback(true, cur.missed===0 && cur.help===0 ? 'Yes!' : 'That\'s it.', text);
+  const row = el('div',{class:'row',style:'margin-top:12px'});
+  const nx = el('button',{class:'btn coral',id:'btnNext'}, cur.i >= Q[cur.part].length ? 'Finish this part' : 'Next');
+  nx.addEventListener('click', nextQ);
+  row.appendChild(nx); f.after(row);
+  for (const b of document.querySelectorAll('#notebook .opt')) b.disabled = true;
+  const c = $('#btnCheck'); if (c) c.remove();
+  nx.focus({preventScroll:true});
+}
+function onTap(r){
+  const q = cur.q; if (cur.settled) return;
+  if (q.ok.includes(r)) return settle(q.right);
+  const isl = ['lesser','brb','atg','dma','grd','tto','abc'].includes(r);
+  const main = MAINL.includes(r), sea = ['carib','gulf','atl','pac'].includes(r);
+  let t = q.wrong[r] || (isl && q.wrong.isl) || (main && q.wrong.main) || (sea && q.wrong.sea) || ((main||ISL.includes(r)) && q.wrong.land) || null;
+  if (!t) t = 'That\'s '+NAMES[r]+'.';
+  miss(NAMES[r] ? r : '?', t);
+}
+function answerChoice(i, b){
+  const q = cur.q, o = q.opts[i]; if (cur.settled) return;
+  if (o.ok){ b.classList.add('right'); return settle(q.right); }
+  b.classList.add('wrong'); b.disabled = true;
+  miss(o.t, o.why);
+}
+function togglePick(i, b){
+  if (cur.settled) return;
+  if (cur.sel.has(i)){ cur.sel.delete(i); b.classList.remove('sel'); }
+  else { if (cur.sel.size >= cur.q.need) return; cur.sel.add(i); b.classList.add('sel'); }
+  for (const x of document.querySelectorAll('#notebook .opt.wrong')) x.classList.remove('wrong');
+  clearFeedback(); updateCheck();
+}
+function checkPick(){
+  const q = cur.q, chosen = [...cur.sel].map(i => q.opts[i]);
+  const bad = chosen.filter(o => !o.ok);
+  if (!bad.length){
+    for (const b of document.querySelectorAll('#notebook .opt')) if (cur.sel.has(+b.getAttribute('data-i'))) b.classList.add('right');
+    return settle(q.right);
+  }
+  for (const b of document.querySelectorAll('#notebook .opt')){ const o = q.opts[+b.getAttribute('data-i')]; if (cur.sel.has(+b.getAttribute('data-i')) && !o.ok) b.classList.add('wrong'); }
+  miss(chosen.map(o=>o.t).join(' + '), bad.map(o=>o.why).join(' '));
+}
+function answerSort(k, b){
+  const q = cur.q, c = q.card; if (cur.settled) return;
+  if (k === c.bin){
+    b.classList.add('right');
+    if (cur.part===3) S.placed3[c.id] = k; else S.placed5[c.id] = k;
+    return settle(c.ok);
+  }
+  b.classList.add('wrong'); b.disabled = true;
+  miss(q.bins[k], c.why[k]);
+}
+function monthList(arr){ const a = [...arr].sort((x,y)=>x-y).map(i=>MONTHS_FULL[i]); return a.length<=1 ? a.join('') : a.slice(0,-1).join(', ')+' and '+a[a.length-1]; }
+function checkMonths(){
+  const q = cur.q, sel = cur.sel;
+  if (q.id === 'p4-dry'){
+    const extra = [...sel].filter(m => !DRY.includes(m)), missing = DRY.filter(m => !sel.has(m));
+    if (!extra.length && !missing.length){ S.dry = true; return settle('Yes. The dry season runs from December to April, and the wet season from May to November. And it stays warm all year.'); }
+    let t = '';
+    if (extra.length) t += monthList(extra)+(extra.length>1?' are':' is')+' in the wet season. ';
+    if (missing.length) t += 'You\'re missing '+(missing.length===1?'one dry month':missing.length+' dry months')+'. ';
+    return miss([...sel].sort((a,b)=>a-b).map(i=>MONTHS[i]).join(' '), t.trim());
+  }
+  if (q.id === 'p4-storm'){
+    const need = [7,8,9], allow = [6,7,8,9,10];
+    const out = [...sel].filter(m => !allow.includes(m)), missing = need.filter(m => !sel.has(m));
+    if (!out.length && !missing.length){
+      S.storm = true;
+      const hasNov = sel.has(10);
+      return settle((hasNov ? 'Yes: late summer and autumn up north is August to November.' : 'Yes. Late summer and autumn up north is August to November, so November counts as well.')+' The real hurricane season officially runs from June to November, and the storms are most likely from August to October. September is usually the busiest month.');
+    }
+    let t = '';
+    const south = out.filter(m => [11,0,1,2].includes(m));
+    if (south.length) t += monthList(south)+' would be late summer for us, south of the Equator. Remember, the Caribbean\'s seasons are the other way round. ';
+    const other = out.filter(m => !south.includes(m));
+    if (other.length) t += monthList(other)+(other.length>1?' are':' is')+' not late summer or autumn in the north. ';
+    if (missing.length) t += 'You\'re missing '+(missing.length===1?'a month':missing.length+' months')+' of late summer or autumn. ';
+    return miss([...sel].sort((a,b)=>a-b).map(i=>MONTHS[i]).join(' '), t.trim());
+  }
+}
+function checkTrip(){
+  const m = [...cur.sel][0];
+  if (DRY.includes(m)){ S.month = m; return settle(MONTHS_FULL[m]+' is in the dry season, well away from the hurricane months. Good choice. You might use it in your letter.'); }
+  if ([7,8,9,10].includes(m)) return miss(MONTHS[m], MONTHS_FULL[m]+' is wet, and it\'s hurricane time. Not calm at all!');
+  return miss(MONTHS[m], MONTHS_FULL[m]+' is in the wet season.');
+}
+const PART_DONE_TEXT = {
+  1:'The chart now shows the Caribbean Sea, the land around it and the four Greater Antilles.',
+  2:'Daniel\'s route is on the chart, and you\'ve found one reason the islands differ: who settled them.',
+  3:'You\'ve found another reason: how each island was made.',
+  4:'You\'ve found what the islands share: the same warm year, with dry, wet and stormy months.',
+  5:'You\'ve sorted Gran\'s market notebook and found why visitors come.'
+};
+function partComplete(){
+  const n = cur.part;
+  S.done[n] = true; save();
+  GR.partDone(PARTS[n-1].name);
+  pips($('#pipsPlay'));
+  const nb = $('#notebook'); nb.innerHTML = '';
+  nb.appendChild(el('p',{class:'eyebrow'}, 'Part '+n+' done'));
+  nb.appendChild(el('h2',{style:'margin:6px 0 10px'}, PARTS[n-1].title));
+  nb.appendChild(el('p',null, PART_DONE_TEXT[n]));
+  const left = PARTS.filter(p => !S.done[p.n]).length;
+  nb.appendChild(el('p',{class:'muted',style:'margin-top:10px'}, left ? (left===1?'One part to go. ':left+' parts to go. ')+'You can stop here: the chart is saved.' : 'All five parts are done. Next, write back to Daniel\'s cousin.'));
+  const row = el('div',{class:'row',style:'margin-top:14px'});
+  const b = el('button',{class:'btn coral'}, left ? 'Back to the chart' : 'Write the letter');
+  b.addEventListener('click', left ? renderHub : openLetter);
+  row.appendChild(b); nb.appendChild(row);
+}
+
+/* ---------- letter ---------- */
+function words(s){ return (s.trim().match(/\S+/g)||[]).length; }
+function openLetter(){
+  if (Object.keys(S.done).length < 5) return renderHub();
+  GR.start(GAME); GR.part('Letter');
+  const ul = $('#ideaList'); ul.innerHTML = '';
+  const ideas = [
+    S.month!=null ? 'The month you chose for the reef trip was '+MONTHS_FULL[S.month]+'. Why was it a good one?' : 'Which months are dry, and which are stormy?',
+    'Where would you find a waterfall, and why? What is a coral cay like?',
+    'Which foods and music did Gran\'s market notebook have?',
+    'Remember: the cousin lives in the Dominican Republic, on Hispaniola.'
+  ];
+  for (const t of ideas) ul.appendChild(el('li',null,t));
+  const ta = $('#letterText'); ta.value = S.letter || '';
+  upd();
+  show('sLetter');
+}
+function upd(){ const w = words($('#letterText').value); $('#wordCount').textContent = w+' word'+(w===1?'':'s'); $('#btnSendLetter').disabled = w < 10; }
+$('#letterText').addEventListener('input', () => {
+  S.letter = $('#letterText').value; save(); upd();
+  GR.write({game:GAME, part:'Letter', area:'EN', prompt:"Daniel's reply to his cousin: which month to visit, waterfall or coral cay, food and music, with reasons", text:S.letter});
+});
+$('#btnSendLetter').addEventListener('click', () => {
+  S.finished = true; save();
+  GR.write({game:GAME, part:'Letter', area:'EN', prompt:"Daniel's reply to his cousin: which month to visit, waterfall or coral cay, food and music, with reasons", text:S.letter});
+  GR.partDone('Letter'); GR.finish();
+  openEnd();
+});
+$('#btnLetterBack').addEventListener('click', renderHub);
+
+/* ---------- end ---------- */
+function openEnd(){
+  $('#endChart').innerHTML = chartSVG({labels:['carib','cam','sam','cub','jam','hisp','pri','groups','countries','kingston','route']});
+  $('#followQ').value = S.followQ || '';
+  show('sEnd');
+}
+$('#btnReveal').addEventListener('click', () => { $('#revealBox').hidden = false; $('#btnReveal').remove(); });
+$('#followQ').addEventListener('input', () => { S.followQ = $('#followQ').value; save(); GR.write({game:GAME, part:'Finish', area:'HSS', prompt:'A question to follow up about the Caribbean', text:S.followQ}); });
+$('#btnEndChart').addEventListener('click', renderHub);
+$('#btnToChart').addEventListener('click', renderHub);
+
+/* ---------- start ---------- */
+if (GR.testing && GR.testing()) document.body.style.paddingTop = '30px';
+$('#introChart').innerHTML = chartSVG({labels:[]});
+$('#btnOpen').addEventListener('click', () => { S.started = true; save(); GR.start(GAME); renderHub(); });
+if (S.started) { GR.start(GAME); if (S.finished) openEnd(); else renderHub(); } else show('sIntro');
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>
