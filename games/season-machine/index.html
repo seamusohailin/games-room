@@ -1,0 +1,1043 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Mistress Wren's Season Machine</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fraunces:opsz,wght@9..144,700&display=swap">
+<style>
+/* Mistress Wren's workshop again: candlelit indigo, parchment panels, brass for the machine, Maeve's teal for every action */
+:root{
+  --bg:#17162e; --bg-deep:#0e0d21; --glow:#f6b860; --parch:#f8efdc; --parch-2:#e8d9b6; --parch-3:#d6c193;
+  --ink:#2a2118; --muted:#6d5c44; --teal:#16A08F; --teal-deep:#0c6b5f; --wax:#a5302a; --brass:#c9973e;
+  --ok:#2f7d4f; --ok-bg:#e1f1e2; --hmm-bg:#fbecd2; --clue-bg:#fff4d6; --on-dark:#f4ead6;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background-color:var(--bg);background-image:radial-gradient(ellipse at 8% -5%,rgba(246,184,96,.28),transparent 55%),radial-gradient(ellipse at 100% 100%,rgba(22,160,143,.12),transparent 50%);
+  color:var(--on-dark);font-family:var(--body);font-size:1.15rem;line-height:1.45;min-height:100vh;-webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
+svg text{font-family:var(--body)}
+
+.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;justify-content:space-between;padding-bottom:14px;margin-bottom:18px;border-bottom:2px dashed rgba(246,184,96,.35)}
+.brand h1{color:var(--glow);font-size:clamp(1.7rem,5.2vw,2.6rem);line-height:1.05}
+.brand p{margin:.3rem 0 0;font-size:1rem;opacity:.85}
+.status{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.pips{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.pips li{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem;border:2px solid var(--parch-3);color:var(--parch-3)}
+.pips li.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.pips li.now{background:var(--glow);border-color:var(--glow);color:var(--ink)}
+.toggle{display:inline-flex;align-items:center;gap:8px;background:var(--bg-deep);border:2px solid var(--parch-3);border-radius:999px;padding:6px 14px;min-height:46px;cursor:pointer;font-size:.95rem}
+.toggle .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--parch-3);display:grid;place-items:center}
+.toggle[aria-pressed="true"]{border-color:var(--teal)}
+.toggle[aria-pressed="true"] .box{background:var(--teal);border-color:var(--teal)}
+.toggle[aria-pressed="true"] .box::after{content:"";width:10px;height:6px;border:solid #fff;border-width:0 0 3px 3px;transform:rotate(-45deg) translate(1px,-1px)}
+
+.panel{background:var(--parch);color:var(--ink);border-radius:14px;padding:18px 20px;box-shadow:0 6px 0 var(--bg-deep)}
+.panel h2{color:var(--wax);font-size:clamp(1.45rem,4.2vw,2rem);margin-bottom:8px}
+.say{display:flex;gap:12px;align-items:flex-start;margin:0 0 4px}
+.say .who{flex:none;width:46px;height:46px;border-radius:50%;background:var(--bg);display:grid;place-items:center;border:2px solid var(--brass)}
+.say .who svg{width:30px;height:30px}
+.say .text{flex:1}
+.say p{margin:0;font-size:1.22rem;line-height:1.45;padding-top:6px}
+.say p+p{margin-top:6px}
+.btn{font-family:var(--body);font-weight:700;font-size:1.2rem;background:var(--teal);color:#fff;border:0;border-radius:999px;padding:.55em 1.4em;min-height:56px;cursor:pointer;box-shadow:0 4px 0 var(--teal-deep);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--teal-deep)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink),0 4px 0 var(--parch-3)}
+.btn[disabled]{opacity:.4;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+.hintbtn{background:var(--clue-bg);border:2px solid #E3BE5C;border-radius:999px;padding:6px 16px;min-height:46px;cursor:pointer;font-size:1rem;color:var(--ink)}
+.hintbtn[disabled]{opacity:.5;cursor:default}
+.ask{font-size:1.25rem;font-weight:700;margin:14px 0 0}
+
+.choices{display:grid;gap:12px;margin:12px 0 4px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.choices.wide{grid-template-columns:1fr}
+.choice{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:12px 16px;min-height:60px;font-size:1.18rem;color:var(--ink);text-align:left;cursor:pointer;box-shadow:0 4px 0 var(--parch-2);display:flex;align-items:center;gap:12px}
+.choice:active:not([disabled]){transform:translateY(2px)}
+.choice svg{flex:none;width:48px;height:48px}
+.choice.yes{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
+.choice.no{opacity:.38;box-shadow:none;cursor:default}
+.choice.pick{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal)}
+.fb{border-radius:12px;margin:12px 0 0;scroll-margin-bottom:100px}
+.fb:empty{display:none}
+.fb.show{padding:12px 14px}
+.fb.yes{background:var(--ok-bg)}
+.fb.hmm{background:var(--hmm-bg)}
+.fb.clue{background:var(--clue-bg)}
+.fb p{margin:0;font-size:1.15rem}
+.fb p+p{margin-top:6px}
+
+.two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start;margin-top:12px}
+@media (max-width:780px){.two{grid-template-columns:minmax(0,1fr)}}
+.scene{background:#1f1d3d;border-radius:14px;padding:6px;box-shadow:inset 0 0 0 2px rgba(201,151,62,.35)}
+.scene svg{display:block;width:100%;height:auto}
+.scene.light{background:#fff;box-shadow:inset 0 0 0 2px var(--parch-2)}
+
+/* home */
+.letter{background:#fbf4e3;border:2px solid var(--parch-2);max-width:840px;margin-bottom:22px}
+.letter .eyebrow{font-family:var(--display);color:var(--wax);font-size:1.3rem;margin:0 0 8px}
+.letter p{margin:0 0 10px;font-size:1.2rem}
+.letter .sign{font-style:italic;color:var(--muted)}
+.note{font-size:.95rem;color:var(--muted);margin:10px 0 0}
+.shelf{color:var(--glow);font-size:1.45rem;margin:18px 0 10px}
+.shelf small{font-family:var(--body);font-weight:400;font-size:1rem;opacity:.8;margin-left:8px}
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.part{text-align:left;border:0;cursor:pointer;padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;min-height:118px}
+.part[disabled]{opacity:.45;cursor:default}
+.part .n{font-family:var(--display);color:var(--wax);font-size:1.05rem}
+.part h3{font-size:1.3rem;color:var(--ink)}
+.part p{margin:0;font-size:1rem;color:var(--muted)}
+.part .tag{margin-top:auto;font-size:.9rem;font-weight:700;color:var(--muted)}
+.part.next{box-shadow:0 0 0 4px var(--glow),0 6px 0 var(--bg-deep)}
+.part.next .tag{color:var(--teal-deep)}
+
+/* the year wheel */
+.wheelzone{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:center;margin-top:10px}
+@media (max-width:780px){.wheelzone{grid-template-columns:minmax(0,1fr)}}
+.wheel{position:relative;width:min(100%,420px);aspect-ratio:1;margin:0 auto}
+.wheel>svg{position:absolute;inset:0;width:100%;height:100%}
+.slot{position:absolute;width:31%;aspect-ratio:1.05;transform:translate(-50%,-50%);border-radius:14px;border:3px dashed var(--parch-3);background:#fffaf0;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:4px}
+.slot svg{width:100%;height:auto;flex:1;min-height:0}
+.slot b{font-family:var(--display);color:var(--wax);font-size:1.05rem;line-height:1.2}
+.slot.filled{border-style:solid;border-color:var(--ok);background:#fff}
+.slot.target{border-color:var(--teal);border-style:solid;box-shadow:0 0 0 4px rgba(22,160,143,.35);animation:pulse 1.4s ease-in-out infinite}
+.slot.target b{color:var(--teal-deep)}
+.slot.covered svg,.slot.covered b{visibility:hidden}
+.slot.covered{background:repeating-linear-gradient(45deg,#efe2c4 0 10px,#e6d6b2 10px 20px);border-style:solid;border-color:var(--parch-3)}
+.slot.covered::after{content:"?";font-family:var(--display);font-size:2.2rem;color:var(--muted);position:absolute}
+.slot.asked{border-color:var(--teal);box-shadow:0 0 0 4px rgba(22,160,143,.35)}
+@keyframes pulse{50%{box-shadow:0 0 0 9px rgba(22,160,143,.12)}}
+@media (prefers-reduced-motion:reduce){.slot.target{animation:none}}
+.tray{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.card{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:6px;cursor:pointer;box-shadow:0 4px 0 var(--parch-2)}
+.card svg{display:block;width:100%;height:auto;border-radius:9px}
+.card.no{opacity:.4}
+.card[disabled]{cursor:default}
+.wheel .hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:22%;aspect-ratio:1;border-radius:50%;background:var(--bg);color:var(--glow);display:grid;place-items:center;text-align:center;font-family:var(--display);font-size:.95rem;line-height:1.1;border:3px solid var(--brass)}
+
+/* sunbeam test */
+.log{display:grid;gap:8px;margin-top:10px}
+.log div{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:6px 12px;font-size:1.05rem}
+.log svg{width:40px;height:40px;flex:none}
+.angle{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.angle .btn.ghost[aria-pressed="true"]{background:#e9f7f5;box-shadow:inset 0 0 0 3px var(--teal),0 4px 0 var(--teal-deep)}
+input[type=range]{width:100%;height:44px;accent-color:var(--teal);margin-top:6px}
+.slab{font-size:.95rem;color:var(--muted);display:flex;justify-content:space-between}
+
+/* season machine */
+.mk{cursor:pointer}
+.mk.off{cursor:default}
+.ring{animation:ring 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes ring{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.ring{animation:none}}
+
+/* houses */
+.plots{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:12px}
+.plot{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:8px;cursor:pointer;text-align:center;box-shadow:0 4px 0 var(--parch-2);color:var(--ink)}
+.plot svg{display:block;width:100%;height:auto;border-radius:9px}
+.plot b{display:block;font-size:1.1rem;margin-top:6px}
+.plot.done{border-color:var(--ok)}
+.plot.done b::after{content:"  \2713";color:var(--ok)}
+.plot[disabled]{cursor:default}
+.parts-tray{display:grid;gap:10px;margin-top:10px}
+.feat{background:#fff;border:3px solid var(--parch-2);border-radius:12px;padding:10px 14px;min-height:56px;text-align:left;cursor:pointer;font-size:1.1rem;color:var(--ink);box-shadow:0 3px 0 var(--parch-2)}
+.feat.yes{border-color:var(--ok);background:var(--ok-bg)}
+.feat.no{opacity:.38;box-shadow:none;cursor:default}
+.need{font-size:1rem;color:var(--muted);margin:8px 0 0}
+
+/* reading the sky */
+.spot{cursor:pointer}
+.found{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:8px}
+.found li{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:8px 12px;font-size:1.05rem}
+.found li.got{border-color:var(--ok);background:var(--ok-bg)}
+.found li b{display:block}
+.beads{display:flex;gap:8px;margin:6px 0}
+.beads i{width:24px;height:24px;border-radius:50%;border:2px solid var(--ink);background:#fff}
+.beads i.on{background:var(--glow)}
+
+/* weather or climate */
+.wcard{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:16px 18px;font-size:1.35rem;margin:10px 0 6px;box-shadow:4px 4px 0 var(--parch-3)}
+.baskets{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.basket{background:#fff;border:3px solid var(--teal);border-radius:14px;padding:12px;min-height:110px;cursor:pointer;color:var(--ink);text-align:center;box-shadow:0 4px 0 var(--teal-deep)}
+.basket b{display:block;font-family:var(--display);font-size:1.4rem;color:var(--teal-deep)}
+.basket span{font-size:1rem;color:var(--muted)}
+.basket.no{opacity:.4;box-shadow:none}
+.sorted{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;font-size:.98rem}
+.sorted ul{margin:0;padding-left:1.1em}
+.sorted h3{font-size:1.05rem;color:var(--muted);font-family:var(--body)}
+
+/* reply letter */
+.reply{background:#fffaf0;border:2px solid var(--parch-2);border-radius:12px;padding:14px 16px;font-size:1.25rem;line-height:1.9}
+.gap{display:inline-block;min-width:110px;border-bottom:3px dotted var(--wax);text-align:center;font-weight:700;color:var(--teal-deep);padding:0 6px;line-height:1.4}
+.gap.now{background:#e9f7f5;border-bottom-style:solid;border-color:var(--teal)}
+textarea{width:100%;min-height:80px;font:inherit;font-size:1.15rem;border:2px solid var(--parch-3);border-radius:12px;padding:10px;background:#fff;color:var(--ink)}
+.tell{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:12px 14px;margin-top:12px}
+.tell h3{color:var(--wax);font-size:1.25rem;margin-bottom:6px}
+.tell ul{margin:0;padding-left:1.2em}
+.tell li+li{margin-top:6px}
+.answer{background:#fff;border-left:6px solid var(--teal);border-radius:8px;padding:10px 14px;margin-top:10px}
+
+.grown{margin-top:30px;padding-top:14px;border-top:2px dashed rgba(244,234,214,.25);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;opacity:.85}
+.grown button{background:transparent;border:2px solid rgba(244,234,214,.5);border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:.95rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>Mistress Wren's Season Machine</h1><p>The globe-maker's workshop</p></div>
+    <div class="status">
+      <ol class="pips" id="pips" aria-label="Parts"></ol>
+      <button class="toggle" id="easy" aria-pressed="false"><span class="box"></span>Easier version</button>
+    </div>
+  </header>
+  <main id="main"></main>
+  <footer class="grown">
+    <span>Your place is saved after each part. You can stop any time.</span>
+    <button id="home">Contents</button>
+    <button id="reset">Start again</button>
+  </footer>
+</div>
+<script>
+'use strict';
+const G=window.GR||{player:()=>'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask(){return {miss(){},hint(){},done(){},giveUp(){},missed:()=>0};},write(){}};
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const GAME='season-machine';
+const RM=(()=>{try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}})();
+const main=$('#main');
+let runId=0;
+const sleep=ms=>{const r=runId;return new Promise(res=>setTimeout(()=>{if(r===runId)res();},ms));};
+function toTop(){try{window.scrollTo({top:0,behavior:'auto'});}catch(e){window.scrollTo(0,0);}}
+
+/* ---------- saved progress, separate for each girl ---------- */
+const KEY=G.key('season-machine-v1');
+function blank(){return {done:[],easy:false,guess:null};}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.done))return Object.assign(blank(),v);}catch(e){}return blank();}
+let S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ---------- pictures ---------- */
+const WREN='<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="9" fill="#f6b860"/><g stroke="#f6b860" stroke-width="2.2" stroke-linecap="round"><path d="M16 2v4M16 26v4M2 16h4M26 16h4M6 6l3 3M23 23l3 3M26 6l-3 3M9 23l-3 3"/></g></svg>';
+const SEASONS={
+  winter:{name:'Winter',line:'Cold days, frost and bare trees.'},
+  spring:{name:'Spring',line:'New leaves and blossom. “Hark, the little bee is humming.” (Mary Howitt)'},
+  summer:{name:'Summer',line:'Hot sun and long, bright days.'},
+  autumn:{name:'Autumn',line:'Cooler air. The leaves change colour and fall.'}
+};
+const ORDER=['winter','spring','summer','autumn'];
+function seasonPic(k){
+  const trunk='<path d="M58 92V62M58 72l-12-10M58 66l11-9M58 78l9-6" stroke="#6b4a2b" stroke-width="5" stroke-linecap="round" fill="none"/>';
+  if(k==='winter')return `<svg viewBox="0 0 120 100" aria-hidden="true"><rect width="120" height="100" fill="#dbe9f4"/><rect y="84" width="120" height="16" fill="#fff"/><path d="M58 92V50M58 70l-16-14M58 62l14-12M58 78l12-8M42 56l-6-8M72 50l6-8" stroke="#6b4a2b" stroke-width="4" stroke-linecap="round" fill="none"/><g fill="#fff" stroke="#9fb9cf" stroke-width="1"><circle cx="18" cy="20" r="3"/><circle cx="96" cy="16" r="3"/><circle cx="30" cy="48" r="2.5"/><circle cx="88" cy="44" r="3"/><circle cx="104" cy="66" r="2.5"/><circle cx="14" cy="70" r="3"/></g><path d="M34 84c8-4 16-4 24 0s16 4 26 0" stroke="#c7d9e8" stroke-width="3" fill="none"/></svg>`;
+  if(k==='spring')return `<svg viewBox="0 0 120 100" aria-hidden="true"><rect width="120" height="100" fill="#e7f4e1"/><rect y="84" width="120" height="16" fill="#9fd086"/>${trunk}<g fill="#f6b6c8" stroke="#d98aa2" stroke-width="1"><circle cx="44" cy="52" r="9"/><circle cx="58" cy="42" r="11"/><circle cx="73" cy="52" r="9"/><circle cx="52" cy="58" r="7"/><circle cx="66" cy="60" r="7"/></g><g fill="#fff"><circle cx="48" cy="48" r="2"/><circle cx="62" cy="38" r="2"/><circle cx="72" cy="55" r="2"/></g><g transform="translate(94 26)"><ellipse rx="8" ry="5.5" fill="#f2c14e" stroke="#3b2a12" stroke-width="1.2"/><path d="M-2-5v10M2-5v10" stroke="#3b2a12" stroke-width="2"/><ellipse cx="-2" cy="-8" rx="4" ry="3" fill="#fff" opacity=".85"/><ellipse cx="3" cy="-8" rx="4" ry="3" fill="#fff" opacity=".85"/></g><g fill="#f7e36b"><circle cx="20" cy="88" r="3"/><circle cx="100" cy="90" r="3"/></g></svg>`;
+  if(k==='summer')return `<svg viewBox="0 0 120 100" aria-hidden="true"><rect width="120" height="100" fill="#bfe3f5"/><rect y="84" width="120" height="16" fill="#d9c56a"/><circle cx="96" cy="22" r="12" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M96 4v4M96 36v4M78 22h4M110 22h4M83 9l3 3M106 32l3 3M109 9l-3 3"/></g>${trunk}<g fill="#3f9a4a" stroke="#2c7036" stroke-width="1"><circle cx="44" cy="52" r="11"/><circle cx="58" cy="40" r="13"/><circle cx="73" cy="52" r="11"/><circle cx="58" cy="58" r="10"/></g></svg>`;
+  return `<svg viewBox="0 0 120 100" aria-hidden="true"><rect width="120" height="100" fill="#f4e6cf"/><rect y="84" width="120" height="16" fill="#c9a66b"/>${trunk}<g fill="#e07b2c" stroke="#a9541a" stroke-width="1"><circle cx="46" cy="54" r="9"/><circle cx="58" cy="45" r="10"/><circle cx="71" cy="54" r="8"/></g><g fill="#c9452d"><path d="M22 60l5-3 2 5-5 2z"/><path d="M90 66l5-2 1 5-5 1z"/><path d="M84 40l5-2 1 5-5 1z"/><path d="M30 86l6-2 1 4-6 2z"/></g><g fill="#e0a62c"><path d="M100 84l5-2 1 4-5 2z"/><path d="M16 40l5-2 1 5-5 1z"/></g><path d="M12 30c10-4 20-4 30 0M70 22c10-4 20-4 30 0" stroke="#b9a483" stroke-width="2" fill="none"/></svg>`;
+}
+
+/* ---------- small building blocks ---------- */
+function sayHTML(lines){return `<div class="say"><span class="who">${WREN}</span><div class="text">${[].concat(lines).map(p=>`<p>${p}</p>`).join('')}</div></div>`;}
+function panel(o){
+  toTop();
+  main.innerHTML=`<section class="panel">${o.title?`<h2>${o.title}</h2>`:''}<div id="say">${o.say?sayHTML(o.say):''}</div>${o.body||''}<div id="act"></div><div class="fb" id="fb" aria-live="polite"></div></section>`;
+}
+function say(lines){const s=$('#say');if(s)s.innerHTML=sayHTML(lines);}
+function goBtn(label,id){return `<div class="row"><button class="btn" id="${id||'go'}">${label}</button></div>`;}
+function click(sel){return new Promise(res=>{const b=$(sel);if(b)b.onclick=()=>res();});}
+function seen(el){try{el.scrollIntoView({block:'nearest',behavior:'auto'});}catch(e){}}
+function fb(kind,html){const f=$('#fb');if(!f)return;f.className='fb show '+kind;f.innerHTML=[].concat(html).map(p=>`<p>${p}</p>`).join('');seen(f);}
+function fbClear(){const f=$('#fb');if(f){f.className='fb';f.innerHTML='';}}
+function rightThenGo(why,label){
+  return new Promise(res=>{const f=$('#fb');f.className='fb show yes';f.innerHTML=`<p><b>Yes.</b> ${why||''}</p>`+goBtn(label||'Go on','go2');$('#go2').onclick=()=>{fbClear();res();};seen(f);});
+}
+function note(html,label){
+  return new Promise(res=>{const f=$('#fb');f.className='fb show clue';f.innerHTML=[].concat(html).map(p=>`<p>${p}</p>`).join('')+goBtn(label||'Go on','go2');$('#go2').onclick=()=>{fbClear();res();};seen(f);});
+}
+function helpRow(){return '<div class="row"><button class="hintbtn" id="help">Help, please</button></div>';}
+/* help in three levels: a reminder, a focused hint, then a worked example */
+function wireHelp(levels,q,extra){
+  const b=$('#help');if(!b||!levels)return;let n=0;
+  b.onclick=()=>{if(n>=levels.length)return;q&&q.hint();fb('clue',`<b>${['Remember','Hint','Example'][n]}:</b> ${levels[n]}`);if(extra)extra(n);n++;b.textContent=n>=levels.length?'No more help':'More help';if(n>=levels.length)b.disabled=true;};
+}
+/* a question with buttons, drawn under whatever is already on screen */
+function choose(o){
+  return new Promise(res=>{
+    const opts=o.keep?o.options:shuffle(o.options);
+    $('#act').innerHTML=`${o.ask?`<p class="ask">${o.ask}</p>`:''}<div class="choices ${o.wide?'wide':''}">${opts.map((op,i)=>`<button class="choice" data-i="${i}">${op.html||''}<span>${op.label}</span></button>`).join('')}</div>${o.help?helpRow():''}`;
+    fbClear();
+    const q=o.concept?G.ask({item:o.item,concept:o.concept,area:o.area||'SC'}):null;
+    wireHelp(o.help,q);
+    let locked=false;
+    $$('#act .choice').forEach(b=>b.onclick=async()=>{
+      if(locked||b.disabled)return;
+      const op=opts[+b.dataset.i];
+      const ok=o.isRight?o.isRight(op.v):op.v===o.answer;
+      if(ok){
+        locked=true;q&&q.done();b.classList.add('yes');$$('#act .choice').forEach(x=>{if(x!==b)x.disabled=true;});const h=$('#help');if(h)h.disabled=true;
+        if(o.onRight)o.onRight(op.v);
+        if(o.quick){await sleep(600);res(op.v);}else{await rightThenGo(typeof o.why==='function'?o.why(op.v):o.why);res(op.v);}
+      }else{
+        q&&q.miss(op.label.replace(/<[^>]+>/g,''));b.classList.add('no');b.disabled=true;
+        fb('hmm',(o.miss&&o.miss(op.v))||'Not that one. Look again and try another.');
+      }
+    });
+  });
+}
+
+/* ---------- the parts ---------- */
+const PARTS=[
+  {id:'wheel',ch:'s',name:'The year wheel',blurb:'Put the four seasons in order.',fn:()=>partWheel()},
+  {id:'beam',ch:'s',name:'The sunbeam test',blurb:'Melt the ice with a torch.',fn:()=>partBeam()},
+  {id:'machine',ch:'s',name:'The season machine',blurb:"Find the answer to the Captain's puzzle.",fn:()=>partMachine()},
+  {id:'houses',ch:'s',name:'A house for every place',blurb:'Build houses for hot and cold lands.',fn:()=>partHouses()},
+  {id:'sky',ch:'w',name:'Reading the sky',blurb:'Find the signs that rain is coming.',fn:()=>partSky()},
+  {id:'wind',ch:'w',name:'Wind, weather and climate',blurb:'Which wind brings the rain?',fn:()=>partWind()},
+  {id:'reply',ch:'e',name:'Writing to the Captain',blurb:'Answer his letter.',fn:()=>partReply()}
+];
+const done=id=>S.done.includes(id);
+function unlocked(i){
+  const p=PARTS[i];
+  if(p.ch==='e')return PARTS.slice(0,6).every(x=>done(x.id));
+  const same=PARTS.filter(x=>x.ch===p.ch);const k=same.indexOf(p);
+  return k===0||done(same[k-1].id);
+}
+function pips(cur){
+  $('#pips').innerHTML=PARTS.map((p,i)=>`<li class="${done(p.id)?'done':''} ${i===cur?'now':''}" title="${p.name}">${i+1}</li>`).join('');
+}
+let cur=-1;
+function finishPart(i){
+  const p=PARTS[i];if(!done(p.id))S.done.push(p.id);save();G.partDone(p.name);
+}
+async function afterPart(i,msg){
+  pips(-1);
+  const next=PARTS.findIndex((p,k)=>!done(p.id)&&unlocked(k));
+  $('#act').innerHTML=`<div class="answer">${msg}</div><div class="row">${next>=0?`<button class="btn" id="nx">Next: ${PARTS[next].name}</button>`:''}<button class="btn ghost" id="ct">Back to the contents</button></div>`;
+  fbClear();
+  if(next>=0)$('#nx').onclick=()=>runPart(next);
+  $('#ct').onclick=home;
+  seen($('#act'));
+}
+function runPart(i){
+  runId++;cur=i;pips(i);G.start(GAME);G.part(PARTS[i].name);PARTS[i].fn();
+}
+
+function home(){
+  runId++;cur=-1;pips(-1);toTop();
+  const tile=(p,i)=>{const ok=unlocked(i),d=done(p.id);const nx=ok&&!d;
+    return `<button class="panel part ${nx?'next':''}" data-i="${i}" ${ok?'':'disabled'}><span class="n">Part ${i+1}</span><h3>${p.name}</h3><p>${p.blurb}</p><span class="tag">${d?'Done. Tap to play again':ok?'Ready':p.ch==='e'?'Opens when parts 1 to 6 are done':'Opens after the part before'}</span></button>`;};
+  main.innerHTML=`<section class="panel letter">
+      <p class="eyebrow">A letter has come for the workshop</p>
+      <p>Dear Mistress Wren and Apprentice,</p>
+      <p>Your globe has carried me safely south, across the Equator. Now I have a puzzle for you. Here it is nearly Christmas, and the sun is so hot that my sailors swim off the ship. But at home in London, Christmas is cold and frosty. It is the same Sun and the same Christmas. How can it be summer here and winter there?</p>
+      <p>One more thing. I must sail home soon. How will I know if the weather will be fine for sailing?</p>
+      <p class="sign">Your friend, Captain Hale</p>
+      ${sayHTML(['Let’s find out, and then write back to him.'])}
+      <p class="note">Mistress Wren and Captain Hale are made up. Everything you find out about the Earth is true.</p>
+    </section>
+    <h2 class="shelf">The seasons <small>(Lesson 6)</small></h2>
+    <div class="parts">${PARTS.map((p,i)=>p.ch==='s'?tile(p,i):'').join('')}</div>
+    <h2 class="shelf">The weather <small>(Lesson 7). You can start here if you like.</small></h2>
+    <div class="parts">${PARTS.map((p,i)=>p.ch==='w'?tile(p,i):'').join('')}</div>
+    <h2 class="shelf">The reply <small>(when both are finished)</small></h2>
+    <div class="parts">${PARTS.map((p,i)=>p.ch==='e'?tile(p,i):'').join('')}</div>`;
+  $$('.part').forEach(b=>b.onclick=()=>{if(!b.disabled)runPart(+b.dataset.i);});
+}
+
+/* ===================== Part 1: the year wheel ===================== */
+const POS=[[50,20],[80,50],[50,80],[20,50]]; /* top, right, bottom, left, going round clockwise */
+function wheelArrows(){
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="34" fill="none" stroke="#c9973e" stroke-width="2.2" stroke-dasharray="1 0"/>
+  <g fill="#c9973e">${[45,135,225,315].map(a=>{const r=34,t=a*Math.PI/180,x=50+r*Math.sin(t),y=50-r*Math.cos(t);return `<path d="M-3.4-3.2L3.6 0L-3.4 3.2z" transform="translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${a})"/>`;}).join('')}</g></svg>`;
+}
+function partWheel(){
+  const easy=S.easy;
+  panel({title:'The year wheel',say:['Here is Mistress Wren’s year wheel. Winter is at the top. The year goes round the way the arrows point.','Which season comes next? Tap its picture.'],
+    body:`<div class="wheelzone"><div class="wheel" id="wheel">${wheelArrows()}<div class="hub">The<br>year</div>${POS.map((p,i)=>`<div class="slot" id="sl${i}" style="left:${p[0]}%;top:${p[1]}%"></div>`).join('')}</div><div><div class="tray" id="tray"></div></div></div>`});
+  const placed=[ 'winter',null,null,null ];
+  if(easy)placed[2]='summer';
+  function fill(i){const k=placed[i];const el=$('#sl'+i);el.className='slot filled';el.innerHTML=`${seasonPic(k)}<b>${SEASONS[k].name}</b>`;}
+  placed.forEach((k,i)=>{if(k)fill(i);});
+  const left=shuffle(ORDER.filter(k=>!placed.includes(k)));
+  $('#tray').innerHTML=left.map(k=>`<button class="card" data-k="${k}" aria-label="A season picture">${seasonPic(k)}</button>`).join('');
+  let slot=placed.indexOf(null);let q=null;
+  function target(){
+    $$('.slot').forEach(s=>s.classList.remove('target'));
+    if(slot<0)return;$('#sl'+slot).classList.add('target');$('#sl'+slot).innerHTML='<b>Next?</b>';
+    q=G.ask({item:'wheel-'+ORDER[slot],concept:'The four seasons in order',area:'SC'});
+    $('#act').innerHTML=helpRow();
+    const before=ORDER[(slot+3)%4];
+    wireHelp([`Look at the season just before the empty space: ${SEASONS[before].name}. What comes after it?`,
+      before==='winter'?'After the cold of winter, the world slowly warms up. Look for new leaves and blossom.':before==='spring'?'After spring, the days get hotter still. Look for the blazing sun.':'After the heat of summer, the air cools down. Look for leaves changing colour.',
+      'The year goes: winter, spring, summer, autumn, and then winter again.'],q);
+  }
+  target();
+  $$('#tray .card').forEach(b=>b.onclick=async()=>{
+    if(slot<0||b.disabled)return;
+    const k=b.dataset.k;
+    if(k===ORDER[slot]){
+      q.done();placed[slot]=k;fill(slot);b.remove();
+      fb('yes',`<b>${SEASONS[k].name}.</b> ${SEASONS[k].line}`);
+      slot=placed.indexOf(null);
+      if(slot>=0){target();}
+      else{$('#act').innerHTML='';await sleep(900);recall();}
+    }else{
+      q.miss(SEASONS[k].name);
+      const before=ORDER[(slot+3)%4];
+      fb('hmm',k==='summer'?`That one is summer, the hottest time. Does the world jump straight from ${SEASONS[before].name.toLowerCase()} to the hottest time? Try another.`:
+        k==='autumn'?`That one is autumn: cooler air and falling leaves. Does that come right after ${SEASONS[before].name.toLowerCase()}? Try another.`:
+        `That one is spring: new leaves and blossom. Does that come right after ${SEASONS[before].name.toLowerCase()}? Try another.`);
+    }
+  });
+  async function recall(){
+    fbClear();
+    $('#tray').innerHTML='';
+    say(['Lovely. And after autumn, round we go to winter again. The seasons go round and round, every year.','Now Mistress Wren covers the pictures. Can you remember the wheel?']);
+    await sleep(400);
+    $$('.slot').forEach(s=>s.classList.add('covered'));
+    /* question 1: what comes after a season, with the wheel covered */
+    const from=shuffle(['autumn','spring','summer'])[0];
+    const after=ORDER[(ORDER.indexOf(from)+1)%4];
+    $('#sl'+ORDER.indexOf(after)).classList.add('asked');
+    await choose({item:'after-'+from,concept:'The four seasons in order',area:'SC',ask:`What comes after ${SEASONS[from].name.toLowerCase()}?`,
+      options:ORDER.map(k=>({v:k,label:SEASONS[k].name})),answer:after,
+      help:['The wheel goes winter, then spring, then…',`Think about ${SEASONS[from].name.toLowerCase()}. Is the next season warmer or colder?`,'Winter, spring, summer, autumn, then back to winter.'],
+      why:`${SEASONS[from].name} is followed by ${SEASONS[after].name.toLowerCase()}.`,
+      onRight:()=>{const el=$('#sl'+ORDER.indexOf(after));el.classList.remove('covered','asked');}});
+    if(!S.easy){
+      /* question 2: the two in-between seasons */
+      $$('.slot').forEach(s=>s.classList.add('covered'));$$('.slot').forEach(s=>s.classList.remove('asked'));
+      await pickTwo();
+    }
+    $$('.slot').forEach(s=>s.classList.remove('covered','asked'));
+    finishPart(0);
+    afterPart(0,'<b>Part 1 done.</b> Winter, spring, summer, autumn, and round again. Summer is hot, winter is cold, and spring and autumn are in between.');
+  }
+  function pickTwo(){
+    return new Promise(res=>{
+      $('#act').innerHTML=`<p class="ask">Summer is hot and winter is cold. Which <u>two</u> seasons are in between, not very hot and not very cold? Tap two.</p><div class="choices">${shuffle(ORDER).map(k=>`<button class="choice" data-k="${k}">${SEASONS[k].name}</button>`).join('')}</div>${helpRow()}`;
+      const q=G.ask({item:'in-between',concept:'Spring and autumn are in between',area:'SC'});
+      wireHelp(['Summer is the hottest. Winter is the coldest. The other two sit between them on the wheel.','Look at the wheel: which seasons sit between summer and winter?','Spring comes between winter and summer. Autumn comes between summer and winter.'],q);
+      let got=0;
+      $$('#act .choice').forEach(b=>b.onclick=async()=>{
+        if(b.disabled)return;const k=b.dataset.k;
+        if(k==='spring'||k==='autumn'){b.classList.add('yes');b.disabled=true;got++;$('#sl'+ORDER.indexOf(k)).classList.remove('covered');
+          if(got===2){q.done();$$('#act .choice').forEach(x=>x.disabled=true);await rightThenGo('Spring and autumn are in between. They sit between the hot and the cold on the wheel.');res();}
+          else fb('yes','That’s one. Find the other.');}
+        else{q.miss(SEASONS[k].name);b.classList.add('no');b.disabled=true;fb('hmm',k==='summer'?'Summer is the hot one, not in between.':'Winter is the cold one, not in between.');}
+      });
+    });
+  }
+}
+
+/* ===================== Part 2: the sunbeam test ===================== */
+function iceSVG(h){return `<svg viewBox="0 0 40 40" aria-hidden="true"><ellipse cx="20" cy="36" rx="${10+(26-h)*0.5}" ry="3" fill="#9fd3f0" opacity=".7"/><rect x="${20-11}" y="${35-h}" width="22" height="${h}" rx="3" fill="#d9f1ff" stroke="#5aa7d6" stroke-width="1.8"/></svg>`;}
+function beamSVG(deg,ice){
+  const P={x:220,y:248},d=175,t=deg*Math.PI/180,c=Math.cos(t);
+  const T={x:P.x-d*Math.sin(t),y:P.y-d*Math.cos(t)};
+  const rx=34/c,ry=9;
+  const op=(0.18+0.72*c).toFixed(2), bop=(0.07+0.22*c).toFixed(2);
+  const melt=44-ice, pw=24+melt*0.9;
+  return `<svg viewBox="0 0 440 300" role="img" aria-label="A torch shining on a block of ice">
+    <rect width="440" height="300" fill="#1f1d3d"/>
+    <rect x="0" y="252" width="440" height="48" fill="#6b4a2b"/><rect x="0" y="248" width="440" height="8" fill="#8a6239"/>
+    <polygon points="${(T.x-8*Math.cos(t)).toFixed(1)},${(T.y+8*Math.sin(t)).toFixed(1)} ${(T.x+8*Math.cos(t)).toFixed(1)},${(T.y-8*Math.sin(t)).toFixed(1)} ${(P.x+rx).toFixed(1)},${P.y} ${(P.x-rx).toFixed(1)},${P.y}" fill="#ffe58a" opacity="${bop}"/>
+    <ellipse cx="${P.x}" cy="${P.y}" rx="${rx.toFixed(1)}" ry="${ry}" fill="#ffe58a" opacity="${op}"/>
+    <ellipse cx="${P.x}" cy="${P.y+1}" rx="${pw.toFixed(1)}" ry="4" fill="#9fd3f0" opacity="${melt>1?.75:0}"/>
+    <rect x="${P.x-22}" y="${P.y-ice}" width="44" height="${ice}" rx="5" fill="#d9f1ff" stroke="#5aa7d6" stroke-width="2.5"/>
+    <path d="M${P.x-14} ${P.y-ice+6}v${Math.max(0,ice-14)}" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+    <g transform="translate(${T.x.toFixed(1)} ${T.y.toFixed(1)}) rotate(${-deg})">
+      <rect x="-13" y="-78" width="26" height="62" rx="6" fill="#a5302a" stroke="#2a2118" stroke-width="2"/>
+      <path d="M-13-18h26l6 18h-38z" fill="#c9973e" stroke="#2a2118" stroke-width="2"/>
+      <rect x="-4" y="-62" width="8" height="14" rx="3" fill="#2a2118"/>
+    </g>
+    <text x="16" y="30" fill="#f4ead6" font-size="16">The torch is the Sun.</text>
+    <text x="16" y="52" fill="#f4ead6" font-size="16">It stays the same distance away.</text>
+  </svg>`;
+}
+function partBeam(){
+  const easy=S.easy;
+  panel({title:'The sunbeam test',say:['Mistress Wren puts a block of ice on the bench. The torch will be the Sun.','Will the ice melt faster with the torch shining <b>straight down</b>, or <b>slanting</b>? What do you think?'],
+    body:`<div class="two"><div class="scene" id="sc"></div><div id="side"></div></div>`});
+  let deg=0,ice=44,busy=false;const tests={};
+  const draw=()=>{$('#sc').innerHTML=beamSVG(deg,ice);};
+  draw();
+  $('#side').innerHTML=`<p class="ask" style="margin-top:0">Your guess:</p><div class="choices wide">
+    <button class="choice" data-g="straight">Straight down melts it faster</button><button class="choice" data-g="slant">Slanting melts it faster</button><button class="choice" data-g="same">They melt the same</button></div>`;
+  $$('#side .choice').forEach(b=>b.onclick=()=>{S.guess=b.dataset.g;save();test();});
+  function test(){
+    say(['That’s your guess. Now let the torch decide.','Choose a way to shine the torch, then tap <b>Shine</b>. Try both ways.']);
+    $('#side').innerHTML=`<div class="angle"><button class="btn ghost" data-a="0" aria-pressed="true">Straight down</button><button class="btn ghost" data-a="60" aria-pressed="false">Slanting</button></div>
+      ${easy?'':`<input type="range" id="rg" min="0" max="65" step="1" value="0" aria-label="Tilt the torch"><div class="slab"><span>straight down</span><span>slanting</span></div>`}
+      <div class="row"><button class="btn" id="shine">Shine</button></div><div class="log" id="log"></div>`;
+    const setA=a=>{deg=a;ice=44;draw();$$('.angle .btn').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.a===a?'true':'false'));const r=$('#rg');if(r)r.value=a;};
+    $$('.angle .btn').forEach(x=>x.onclick=()=>{if(!busy)setA(+x.dataset.a);});
+    const r=$('#rg');if(r)r.oninput=()=>{if(busy){r.value=deg;return;}deg=+r.value;ice=44;draw();$$('.angle .btn').forEach(x=>x.setAttribute('aria-pressed','false'));};
+    $('#shine').onclick=async()=>{
+      if(busy)return;busy=true;$('#shine').disabled=true;ice=44;draw();
+      const c=Math.cos(deg*Math.PI/180),melt=30*c,steps=RM?1:24;
+      for(let i=1;i<=steps;i++){await sleep(RM?50:90);ice=44-melt*i/steps;draw();}
+      const kind=deg<=20?'straight':deg>=45?'slant':'mid';
+      tests[kind]=Math.round(ice);
+      const words=deg<=20?'Straight down':deg>=45?'Slanting':'A little slanting';
+      fbClear();
+      $('#log').insertAdjacentHTML('beforeend',`<div>${iceSVG(Math.max(2,ice*26/44))}<span><b>${words}:</b> ${melt>22?'melted a lot':melt>=16?'melted some':'melted only a little'}</span></div>`);
+      busy=false;$('#shine').disabled=false;
+      if(tests.straight!=null&&tests.slant!=null&&!$('#ready')){
+        $('#side').insertAdjacentHTML('beforeend',`<div class="row"><button class="btn" id="ready">I’ve tested both</button></div>`);
+        $('#ready').onclick=()=>why();
+      }else if(!$('#ready')){
+        fb('clue',tests.straight==null?'Now try it <b>straight down</b>.':'Now try it <b>slanting</b>.');
+      }
+    };
+  }
+  async function why(){
+    fbClear();
+    const g=S.guess==='straight'?'You guessed straight down would melt it faster. The torch agreed.':S.guess==='slant'?'You guessed slanting. The torch showed something different, and that’s what tests are for.':'You guessed they would melt the same. The torch showed a difference.';
+    say([g,'Look at the patch of light each time. Straight down, it is small and bright. Slanting, it spreads out and goes pale.']);
+    $('#side').querySelector('.angle').remove();
+    const rr=$('#rg');if(rr){rr.nextElementSibling.remove();rr.remove();}
+    $('#shine').parentElement.remove();
+    await choose({item:'why-straight-melts',concept:'Direct sunlight warms more than slanting sunlight',area:'SC',wide:true,
+      ask:'Why did the ice melt faster when the torch shone straight down?',
+      options:[{v:'packed',label:'The light was packed into a small, bright patch.'},{v:'close',label:'The torch was closer to the ice.'},{v:'colour',label:'Slanting light is a different colour.'}],answer:'packed',
+      miss:v=>v==='close'?'Look again: the torch stays the same distance away. It only tilts.':'It’s the same torch and the same light. Look at the <b>size</b> of the patch each time.',
+      help:['Look at the patch of light on the bench each time.','When the torch slants, does the patch get bigger or smaller? Is the same light spread thin or packed tight?','Spread one spoonful of butter on a small piece of toast, then the same spoonful on a big piece. The small piece gets a thick layer. The light works the same way.'],
+      why:'The same light was packed into a small patch, so the ice got lots of warmth. Slanting, the light spreads thin.'});
+    /* the lesson's fireplace */
+    say(['Mistress Wren lights the fire. Captain Hale’s cold cousin has come in from the snow.']);
+    $('#sc').innerHTML=fireSVG();
+    $('#side').innerHTML='';
+    await choose({item:'fireplace',concept:'Direct sunlight warms more than slanting sunlight',area:'SC',wide:true,
+      ask:'Where should he stand to warm up fastest?',options:[{v:'front',label:'A: right in front of the fire'},{v:'side',label:'B: off to the side'}],answer:'front',
+      miss:()=>'Off to the side, the warmth reaches him at a slant, like the slanting torch. Try the other spot.',
+      help:['Think about the torch test.','In front of the fire, the heat comes straight at him, like the torch shining straight down.','Straight on gives the most warmth. Slanting gives less.'],
+      why:'In front of the fire, the warmth comes straight at him. The Sun works the same way: when its light comes down more straight, we get summer. When it slants, we get winter.'});
+    finishPart(1);
+    afterPart(1,'<b>Part 2 done.</b> Straight-down light packs its warmth into a small patch. Slanting light spreads it thin. Keep that in mind for the Captain’s puzzle.');
+  }
+}
+function fireSVG(){
+  return `<svg viewBox="0 0 440 300" role="img" aria-label="A fireplace with two places to stand, A in front and B to the side">
+    <rect width="440" height="300" fill="#2a2244"/><rect y="250" width="440" height="50" fill="#5b3f26"/>
+    <rect x="150" y="110" width="140" height="140" fill="#7a5a3a" stroke="#3a2a1a" stroke-width="3"/><rect x="175" y="150" width="90" height="100" fill="#1a1410"/>
+    <path d="M190 250c0-30 20-40 15-70 18 18 30 32 25 70z" fill="#f08a24"/><path d="M215 250c0-20 12-28 10-50 12 14 18 26 14 50z" fill="#f6c430"/>
+    <g fill="#f6b860" opacity=".22"><polygon points="175,170 265,170 300,300 140,300"/></g>
+    <g transform="translate(220 268)"><circle r="22" fill="#16A08F"/><text y="8" text-anchor="middle" font-size="24" fill="#fff" font-weight="700">A</text></g>
+    <g transform="translate(380 200)"><circle r="22" fill="#16A08F"/><text y="8" text-anchor="middle" font-size="24" fill="#fff" font-weight="700">B</text></g>
+    <path d="M230 200 Q 320 170 360 196" stroke="#f6b860" stroke-width="3" fill="none" stroke-dasharray="6 6" opacity=".7"/>
+  </svg>`;
+}
+
+/* ===================== Part 3: the season machine ===================== */
+const ORB={cx:300,cy:215,rx:215,ry:85};
+const MONTHS=[{k:'dec',name:'December',phi:0},{k:'mar',name:'March',phi:90},{k:'jun',name:'June',phi:180},{k:'sep',name:'September',phi:270}];
+const SEAS={dec:{n:'winter',s:'summer'},mar:{n:'spring',s:'autumn'},jun:{n:'summer',s:'winter'},sep:{n:'autumn',s:'spring'}};
+const TINT={summer:'#ffb347',winter:'#8fc3ff',spring:'#b6e3a1',autumn:'#e8a165',same:'#e9dcb0',hidden:'#cfd8e3'};
+function epos(phi){const t=phi*Math.PI/180;return {x:ORB.cx+ORB.rx*Math.cos(t),y:ORB.cy+ORB.ry*Math.sin(t)};}
+function nearestMonth(phi){phi=((phi%360)+360)%360;return MONTHS.reduce((a,m)=>{const d=Math.min(Math.abs(m.phi-phi),360-Math.abs(m.phi-phi));return d<a.d?{m,d}:a;},{m:null,d:999}).m;}
+function machineSVG(st){
+  const p=epos(st.phi),R=50,tilt=st.tilt;
+  const m=nearestMonth(st.phi);const se=tilt?SEAS[m.k]:{n:'same',s:'same'};
+  const show=st.show;
+  const nT=show?TINT[se.n]:TINT.hidden,sT=show?TINT[se.s]:TINT.hidden;
+  const back=p.y<ORB.cy-10;
+  const sun=`<g><circle cx="${ORB.cx}" cy="${ORB.cy}" r="62" fill="#f6b860" opacity=".18"/><circle cx="${ORB.cx}" cy="${ORB.cy}" r="44" fill="#f6c430" stroke="#e08a1e" stroke-width="3"/><text x="${ORB.cx}" y="${ORB.cy+7}" text-anchor="middle" font-size="20" font-weight="700" fill="#7a3d00">Sun</text></g>`;
+  const rays=[-14,0,14].map(o=>{const dx=p.x-ORB.cx,dy=p.y-ORB.cy,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,nx=-uy,ny=ux;
+    return `<path d="M${(ORB.cx+ux*50+nx*o).toFixed(1)} ${(ORB.cy+uy*50+ny*o).toFixed(1)}L${(p.x-ux*(R+4)+nx*o).toFixed(1)} ${(p.y-uy*(R+4)+ny*o).toFixed(1)}" stroke="#f6c430" stroke-width="2.5" stroke-dasharray="7 6" opacity=".75"/>`;}).join('');
+  const sName=x=>x==='same'?'same all year':x.charAt(0).toUpperCase()+x.slice(1);
+  const earth=`<g transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})">
+      <clipPath id="ec"><circle r="${R}"/></clipPath>
+      <g transform="rotate(${tilt})">
+        <g clip-path="url(#ec)">
+          <rect x="-${R}" y="-${R}" width="${2*R}" height="${2*R}" fill="#3f78b5"/>
+          <rect x="-${R}" y="-${R}" width="${2*R}" height="${R}" fill="${nT}" opacity=".78"/>
+          <rect x="-${R}" y="0" width="${2*R}" height="${R}" fill="${sT}" opacity=".78"/>
+          <path d="M-${R} 0H${R}" stroke="#a5302a" stroke-width="3"/>
+          <g transform="translate(-10 -22)"><circle r="4" fill="#2a2118"/></g>
+          ${st.ship?`<g transform="translate(8 22)"><path d="M-10 0h20l-4 6h-12z" fill="#2a2118"/><path d="M0 0v-14l9 10h-9" fill="#fff" stroke="#2a2118" stroke-width="1.2"/></g>`:''}
+        </g>
+        <circle r="${R}" fill="none" stroke="#f4ead6" stroke-width="2.5"/>
+        <path d="M0 -${R+26}V${R+16}" stroke="#f4ead6" stroke-width="3" stroke-dasharray="6 5"/>
+        <path d="M-5 -${R+20}L0 -${R+30}L5 -${R+20}" fill="none" stroke="#f4ead6" stroke-width="3"/>
+        <text x="${tilt?9:9}" y="-${R+8}" font-size="15" font-weight="700" fill="#f4ead6">N</text>
+        <text x="9" y="${R+16}" font-size="15" font-weight="700" fill="#f4ead6">S</text>
+      </g>
+    </g>`;
+  const here=MONTHS.find(mm=>{const q=epos(mm.phi);return Math.hypot(q.x-p.x,q.y-p.y)<20;});
+  const marks=MONTHS.map(mm=>{const q=epos(mm.phi);const on=st.active&&st.active.includes(mm.k);const tgt=st.target===mm.k;
+    const ly=mm.k==='sep'?q.y-20:mm.k==='mar'?q.y+34:q.y+R+44;const under=here===mm;
+    return `<g class="mk ${on?'':'off'}" data-m="${mm.k}"><circle cx="${q.x}" cy="${q.y}" r="28" fill="transparent"/>
+      ${tgt?`<circle class="ring" cx="${q.x}" cy="${q.y}" r="20" fill="none" stroke="#16A08F" stroke-width="5"/>`:''}
+      ${under?'':`<circle cx="${q.x}" cy="${q.y}" r="9" fill="${on?'#16A08F':'#6d6a8a'}" stroke="#f4ead6" stroke-width="2"/>`}
+      <text x="${q.x}" y="${ly}" text-anchor="middle" font-size="17" fill="${under?'#f6b860':on?'#9fe6db':'#b3aec9'}" font-weight="700">${mm.name}</text></g>`;}).join('');
+  const sw=(y,label,t)=>`<rect x="16" y="${y-15}" width="20" height="20" rx="4" fill="${show?TINT[t]:TINT.hidden}" stroke="#f4ead6" stroke-width="1.5"/><text x="44" y="${y}" font-size="17" fill="#f4ead6"><tspan font-weight="700">${label}:</tspan> ${show?sName(t):'?'}</text>`;
+  const legend=`<g><rect x="6" y="8" width="238" height="84" rx="10" fill="#0e0d21" opacity=".85"/><text x="16" y="32" font-size="18" font-weight="700" fill="#f6b860">${here?here.name:'Moving…'}</text>${sw(58,'North half',se.n)}${sw(84,'South half',se.s)}</g>`;
+  return `<svg viewBox="0 0 600 370" role="img" aria-label="The season machine: the Earth going round the Sun with its axis tilted">
+    <rect width="600" height="370" fill="#17162e"/>
+    <g fill="#f4ead6" opacity=".5"><circle cx="40" cy="30" r="1.5"/><circle cx="120" cy="70" r="1"/><circle cx="210" cy="24" r="1.3"/><circle cx="480" cy="390" r="1.2"/><circle cx="60" cy="380" r="1"/><circle cx="420" cy="60" r="1"/></g>
+    <g transform="translate(${tilt?548:300} 26)"><path d="M0-11l3 8h8l-6.5 5 2.5 8-7-5-7 5 2.5-8-6.5-5h8z" fill="#fff6c8"/><text x="${tilt?-16:0}" y="28" text-anchor="${tilt?'end':'middle'}" font-size="14" fill="#fff6c8">Pole star</text></g>
+    <ellipse cx="${ORB.cx}" cy="${ORB.cy}" rx="${ORB.rx}" ry="${ORB.ry}" fill="none" stroke="#c9973e" stroke-width="3" opacity=".8"/>
+    ${marks}
+    ${back?earth+sun+rays:sun+rays+earth}
+    ${legend}
+  </svg>`;
+}
+function partMachine(){
+  const easy=S.easy;
+  const st={phi:0,tilt:23.5,show:false,active:[],target:null,ship:true};
+  panel({title:'The season machine',say:['Mistress Wren has built a season machine. The Earth goes round the Sun once a year, along the brass track.','First, two quick questions about the machine.'],
+    body:'<div class="scene" id="sc" style="margin-top:10px"></div>'});
+  const draw=()=>{$('#sc').innerHTML=machineSVG(st);};
+  draw();
+  let moving=false,onMark=null;
+  $('#sc').addEventListener('click',e=>{const g=e.target.closest&&e.target.closest('.mk');if(!g||moving)return;const k=g.dataset.m;if(!st.active.includes(k))return;onMark&&onMark(k);});
+  function moveTo(k){
+    return new Promise(res=>{
+      const to=MONTHS.find(m=>m.k===k).phi;let from=st.phi;let d=((to-from)%360+360)%360;if(d===0){res();return;}
+      moving=true;const t0=performance.now(),dur=RM?1:1000;
+      const step=now=>{const f=Math.min(1,(now-t0)/dur);const e=f<.5?2*f*f:1-Math.pow(-2*f+2,2)/2;st.phi=from+d*e;draw();
+        if(f<1)requestAnimationFrame(step);else{st.phi=to;draw();moving=false;res();}};
+      requestAnimationFrame(step);
+    });
+  }
+  function waitMark(keys,target){st.active=keys;st.target=target;draw();return new Promise(res=>{onMark=async k=>{if(target&&k!==target){fb('hmm',`That’s ${MONTHS.find(m=>m.k===k).name}. Find <b>${MONTHS.find(m=>m.k===target).name}</b> on the track.`);return;}onMark=null;st.active=[];st.target=null;fbClear();await moveTo(k);res(k);};});}
+  (async()=>{
+    /* return round: the axis, and the hemispheres */
+    await choose({item:'machine-axis',concept:'The axis is the imaginary line the Earth spins around',area:'SC',wide:true,
+      ask:'The dashed line through the Earth is its axis. What is the axis?',
+      options:[{v:'imag',label:'An imaginary line the Earth spins around'},{v:'pole',label:'A real metal pole through the Earth'},{v:'eq',label:'The line around the Earth’s middle'}],answer:'imag',
+      miss:v=>v==='pole'?'Mistress Wren used a knitting needle for her globe. But the real Earth has no pole through it. The line is only imaginary.':'The red line round the middle is the Equator. The axis goes from top to bottom.',
+      help:['Remember the spinning top: it turns on a still middle line.','Is there really a pole stuck through the Earth?','The axis is a pretend line from the North Pole to the South Pole. The Earth spins around it.'],
+      why:'It’s a pretend line from the North Pole to the South Pole, and the Earth spins around it.'});
+    await choose({item:'machine-hemisphere',concept:'The Northern and Southern Hemispheres',area:'HSS',
+      ask:'Each half of the Earth is a hemisphere. Captain Hale has sailed across the Equator, going south. Which hemisphere is he in now?',
+      options:[{v:'s',label:'The Southern Hemisphere'},{v:'n',label:'The Northern Hemisphere'}],answer:'s',
+      miss:()=>'London is in the Northern Hemisphere, above the Equator. The Captain sailed south, across the red line.',
+      help:['The Equator is the red line. It splits the Earth into two halves.','The half below the Equator is towards the South Pole.','North of the Equator is the Northern Hemisphere. South of it is the Southern Hemisphere.'],
+      why:'He’s in the Southern Hemisphere. His ship is on the bottom half. You live in the Southern Hemisphere too.'});
+    /* worked example: December */
+    say(['Now look closely. The axis is <b>tilted</b>. It leans, and it always leans the same way, pointing at the pole star.','It’s December. Watch which end of the Earth leans towards the Sun.']);
+    $('#act').innerHTML='';
+    await sleep(500);
+    st.show=true;draw();
+    await note(['In December, the <b>South Pole</b> end leans towards the Sun. The Sun’s light comes down more straight on the south, like the torch shining straight down. So the south has <b>summer</b>.','The north leans away. Its sunlight slants, so London has <b>winter</b>.'],'Now you try');
+    st.show=false;draw();
+    say(['Your turn. Tap <b>June</b> on the track to move the Earth there.']);
+    await waitMark(['jun'],'jun');
+    say(['It’s June. Look at the tilt.']);
+    await choose({item:'june-pole',concept:'The tilt of the Earth’s axis makes the seasons',area:'SC',
+      ask:'In June, which end of the Earth leans towards the Sun?',
+      options:[{v:'n',label:'The North Pole end'},{v:'s',label:'The South Pole end'}],answer:'n',
+      miss:()=>'Look at the dashed axis. Follow it to the N end. Is the N end tipped towards the Sun now?',
+      help:['Find the letter N at the top of the axis.','The axis still leans the same way. But now the Earth is on the other side of the Sun.','In December the S end leaned towards the Sun. Now the Earth has gone halfway round, so the other end does.'],
+      why:'Now the North Pole end leans towards the Sun.'});
+    await choose({item:'june-seasons',concept:'The hemispheres have opposite seasons',area:'SC',wide:true,
+      ask:'So in June, what season does each half have?',
+      options:[{v:'a',label:'North: summer. South: winter.'},{v:'b',label:'North: winter. South: summer.'},{v:'c',label:'Both halves have summer.'}],answer:'a',
+      miss:v=>v==='b'?'That was December. In June the tilt has swapped over. Which half gets the straight-down light now?':'Only one half leans towards the Sun. The other half gets slanting light.',
+      help:['The half that leans towards the Sun gets straight-down light.','Straight-down light means summer. Slanting light means winter.','In June the north leans towards the Sun, so the north has summer and the south has winter.'],
+      why:'In June, London has summer and the south has winter. That’s why winter here at home comes in June, July and August.',
+      onRight:()=>{st.show=true;draw();}});
+    if(!easy){
+      st.show=false;
+      say(['Now tap <b>March</b> to move the Earth on.']);
+      await waitMark(['mar'],'mar');
+      await choose({item:'march-season',concept:'The four seasons in order',area:'SC',
+        ask:'In March, neither end leans towards the Sun. The south has just had summer. What season comes next for the south?',
+        options:ORDER.map(k=>({v:k,label:SEASONS[k].name})),answer:'autumn',
+        miss:()=>'Think of the year wheel. What comes after summer?',
+        help:['Remember the year wheel.','After summer, the air cools down and the leaves fall.','Winter, spring, summer, autumn. After summer comes autumn.'],
+        why:'Autumn, in between hot and cold, because neither half leans towards the Sun.',onRight:()=>{st.show=true;draw();}});
+    }
+    /* the experiment: stand the Earth up straight */
+    st.show=true;draw();
+    say(['Mistress Wren has an idea. What if the Earth stood up straight, with no tilt at all?']);
+    $('#act').innerHTML=`<div class="row"><button class="btn" id="up">Stand the Earth up straight</button></div>`;
+    await click('#up');
+    for(let i=1;i<=10;i++){st.tilt=23.5*(1-i/10);draw();await sleep(RM?5:60);}
+    st.tilt=0;draw();
+    say(['Now move the Earth round the track. Tap any two months and watch the colours.']);
+    $('#act').innerHTML='';
+    const left=MONTHS.map(m=>m.k).filter(k=>k!==nearestMonth(st.phi).k);
+    const a=await waitMark(left,null);
+    await waitMark(left.filter(k=>k!==a),null);
+    await choose({item:'no-tilt',concept:'Without the tilt there would be no seasons',area:'SC',wide:true,
+      ask:'With the Earth standing up straight, what happens to the seasons?',
+      options:[{v:'none',label:'There are no seasons. Every month is the same.'},{v:'hot',label:'It is summer everywhere, all year.'},{v:'fast',label:'The seasons change faster.'}],answer:'none',
+      miss:v=>v==='hot'?'Look at the labels. Do they say summer?':'Look at the labels each time you move the Earth. Do they change at all?',
+      help:['Read the labels above and below the Earth.','Did the labels change when the Earth moved round?','With no tilt, no half ever leans towards the Sun, so nothing changes through the year.'],
+      why:'No tilt, no seasons. The Earth went round the same track, but nothing changed. So it’s the tilt that makes the seasons.'});
+    $('#act').innerHTML=`<div class="row"><button class="btn" id="tb">Tilt it back</button></div>`;
+    await click('#tb');
+    for(let i=1;i<=10;i++){st.tilt=23.5*i/10;draw();await sleep(RM?5:60);}
+    st.tilt=23.5;st.show=false;draw();
+    say(['Back to December, and the Captain’s puzzle.']);
+    $('#act').innerHTML='';
+    await moveTo('dec');
+    await choose({item:'captain-answer',concept:'The tilt of the Earth’s axis makes the seasons',area:'SC',wide:true,
+      ask:'So why is it summer for the Captain at Christmas, when London has winter?',
+      options:[{v:'tilt',label:'In December the south leans towards the Sun, so its sunlight comes down more straight.'},{v:'closer',label:'The south is always closer to the Sun.'},{v:'only',label:'The Sun only shines on the south in December.'}],answer:'tilt',
+      miss:v=>v==='closer'?'If the south were always closer, it would have summer all year. But in June it has winter.':'The Sun shines on both halves as the Earth spins. What matters is how straight or slanting the light comes down.',
+      help:['Think about the torch test, and the tilt.','Which end of the axis leans towards the Sun in December?','In December the South Pole end leans towards the Sun. The south gets straight-down light, like the torch, so it’s summer there.'],
+      why:'That’s the answer to the Captain’s puzzle. The tilt makes the seasons, and the two halves take turns.',onRight:()=>{st.show=true;draw();}});
+    finishPart(2);
+    afterPart(2,'<b>Part 3 done.</b> You solved the Captain’s puzzle. The Earth’s axis is tilted. As the Earth goes round the Sun, first one half and then the other leans towards it. The half that leans towards the Sun has summer.');
+  })();
+}
+
+/* ===================== Part 4: a house for every place ===================== */
+function houseSVG(scene,f){
+  const lift=f.stilts?34:0,gy=176,x0=96,x1=204,h=66,top=gy-lift-h,ov=f.wide?34:10,rh=f.wide?26:44;
+  let bg='';
+  if(scene==='pole')bg=`<rect width="300" height="220" fill="#d6e6f2"/><path d="M0 120l40-30 30 20 40-40 50 50 40-24 50 30 50-20v94H0z" fill="#eef5fb"/><rect y="${gy}" width="300" height="44" fill="#fff"/><g fill="#fff" stroke="#a9c3d8" stroke-width="1">${[[20,30],[60,60],[250,26],[280,70],[140,20],[200,50],[30,140],[270,150]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3"/>`).join('')}</g><path d="M40 92l6-6" stroke="#a9c3d8"/>`;
+  else if(scene==='eq')bg=`<rect width="300" height="220" fill="#bfe6f0"/><circle cx="262" cy="34" r="16" fill="#f6c430"/><g transform="translate(40 24)"><path d="M0 22h44a12 12 0 0 0 0-24 16 16 0 0 0-30-4 12 12 0 0 0-14 28z" fill="#9aa6b2"/><path d="M8 30l-4 10M22 30l-4 10M36 30l-4 10" stroke="#2f6e9c" stroke-width="3" stroke-linecap="round"/></g><rect y="${gy}" width="300" height="44" fill="#6fbf5a"/><g transform="translate(262 ${gy})"><path d="M0 0c-2-30 2-50 6-70" stroke="#7a5a3a" stroke-width="6" fill="none"/><path d="M6-70c-20-6-34 4-40 12M6-70c18-8 32-2 38 8M6-70c-6-16-20-20-30-18M6-70c10-14 24-14 30-8" stroke="#2f8f3e" stroke-width="7" fill="none" stroke-linecap="round"/></g>`;
+  else bg=`<rect width="300" height="220" fill="#cde8f5"/><rect y="${gy}" width="300" height="44" fill="#86c46e"/><g transform="translate(258 ${gy})"><path d="M0 0V-60M0-40l-14-12M0-48l12-10" stroke="#b9a68a" stroke-width="7" stroke-linecap="round" fill="none"/><g fill="#7da36a"><ellipse cx="-14" cy="-66" rx="18" ry="11"/><ellipse cx="12" cy="-72" rx="20" ry="12"/><ellipse cx="0" cy="-86" rx="16" ry="10"/></g></g><path d="M0 ${gy}h60" stroke="#6e5a3e" stroke-width="3"/><path d="M10 ${gy}v-14M30 ${gy}v-14M50 ${gy}v-14M8 ${gy-10}h46" stroke="#6e5a3e" stroke-width="3"/>`;
+  const wall=f.thick?'#cdb48a':'#ecdcbc',ws=f.thick?9:3;
+  const win=(cx)=>{
+    if(f.small)return `<rect x="${cx-9}" y="${top+20}" width="18" height="16" fill="#ffe7a3" stroke="#4a3520" stroke-width="2.5"/>`;
+    if(f.big)return `<rect x="${cx-17}" y="${top+12}" width="34" height="30" fill="#bfe6f0" stroke="#4a3520" stroke-width="2.5"/><path d="M${cx-17} ${top+12}l-10 4v24l10 -2zM${cx+17} ${top+12}l10 4v24l-10 -2z" fill="#a5302a" stroke="#4a3520" stroke-width="1.5"/>`;
+    return `<rect x="${cx-13}" y="${top+16}" width="26" height="22" fill="#fff6d6" stroke="#4a3520" stroke-width="2.5"/><path d="M${cx} ${top+16}v22M${cx-13} ${top+27}h26" stroke="#4a3520" stroke-width="1.5"/>`;
+  };
+  return `<svg viewBox="0 0 300 220" role="img" aria-label="A house">${bg}
+    ${f.stilts?`<g stroke="#5b3f26" stroke-width="6">${[x0+6,x0+40,x1-40,x1-6].map(x=>`<path d="M${x} ${gy-lift}V${gy}"/>`).join('')}</g><path d="M${x1-6} ${gy-lift}l20 ${lift}" stroke="#5b3f26" stroke-width="4"/>`:''}
+    ${f.veranda?`<path d="M${x1} ${top+22}L${x1+46} ${top+30}" stroke="#5b3f26" stroke-width="7"/><path d="M${x1+42} ${top+30}V${gy-lift}" stroke="#5b3f26" stroke-width="5"/><rect x="${x1}" y="${gy-lift-4}" width="46" height="5" fill="#5b3f26"/>`:''}
+    <rect x="${x0}" y="${top}" width="${x1-x0}" height="${h}" fill="${wall}" stroke="#4a3520" stroke-width="${ws}"/>
+    ${f.thick?`<rect x="${x0+8}" y="${top+8}" width="${x1-x0-16}" height="${h-8}" fill="none" stroke="#a88b5e" stroke-width="2" stroke-dasharray="5 4"/>`:''}
+    ${f.strong?`<path d="M${x0} ${top}L${x1} ${top+h}M${x1} ${top}L${x0} ${top+h}" stroke="#5b3f26" stroke-width="5" opacity=".85"/><rect x="${x0-6}" y="${top-2}" width="10" height="${h+4}" fill="#5b3f26"/><rect x="${x1-4}" y="${top-2}" width="10" height="${h+4}" fill="#5b3f26"/>`:''}
+    ${f.fire?`<rect x="${x1-34}" y="${top-rh+2}" width="16" height="${rh+6}" fill="#8a4b2b" stroke="#4a3520" stroke-width="2"/><path d="M${x1-26} ${top-rh-4}c-8-10 8-14 0-26" stroke="#c9c9c9" stroke-width="5" fill="none" stroke-linecap="round"/>`:''}
+    <polygon points="${x0-ov},${top+2} ${x1+ov},${top+2} ${(x0+x1)/2},${top-rh}" fill="${scene==='pole'?'#8a5a3a':'#a5302a'}" stroke="#4a3520" stroke-width="3"/>
+    ${scene==='pole'?`<path d="M${x0-ov+6} ${top-2}L${(x0+x1)/2} ${top-rh+6}L${x1+ov-6} ${top-2}" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/>`:''}
+    ${win(x0+26)}${win(x1-26)}
+    <rect x="${(x0+x1)/2-11}" y="${top+h-36}" width="22" height="36" fill="#6b4a2b" stroke="#4a3520" stroke-width="2"/>
+  </svg>`;
+}
+const PLOTS={
+  pole:{name:'Near the North Pole',say:'Near the North Pole it is cold and icy for most of the year, with snow and strong winds.',need:3,
+    parts:[{v:'thick',label:'Thick walls that keep the warmth in',ok:true},{v:'small',label:'Small windows, so less warmth escapes',ok:true},{v:'strong',label:'A strong frame to stand up to snow and wind',ok:true},
+      {v:'big',label:'Big open windows to let the breezes through',ok:false,why:'Brrr. Breezes would carry the warmth away. A cold place needs to keep the warmth in.'},
+      {v:'wide',label:'A wide roof for shade from the hot sun',ok:false,why:'There’s not much hot sun to hide from here. What does a house in the ice and snow need?'},
+      {v:'stilts',label:'Raised up on stilts so cool air flows underneath',ok:false,why:'Icy air underneath would make the floor freezing. This house needs to keep cold out.'}]},
+  eq:{name:'Near the Equator',say:'Near the Equator it is hot all year. In the wet season, heavy rain pours down.',need:3,
+    parts:[{v:'big',label:'Big open windows to let the breezes through',ok:true},{v:'wide',label:'A wide roof for shade from the hot sun',ok:true},{v:'stilts',label:'Raised up on stilts, to stay dry in heavy rain',ok:true},
+      {v:'thick',label:'Thick walls that keep the warmth in',ok:false,why:'It’s hot here all year. Do we want to keep warmth in, or let it out?'},
+      {v:'small',label:'Small windows, so less warmth escapes',ok:false,why:'Small windows would trap the heat inside. A hot place needs cooling breezes.'},
+      {v:'fire',label:'A big fireplace',ok:false,why:'A fire, when it’s hot all year? That would make it hotter still.'}]}
+};
+function partHouses(){
+  const easy=S.easy;
+  panel({title:'A house for every place',say:['The Captain’s sailors come from all over the world. Each one wants a house that suits the weather back home.','Which house would you like to build first?'],
+    body:'<div id="plots" class="plots"></div><div class="two" id="build" style="display:none"><div class="scene light" id="hs"></div><div id="tray"></div></div>'});
+  const built={};
+  const plotsDone=()=>['pole','eq','home'].filter(k=>built[k]);
+  function showPlots(){
+    $('#build').style.display='none';$('#plots').style.display='';
+    $('#plots').innerHTML=['pole','eq','home'].map(k=>`<button class="plot ${built[k]?'done':''}" data-k="${k}">${houseSVG(k,built[k]||{})}<b>${k==='home'?'Here at home':PLOTS[k].name}</b></button>`).join('');
+    $$('.plot').forEach(b=>b.onclick=()=>build(b.dataset.k));
+  }
+  showPlots();
+  async function build(k){
+    $('#plots').style.display='none';$('#build').style.display='';$('#act').innerHTML='';fbClear();
+    const f={};const draw=()=>{$('#hs').innerHTML=houseSVG(k,f);};draw();
+    if(k==='eq'){
+      say(['Near the Equator it is hot all year. It doesn’t have four seasons like we do.']);
+      $('#tray').innerHTML='';
+      await choose({item:'equator-seasons',concept:'Near the Equator: wet and dry seasons',area:'HSS',wide:true,ask:'What two seasons does it have instead?',
+        options:[{v:'wd',label:'A wet season and a dry season'},{v:'sw',label:'Summer and winter'},{v:'sa',label:'Spring and autumn'}],answer:'wd',
+        miss:()=>'Near the Equator the Sun’s light comes down almost the same way all year, so it’s never really cold. What changes is the rain.',
+        help:['What changes near the Equator is not hot and cold.','Think about rain. Some months bring lots, some bring very little.','The two seasons are named after the rain: the wet season and the dry season.'],
+        why:'The wet season brings heavy rain. The dry season has very little.'});
+      $('#act').innerHTML='';
+    }
+    if(k==='home'){await buildHome(f,draw);}
+    else{
+      const P=PLOTS[k];say([P.say,`Choose <b>${easy?2:3}</b> things this house needs.`]);
+      let parts=P.parts;if(easy){parts=shuffle(parts.filter(p=>p.ok)).slice(0,2).concat(shuffle(parts.filter(p=>!p.ok)).slice(0,2));}
+      const need=easy?2:3;let got=0;
+      $('#tray').innerHTML=`<div class="parts-tray">${shuffle(parts).map(p=>`<button class="feat" data-v="${p.v}">${p.label}</button>`).join('')}</div><p class="need" id="need"></p>${helpRow()}`;
+      const q=G.ask({item:'house-'+k,concept:'Houses suit the climate',area:'HSS'});
+      wireHelp(k==='pole'?['This house is in the ice and snow.','Does it need to keep warmth in, or let warmth out?','A cold-place house has thick walls, small windows, and a strong frame for the snow and wind.']:['This house is in the heat and heavy rain.','Does it need to keep warmth in, or let it out? And how will it stay dry?','A hot-place house has big open windows for breezes, a wide roof for shade, and stilts to stay above the rain.'],q);
+      const needText=()=>{$('#need').textContent=got<need?`${need-got} more to choose.`:'';};needText();
+      await new Promise(res=>{$$('#tray .feat').forEach(b=>b.onclick=async()=>{
+        if(b.disabled)return;const p=P.parts.find(x=>x.v===b.dataset.v);
+        if(p.ok){b.classList.add('yes');b.disabled=true;f[p.v]=true;draw();got++;needText();
+          fb('yes',k==='pole'?{thick:'Thick walls keep the warmth inside.',small:'Small windows let less warmth escape.',strong:'A strong frame stands up to heavy snow and wild winds.'}[p.v]:{big:'Breezes blow through and cool the house.',wide:'The wide roof makes shade and keeps the rooms cool.',stilts:'Up on stilts, the house stays dry when the heavy rain comes.'}[p.v]);
+          if(got>=need){q.done();$$('#tray .feat').forEach(x=>x.disabled=true);const h=$('#help');if(h)h.disabled=true;res();}}
+        else{q.miss(p.label);b.classList.add('no');b.disabled=true;fb('hmm',p.why);}
+      });});
+    }
+    built[k]=Object.assign({},f);
+    await sleep(300);
+    $('#act').innerHTML='';
+    if(plotsDone().length<3){
+      await note(['House built. Choose the next one.'],'Choose the next house');
+      say(['Which house next?']);showPlots();
+    }else{
+      $('#tray').innerHTML='';showPlots();$$('.plot').forEach(b=>b.disabled=true);
+      say(['Three houses, each one suited to its weather.','Tell a grown-up: why does the North Pole house have small windows? Why is the Equator house up on stilts?']);
+      finishPart(3);
+      afterPart(3,'<b>Part 4 done.</b> Houses need to suit the weather: cold places keep warmth in, hot places let breezes through and keep the rain off.');
+    }
+  }
+  async function buildHome(f,draw){
+    say(['Here at home we have four seasons, with hot summers and cold winters.','Our house needs something for both.']);
+    $('#tray').innerHTML='';
+    const s=await choose({item:'home-summer',concept:'Houses suit the climate',area:'HSS',wide:true,ask:'Choose one thing for hot summer days.',
+      options:[{v:'veranda',label:'A shady verandah'},{v:'big',label:'Windows that open to let breezes in'},{v:'fire',label:'A fireplace'}],isRight:v=>v!=='fire',
+      miss:()=>'A fire in summer? Too hot! That’s one for winter.',quick:true,onRight:v=>{f[v]=true;draw();}});
+    fb('yes',s==='veranda'?'A shady verandah: a cool spot on hot days.':'Open windows let the cool breezes in.');
+    await sleep(900);
+    await choose({item:'home-winter',concept:'Houses suit the climate',area:'HSS',wide:true,ask:'Now choose one thing for cold winter days.',
+      options:[{v:'fire',label:'A fireplace or heater'},{v:'thick',label:'Thick walls that keep the warmth in'},{v:'pool',label:'A paddling pool in the garden'}],isRight:v=>v!=='pool',
+      miss:()=>'A paddling pool in winter? Brrr! That’s for summer.',quick:true,onRight:v=>{f[v]=true;draw();}});
+    fb('yes','A house for both: cool in summer, warm in winter.');
+    await sleep(900);
+  }
+}
+
+/* ===================== Part 5: reading the sky ===================== */
+const SIGNS=[
+  {k:'clouds',name:'Dark clouds gathering',why:'The clouds turn darker before rain.',x:130,y:70},
+  {k:'wind',name:'The wind picking up',why:'The tree bends and the flag streams out. The wind picks up before rain.',x:520,y:150},
+  {k:'cool',name:'The air feeling cooler',why:'The sailor is pulling on his coat. The air feels cooler before rain.',x:205,y:262},
+  {k:'birds',name:'Birds flying low',why:'Old sailors said birds fly low when a storm is coming.',x:360,y:200},
+  {k:'cat',name:'The cat curled up tight',why:'People long ago said a cat curls up when rain is near.',x:96,y:298}
+];
+const DECOYS={barrel:'That’s a barrel. It doesn’t tell us about the weather.',ship:'That’s the Captain’s ship. It doesn’t tell us about the weather, but look at its flag.',sea:'That’s the sea. Look up, and around the harbour.',anchor:'That’s the anchor. It doesn’t tell us about the weather.'};
+function harbourSVG(found,ring){
+  const r=k=>found.includes(k)?(()=>{const s=SIGNS.find(x=>x.k===k);return `<circle cx="${s.x}" cy="${s.y}" r="40" fill="none" stroke="#f6b860" stroke-width="5"/>`;})():'';
+  const pulse=ring?(()=>{const s=SIGNS.find(x=>x.k===ring);return `<circle class="ring" cx="${s.x}" cy="${s.y}" r="44" fill="none" stroke="#16A08F" stroke-width="6"/>`;})():'';
+  return `<svg viewBox="0 0 600 340" role="img" aria-label="The harbour, with the sky changing">
+    <defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d6470"/><stop offset="1" stop-color="#b9c1c9"/></linearGradient></defs>
+    <rect width="600" height="340" fill="url(#sk)"/>
+    <g class="spot" data-s="clouds"><rect x="20" y="20" width="250" height="100" fill="transparent"/>
+      <path d="M30 100h200a30 30 0 0 0 0-60 40 40 0 0 0-74-14 34 34 0 0 0-62 6 30 30 0 0 0-64 68z" fill="#3c414a"/><path d="M150 112h110a22 22 0 0 0 0-44 30 30 0 0 0-56-6 22 22 0 0 0-54 50z" fill="#2c3037"/></g>
+    <rect x="0" y="200" width="600" height="140" fill="#4f7591" class="spot" data-s="sea"/>
+    <g fill="none" stroke="#7fa3bd" stroke-width="2">${[230,255,280,305].map((y,i)=>`<path d="M${280+i*20} ${y}q12-6 24 0t24 0t24 0" />`).join('')}</g>
+    <g class="spot" data-s="birds"><rect x="300" y="178" width="120" height="44" fill="transparent"/>
+      <g stroke="#f4f4f4" stroke-width="3" fill="none" stroke-linecap="round"><path d="M320 200q8-8 16 0q8-8 16 0"/><path d="M366 192q7-7 14 0q7-7 14 0"/><path d="M344 214q6-6 12 0q6-6 12 0"/></g></g>
+    <g class="spot" data-s="ship"><path d="M330 150h150l-18 30h-114z" fill="#6b4a2b" stroke="#2a2118" stroke-width="2"/><path d="M402 150V70" stroke="#2a2118" stroke-width="4"/><path d="M404 78h60l-60 64z" fill="#efe6d2" stroke="#2a2118" stroke-width="1.5"/></g>
+    <g class="spot" data-s="wind"><rect x="392" y="44" width="90" height="34" fill="transparent"/><path d="M402 52c20-6 40 6 70-2l-2 14c-26 6-46-4-68 2z" fill="#a5302a" stroke="#2a2118" stroke-width="1.2"/>
+      <rect x="470" y="70" width="110" height="140" fill="transparent"/><path d="M520 200c0-30 4-52 18-80" stroke="#5b3f26" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <g fill="#3f7d45"><ellipse cx="552" cy="110" rx="34" ry="16" transform="rotate(-20 552 110)"/><ellipse cx="560" cy="134" rx="26" ry="12" transform="rotate(-10 560 134)"/></g>
+      <g fill="#3f7d45"><path d="M590 96l8-3-2 6z"/><path d="M584 76l9-2-3 6z"/></g><g stroke="#e8ecef" stroke-width="2.5" stroke-linecap="round" opacity=".8"><path d="M486 92h30M494 120h24M480 150h28"/></g></g>
+    <rect x="460" y="196" width="140" height="20" fill="#6e7b6a"/>
+    <rect x="0" y="246" width="300" height="94" fill="#7a5a3a"/><g stroke="#5b3f26" stroke-width="2">${[40,90,140,190,240].map(x=>`<path d="M${x} 246v94"/>`).join('')}</g>
+    <g class="spot" data-s="barrel"><rect x="232" y="268" width="40" height="52" rx="8" fill="#9a6a3a" stroke="#4a3520" stroke-width="2"/><path d="M232 282h40M232 306h40" stroke="#4a3520" stroke-width="3"/></g>
+    <g class="spot" data-s="anchor"><path d="M32 270v40M20 282h24M14 300c4 14 32 14 36 0" stroke="#3a3a3a" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+    <g class="spot" data-s="cool"><rect x="170" y="200" width="70" height="100" fill="transparent"/>
+      <circle cx="205" cy="220" r="12" fill="#e9c4a0" stroke="#4a3520" stroke-width="2"/><path d="M193 214h24l-4-10h-16z" fill="#2a2118"/>
+      <path d="M190 236h30v42h-30z" fill="#2f5d8a" stroke="#1d3a57" stroke-width="2"/><path d="M190 238l-14 22M220 238l14 18" stroke="#2f5d8a" stroke-width="8" stroke-linecap="round"/><path d="M176 260l14-22M234 256l-14-18" stroke="#1d3a57" stroke-width="2"/>
+      <path d="M196 278v16M214 278v16" stroke="#2a2118" stroke-width="7"/><path d="M182 230c-6-4-10-2-12 2M228 230c6-4 10-2 12 2" stroke="#fff" stroke-width="2" opacity=".8"/></g>
+    <g class="spot" data-s="cat"><rect x="66" y="278" width="62" height="40" fill="transparent"/><ellipse cx="96" cy="302" rx="26" ry="13" fill="#3a3a3a"/><circle cx="76" cy="296" r="9" fill="#3a3a3a"/><path d="M70 289l3-7 4 6M78 288l4-6 2 7" fill="#3a3a3a"/><path d="M120 304c6 4 2 10-8 8" stroke="#3a3a3a" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+    ${SIGNS.map(s=>r(s.k)).join('')}${pulse}
+  </svg>`;
+}
+function partSky(){
+  const easy=S.easy,need=easy?3:5;
+  const found=[];
+  panel({title:'Reading the sky',say:['The Captain wants to sail home tomorrow. But the sky over the harbour is changing.','Long ago, sailors read the sky to guess what weather was coming. Find <b>'+need+'</b> signs that rain is on its way. Tap them in the picture.'],
+    body:'<div class="scene light" id="sc" style="margin-top:10px"></div><div class="beads" id="beads"></div><div id="h"></div><ul class="found" id="list"></ul>'});
+  let ring=null;
+  const draw=()=>{$('#sc').innerHTML=harbourSVG(found,ring);$('#beads').innerHTML=Array.from({length:need},(_,i)=>`<i class="${i<found.length?'on':''}"></i>`).join('');
+    $('#list').innerHTML=found.map(k=>{const s=SIGNS.find(x=>x.k===k);return `<li class="got"><b>${s.name}</b>${s.why}</li>`;}).join('');};
+  draw();
+  const q=G.ask({item:'rain-signs',concept:'Signs that rain is coming',area:'SC'});
+  $('#h').innerHTML=helpRow();
+  wireHelp(['The lesson says three things change before rain: the clouds, the air and the wind.','Look up at the sky. Then at the tree and the flag. Then at the people and animals on the dock.','Look where the green ring is.'],q,n=>{if(n===2){ring=SIGNS.find(s=>!found.includes(s.k)).k;draw();}});
+  (async()=>{
+    await new Promise(res=>{
+      $('#sc').onclick=e=>{
+        const g=e.target.closest&&e.target.closest('[data-s]');if(!g)return;const k=g.dataset.s;
+        const s=SIGNS.find(x=>x.k===k);
+        if(s){if(found.includes(k)){fb('clue','You found that one already. Look for another.');return;}
+          found.push(k);if(ring===k)ring=null;draw();fb('yes',`<b>${s.name}.</b> ${s.why}`);
+          if(found.length>=need){q.done();const h=$('#help');if(h)h.disabled=true;$('#sc').onclick=null;res();}}
+        else{fb('clue',DECOYS[k]||'Look for something that tells us about the weather.');}
+      };
+    });
+    await sleep(700);
+    $('#h').innerHTML='';
+    say(['Dark clouds, a rising wind, cooler air. The signs all point one way.']);
+    await choose({item:'rain-certain',concept:'Certain or only likely',area:'MA',wide:true,ask:'So, will it rain tomorrow?',
+      options:[{v:'cert',label:'It will certainly rain.'},{v:'likely',label:'Rain is likely, but no one can be certain.'},{v:'imp',label:'It can’t possibly rain.'}],answer:'likely',
+      miss:v=>v==='cert'?'The signs make rain likely. But weather can surprise us, so nobody can promise it.':'With dark clouds and a rising wind? Rain is very possible.',
+      help:['Remember the chance words: impossible, unlikely, likely, certain.','Can anyone promise what the weather will do?','The signs tell us what is likely. Only something that must happen is certain.'],
+      why:'The signs tell us rain is likely. Weather can still surprise us.'});
+    /* instruments */
+    say(['Today, people who study the weather are called <b>meteorologists</b>. They use instruments to measure the weather.']);
+    $('#sc').innerHTML=toolsSVG(!easy);
+    $('#list').innerHTML='';$('#beads').innerHTML='';
+    await choose({item:'thermometer',concept:'Weather instruments',area:'SC',wide:true,ask:'What does the thermometer measure?',
+      html:'',options:[{v:'temp',label:'How hot or cold the air is: the temperature'},{v:'wind',label:'Which way the wind is blowing'},{v:'rain',label:'How many clouds there are'}],answer:'temp',
+      miss:()=>'Look at the red line inside it. On a hot day it climbs up. On a cold day it sinks down.',
+      help:['A thermometer has a line inside that goes up and down.','When is the line higher: on a hot day or a cold day?','A thermometer measures the temperature: how hot or cold the air is.'],
+      why:'The temperature. The red line climbs up when it’s hot and sinks when it’s cold.'});
+    if(!easy){
+      await choose({item:'weather-vane',concept:'Weather instruments',area:'SC',wide:true,ask:'What does the weather vane show?',
+        options:[{v:'wind',label:'Which way the wind is blowing'},{v:'temp',label:'How hot or cold the air is'},{v:'rain',label:'How much rain fell'}],answer:'wind',
+        miss:()=>'The arrow on top swings round in the wind. What could that tell us?',
+        help:['The arrow on top can spin.','What pushes the arrow round?','A weather vane swings round to show which way the wind is blowing.'],
+        why:'The arrow swings round to point into the wind, so it shows which way the wind is blowing.'});
+    }
+    finishPart(4);
+    afterPart(4,'<b>Part 5 done.</b> Before rain, the clouds turn dark, the air cools and the wind picks up. Signs and instruments tell us what weather is <b>likely</b>.');
+  })();
+}
+function toolsSVG(vane){
+  return `<svg viewBox="0 0 600 340" role="img" aria-label="${vane?'A thermometer and a weather vane':'A thermometer'}"><rect width="600" height="340" fill="#f8efdc"/>
+    <g transform="translate(${vane?170:300} 40)"><rect x="-22" y="0" width="44" height="230" rx="22" fill="#fff" stroke="#2a2118" stroke-width="3"/><circle cx="0" cy="240" r="34" fill="#c9302a" stroke="#2a2118" stroke-width="3"/><rect x="-7" y="70" width="14" height="172" fill="#c9302a"/>
+      <g stroke="#2a2118" stroke-width="2">${[20,50,80,110,140,170,200].map(y=>`<path d="M22 ${y}h-12"/>`).join('')}</g>
+      <text x="40" y="26" font-size="20" fill="#2a2118">hot</text><text x="40" y="206" font-size="20" fill="#2a2118">cold</text>
+      <text x="0" y="300" text-anchor="middle" font-size="22" font-weight="700" fill="#2a2118">Thermometer</text></g>
+    ${vane?`<g transform="translate(420 0)"><path d="M0 300V110" stroke="#2a2118" stroke-width="6"/><path d="M-70 110h140" stroke="#2a2118" stroke-width="5"/><path d="M70 110l-22-14v28z" fill="#2a2118"/><path d="M-70 110l-20-18h30l10 18-10 18h-30z" fill="#a5302a" stroke="#2a2118" stroke-width="2"/>
+      <path d="M0 160h-46M0 160h46M0 160v-34" stroke="#c9973e" stroke-width="3"/><text x="-60" y="168" font-size="20" font-weight="700" fill="#c9973e">W</text><text x="50" y="168" font-size="20" font-weight="700" fill="#c9973e">E</text><text x="-7" y="144" font-size="18" font-weight="700" fill="#c9973e">N</text>
+      <g stroke="#7fa3bd" stroke-width="3" stroke-linecap="round"><path d="M-170 70h50M-160 96h60M-176 124h40"/></g>
+      <text x="0" y="330" text-anchor="middle" font-size="22" font-weight="700" fill="#2a2118">Weather vane</text></g>`:''}
+  </svg>`;
+}
+
+/* ===================== Part 6: wind, weather and climate ===================== */
+function mapSVG(blow,result){
+  const streaks=d=>{const y0=d==='n'?40:300,dir=d==='n'?1:-1;return `<g stroke="${d==='n'?'#e08a1e':'#5aa7d6'}" stroke-width="4" stroke-linecap="round" fill="none" opacity=".9">${[200,260,320,380].map((x,i)=>`<path d="M${x} ${y0+dir*(i%2?10:0)}v${dir*70}"><animateTransform attributeName="transform" type="translate" values="0 0;0 ${dir*90}" dur="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/></path>`).join('')}</g>`;};
+  const res=result==='hot'?`<g transform="translate(300 105)"><circle r="18" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M0-30v6M0 24v6M-30 0h6M24 0h6M-21-21l4 4M17 17l4 4M21-21l-4 4M-17 17l-4 4"/></g></g>`:
+    result==='rain'?`<g transform="translate(278 92)"><path d="M0 22h44a12 12 0 0 0 0-24 16 16 0 0 0-30-4 12 12 0 0 0-14 28z" fill="#8f949a"/><path d="M10 30l-4 10M24 30l-4 10M38 30l-4 10" stroke="#2f6e9c" stroke-width="3" stroke-linecap="round"/></g>`:'';
+  return `<svg viewBox="0 0 600 340" role="img" aria-label="A map: hot dry land to the north, the harbour in the middle, a cold sea to the south">
+    <rect width="600" height="150" fill="#e9c98a"/><g fill="#c9a25e">${[[60,60],[150,110],[520,50],[430,100],[300,40]].map(p=>`<ellipse cx="${p[0]}" cy="${p[1]}" rx="18" ry="6"/>`).join('')}</g>
+    <circle cx="540" cy="40" r="16" fill="#f6c430"/><text x="20" y="34" font-size="20" font-weight="700" fill="#5b3f26">Hot, dry land</text>
+    <path d="M0 150c80 20 140-10 220 8s150 20 220 0 120-10 160 2v40H0z" fill="#86b86e"/>
+    <rect y="190" width="600" height="150" fill="#3f78b5"/><g stroke="#8fc3ff" stroke-width="2" fill="none">${[220,250,280,310].map((y,i)=>`<path d="M${40+i*120} ${y}q12-6 24 0t24 0"/>`).join('')}</g>
+    <text x="20" y="326" font-size="20" font-weight="700" fill="#e9f3ff">Cold sea, towards the South Pole</text><path d="M560 300l14-22 14 22z" fill="#fff" stroke="#bcd6ea"/>
+    <g transform="translate(300 172)"><path d="M-40 10v-16l10-8 10 8v16zM-14 10v-20l12-10 12 10v20zM16 10v-14l9-7 9 7v14z" fill="#f8efdc" stroke="#4a3520" stroke-width="2"/><text x="0" y="34" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2a4d">The harbour</text></g>
+    <g transform="translate(560 120)"><circle r="18" fill="#fff" stroke="#2a2118" stroke-width="2"/><path d="M0-14l5 12h-10z" fill="#a5302a"/><text x="0" y="12" text-anchor="middle" font-size="12" font-weight="700">N</text></g>
+    ${blow?streaks(blow):''}${res}
+  </svg>`;
+}
+function partWind(){
+  const easy=S.easy;
+  panel({title:'Wind, weather and climate',say:['The wind carries the weather with it. It brings warm air from hot places, and cold air from cold places.','Which wind would you like to try first?'],
+    body:'<div class="scene light" id="sc" style="margin-top:10px"></div>'});
+  const draw=(b,r)=>{$('#sc').innerHTML=mapSVG(b,r);};draw(null,null);
+  const tried=[];
+  (async()=>{
+    while(tried.length<2){
+      const left=['n','s'].filter(x=>!tried.includes(x));
+      $('#act').innerHTML=`<div class="row">${left.map(d=>`<button class="btn ghost" data-d="${d}">${d==='n'?'Wind from the hot, dry land':'Wind from the cold sea'}</button>`).join('')}</div>`;
+      const d=await new Promise(res=>$$('#act [data-d]').forEach(b=>b.onclick=()=>res(b.dataset.d)));
+      draw(d,null);
+      say([d==='n'?'The wind blows from the hot, dry land, down over the harbour.':'The wind blows in off the cold sea, from the direction of the South Pole.']);
+      await sleep(RM?100:1000);
+      await choose({item:d==='n'?'wind-from-land':'wind-from-sea',concept:'Winds carry the weather',area:'SC',wide:true,ask:'What weather will this wind bring to the harbour?',
+        options:[{v:'hot',label:'Hot, dry, cloudless days'},{v:'rain',label:'Cool air and rain clouds'},{v:'none',label:'No change at all'}],answer:d==='n'?'hot':'rain',
+        miss:v=>v==='none'?'The wind carries the air from where it came from. Will that change the harbour’s weather?':d==='n'?'Can a wind from dry land carry rain clouds? Think about where it came from.':'This wind has blown across the cold sea. What does it pick up there?',
+        help:['The wind brings the weather from the place it blew across.',d==='n'?'This wind crossed hot, dry land. Is it hot or cold? Wet or dry?':'This wind crossed a cold sea. Is it hot or cold? Wet or dry?',d==='n'?'A dry wind from the land brings hot, cloudless days.':'A wind from the sea brings rain. A wind from near the South Pole brings cold air.'],
+        why:d==='n'?'A dry wind from the land brings hot, cloudless days.':'A wind from the sea brings rain, and this one carries cold air too.',onRight:v=>draw(null,v)});
+      tried.push(d);
+    }
+    await note(['Here at home, a hot day often comes with a wind from the north, from the hot inland. Then a cool change blows in from the south, off the cold sea.'],'Go on');
+    /* weather or climate */
+    const CARDS=[
+      {t:'It is raining this morning.',v:'w'},{t:'There was frost on the grass today.',v:'w'},{t:'Tomorrow will be windy.',v:'w'},
+      {t:'Near the North Pole, it is icy for most of every year.',v:'c'},{t:'Near the Equator, it is hot all year, year after year.',v:'c'},{t:'Here at home we have warm summers and cold winters, every year.',v:'c'}];
+    let cards=shuffle(CARDS);if(easy)cards=shuffle(shuffle(CARDS.filter(c=>c.v==='w')).slice(0,2).concat(shuffle(CARDS.filter(c=>c.v==='c')).slice(0,2)));
+    $('#sc').style.display='none';
+    say(['<b>Weather</b> is what happens on one day. <b>Climate</b> is what the weather is usually like in a place, over many years.','Sort each card into the right basket.']);
+    const sorted={w:[],c:[]};
+    for(let i=0;i<cards.length;i++){
+      const c=cards[i];
+      $('#act').innerHTML=`<p class="ask">Card ${i+1} of ${cards.length}</p><div class="wcard">${c.t}</div><div class="baskets"><button class="basket" data-v="w"><b>Weather</b><span>one day</span></button><button class="basket" data-v="c"><b>Climate</b><span>many years</span></button></div>${helpRow()}
+        <div class="sorted"><div><h3>Weather</h3><ul>${sorted.w.map(t=>`<li>${t}</li>`).join('')}</ul></div><div><h3>Climate</h3><ul>${sorted.c.map(t=>`<li>${t}</li>`).join('')}</ul></div></div>`;
+      fbClear();
+      const q=G.ask({item:'wc-'+c.t.slice(0,24),concept:'Weather and climate',area:'HSS'});
+      wireHelp(['Weather is one day. Climate is many years.',`Look for the time words in the card. Do they talk about one day, or every year?`,c.v==='w'?'“This morning”, “today” and “tomorrow” are about one day, so they are weather.':'“Every year” and “year after year” mean many years, so they are climate.'],q);
+      await new Promise(res=>$$('.basket').forEach(b=>b.onclick=async()=>{
+        if(b.classList.contains('no'))return;
+        if(b.dataset.v===c.v){q.done();sorted[c.v].push(c.t);$$('.basket').forEach(x=>x.disabled=true);fb('yes',c.v==='w'?'Weather: it’s about one day.':'Climate: it’s about many years.');await sleep(900);res();}
+        else{q.miss(b.dataset.v==='w'?'Weather':'Climate');b.classList.add('no');fb('hmm',c.v==='w'?'Is this about many years, or just one day? Look for the time word.':'This one says “every year”. Is that one day, or many years?');}
+      }));
+    }
+    $('#sc').style.display='';
+    finishPart(5);
+    afterPart(5,'<b>Part 6 done.</b> The wind carries the weather. Weather is one day; climate is what a place is like over many years.');
+  })();
+}
+
+/* ===================== Part 7: writing to the Captain ===================== */
+function partReply(){
+  const easy=S.easy;
+  const GAPS=[
+    {id:'tilt',opts:['tilted','straight','short'],ans:'tilted',concept:'The tilt of the Earth’s axis makes the seasons',area:'SC',hint:'Remember how the axis looked on the season machine.'},
+    {id:'pole',opts:['South','North'],ans:'South',concept:'The tilt of the Earth’s axis makes the seasons',area:'SC',hint:'In December, which end leaned towards the Sun?'},
+    {id:'seas',opts:['summer','winter'],ans:'summer',concept:'The hemispheres have opposite seasons',area:'SC',hint:'The half that leans towards the Sun gets straight-down light.'},
+    {id:'cloud',opts:['dark','white'],ans:'dark',concept:'Signs that rain is coming',area:'SC',hint:'What colour were the clouds before the rain?',skipEasy:true},
+    {id:'likely',opts:['likely','certain'],ans:'likely',concept:'Certain or only likely',area:'MA',hint:'Can anyone promise the weather?'}
+  ].filter(g=>!(easy&&g.skipEasy));
+  const vals={};
+  const gap=id=>{if(!GAPS.find(g=>g.id===id))return id==='cloud'?'dark':'';return `<span class="gap ${vals[id]?'':'g-'+id}" id="g-${id}">${vals[id]||' '}</span>`;};
+  function letter(){return `<div class="reply" id="rep">Dear Captain Hale,<br>
+    You are not being teased! The Earth’s axis is ${gap('tilt')}. In December, the ${gap('pole')} Pole end leans towards the Sun. The sunlight comes down more straight on the south, so you have ${gap('seas')}, while London has the opposite.<br>
+    For your voyage home: watch the sky. If the clouds turn ${gap('cloud')} and the wind picks up, rain is ${gap('likely')}.<br>
+    From Mistress Wren and her Apprentice</div>`;}
+  panel({title:'Writing to the Captain',say:['Let’s write back to Captain Hale. Fill each gap in the letter.'],body:'<div id="lt"></div>'});
+  (async()=>{
+    for(const g of GAPS){
+      $('#lt').innerHTML=letter();const el=$('#g-'+g.id);if(el)el.classList.add('now');
+      await choose({item:'reply-'+g.id,concept:g.concept,area:g.area,ask:'Which word fills the green gap?',options:g.opts.map(o=>({v:o,label:o})),answer:g.ans,quick:true,
+        help:[g.hint,'Think back to the part of the game where you found this out.',`The word is “${g.ans}”.`],
+        miss:()=>g.hint});
+      vals[g.id]=g.ans;
+    }
+    $('#lt').innerHTML=letter();
+    say(['The letter is ready to send. One last puzzle before it goes.']);
+    await choose({item:'transfer-october',concept:'The hemispheres have opposite seasons',area:'SC',ask:'Right now, at the end of October, it is spring here at home. What season is it in London?',
+      options:ORDER.map(k=>({v:k,label:SEASONS[k].name})),answer:'autumn',
+      miss:v=>v==='spring'?'London is in the other half of the Earth. Its seasons are the opposite of ours.':'Spring here is halfway from winter to summer. In the other half, it’s halfway from summer to winter.',
+      help:['London is in the Northern Hemisphere. We are in the Southern.','The two halves have opposite seasons. Our summer is their winter.','Our spring comes after winter. Their opposite comes after summer: autumn.'],
+      why:'Autumn. Our seasons and London’s are opposite, so while our trees blossom, London’s leaves are falling.'});
+    finishPart(6);
+    ending();
+  })();
+}
+async function ending(){
+  runId++;toTop();pips(-1);
+  main.innerHTML=`<section class="panel"><h2>The letter is on its way</h2>
+    ${sayHTML(['Thank you, Apprentice. Captain Hale will be very glad of this.'])}
+    <div class="answer"><b>The Captain’s puzzle:</b> the Earth’s axis is tilted. In December the south leans towards the Sun and has summer, while London has winter. In June it’s the other way round.</div>
+    <div class="answer"><b>Sailing home:</b> dark clouds, cooler air and a rising wind mean rain is likely. Not certain, but likely.</div>
+    <div class="tell"><h3>Tell a grown-up</h3><ul>
+      <li>Why is Christmas hot here and cold in London?</li>
+      <li>What is the difference between weather and climate?</li>
+      <li>A question for another day: why are summer days longer than winter days?</li></ul></div>
+    <p style="margin:14px 0 6px">If you like, write one sentence to the Captain.</p>
+    <textarea id="note" maxlength="300" placeholder="Dear Captain..."></textarea>
+    <div class="tell"><h3>Now put the iPad away</h3><p style="margin:0">Go outside with a grown-up. Look at the sky, feel the air, and drop a pinch of grass to see which way the wind blows. What weather do you think is coming? Or try the sunbeam test with a real torch and a sheet of paper.</p></div>
+    ${goBtn('Close the machine')}</section>`;
+  const NK=G.key('season-machine-note');
+  const ta=$('#note');try{ta.value=localStorage.getItem(NK)||'';}catch(e){}
+  ta.oninput=()=>{try{localStorage.setItem(NK,ta.value);}catch(e){}G.write({prompt:'One sentence to the Captain',text:ta.value,game:GAME,part:'Writing to the Captain',area:'EN'});};
+  G.finish();
+  await click('#go');home();
+}
+
+/* ---------- grown-up controls ---------- */
+function setEasy(){$('#easy').setAttribute('aria-pressed',S.easy?'true':'false');}
+$('#easy').onclick=()=>{S.easy=!S.easy;save();setEasy();if(cur>=0&&cur<6)runPart(cur);};
+$('#home').onclick=home;
+let armed=false;
+$('#reset').onclick=()=>{
+  if(!armed){armed=true;$('#reset').textContent='Tap again to start again';setTimeout(()=>{armed=false;$('#reset').textContent='Start again';},4000);return;}
+  armed=false;$('#reset').textContent='Start again';const e=S.easy;S=blank();S.easy=e;save();home();
+};
+setEasy();home();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>

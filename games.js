@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "season-machine",
+    title: "Mistress Wren's Season Machine",
+    blurb: "Solve Captain Hale's Christmas puzzle, then read the sky for his voyage home.",
+    players: ["maeve"],
+    subject: "Geography",
+    source: "Earth is Our Home and My Earth Notebook, Lessons 6 and 7: the seasons; the weather",
+    added: "2026-10-27",
+    colour: "#C9973E",
+    href: "games/season-machine/index.html"
+  },
+  {
     id: "daniels-island-chart",
     title: "Daniel's Island Chart",
     blurb: "Finish Daniel's sea chart and find out why no two Caribbean islands are alike.",
