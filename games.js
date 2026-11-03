@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "pattern-engine",
+    title: "The Pattern Engine",
+    blurb: "Watch Ada Lovelace's story, then punch cards to make a machine stitch patterns.",
+    players: ["maggie", "maeve"],
+    subject: "Technology",
+    source: "Introduction to coding (ICTDT): sequence, debugging and repeat loops, through Ada Lovelace and the Jacquard loom. Follows MYHS Maths 2B Lessons 29 to 32 (coding) for Maeve",
+    added: "2026-11-04",
+    colour: "#A87A22",
+    href: "games/pattern-engine/index.html"
+  },
+  {
     id: "wind-reader",
     title: "The Wind Reader",
     blurb: "Find a wind nobody can see, and use it to sail Captain Hale’s ship.",
