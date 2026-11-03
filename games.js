@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "wind-reader",
+    title: "The Wind Reader",
+    blurb: "Find a wind nobody can see, and use it to sail Captain Hale’s ship.",
+    players: ["maeve"],
+    subject: "Geography",
+    source: "Earth is Our Home and My Earth Notebook, Lesson 8: the winds",
+    added: "2026-11-04",
+    colour: "#2F6FA0",
+    href: "games/wind-reader/index.html"
+  },
+  {
     id: "season-machine",
     title: "Mistress Wren's Season Machine",
     blurb: "Solve Captain Hale's Christmas puzzle, then read the sky for his voyage home.",
