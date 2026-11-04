@@ -10,11 +10,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
 <style>
-/* An inventor's workshop in 1843: linen cloth, cream punched cards, indigo thread and brass. */
+/* An inventor's workshop in 1843: linen cloth, cream punched cards, indigo thread and brass.
+   Version 2: one picture per step, one short line from Bobbin, feedback on the picture. */
 :root{
   --paper:#F5EFE2; --paper-2:#EADFC8; --ink:#1E2440; --muted:#5E5A52; --line:#DCCFB4;
   --deep:#26306B; --thread:#2F3C8F; --brass:#A87A22; --brass-d:#7C5913; --card:#FFFBF0; --card-edge:#8A7550;
-  --madder:#A8322A; --good:#2C7A47; --good-bg:#E4F2E6; --soft:#FBF6EA;
+  --madder:#A8322A; --good:#2C7A47; --good-bg:#E4F2E6; --soft:#FBF6EA; --hmm-bg:#FFF4D6;
   --display:"Fraunces",Georgia,"Times New Roman",serif;
   --body:"Andika","Trebuchet MS",system-ui,sans-serif;
   color-scheme:light;
@@ -22,146 +23,227 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;color:var(--ink);font-family:var(--body);font-size:1.15rem;line-height:1.5;background-color:var(--paper);
+body{margin:0;color:var(--ink);font-family:var(--body);font-size:1.15rem;line-height:1.45;background-color:var(--paper);
   background-image:repeating-linear-gradient(0deg,rgba(120,95,50,.035) 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,rgba(120,95,50,.035) 0 1px,transparent 1px 4px)}
-.wrap{max-width:1100px;margin:0 auto;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(84px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:1100px;margin:0 auto;padding:max(12px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(84px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 button:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--brass);outline-offset:3px}
 h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;line-height:1.15;text-wrap:balance}
-p{margin:0 0 .7em}
+p{margin:0 0 .6em}
 
-.top{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding:6px 0 12px;margin-bottom:16px;border-bottom:3px solid var(--deep)}
+.top{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;padding:4px 0 10px;margin-bottom:12px;border-bottom:3px solid var(--deep)}
 .brand{display:flex;gap:12px;align-items:center}
-.brand svg{width:50px;height:50px;flex:none}
-.brand h1{font-size:clamp(1.6rem,4.4vw,2.3rem);color:var(--deep)}
-.brand p{margin:0;font-size:.95rem;color:var(--muted)}
+.brand svg{width:46px;height:46px;flex:none}
+.brand h1{font-size:clamp(1.5rem,4.2vw,2.2rem);color:var(--deep)}
 .who{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:1rem}
-.chip{background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 14px;min-height:44px}
-.chip[aria-pressed="true"]{background:var(--deep);border-color:var(--deep);color:#fff}
+.chip-t{background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 14px;min-height:44px}
+.chip-t[aria-pressed="true"]{background:var(--deep);border-color:var(--deep);color:#fff}
 
-.panel{background:#fff;border:2px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--line);padding:20px}
-.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--brass-d);font-weight:700;margin:0 0 4px}
-.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-.head h2{font-size:clamp(1.45rem,4vw,2rem);color:var(--deep)}
+.panel{background:#fff;border:2px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--line);padding:14px 16px 18px}
+.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.head h2{font-size:clamp(1.3rem,3.8vw,1.8rem);color:var(--deep)}
 .back{background:#fff;border:2px solid var(--deep);border-radius:999px;padding:6px 16px;min-height:46px;font-size:1rem}
 .dots{display:flex;gap:6px;margin-left:auto}
-.dots i{width:12px;height:12px;border-radius:50%;background:var(--paper-2);border:2px solid var(--line)}
+.dots i{width:14px;height:14px;border-radius:50%;background:var(--paper-2);border:2px solid var(--line)}
 .dots i.on{background:var(--deep);border-color:var(--deep)}
 
-.btn{font-family:var(--body);font-weight:700;font-size:1.15rem;background:var(--deep);color:#fff;border:0;border-radius:999px;padding:.5em 1.35em;min-height:52px;box-shadow:0 4px 0 #141a40;transition:transform .08s}
+/* Bobbin says one line */
+.bubble{display:flex;gap:10px;align-items:center;min-height:56px}
+.bubble .face{flex:none;width:54px;height:54px;border-radius:50%;background:var(--paper);border:2px solid var(--brass);display:grid;place-items:center}
+.bubble .face svg{width:44px;height:44px}
+.bubble p{flex:1;margin:0;font-size:1.3rem;line-height:1.3;font-weight:700;background:var(--soft);border-radius:14px;padding:8px 14px;border:2px solid var(--line)}
+.bubble p b{color:var(--deep)}
+.qbtn{flex:none;width:50px;height:50px;border-radius:50%;border:2px solid var(--brass);background:var(--hmm-bg);font-weight:700;font-size:1.35rem;color:var(--ink)}
+.qbtn[disabled]{opacity:.3;cursor:default}
+.clue{margin:8px 0 0 64px;background:var(--hmm-bg);border-radius:12px;padding:8px 12px;font-size:1.08rem}
+.clue .mini{margin-top:6px}
+
+.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:20px;align-items:start;margin-top:12px}
+.stage.one{grid-template-columns:1fr}
+@media (max-width:860px){.stage{grid-template-columns:1fr}}
+.pic{position:relative;display:grid;justify-items:center;gap:6px}
+.side{min-width:0}
+.toast{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);max-width:92%;width:max-content;padding:10px 18px;border-radius:16px;font-weight:700;font-size:1.2rem;text-align:center;box-shadow:0 5px 0 rgba(0,0,0,.18);z-index:20;pointer-events:none}
+.toast.yes{background:var(--good-bg);color:var(--good);border:3px solid var(--good)}
+.toast.hmm{background:var(--hmm-bg);color:#6d4410;border:3px solid #E3BE5C}
+
+.btn{font-family:var(--body);font-weight:700;font-size:1.15rem;background:var(--deep);color:#fff;border:0;border-radius:999px;padding:.45em 1.3em;min-height:54px;box-shadow:0 4px 0 #141a40;transition:transform .08s}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #141a40}
 .btn.brass{background:var(--brass);box-shadow:0 4px 0 var(--brass-d)}
 .btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
-.btn.small{font-size:1rem;min-height:46px;padding:.35em 1em}
+.btn.small{font-size:1rem;min-height:46px;padding:.3em 1em}
 .btn[disabled]{opacity:.4;cursor:default}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.next-row{margin-top:18px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
-
-.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px;align-items:start}
-@media (max-width:860px){.stage{grid-template-columns:1fr}}
-.prompt{font-size:1.25rem;margin-bottom:12px}
-.prompt b{color:var(--deep)}
+.next-row{margin-top:14px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
 .note{font-size:.95rem;color:var(--muted)}
 
 /* the cloth */
-.cloth-wrap{display:grid;justify-items:center;gap:8px}
-.cloth{--c:6;--r:6;position:relative;display:grid;grid-template-columns:repeat(var(--c),1fr);width:100%;max-width:min(500px,calc(62vh * var(--c) / var(--r)));aspect-ratio:var(--c)/var(--r);
-  background:#FBF7EC;border:3px solid var(--card-edge);border-radius:8px;box-shadow:0 4px 0 var(--line);overflow:visible}
+.cloth{--c:6;--r:6;position:relative;display:grid;grid-template-columns:repeat(var(--c),1fr);width:100%;max-width:min(480px,calc(56vh * var(--c) / var(--r)));aspect-ratio:var(--c)/var(--r);
+  background:#FBF7EC;border:3px solid var(--card-edge);border-radius:8px;box-shadow:0 4px 0 var(--line)}
 .cell{position:relative;border:1px solid #E6DCC5;background:repeating-linear-gradient(45deg,transparent 0 3px,rgba(140,110,60,.05) 3px 4px)}
-.cell.t::after{content:"";position:absolute;inset:12%;border:2.5px dotted #8C7A55;border-radius:4px;background:rgba(168,122,34,.08)}
+.cell.t::after{content:"";position:absolute;inset:12%;border:2.5px dotted #8C7A55;border-radius:4px;background:rgba(168,122,34,.09)}
 .cell.st{box-shadow:inset 0 0 0 3px rgba(38,48,107,.35)}
 .cell svg{position:absolute;inset:14%;width:72%;height:72%;color:var(--thread);z-index:1}
 .cell.off svg{color:var(--madder)}
-.cell.m::before{content:"";position:absolute;inset:26%;border-radius:50%;border:3px solid #6F6A60;background:rgba(255,255,255,.7);z-index:2}
-.cell.mark-able{cursor:pointer}
+.cell.m::before{content:"";position:absolute;inset:26%;border-radius:50%;border:3px solid #6F6A60;background:rgba(255,255,255,.75);z-index:2}
+.cell.no{animation:no .6s}
+@keyframes no{30%{background:#F6D7D2}}
+.cell.tap{cursor:pointer}
 .needle{position:absolute;width:calc(100% / var(--c) * .62);aspect-ratio:1;transform:translate(-50%,-50%);transition:left .3s ease,top .3s ease;z-index:3;pointer-events:none}
 .needle .rot{width:100%;height:100%;transform:rotate(var(--rot,0deg));transition:transform .3s ease}
 .needle svg{width:100%;height:100%}
 .needle.bump{animation:bump .45s}
 @keyframes bump{20%{margin-left:-6px}40%{margin-left:6px}60%{margin-left:-4px}80%{margin-left:3px}}
-.round{min-height:1.6em;font-size:1rem;color:var(--muted)}
-.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.92rem;color:var(--muted)}
-.legend span{display:inline-flex;gap:6px;align-items:center}
-.legend i{display:inline-block;width:20px;height:20px;border:2.5px dotted #8C7A55;border-radius:3px}
+.round{min-height:1.5em;font-size:1rem;color:var(--muted)}
 
 /* punched cards */
 .code{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;min-height:96px;padding:10px;border:2px dashed var(--line);border-radius:12px;background:var(--soft)}
-.code+p{margin-top:12px}
 .code.empty::before{content:attr(data-empty);color:var(--muted);font-size:1rem;align-self:center}
-.card{position:relative;width:72px;min-height:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:var(--card);border:2px solid var(--card-edge);border-radius:6px;padding:12px 4px 6px;box-shadow:0 3px 0 var(--line);font-size:.78rem;font-weight:700;color:var(--ink);line-height:1.1;text-align:center}
+.card{position:relative;width:70px;min-height:82px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:var(--card);border:2px solid var(--card-edge);border-radius:6px;padding:12px 4px 6px;box-shadow:0 3px 0 var(--line);font-size:.78rem;font-weight:700;color:var(--ink);line-height:1.1;text-align:center}
 .card::before{content:"";position:absolute;top:4px;left:8px;right:8px;height:4px;background:radial-gradient(circle,#8A7550 1.4px,transparent 1.8px) 0 0/8px 4px repeat-x;opacity:.55}
 .card .ic{width:34px;height:34px}
-.card .ic svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.card .ic svg,.ic svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 .card .n{position:absolute;top:-10px;left:-8px;min-width:24px;height:24px;border-radius:12px;background:var(--deep);color:#fff;font-size:.8rem;display:grid;place-items:center;padding:0 5px}
 .card.now{border-color:var(--brass);background:#FFF1C9;box-shadow:0 0 0 3px var(--brass)}
 .card.sel{border-color:var(--madder);box-shadow:0 0 0 3px var(--madder)}
+.card.pick{border-color:var(--good);background:var(--good-bg);box-shadow:0 0 0 3px var(--good)}
 .card.turn{background:repeating-linear-gradient(45deg,var(--card) 0 6px,#F3EAD3 6px 8px)}
 .card.rep{width:auto;min-width:84px}
 .tray{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
-.tray .card{width:84px;min-height:92px;font-size:.85rem}
+.tray .card{width:82px;min-height:90px;font-size:.85rem}
 .tray .card:active{transform:translateY(2px)}
 .tray .card[disabled]{opacity:.35}
 .mini{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center;vertical-align:middle}
-.mini .card{width:44px;min-height:48px;padding:8px 2px 3px;font-size:0}
+.mini .card{width:42px;min-height:46px;padding:8px 2px 3px;font-size:0}
 .mini .card .ic{width:24px;height:24px}
 .mini .card::before{display:none}
 .mini .repm{display:inline-flex;gap:4px;align-items:center;border:2px solid var(--brass);border-radius:8px;padding:3px 6px;background:#FFF6DD;font-size:.85rem;font-weight:700}
-
 .repblock{display:flex;flex-direction:column;gap:6px;border:3px solid var(--brass);border-radius:10px;padding:6px 8px 8px;background:#FFF6DD}
 .repblock.open{box-shadow:0 0 0 3px rgba(168,122,34,.35)}
 .rephead{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1rem}
-.rephead button{width:40px;height:40px;border-radius:50%;border:2px solid var(--brass-d);background:#fff;font-weight:700;font-size:1.2rem}
-.rephead .cnt{min-width:1.4em;text-align:center;font-size:1.3rem}
+.rephead button{width:42px;height:42px;border-radius:50%;border:2px solid var(--brass-d);background:#fff;font-weight:700;font-size:1.25rem}
+.rephead .cnt{min-width:1.4em;text-align:center;font-size:1.35rem}
 .repbody{display:flex;flex-wrap:wrap;gap:8px;min-height:88px;min-width:120px;padding:6px;border:2px dashed var(--brass);border-radius:8px}
 .repbody.empty::before{content:"Tap cards to put them in here";color:var(--brass-d);font-size:.95rem;align-self:center}
 .edit{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px;padding:10px;border:2px solid var(--madder);border-radius:12px;background:#FFF4F2}
 .edit .card{width:60px;min-height:66px}
-
 .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-.msg{min-height:1.5em;margin-top:12px;font-size:1.12rem;padding:0}
-.msg.show{padding:12px 14px;border-radius:12px;background:var(--soft);border:2px solid var(--line)}
-.msg.good{background:var(--good-bg);border-color:#A9D5B3}
 .budget{font-size:1rem;color:var(--muted);margin-top:6px}
 .budget b{color:var(--ink)}
 
-.help{margin-top:12px}
-.help .hint{margin-top:8px;padding:10px 14px;border-left:5px solid var(--brass);background:var(--soft);border-radius:0 10px 10px 0}
-
-/* choices */
-.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:10px}
-.opt{display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px;min-height:64px;text-align:center;font-size:1.1rem;box-shadow:0 3px 0 var(--line)}
-.opt.no{border-color:#D9B3AE;background:#FBF1EF;opacity:.7}
+/* picture tiles */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:10px}
+.opt{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:3px solid var(--line);border-radius:14px;padding:10px;text-align:center;font-size:1.1rem;font-weight:700;box-shadow:0 3px 0 var(--line)}
+.opt.no{opacity:.35;box-shadow:none}
 .opt.yes{border-color:var(--good);background:var(--good-bg)}
 .opt svg.th{width:100%;max-width:170px;height:auto}
 
+/* drag or tap */
+.chip{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;border:3px solid var(--deep);border-radius:14px;padding:6px;display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;font-size:.95rem;line-height:1.15;text-align:center;box-shadow:0 4px 0 var(--line);position:relative}
+.chip.lift{z-index:60;box-shadow:0 10px 18px rgba(0,0,0,.25)}
+.chip.sel{box-shadow:0 0 0 4px var(--brass),0 4px 0 var(--line)}
+.chip.used{visibility:hidden}
+.chip.shake{animation:shake .45s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.slot.cando{outline:3px dashed var(--brass);outline-offset:2px}
+.slot.over{outline:4px solid var(--good)}
+
+/* the story strip */
+.timeline{display:grid;grid-template-columns:repeat(var(--k),minmax(0,1fr));gap:10px;width:100%;position:relative;padding-top:10px}
+.timeline::before{content:"";position:absolute;left:4px;right:4px;top:0;height:4px;background:var(--brass);border-radius:2px}
+.slot{min-height:150px;border:3px dashed var(--line);border-radius:14px;background:var(--soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px;text-align:center;font-weight:700;font-size:.95rem}
+.slot .num{font-family:var(--display);font-size:1.6rem;color:var(--line)}
+.slot.filled{border-style:solid;border-color:var(--good);background:#fff}
+.slot .yr{font-family:var(--display);color:var(--brass-d);font-size:1.15rem}
+.slot svg,.chip svg.pn{width:100%;max-width:150px;height:auto}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;width:100%;margin-top:14px}
+
+/* the loom */
+.loom{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start;width:100%}
+@media (max-width:600px){.loom{grid-template-columns:1fr}}
+.chain{display:flex;flex-direction:column;gap:6px;align-items:center;min-width:96px;padding:8px;border:2px dashed var(--line);border-radius:12px;background:var(--soft)}
+.chain .lab{font-size:.85rem;color:var(--muted);font-weight:700}
+.minicard{display:flex;gap:3px;padding:6px 6px 5px;background:var(--card);border:2px solid var(--card-edge);border-radius:4px}
+.minicard i{width:9px;height:9px;border-radius:50%;border:1.5px solid #C9B98F;background:#fff}
+.minicard i.h{background:#2a2118;border-color:#2a2118}
+button.minicard{cursor:pointer}
+.minicard.pick{box-shadow:0 0 0 3px var(--good)}
+.frame{display:grid;justify-items:center;gap:8px;width:100%}
+.beam{width:min(100%,460px);height:14px;border-radius:4px;background:linear-gradient(#9C7429,#6F4F12)}
+.weave{--n:5;--rr:4;display:grid;grid-template-columns:repeat(var(--n),1fr);width:min(100%,430px);aspect-ratio:var(--n)/var(--rr);
+  background:repeating-linear-gradient(90deg,#F7F0DE 0 calc(100%/var(--n) - 3px),#B8A77C calc(100%/var(--n) - 3px) calc(100%/var(--n)));border:2px solid #B8A77C}
+.wc{position:relative;border-bottom:1px solid #E5D9BB}
+.wc.t::after{content:"";position:absolute;inset:14%;border:2.5px dotted #8C7A55;border-radius:3px}
+.wc.on{background:repeating-linear-gradient(0deg,var(--thread) 0 5px,#3d4a9e 5px 7px);border-radius:2px}
+.wc.bad{outline:3px dashed var(--madder);outline-offset:-5px}
+.wc.row-now{box-shadow:inset 0 3px 0 rgba(168,122,34,.0)}
+.rowmark{position:absolute;left:-28px;font-size:1.3rem;color:var(--brass-d)}
+.pcard{display:flex;gap:10px;justify-content:center;padding:14px 16px 12px;background:var(--card);border:3px solid var(--card-edge);border-radius:8px;box-shadow:0 4px 0 var(--line);width:min(100%,430px)}
+.hole{width:52px;height:52px;border-radius:50%;border:3px dashed #B8A77C;background:#fff;display:grid;place-items:center;font-size:.8rem;color:var(--muted);font-weight:700}
+.hole[aria-pressed="true"]{background:#2a2118;border:3px solid #2a2118;color:#fff}
+
+/* repeat slider and beads */
+.slide{display:flex;align-items:center;gap:12px;background:var(--soft);border:2px solid var(--line);border-radius:999px;padding:6px 16px;margin-top:12px}
+.slide input{flex:1;height:48px;accent-color:var(--brass)}
+.slide b{font-family:var(--display);font-size:1.6rem;min-width:2.6em;text-align:center;color:var(--deep)}
+.pocket{display:flex;gap:6px;align-items:center;min-height:62px;min-width:160px;padding:8px 12px;border:3px solid var(--brass);border-radius:12px;background:#FFF6DD}
+.bead{width:46px;height:46px;border-radius:50%;border:2px solid #222;display:inline-block;flex:none;position:relative}
+.bead.r{background:#C0392B}
+.bead.b{background:#2E5EAA}
+.bead.b::after{content:"";position:absolute;left:8px;right:8px;top:20px;height:4px;background:#fff;border-radius:2px}
+.beadbtn{background:#fff;border:3px solid var(--line);border-radius:16px;padding:8px 12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;box-shadow:0 3px 0 var(--line)}
+.string{display:flex;flex-wrap:wrap;gap:3px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--soft);border:2px solid var(--line);min-height:44px}
+.string .bead{width:32px;height:32px}
+.string .bead.b::after{left:5px;right:5px;top:13px;height:4px}
+
 .video{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;border:3px solid var(--card-edge)}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.quote{font-family:var(--display);font-size:clamp(1.3rem,3.4vw,1.75rem);line-height:1.35;color:var(--deep);border-left:6px solid var(--brass);padding:6px 0 6px 18px;margin:8px 0 16px}
-.quote cite{display:block;font-family:var(--body);font-size:1rem;color:var(--muted);font-style:normal;margin-top:6px}
-textarea{width:100%;min-height:130px;border:2px solid var(--line);border-radius:12px;padding:12px;font-size:1.15rem;background:#FFFDF8}
+details.fallback{margin-top:10px;font-size:1rem;color:var(--muted)}
+details.fallback summary{cursor:pointer;font-weight:700}
+.overcard{width:100%;max-width:640px;background:#fffaf0;border:3px solid var(--brass);border-radius:16px;padding:14px 18px;box-shadow:0 5px 0 rgba(0,0,0,.12);margin-top:6px}
+.quote{font-family:var(--display);font-size:clamp(1.15rem,3vw,1.5rem);line-height:1.35;color:var(--deep);margin:0 0 6px}
+.quote cite{display:block;font-family:var(--body);font-size:.95rem;color:var(--muted);font-style:normal;margin-top:4px}
+textarea{width:100%;min-height:110px;border:2px solid var(--line);border-radius:12px;padding:12px;font-size:1.15rem;background:#FFFDF8}
 .checks{display:grid;gap:10px;margin:12px 0}
 .check{display:flex;gap:12px;align-items:center;background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:10px 14px;min-height:56px;text-align:left;font-size:1.1rem}
 .check .bx{width:30px;height:30px;border:3px solid var(--deep);border-radius:6px;display:grid;place-items:center;flex:none;background:#fff}
 .check[aria-pressed="true"] .bx::after{content:"";width:14px;height:8px;border-left:4px solid var(--deep);border-bottom:4px solid var(--deep);transform:rotate(-45deg) translate(1px,-2px)}
+.steps3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;margin-top:8px}
+.steps3 div{background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-weight:700;font-size:1rem}
+.steps3 b{display:block;font-family:var(--display);font-size:1.4rem;color:var(--brass-d)}
+.bigpic{width:100%;max-width:640px;height:auto}
+.engine .gear{transform-box:fill-box;transform-origin:center}
+.engine.go .gear{animation:spin 2.4s linear 2}
+.engine.go .g2{animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.engine .out{opacity:0;transition:opacity .4s}
+.engine.go .out{opacity:1}
+.engine .note{opacity:0}
+.engine.go .note{animation:float 2.6s ease-out forwards}
+@keyframes float{0%{opacity:0;transform:translateY(10px)}30%{opacity:1}100%{opacity:1;transform:translateY(-14px)}}
+.engine.go .feed{animation:feed 2.4s linear}
+@keyframes feed{to{transform:translateX(26px)}}
+@media (prefers-reduced-motion:reduce){.engine.go .gear,.engine.go .feed{animation:none}.engine.go .note{animation:none;opacity:1}}
 
 /* the map */
-.intro{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;align-items:center;margin-bottom:18px}
+.intro{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;align-items:center;margin-bottom:12px}
 @media (max-width:760px){.intro{grid-template-columns:1fr}}
-.sess{margin:18px 0 8px;font-family:var(--display);font-size:1.25rem;color:var(--deep)}
-.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-.part{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;text-align:left;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px;min-height:88px;box-shadow:0 3px 0 var(--line)}
-.part .num{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--paper-2);font-family:var(--display);font-weight:700;font-size:1.4rem;color:var(--deep)}
-.part.done .num{background:var(--good-bg);color:var(--good)}
+.sess{margin:16px 0 8px;font-family:var(--display);font-size:1.2rem;color:var(--deep)}
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.part{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center;text-align:left;background:#fff;border:3px solid var(--line);border-radius:14px;padding:10px;min-height:86px;box-shadow:0 3px 0 var(--line)}
+.part .pp{width:80px;height:60px;border-radius:10px;overflow:hidden;position:relative;background:var(--soft)}
+.part .pp svg{width:100%;height:100%}
+.part .tick{position:absolute;right:3px;top:3px;width:24px;height:24px;border-radius:50%;background:var(--good);color:#fff;display:grid;place-items:center;font-size:.85rem}
 .part.next{border-color:var(--brass)}
 .part.locked{opacity:.45;cursor:default}
-.part b{font-size:1.1rem;display:block}
-.part small{color:var(--muted);font-size:.92rem;display:block;line-height:1.3}
-.stopnote{margin-top:16px;font-size:1rem;color:var(--muted)}
+.part b{font-size:1.08rem;display:block}
 .colours{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
-.sw{width:52px;height:52px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line)}
+.sw{width:50px;height:50px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line)}
 .sw[aria-pressed="true"]{box-shadow:0 0 0 4px var(--ink)}
-.beads{display:inline-flex;gap:3px;align-items:center}
+.endicons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.endicons div{background:var(--soft);border:2px solid var(--line);border-radius:14px;padding:10px;text-align:center;font-weight:700}
+.endicons .ic{display:block;width:44px;height:44px;margin:0 auto 4px;color:var(--deep)}
 </style>
 </head>
 <body>
@@ -169,7 +251,7 @@ textarea{width:100%;min-height:130px;border:2px solid var(--line);border-radius:
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 50 50" aria-hidden="true"><rect x="7" y="6" width="36" height="40" rx="4" fill="#FFFBF0" stroke="#26306B" stroke-width="3"/><g fill="#26306B"><circle cx="16" cy="15" r="2.6"/><circle cx="25" cy="15" r="2.6"/><circle cx="34" cy="22" r="2.6"/><circle cx="16" cy="29" r="2.6"/><circle cx="25" cy="29" r="2.6"/><circle cx="34" cy="36" r="2.6"/><circle cx="16" cy="36" r="2.6"/></g></svg>
-      <div><h1>The Pattern Engine</h1><p>Ada Lovelace and the punched cards</p></div>
+      <h1>The Pattern Engine</h1>
     </div>
     <div class="who" id="who"></div>
   </header>
@@ -178,27 +260,64 @@ textarea{width:100%;min-height:130px;border:2px solid var(--line);border-radius:
 <script>
 'use strict';
 const G=window.GR||{player:()=>'unknown',key:k=>k,testing:()=>false,start(){},part(){},partDone(){},finish(){},ask(){return {miss(){},hint(){},done(){},giveUp(){},missed:()=>0};},write(){}};
-const GAME='pattern-engine', SAVE='pattern-engine-v1';
+const GAME='pattern-engine', SAVE='pattern-engine-v2';
 let PLAYER=G.player(), KEY=G.key(SAVE), S=load();
 const app=document.getElementById('app');
 
-/* ---------- small helpers ---------- */
+/* ---------- helpers ---------- */
 function h(tag,a,...kids){const e=document.createElement(tag);if(a)for(const k in a){const v=a[k];if(v==null||v===false)continue;if(k==='class')e.className=v;else if(k==='on')for(const ev in v)e.addEventListener(ev,v[ev]);else if(k==='html')e.innerHTML=v;else if(k==='style')e.style.cssText=v;else e.setAttribute(k,v===true?'':v);}
   kids.flat(9).forEach(c=>{if(c==null||c===false)return;e.appendChild(typeof c==='string'||typeof c==='number'?document.createTextNode(String(c)):c);});return e;}
-/* rich(): plain text with **bold** only. Built from text nodes, never parsed as HTML. */
+/* rich(): plain text with **bold** only, built from text nodes (never parsed as HTML). */
 function rich(s){const f=document.createDocumentFragment();String(s).split(/(\*\*[^*]+\*\*)/).forEach(p=>{if(!p)return;if(p.startsWith('**')&&p.endsWith('**'))f.appendChild(h('b',null,p.slice(2,-2)));else f.appendChild(document.createTextNode(p));});return f;}
 const P=s=>h('p',null,rich(s));
 const isMaeve=()=>PLAYER==='maeve';
 const REL=()=>!isMaeve();
 const NAME=()=>isMaeve()?'Maeve':'Maggie';
 const SIS=()=>isMaeve()?'Maggie':'Maeve';
-let _id=0; const uid=()=>'c'+(++_id);
+const M=(a,b)=>isMaeve()?a:b;
+let _id=0;const uid=()=>'c'+(++_id);
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 const words=s=>(String(s||'').trim().match(/\S+/g)||[]).length;
+const svgEl=s=>{const d=document.createElement('div');d.innerHTML=s;return d.firstElementChild;};
 
-function defaults(){return {easy:false,done:{},part:null,task:0,colour:'#2F3C8F',design:null,writing:{},choice:{},finished:false,started:false};}
+function defaults(){return {easy:false,done:{},part:null,task:0,colour:'#2F3C8F',design:null,writing:{},choice:{},finished:false};}
 function load(){try{return Object.assign(defaults(),JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){return defaults();}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ---------- pictures (all drawn here, no outside images) ---------- */
+const BOBBIN='<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="13" cy="14" r="9" fill="#B9B2A6"/><circle cx="13" cy="14" r="5" fill="#E9B8B8"/><circle cx="35" cy="14" r="9" fill="#B9B2A6"/><circle cx="35" cy="14" r="5" fill="#E9B8B8"/><ellipse cx="24" cy="28" rx="14" ry="13" fill="#CFC8BC"/><circle cx="19" cy="25" r="2.3" fill="#1E2440"/><circle cx="29" cy="25" r="2.3" fill="#1E2440"/><circle cx="24" cy="32" r="2.5" fill="#C0565A"/><path d="M7 31l10 1M7 35l10-1M41 31l-10 1M41 35l-10-1" stroke="#6B655C" stroke-width="1"/><rect x="31" y="36" width="10" height="9" rx="2" fill="#A87A22"/><rect x="32.5" y="38" width="7" height="5" fill="#2F3C8F"/></svg>';
+const PANEL={
+  loom:'<svg class="pn" viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#EFE4CC"/><rect x="22" y="12" width="84" height="8" rx="2" fill="#7C5913"/><rect x="22" y="84" width="84" height="8" rx="2" fill="#7C5913"/><path d="M26 92v12M102 92v12" stroke="#7C5913" stroke-width="4"/><g stroke="#8A7550" stroke-width="1.4"><path d="M30 20v64M38 20v64M46 20v64M54 20v64M62 20v64M70 20v64M78 20v64M86 20v64M94 20v64"/></g><g fill="#2F3C8F"><rect x="27" y="56" width="70" height="6"/><rect x="43" y="64" width="38" height="6"/><rect x="51" y="48" width="22" height="6"/><rect x="27" y="72" width="70" height="6"/></g><g transform="translate(116 14)"><rect width="30" height="16" rx="2" fill="#FFFBF0" stroke="#8A7550" stroke-width="1.5"/><rect y="20" width="30" height="16" rx="2" fill="#FFFBF0" stroke="#8A7550" stroke-width="1.5"/><rect y="40" width="30" height="16" rx="2" fill="#FFFBF0" stroke="#8A7550" stroke-width="1.5"/><rect y="60" width="30" height="16" rx="2" fill="#FFFBF0" stroke="#8A7550" stroke-width="1.5"/><g fill="#2a2118"><circle cx="8" cy="8" r="2"/><circle cx="22" cy="8" r="2"/><circle cx="15" cy="28" r="2"/><circle cx="8" cy="48" r="2"/><circle cx="15" cy="48" r="2"/><circle cx="22" cy="68" r="2"/></g><path d="M15 16v4M15 36v4M15 56v4" stroke="#8A7550" stroke-width="1.5"/></g></svg>',
+  ada:'<svg class="pn" viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#E7EEF6"/><path d="M60 104l12-44h16l12 44z" fill="#6B4E8C"/><circle cx="80" cy="44" r="14" fill="#F2D2B6"/><path d="M66 42q2-18 14-18t14 18q-6-8-14-8t-14 8z" fill="#4A3324"/><circle cx="75" cy="45" r="1.8" fill="#222"/><circle cx="85" cy="45" r="1.8" fill="#222"/><path d="M76 51q4 3 8 0" stroke="#222" stroke-width="1.4" fill="none"/><rect x="66" y="70" width="28" height="18" rx="2" fill="#A8322A"/><path d="M80 70v18" stroke="#fff" stroke-width="1.5"/><g font-family="Georgia" font-weight="700" fill="#26306B"><text x="18" y="38" font-size="18">1+2</text><text x="112" y="34" font-size="20">x²</text><text x="116" y="80" font-size="18">÷</text><text x="22" y="82" font-size="18">3×4</text></g></svg>',
+  meet:'<svg class="pn" viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#F3EAD7"/><path d="M14 104l8-34h12l8 34z" fill="#6B4E8C"/><circle cx="28" cy="58" r="10" fill="#F2D2B6"/><path d="M18 56q2-14 10-14t10 14q-4-6-10-6t-10 6z" fill="#4A3324"/><path d="M48 104V74h18v30z" fill="#2B2B3A"/><circle cx="57" cy="62" r="10" fill="#F2D2B6"/><rect x="48" y="40" width="18" height="12" fill="#1E1E28"/><rect x="44" y="51" width="26" height="3" fill="#1E1E28"/><g transform="translate(112 56)"><rect x="-34" y="-34" width="68" height="68" rx="6" fill="#C9A44E" stroke="#7C5913" stroke-width="3"/><g class="gear" fill="#7C5913"><circle r="16"/><g stroke="#7C5913" stroke-width="7"><path d="M0-22V22M-22 0H22M-16-16L16 16M16-16L-16 16"/></g><circle r="6" fill="#EAD9A8"/></g><g fill="#fff" stroke="#7C5913" stroke-width="2"><rect x="-28" y="22" width="10" height="8"/><rect x="-14" y="22" width="10" height="8"/><rect x="0" y="22" width="10" height="8"/><rect x="14" y="22" width="10" height="8"/></g></g></svg>',
+  notes:'<svg class="pn" viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#EFE4CC"/><rect x="30" y="12" width="78" height="90" rx="3" fill="#FFFDF6" stroke="#B8A77C" stroke-width="2"/><g stroke="#B8A77C" stroke-width="1.5"><path d="M40 32h56M40 44h56M40 56h56M40 68h40"/></g><g font-family="Georgia" font-weight="700" fill="#26306B" font-size="13"><text x="40" y="29">Note G</text><text x="40" y="53">V1 × V2</text><text x="40" y="78">1, 2, 3 …</text></g><path d="M118 20q20 30-6 74" stroke="#7C5913" stroke-width="3" fill="none"/><path d="M118 20q18 2 22 12-10-2-22-12z" fill="#fff" stroke="#7C5913" stroke-width="1.5"/><g fill="#2F3C8F"><ellipse cx="128" cy="92" rx="6" ry="4.5"/><path d="M133 92V70h3v22z"/></g></svg>',
+  comp:'<svg class="pn" viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#E3E8EC"/><rect x="18" y="16" width="56" height="84" rx="4" fill="#5B6770"/><rect x="86" y="16" width="56" height="84" rx="4" fill="#5B6770"/><g fill="#F6C430"><circle cx="30" cy="30" r="3"/><circle cx="42" cy="30" r="3"/><circle cx="54" cy="30" r="3"/><circle cx="30" cy="42" r="3"/><circle cx="54" cy="42" r="3"/></g><g fill="#E35D4F"><circle cx="42" cy="42" r="3"/><circle cx="66" cy="30" r="3"/></g><g fill="none" stroke="#DDE3E7" stroke-width="3"><circle cx="102" cy="40" r="11"/><circle cx="126" cy="40" r="11"/></g><g fill="#DDE3E7"><circle cx="102" cy="40" r="3"/><circle cx="126" cy="40" r="3"/></g><rect x="26" y="60" width="40" height="30" rx="2" fill="#2E3A40"/><path d="M30 70h20M30 78h28" stroke="#7BE08F" stroke-width="2"/></svg>'
+};
+const PANEL_ALT={loom:'A loom with a chain of punched cards',ada:'Young Ada with her maths',meet:'Ada and Babbage with his machine',notes:'Ada writing her notes',comp:'An early electronic computer'};
+const KIDS='<svg class="bigpic" viewBox="0 0 320 120" aria-hidden="true"><rect width="320" height="120" rx="12" fill="#F3EAD7"/><rect y="96" width="320" height="24" fill="#D8C49A"/><rect x="262" y="22" width="40" height="74" rx="3" fill="#8A6A44"/><circle cx="294" cy="60" r="3" fill="#E7C66B"/><g transform="translate(34 30)"><circle cx="16" cy="10" r="10" fill="#F2D2B6"/><path d="M6 8q2-12 10-12t10 12q-4-5-10-5t-10 5z" fill="#4A3324"/><path d="M4 66l6-42h12l6 42z" fill="#16A08F"/><rect x="24" y="30" width="18" height="22" rx="2" fill="#FFFBF0" stroke="#8A7550" stroke-width="2"/><path d="M33 47V36M29 40l4-4 4 4" stroke="#1E2440" stroke-width="2" fill="none" stroke-linecap="round"/></g><g transform="translate(176 30)"><circle cx="16" cy="10" r="10" fill="#F2D2B6"/><path d="M6 8q2-12 10-12t10 12q-4-5-10-5t-10 5z" fill="#7A3B1D"/><path d="M4 66l6-42h12l6 42z" fill="#E2557A"/></g><g fill="#FFFBF0" stroke="#8A7550" stroke-width="1.5"><rect x="88" y="100" width="18" height="14" rx="2"/><rect x="110" y="100" width="18" height="14" rx="2"/><rect x="132" y="100" width="18" height="14" rx="2"/><rect x="154" y="100" width="18" height="14" rx="2"/></g><g fill="#B8A77C"><ellipse cx="214" cy="104" rx="6" ry="3"/><ellipse cx="232" cy="108" rx="6" ry="3"/><ellipse cx="248" cy="104" rx="6" ry="3"/></g><path d="M212 84q20-10 40 0" stroke="#A87A22" stroke-width="3" fill="none" stroke-dasharray="6 5"/></svg>';
+function engineSVG(){
+  const sq=[];const pat=[[1,0,1,0,1,0],[0,1,1,1,1,0],[1,1,0,0,1,1],[0,1,1,1,1,0],[1,0,1,0,1,0]];
+  pat.forEach((r,y)=>r.forEach((v,x)=>{if(v)sq.push(`<rect class="out" style="transition-delay:${(.3+(y*6+x)*.05).toFixed(2)}s" x="${232+x*12}" y="${52+y*12}" width="10" height="10" rx="1.5" fill="#2F3C8F"/>`);}));
+  return `<svg class="bigpic engine" viewBox="0 0 320 170" role="img" aria-label="Babbage's Engine with a chain of cards"><rect width="320" height="170" rx="12" fill="#F3EAD7"/>
+  <g class="feed"><g fill="#FFFBF0" stroke="#8A7550" stroke-width="1.5"><rect x="4" y="80" width="22" height="30" rx="2"/><rect x="30" y="80" width="22" height="30" rx="2"/><rect x="56" y="80" width="22" height="30" rx="2"/></g><g fill="#2a2118"><circle cx="10" cy="88" r="2"/><circle cx="20" cy="100" r="2"/><circle cx="36" cy="92" r="2"/><circle cx="46" cy="88" r="2"/><circle cx="62" cy="102" r="2"/><circle cx="72" cy="90" r="2"/></g></g>
+  <rect x="86" y="30" width="126" height="120" rx="8" fill="#C9A44E" stroke="#7C5913" stroke-width="4"/>
+  <g transform="translate(120 70)"><g class="gear"><circle r="20" fill="#7C5913"/><g stroke="#7C5913" stroke-width="8"><path d="M0-27V27M-27 0H27M-19-19L19 19M19-19L-19 19"/></g><circle r="7" fill="#EAD9A8"/></g></g>
+  <g transform="translate(170 96)"><g class="gear g2"><circle r="16" fill="#5E4410"/><g stroke="#5E4410" stroke-width="7"><path d="M0-22V22M-22 0H22M-16-16L16 16M16-16L-16 16"/></g><circle r="6" fill="#EAD9A8"/></g></g>
+  <g fill="#EAD9A8" stroke="#7C5913" stroke-width="2"><rect x="100" y="120" width="16" height="20" rx="2"/><rect x="122" y="120" width="16" height="20" rx="2"/><rect x="144" y="120" width="16" height="20" rx="2"/><rect x="166" y="120" width="16" height="20" rx="2"/><rect x="188" y="120" width="16" height="20" rx="2"/></g>
+  <rect x="226" y="46" width="84" height="72" rx="4" fill="#FBF7EC" stroke="#8A7550" stroke-width="2"/>${sq.join('')}
+  <g class="note" style="animation-delay:.8s" fill="#A8322A"><ellipse cx="246" cy="160" rx="6" ry="4.5"/><path d="M251 160V140h3v20z"/></g>
+  <g class="note" style="animation-delay:1.3s" fill="#A8322A"><ellipse cx="272" cy="154" rx="6" ry="4.5"/><path d="M277 154V134h3v20z"/><path d="M277 134l12 4v4l-12-4z"/></g>
+  <g class="note" style="animation-delay:1.8s" fill="#A8322A"><ellipse cx="298" cy="162" rx="6" ry="4.5"/><path d="M303 162V142h3v20z"/></g></svg>`;
+}
+const BUGPIC='<svg viewBox="0 0 80 60" aria-hidden="true"><ellipse cx="40" cy="34" rx="14" ry="18" fill="#6B4E2E"/><circle cx="40" cy="14" r="8" fill="#4A3324"/><path d="M40 18v34" stroke="#2a2118" stroke-width="2"/><g stroke="#2a2118" stroke-width="2.5" stroke-linecap="round"><path d="M27 26l-12-6M26 36H12M27 46l-12 6M53 26l12-6M54 36h14M53 46l12 6M36 8l-5-6M44 8l5-6"/></g></svg>';
+const TILEPIC={
+  ada:PANEL.ada,unplugged:'<svg viewBox="0 0 320 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+KIDS.slice(KIDS.indexOf('>')+1).replace('</svg>','')+'</svg>',
+  read:'<svg viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#FBF7EC"/><g stroke="#E6DCC5"><path d="M0 27h160M0 55h160M0 82h160M40 0v110M80 0v110M120 0v110"/></g><g stroke="#2F3C8F" stroke-width="5" stroke-linecap="round"><path d="M10 92l20 16M30 92l-20 16M50 92l20 16M70 92l-20 16M50 64l20 16M70 64l-20 16"/></g><circle cx="100" cy="72" r="13" fill="#C9A44E" stroke="#5E4410" stroke-width="3"/></svg>',
+  punch:PANEL.loom,bug:'<svg viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#FBF6EA"/><g transform="translate(40 25)">'+BUGPIC.slice(BUGPIC.indexOf('>')+1).replace('</svg>','')+'</g></svg>',
+  repeat:'<svg viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#FBF7EC"/><g fill="#2F3C8F"><rect x="12" y="78" width="18" height="18"/><rect x="30" y="78" width="18" height="18"/><rect x="30" y="60" width="18" height="18"/><rect x="48" y="60" width="18" height="18"/><rect x="48" y="42" width="18" height="18"/><rect x="66" y="42" width="18" height="18"/><rect x="66" y="24" width="18" height="18"/><rect x="84" y="24" width="18" height="18"/></g><path d="M118 40a18 18 0 1 1 0 30" stroke="#A87A22" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M110 64l8 8 8-8" stroke="#A87A22" stroke-width="6" fill="none" stroke-linecap="round"/></svg>',
+  sister:'<svg viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#F3EAD7"/><rect x="30" y="20" width="100" height="74" rx="4" fill="#fff" stroke="#8A7550" stroke-width="2"/><g stroke="#C9B98F"><path d="M30 38h100M30 56h100M30 74h100M50 20v74M70 20v74M90 20v74M110 20v74"/></g><g fill="#999"><rect x="70" y="38" width="20" height="18"/><rect x="90" y="38" width="20" height="18"/><rect x="70" y="56" width="20" height="18"/></g><path d="M122 92l18-30 6 4-18 30z" fill="#E7C66B" stroke="#7C5913" stroke-width="2"/></svg>',
+  end:'<svg viewBox="0 0 160 110" aria-hidden="true"><rect width="160" height="110" rx="10" fill="#F3EAD7"/><rect x="50" y="18" width="60" height="70" rx="5" fill="#C9A44E" stroke="#7C5913" stroke-width="3"/><circle cx="80" cy="48" r="14" fill="#7C5913"/><circle cx="80" cy="48" r="5" fill="#EAD9A8"/><g fill="#A8322A"><ellipse cx="124" cy="40" rx="6" ry="4.5"/><path d="M129 40V20h3v20z"/><ellipse cx="140" cy="56" rx="6" ry="4.5"/><path d="M145 56V36h3v20z"/></g></svg>'
+};
 
 /* ---------- card faces ---------- */
 const ICON={
@@ -209,7 +328,8 @@ const ICON={
   fwd:'<svg viewBox="0 0 24 24"><path d="M12 21V5M6 11l6-6 6 6"/></svg>',
   tl:'<svg viewBox="0 0 24 24"><path d="M17 20v-7a5 5 0 0 0-5-5H6M10 4 6 8l4 4"/></svg>',
   tr:'<svg viewBox="0 0 24 24"><path d="M7 20v-7a5 5 0 0 1 5-5h6M14 4l4 4-4 4"/></svg>',
-  rep:'<svg viewBox="0 0 24 24"><path d="M4 11V9a3 3 0 0 1 3-3h11M15 3l3 3-3 3M20 13v2a3 3 0 0 1-3 3H6M9 21l-3-3 3-3"/></svg>'
+  rep:'<svg viewBox="0 0 24 24"><path d="M4 11V9a3 3 0 0 1 3-3h11M15 3l3 3-3 3M20 13v2a3 3 0 0 1-3 3H6M9 21l-3-3 3-3"/></svg>',
+  step:'<svg viewBox="0 0 24 24"><path d="M5 5v14l9-7zM17 5v14"/></svg>'
 };
 const LABEL={up:'up',down:'down',left:'left',right:'right',fwd:'Forward',tl:'Turn left',tr:'Turn right'};
 const TXT={up:'↑',down:'↓',left:'←',right:'→',fwd:'F',tl:'L',tr:'R'};
@@ -217,7 +337,6 @@ const STITCH='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19
 const STITCH_OFF='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>';
 const NEEDLE_ABS='<div class="rot"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#C9A44E" stroke="#5E4410" stroke-width="3"/><circle cx="20" cy="20" r="5" fill="#fff" stroke="#5E4410" stroke-width="2"/></svg></div>';
 const NEEDLE_REL='<div class="rot"><svg viewBox="0 0 40 40"><path d="M20 2 29 19h-5v17h-8V19h-5z" fill="#C9A44E" stroke="#5E4410" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="20" cy="29" rx="1.8" ry="4" fill="#fff"/></svg></div>';
-
 function cardEl(op,o={}){const turn=(op==='tl'||op==='tr');
   return h(o.tag||'div',{class:'card'+(turn?' turn':'')+(o.cls?' '+o.cls:''),'data-num':o.num||null,'aria-label':LABEL[op]+(o.num?', card '+o.num:''),type:o.tag==='button'?'button':null,on:o.on,disabled:o.disabled},
     o.num?h('span',{class:'n'},String(o.num)):null,h('span',{class:'ic',html:ICON[op]}),h('span',null,LABEL[op]));}
@@ -245,7 +364,7 @@ function simulate(items,t){
     if(nx<0||ny<0||nx>=c||ny>=r){bumped=true;steps.push({num:o.num,op:o.op,rounds:o.rounds,x,y,dir:d,bump:true});break;}
     x=nx;y=ny;seen.add(key(x,y));steps.push({num:o.num,op:o.op,rounds:o.rounds,x,y,dir:d,stitch:true});
   }
-  return {steps,seen,bumped};
+  return {steps,seen,bumped,end:{x,y,dir:d}};
 }
 const eqSet=(a,b)=>a.size===b.size&&[...a].every(k=>b.has(k));
 const subset=(a,b)=>[...a].every(k=>b.has(k));
@@ -256,20 +375,20 @@ function Cloth(t){
   const [c,r]=t.grid;const el=h('div',{class:'cloth',style:'--c:'+c+';--r:'+r,role:'img','aria-label':'The cloth, '+c+' squares across and '+r+' down'});
   const cells=[];for(let y=0;y<r;y++)for(let x=0;x<c;x++){const d=h('div',{class:'cell','data-x':x,'data-y':y});el.appendChild(d);cells.push(d);}
   const needle=h('div',{class:'needle',html:REL()?NEEDLE_REL:NEEDLE_ABS});el.appendChild(needle);
-  const api={el,target:null,
+  const api={el,target:null,cells,
     cell:(x,y)=>cells[y*c+x],
     setTarget(set){api.target=set;cells.forEach(d=>d.classList.toggle('t',set.has(key(+d.dataset.x,+d.dataset.y))));},
     clear(){cells.forEach(d=>{d.classList.remove('s','off');d.innerHTML='';});},
     stitch(x,y){const d=api.cell(x,y);if(!d)return;const off=!!(api.target&&!api.target.has(key(x,y)));d.classList.add('s');d.classList.toggle('off',off);d.innerHTML=off?STITCH_OFF:STITCH;},
     needle(x,y,dir){needle.style.left=((x+.5)/c*100)+'%';needle.style.top=((y+.5)/r*100)+'%';needle.firstChild.style.setProperty('--rot',((dir||0)*90)+'deg');},
     bump(){needle.classList.remove('bump');void needle.offsetWidth;needle.classList.add('bump');},
+    show(set,end){api.clear();set.forEach(k=>{const [x,y]=k.split(',').map(Number);api.stitch(x,y);});if(end)api.needle(end.x,end.y,end.dir);},
     reset(){api.clear();api.stitch(t.start.x,t.start.y);api.needle(t.start.x,t.start.y,t.start.dir);}
   };
   api.cell(t.start.x,t.start.y).classList.add('st');
   api.reset();
   return api;
 }
-function legend(withTarget){return h('div',{class:'legend'},withTarget?h('span',null,h('i'),'squares to stitch'):null,h('span',null,'The needle starts on the ringed square.'));}
 
 /* ---------- running a code ---------- */
 function speed(n){const base=isMaeve()?(S.easy?650:560):480;return n>20?Math.round(base*.62):base;}
@@ -292,14 +411,10 @@ function highlighter(root,roundEl){
       if(roundEl)roundEl.textContent=s.rounds&&s.rounds.length?('Repeat: round '+s.rounds[s.rounds.length-1][0]+' of '+s.rounds[s.rounds.length-1][1]):'';},
     clear(){root.querySelectorAll('.card.now').forEach(e=>e.classList.remove('now'));if(roundEl)roundEl.textContent='';}};
 }
-
-/* read-only code strip */
 function strip(spec,o={}){const items=toItems(spec);numberCards(items);
   const draw=a=>a.map(it=>it.rep?h('div',{class:'repblock'},h('div',{class:'rephead'},h('span',{class:'ic',style:'width:24px;height:24px;display:inline-block',html:ICON.rep}),'Repeat '+it.rep+' times'),h('div',{class:'repbody'},draw(it.body))):cardEl(it.op,{num:o.numbered?it.num:null}));
-  return h('div',{class:'code'+(o.cls?' '+o.cls:'')},draw(items));}
+  return h('div',{class:'code'},draw(items));}
 function miniStrip(spec){const draw=a=>a.map(it=>typeof it==='string'?cardEl(it):h('span',{class:'repm'},'Repeat '+it.rep+':',draw(it.body)));return h('span',{class:'mini'},draw(spec));}
-
-/* small picture of what a code stitches */
 function thumb(t,spec){const [c,r]=t.grid;const sim=simulate(toItems(spec),t);const s=24;const NS='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 '+(c*s)+' '+(r*s));svg.setAttribute('class','th');svg.setAttribute('aria-hidden','true');
   const add=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e;};
@@ -309,190 +424,130 @@ function thumb(t,spec){const [c,r]=t.grid;const sim=simulate(toItems(spec),t);co
   add('rect',{x:t.start.x*s+2,y:t.start.y*s+2,width:s-4,height:s-4,fill:'none',stroke:'#26306B','stroke-width':2.4,rx:3,'stroke-opacity':.6});
   return svg;}
 
-function beads(list){const NS='http://www.w3.org/2000/svg';const svg=document.createElementNS(NS,'svg');const w=26;svg.setAttribute('viewBox','0 0 '+(list.length*w+4)+' 30');svg.setAttribute('width',Math.min(340,list.length*w+4));svg.setAttribute('aria-hidden','true');
-  const ln=document.createElementNS(NS,'line');ln.setAttribute('x1',0);ln.setAttribute('x2',list.length*w+4);ln.setAttribute('y1',15);ln.setAttribute('y2',15);ln.setAttribute('stroke','#5E5A52');ln.setAttribute('stroke-width',2);svg.appendChild(ln);
-  list.forEach((b,i)=>{const cx=i*w+15;const c=document.createElementNS(NS,'circle');c.setAttribute('cx',cx);c.setAttribute('cy',15);c.setAttribute('r',11);c.setAttribute('fill',b==='r'?'#C0392B':'#2E5EAA');c.setAttribute('stroke','#222');c.setAttribute('stroke-width',1.5);svg.appendChild(c);
-    if(b==='b'){const l=document.createElementNS(NS,'line');l.setAttribute('x1',cx-7);l.setAttribute('x2',cx+7);l.setAttribute('y1',15);l.setAttribute('y2',15);l.setAttribute('stroke','#fff');l.setAttribute('stroke-width',3);svg.appendChild(l);}});
-  return h('span',{class:'beads','aria-label':list.map(b=>b==='r'?'red':'blue').join(', ')},svg);}
-
-/* help: three levels, least first */
-function helpBox(hints,q,acts){
-  let n=0;const box=h('div',{class:'help'});const list=h('div');const btn=h('button',{class:'btn ghost small',type:'button'},'Help');
-  btn.addEventListener('click',()=>{if(n>=hints.length)return;if(n===0&&q)q.hint();const hn=hints[n++];const d=h('div',{class:'hint'});
-    const text=typeof hn==='string'?hn:hn.text;d.appendChild(P(text));if(hn.code)d.appendChild(miniStrip(hn.code));list.appendChild(d);
-    if(hn.act&&acts&&acts[hn.act])acts[hn.act]();
-    btn.textContent=n===hints.length-1?'Show me':'More help';if(n>=hints.length)btn.hidden=true;});
-  box.append(btn,list);return box;}
-
-function say(el,text,good){el.textContent='';el.className='msg'+(text?' show':'')+(good?' good':'');if(text)el.appendChild(rich(text));}
+/* ---------- drag, or tap then tap ---------- */
+function dnd(chips,targets,attempt){
+  let sel=null;const open=t=>!t.classList.contains('filled');
+  const mark=on=>targets.forEach(t=>t.classList.toggle('cando',on&&open(t)));
+  function at(x,y){for(const t of targets){if(!open(t))continue;const r=t.getBoundingClientRect();if(x>=r.left-10&&x<=r.right+10&&y>=r.top-10&&y<=r.bottom+10)return t;}return null;}
+  chips.forEach(ch=>{let sx=0,sy=0,on=false,moved=false;
+    ch.addEventListener('pointerdown',e=>{if(ch.classList.contains('used'))return;on=true;moved=false;sx=e.clientX;sy=e.clientY;try{ch.setPointerCapture(e.pointerId);}catch(_){}ch.classList.add('lift');e.preventDefault();});
+    ch.addEventListener('pointermove',e=>{if(!on)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.hypot(dx,dy)>8)moved=true;ch.style.transform='translate('+dx+'px,'+dy+'px)';const t=at(e.clientX,e.clientY);targets.forEach(x=>x.classList.toggle('over',x===t));});
+    ch.addEventListener('pointerup',e=>{if(!on)return;on=false;ch.classList.remove('lift');ch.style.transform='';targets.forEach(x=>x.classList.remove('over'));
+      if(!moved){sel=sel===ch?null:ch;chips.forEach(c=>c.classList.toggle('sel',c===sel));mark(!!sel);return;}
+      const t=at(e.clientX,e.clientY);if(t)attempt(ch,t);});
+    ch.addEventListener('pointercancel',()=>{on=false;ch.classList.remove('lift');ch.style.transform='';});
+  });
+  targets.forEach(t=>t.addEventListener('click',()=>{if(!sel||!open(t))return;const c=sel;sel=null;c.classList.remove('sel');mark(false);attempt(c,t);}));
+}
 
 /* ===================================================================
-   THE PARTS
+   THE PARTS (content)
    =================================================================== */
 const ADA_STORY=[
   'Ada Lovelace was born in London in 1815. Her mother made sure she studied mathematics.',
-  'When Ada was 17 she met **Charles Babbage**, an inventor who was designing machines that could work out sums by themselves.',
-  'Babbage planned a bigger machine, the **Analytical Engine**. It would follow instructions punched as holes in cards. He borrowed the idea from the **Jacquard loom**, which wove patterns in silk by following a chain of punched cards.',
-  'In 1843 Ada wrote notes explaining the Engine. They included a list of steps for the Engine to work out a tricky set of numbers. She also saw that it could work with more than numbers, perhaps even music.',
-  'Babbage never finished building his Engine. The engine in this game is a pretend one, so you can try out Ada\'s ideas.'
+  'When Ada was 17 she met Charles Babbage, an inventor who was designing machines that could work out sums by themselves.',
+  'Babbage planned a bigger machine, the Analytical Engine. It would follow instructions punched as holes in cards, an idea borrowed from the Jacquard loom, which wove patterns in silk by following a chain of punched cards.',
+  'In 1843 Ada wrote notes explaining the Engine, with a list of steps for it to work out a tricky set of numbers. She saw it could work with more than numbers, perhaps even music.',
+  'Babbage never finished building his Engine. The engine in this game is a pretend one.'
 ];
 function parts(){
-  const M=isMaeve();
-  const ARROWS=['up','down','left','right'], RELS=['fwd','tl','tr'];
+  const ARROWS=['up','down','left','right'],RELS=['fwd','tl','tr'];
+  const mv=isMaeve();
   return [
-  {id:'ada',title:"Ada's story",line:'Watch the story of Ada Lovelace.',session:1,tasks:[
+  {id:'ada',title:"Ada's story",pic:'ada',session:1,tasks:[
     {type:'video'},
-    {type:'story',title:"Ada's story in short",paras:ADA_STORY,note:M?'Grown-up: read this aloud.':null},
-    {type:'mcq',item:'What told the Jacquard loom which threads to lift?',concept:'jacquard-punched-cards',area:'HSS',
-      prompt:'What told the **Jacquard loom** which threads to lift?',
-      options:['Cards with holes punched in them','A weaver calling out each colour','A painted picture fixed to the loom'],
-      hints:['Think about what Babbage borrowed for his Engine.','The holes in each card said yes or no to each thread.'],
-      why:'Yes. Each card\'s holes said which threads to lift. A chain of cards wove the whole pattern.'},
-    M?{type:'mcq',item:'What did Ada think the Engine might make one day, besides sums?',concept:'ada-beyond-numbers',area:'HSS',
-      prompt:'Ada thought the Engine could work with more than numbers. What did she think it might make one day?',
-      options:['Music','Bread','Rain'],easy:{options:['Music','Bread']},
-      hints:['It\'s something you can listen to.'],
-      why:'Yes. Ada wrote that it might one day make music. Today computers do.'}
-    :{type:'mcq',item:'Why do people call Ada a programmer?',concept:'ada-program',area:'HSS',
-      prompt:'Why do people call Ada a **programmer**?',
-      options:['She wrote a list of steps for the Engine to follow','She built the Engine herself','She invented the Jacquard loom'],
-      hints:['Babbage never finished building the Engine, and the loom was Jacquard\'s.','A program is a list of instructions for a machine.'],
-      why:'Yes. Her notes set out step-by-step instructions for the Engine. That list of steps was a program.'}
+    {type:'loom'},
+    {type:'strip'}
   ]},
-  {id:'unplugged',title:'Be the engine',line:'Act out a code with your sister. No screen.',session:1,tasks:[{type:'unplugged'}]},
-  {id:'read',title:'Read the cards',line:M?'Work out what a code will stitch.':'Predict what a program will stitch.',session:1,tasks:M?[
-    {type:'story',title:'How the Pattern Engine works',demo:{grid:[4,4],start:{x:0,y:3},code:['right','right','up']},
-      paras:['The **needle** follows the **code**: a row of cards, one card at a time.','Each arrow moves the needle **one square** and stitches it.','Tap **Run** to watch.']},
-    {type:'pick',item:'Predict: right right up up',concept:'trace-code',area:'ICTDT',grid:[5,5],start:{x:0,y:4},code:['right','right','up','up'],
-      options:[['right','right','up','up'],['up','up','right','right'],['right','up','right','up']],
-      hints:['Each arrow moves the needle one square that way.','Put your finger on the needle. The first two cards both go right. Which picture starts by going right twice?',{text:'Watch it run, then choose.',act:'run'}]},
-    {type:'pick',item:'Predict: down right down right',concept:'trace-code',area:'ICTDT',grid:[5,5],start:{x:0,y:0},code:['down','right','down','right'],
-      options:[['down','right','down','right'],['right','down','right','down'],['down','down','right','right']],
-      hints:['Follow the cards with your finger, one at a time.','The first card goes down, not right. Then the needle takes turns: down, right, down, right.',{text:'Watch it run, then choose.',act:'run'}]},
+  {id:'unplugged',title:'Be the engine',pic:'unplugged',session:1,tasks:[{type:'unplugged'}]},
+  {id:'read',title:'Read the cards',pic:'read',session:1,tasks:mv?[
+    {type:'demo',grid:[4,4],start:{x:0,y:3},code:['right','right','up'],say:'Each arrow moves the needle one square. Tap **Run**!'},
+    {type:'endsq',item:'Where does it stop: right right up up',concept:'trace-code',area:'ICTDT',grid:[5,5],start:{x:0,y:4},code:['right','right','up','up'],
+      hints:['Each arrow moves the needle one square that way.','Put your finger on the needle. Move it with each card.',{text:'Watch it run, then tap where it stopped.',act:'run'}]},
+    {type:'mark',item:'Predict: down right down right',concept:'trace-code',area:'ICTDT',grid:[5,5],start:{x:0,y:0},code:['down','right','down','right'],
+      hints:['Follow the cards with your finger, one at a time.','First down, then right, then down, then right.',{text:'Watch it run, then tap the squares.',act:'run'}]},
     {type:'pick',item:'Predict: up left left up',concept:'trace-code',area:'ICTDT',grid:[5,5],start:{x:4,y:4},code:['up','left','left','up'],
       options:[['up','left','left','up'],['left','up','up','left'],['up','up','left','left']],
       hints:['This needle starts in the bottom corner on the right.','First it goes up one square. Then two squares left.',{text:'Watch it run, then choose.',act:'run'}]}
   ]:[
-    {type:'story',title:'How the Pattern Engine works',demo:{grid:[4,4],start:{x:0,y:3,dir:0},code:['fwd','tr','fwd','fwd']},
-      paras:['The **needle** follows the **code**, one card at a time. A code is also called a **program**.','**Forward** moves the needle one square the way its point faces, and stitches it.','**Turn left** and **Turn right** spin it on the spot, from the needle\'s point of view, like the turn cards in Be the engine. Tap **Run** to watch.']},
+    {type:'demo',grid:[4,4],start:{x:0,y:3,dir:0},code:['fwd','tr','fwd','fwd'],say:'**Forward** goes where the point faces. Turns spin it on the spot. Tap **Run**!'},
     {type:'mark',item:'Predict: F F R F F',concept:'trace-code',area:'ICTDT',grid:[6,6],start:{x:1,y:5,dir:0},code:['fwd','fwd','tr','fwd','fwd'],
-      hints:['Only Forward stitches. Turns just spin the needle.','After two Forwards the needle turns right. Its point now faces the right-hand side of the cloth.',{text:'Watch it run slowly, then mark what you saw.',act:'run'}]},
+      hints:['Only Forward stitches. Turns just spin the needle.','After two Forwards it turns right, so its point faces the right side of the cloth.',{text:'Watch it run slowly, then mark what you saw.',act:'run'}]},
     {type:'mark',item:'Predict: F L F R F L F (needle facing left)',concept:'relative-turns',area:'ICTDT',grid:[6,6],start:{x:5,y:0,dir:3},code:['fwd','tl','fwd','tr','fwd','tl','fwd'],
-      hints:['Look at the needle\'s point first. It faces left.','Stand up and face left, as the needle does. Now turn to your own left. Which way are you facing on the cloth?',{text:'Watch it run slowly, then mark what you saw.',act:'run'}]},
+      hints:['Look at the needle\'s point first. It faces left.','Stand up and face left, as the needle does. Now turn to your own left. Which way do you face on the cloth?',{text:'Watch it run slowly, then mark what you saw.',act:'run'}]},
     {type:'mark',item:'Predict: F R F R F R F',concept:'trace-code',area:'ICTDT',grid:[6,6],start:{x:2,y:4,dir:0},code:['fwd','tr','fwd','tr','fwd','tr','fwd'],
-      hints:['Follow it one card at a time with your finger.','Three right turns bring the needle round in a loop. Where does the last Forward land?',{text:'Watch it run slowly, then mark what you saw.',act:'run'}]}
+      hints:['Follow it one card at a time with your finger.','Three right turns bring the needle round in a loop.',{text:'Watch it run slowly, then mark what you saw.',act:'run'}]}
   ]},
-  {id:'punch',title:'Punch the cards',line:M?'Make codes for the dotted patterns.':'Write programs for the dotted patterns.',session:1,tasks:M?[
+  {id:'punch',title:'Punch the cards',pic:'punch',session:1,tasks:mv?[
     {type:'build',item:'Order the cards: right right up up right',concept:'sequence-code',area:'ICTDT',grid:[6,6],start:{x:1,y:4},ops:ARROWS,
-      solution:['right','right','up','up','right'],parsons:true,easy:{solution:['right','right','up','up']},
-      prompt:'Put these cards in order so the needle stitches the **dotted squares**.',
-      hints:['Start at the needle. Which way is the first dotted square?','The first two cards go right. Where does the pattern turn next?',{text:'The code starts like this:',code:['right','right','up']}]},
-    {type:'choose',key:'p4',prompt:'Choose a pattern to make.',options:[
+      solution:['right','right','up','up','right'],parsons:true,easy:{solution:['right','right','up','up']},say:'Put the cards in order to stitch the dots.',
+      hints:['Start at the needle. Which way is the first dot?','The first two cards go right. Where next?',{text:'It starts like this:',code:['right','right','up']}]},
+    {type:'choose',key:'p4',say:'Pick a pattern to make.',options:[
       {label:'The wave',t:{type:'build',item:'Build: the wave',concept:'sequence-code',area:'ICTDT',grid:[7,6],start:{x:0,y:4},ops:ARROWS,solution:['up','right','right','down','right','right','up'],easy:{solution:['up','right','right','down']},
-        prompt:'Make a code to stitch the **wave**. Tap a card to add it.',hints:['The wave goes up and down as it travels right.','It starts: up one, then right two.',{text:'The code starts like this:',code:['up','right','right','down']}]}},
+        say:'Make a code for the **wave**. Tap cards to add them.',hints:['The wave goes up and down as it travels right.','It starts: up one, then right two.',{text:'It starts like this:',code:['up','right','right','down']}]}},
       {label:'The key',t:{type:'build',item:'Build: the key',concept:'sequence-code',area:'ICTDT',grid:[6,6],start:{x:1,y:1},ops:ARROWS,solution:['right','right','right','down','down','left'],easy:{solution:['right','right','down','down']},
-        prompt:'Make a code to stitch the **key**. Tap a card to add it.',hints:['Count the dotted squares going right first.','Three squares right, then the key turns down.',{text:'The code starts like this:',code:['right','right','right','down']}]}}
+        say:'Make a code for the **key**. Tap cards to add them.',hints:['Count the dots going right first.','Three squares right, then the key turns down.',{text:'It starts like this:',code:['right','right','right','down']}]}}
     ]},
     {type:'build',item:'Build: the steps',concept:'sequence-code',area:'ICTDT',grid:[6,6],start:{x:0,y:5},ops:ARROWS,
-      solution:['up','up','right','right','up','up','right','right'],easy:{solution:['up','up','right','right']},
-      prompt:'Now the **steps**. Make a code to stitch the dotted squares.',
-      hints:['Start at the needle. Which way is the first dotted square?','Up two, then right two. What comes next?',{text:'The code starts like this:',code:['up','up','right','right','up']}]}
+      solution:['up','up','right','right','up','up','right','right'],easy:{solution:['up','up','right','right']},say:'Now the **steps**!',
+      hints:['Which way is the first dot?','Up two, then right two. What comes next?',{text:'It starts like this:',code:['up','up','right','right','up']}]}
   ]:[
     {type:'build',item:'Build: the hook',concept:'sequence-code',area:'ICTDT',grid:[6,6],start:{x:1,y:5,dir:0},ops:RELS,
-      solution:['fwd','fwd','fwd','tr','fwd','fwd','tr','fwd'],
-      prompt:'Write a program to stitch the **hook**. Tap a card to add it.',
-      hints:['Count the dotted squares the needle meets before it has to turn.','Three Forwards, then turn right. Then count again.',{text:'The program starts like this:',code:['fwd','fwd','fwd','tr','fwd']}]},
-    {type:'choose',key:'p4',prompt:'Choose a pattern to make.',options:[
+      solution:['fwd','fwd','fwd','tr','fwd','fwd','tr','fwd'],say:'Write a program to stitch the **hook**.',
+      hints:['Count the dots before the needle has to turn.','Three Forwards, then turn right. Then count again.',{text:'It starts like this:',code:['fwd','fwd','fwd','tr','fwd']}]},
+    {type:'choose',key:'p4',say:'Pick a pattern to make.',options:[
       {label:'The wave',t:{type:'build',item:'Build: the wave',concept:'relative-turns',area:'ICTDT',grid:[6,6],start:{x:0,y:4,dir:0},ops:RELS,solution:['fwd','tr','fwd','fwd','tr','fwd','tl','fwd','fwd'],
-        prompt:'Write a program to stitch the **wave**.',hints:['The needle points up. After one Forward, which way must it turn to travel along the wave?','At the top it turns right. Coming down, it faces down, so to face along the wave again it turns left.',{text:'The program starts like this:',code:['fwd','tr','fwd','fwd','tr']}]}},
+        say:'Write a program to stitch the **wave**.',hints:['The needle points up. After one Forward, which way must it turn?','Coming down, it faces down. To face along the wave again, it turns left.',{text:'It starts like this:',code:['fwd','tr','fwd','fwd','tr']}]}},
       {label:'The key',t:{type:'build',item:'Build: the key',concept:'relative-turns',area:'ICTDT',grid:[6,6],start:{x:1,y:1,dir:1},ops:RELS,solution:['fwd','fwd','fwd','tr','fwd','fwd','tr','fwd'],
-        prompt:'Write a program to stitch the **key**.',hints:['The needle faces right. Count the squares before the key turns.','Three Forwards, then turn right to head down.',{text:'The program starts like this:',code:['fwd','fwd','fwd','tr','fwd','fwd']}]}}
+        say:'Write a program to stitch the **key**.',hints:['The needle faces right. Count before the key turns.','Three Forwards, then turn right to head down.',{text:'It starts like this:',code:['fwd','fwd','fwd','tr','fwd','fwd']}]}}
     ]},
     {type:'build',item:'Build: the steps',concept:'relative-turns',area:'ICTDT',grid:[6,6],start:{x:0,y:5,dir:1},ops:RELS,
-      solution:['fwd','tl','fwd','tr','fwd','tl','fwd','tr'],
-      prompt:'Now the **steps**. You may finish facing any way you like.',
-      hints:['Each step is: along one, then up one.','To go up from facing right, turn left. To face along again, turn right.',{text:'The program starts like this:',code:['fwd','tl','fwd','tr']}]}
+      solution:['fwd','tl','fwd','tr','fwd','tl','fwd','tr'],say:'Now the **steps**. You can finish facing any way.',
+      hints:['Each step is along one, then up one.','To go up from facing right, turn left. To face along again, turn right.',{text:'It starts like this:',code:['fwd','tl','fwd','tr']}]}
   ]},
-  {id:'bug',title:'Find the bug',line:'Find and fix the mistakes in a code.',session:2,tasks:M?[
-    {type:'story',title:'Bugs',paras:['A **bug** is a mistake in a code. Finding bugs is called **debugging**. Programmers do it every day.','**Step** runs one card at a time, so you can see where the needle first goes wrong. Then tap that card to change it.']},
+  {id:'bug',title:'Find the bug',pic:'bug',session:2,tasks:mv?[
     {type:'build',debug:true,item:'Debug: the stairs (card 6)',concept:'debug',area:'ICTDT',grid:[6,6],start:{x:0,y:5},ops:ARROWS,
       solution:['right','up','right','up','right','up'],prog:['right','up','right','up','right','right'],easy:{solution:['right','up','right','up'],prog:['right','up','right','right']},
-      prompt:'This code should stitch the dotted stairs, but it has a **bug**. Run it, find the wrong card, and fix it.',
-      hints:['Tap Step. Watch for the first stitch that lands off the dotted squares.','The bug is near the end of the code.',{text:'It\'s the last card. Tap it and choose the arrow the stairs need.'}]},
+      say:'A **bug**! Tap **Step** to find the wrong card. Then tap it.',
+      hints:['Step one card at a time. Watch for the first stitch off the dots.','The bug is near the end.',{text:'It\'s the last card. Tap it and pick the arrow the stairs need.'}]},
     {type:'build',debug:true,item:'Debug: the arch (card 4)',concept:'debug',area:'ICTDT',grid:[6,6],start:{x:1,y:5},ops:ARROWS,easy:{skip:true},
-      solution:['up','up','up','right','right','down','down'],prog:['up','up','up','up','right','down','down'],
-      prompt:'Another **bug**. Find the wrong card and fix it.',
-      hints:['Tap Step and watch the needle climb. Does it climb too far?','Count the dotted squares going up. How many up cards should there be?',{text:'It\'s card 4. The needle should turn right there.'}]}
+      solution:['up','up','up','right','right','down','down'],prog:['up','up','up','up','right','down','down'],say:'Another bug. Can you find it?',
+      hints:['Step and watch the needle climb. Does it go too high?','Count the dots going up. How many up cards should there be?',{text:'It\'s card 4. The needle should turn right there.'}]}
   ]:[
-    {type:'story',title:'Bugs',paras:['A **bug** is a mistake in a program. Finding bugs is called **debugging**. Programmers do it every day.','**Step** runs one card at a time, so you can see where the needle first goes wrong. Tap a card to change it or take it out.']},
     {type:'build',debug:true,item:'Debug: the wave (card 5 turns the wrong way)',concept:'debug',area:'ICTDT',grid:[6,6],start:{x:0,y:4,dir:0},ops:RELS,
       solution:['fwd','tr','fwd','fwd','tr','fwd','tl','fwd','fwd'],prog:['fwd','tr','fwd','fwd','tl','fwd','tl','fwd','fwd'],
-      prompt:'This program should stitch the dotted wave, but it has a **bug**. Find it and fix it.',
-      hints:['Tap Step. Watch for the first stitch that lands off the dotted squares.','Look at the turn just before the needle leaves the wave. Pretend you are the needle: which way do you need to turn?',{text:'It\'s card 5. The needle faces right there and needs to head down.'}]},
-    {type:'write',wkey:'bug-why',area:'ICTDT',prompt:'Which card was the bug, and why did it send the needle the wrong way?',sub:'Write a sentence with **because** in it.',min:5,
-      example:'Card ... was the bug because ...'},
+      say:'This program has a **bug**. Step through, find it, and tap it to fix it.',
+      hints:['Step one card at a time. Watch for the first stitch off the dots.','Look at the turn just before the needle leaves the wave.',{text:'It\'s card 5. The needle faces right there and needs to head down.'}]},
+    {type:'write',wkey:'bug-why',area:'ICTDT',say:'Which card was the bug? Why did it go wrong?',sub:'Write a sentence with **because** in it.',min:5,example:'Card ... was the bug because ...',pic:'bug'},
     {type:'build',debug:true,item:'Debug: the frame (extra card)',concept:'debug',area:'ICTDT',grid:[6,6],start:{x:1,y:4,dir:0},ops:RELS,
       solution:['fwd','fwd','tr','fwd','fwd','tr','fwd','fwd','tr','fwd'],prog:['fwd','fwd','tr','fwd','fwd','fwd','tr','fwd','fwd','tr','fwd'],
-      prompt:'This time the bug is a card that **shouldn\'t be there at all**. Find it and take it out.',
-      hints:['Tap Step. Where does the needle first leave the frame?','The top of the frame is two squares wide. Count the Forwards there.',{text:'One of cards 4, 5 or 6 is extra. Tap one and take it out.'}]}
+      say:'This bug is an **extra card**. Find it and take it out.',
+      hints:['Step through. Where does the needle first leave the frame?','The top of the frame is two squares wide. Count the Forwards there.',{text:'One of cards 4, 5 or 6 is extra. Tap one and take it out.'}]}
   ]},
-  {id:'repeat',title:'The repeating card',line:'Use one card to repeat others, like Jacquard\'s chain.',session:2,tasks:M?[
-    {type:'story',title:'The repeating card',demo:{grid:[6,5],start:{x:0,y:4},code:[{rep:3,body:['right','up']}]},
-      paras:['On a Jacquard loom the cards were laced into a chain. To weave the same flower again, the chain came round again.','The **Repeat** card does the same. It runs the cards inside it again and again.','Tap **Run** to watch.']},
-    {type:'mcq',item:'Spot the repeating cards in → ↑ → ↑ → ↑ → ↑',concept:'repeating-unit',area:'ICTDT',
-      prompt:'Here is a long code. **Which cards repeat?**',show:['right','up','right','up','right','up','right','up'],
-      options:[{code:['right','up']},{code:['right','right','up']},{code:['up','up']}],easy:{show:['right','up','right','up','right','up'],options:[{code:['right','up']},{code:['up','up']}]},
-      hints:['Read the cards in pairs.','Look at the first two cards. Do the next two match them?'],why:'Yes. Right, up, then right, up again, all the way along.'},
-    {type:'mcq',item:'How many times do → ↑ repeat?',concept:'repeating-unit',area:'ICTDT',
-      prompt:'How many times do these two cards repeat?',show:['right','up','right','up','right','up','right','up'],
-      options:['4 times','2 times','8 times'],easy:{show:['right','up','right','up','right','up'],options:['3 times','6 times']},
-      hints:['Count the right cards.','Each pair is one right and one up. Count the pairs.'],why:'Yes. Each time round, one right and one up.'},
-    {type:'build',item:'Repeat: the stairs',concept:'repeat-loop',area:'ICTDT',grid:[6,6],start:{x:0,y:5},ops:ARROWS,preRepeat:2,mustRepeat:true,
-      solution:[{rep:4,body:['right','up']}],easy:{solution:[{rep:3,body:['right','up']}]},
-      prompt:'Put cards **inside the Repeat** and set how many times, to stitch the stairs.',
-      hints:['Which two cards make one stair?','Put right and up inside the Repeat. Then count the stairs and set the number.',{text:'These cards go inside the Repeat. Now count the stairs.',code:['right','up']}]},
+  {id:'repeat',title:'The repeating card',pic:'repeat',session:2,tasks:mv?[
+    {type:'unit',item:'Loop the stairs',concept:'repeat-loop',area:'ICTDT',grid:[6,6],start:{x:0,y:5},unit:['right','up'],rep:4,easy:{rep:3}},
     {type:'build',item:'Repeat: the castle wall',concept:'repeat-loop',area:'ICTDT',grid:[10,5],start:{x:0,y:3},ops:ARROWS,allowRepeat:true,mustRepeat:true,
       solution:[{rep:3,body:['up','right','down','right','right']}],easy:{solution:[{rep:2,body:['up','right','down','right','right']}]},
-      prompt:'Make the **castle wall** with a Repeat card. Tap **Repeat** to add one.',
+      say:'Build the **castle wall** with a Repeat card.',
       hints:['Find the bit of wall that repeats. It starts by going up.','One piece of wall is up, right, down, then right two.',{text:'These cards go inside the Repeat. Now count the pieces of wall.',code:['up','right','down','right','right']}]}
   ]:[
-    {type:'story',title:'The repeating card',demo:{grid:[6,5],start:{x:0,y:4,dir:1},code:[{rep:3,body:['fwd','tl','fwd','tr']}]},
-      paras:['On a Jacquard loom the cards were laced into a chain. To weave the same flower again, the chain came round again.','The **Repeat** card does the same. It runs the cards inside it again and again. Programmers call this a **loop**.','Tap **Run** to watch.']},
-    {type:'build',item:'Shorten: the steps in 5 cards',concept:'repeat-loop',area:'ICTDT',grid:[6,6],start:{x:0,y:5,dir:1},ops:RELS,allowRepeat:true,budget:5,
-      solution:[{rep:4,body:['fwd','tl','fwd','tr']}],long:['fwd','tl','fwd','tr','fwd','tl','fwd','tr','fwd','tl','fwd','tr','fwd','tl','fwd','tr'],
-      prompt:'This long program has 16 cards. Make the **same pattern with 5 cards or fewer**. (A Repeat card counts as one.)',
-      hints:['Find the cards that repeat in the long program.','Four cards repeat: Forward, Turn left, Forward, Turn right. How many times?',{text:'These cards go inside the Repeat. How many times does the long program use them?',code:['fwd','tl','fwd','tr']}]},
+    {type:'unit',item:'Loop the steps',concept:'repeat-loop',area:'ICTDT',grid:[6,6],start:{x:0,y:5,dir:1},unit:['fwd','tl','fwd','tr'],rep:4},
     {type:'build',item:'Shorten: the frame in 4 cards',concept:'repeat-loop',area:'ICTDT',grid:[6,6],start:{x:1,y:4,dir:0},ops:RELS,allowRepeat:true,budget:4,
-      solution:[{rep:4,body:['fwd','fwd','tr']}],
-      prompt:'Stitch the **frame** with **4 cards or fewer**.',
+      solution:[{rep:4,body:['fwd','fwd','tr']}],say:'Stitch the **frame** with **4 cards or fewer**. A Repeat counts as one.',
       hints:['A frame has four sides that are all the same.','One side is two Forwards, then a turn.',{text:'These cards go inside the Repeat. How many sides does a frame have?',code:['fwd','fwd','tr']}]},
     {type:'build',optional:true,item:'Challenge: the star in 8 cards',concept:'repeat-loop',area:'ICTDT',grid:[7,7],start:{x:3,y:3,dir:0},ops:RELS,allowRepeat:true,budget:8,
-      solution:[{rep:4,body:['fwd','fwd','tr','tr','fwd','fwd','tr']}],
-      prompt:'**Ada\'s challenge** (if you like): stitch the star with **8 cards or fewer**.',
-      hints:['Stitch one arm, come back to the middle, then turn to face the next arm.','Two right turns face the needle the other way.',{text:'One arm and back looks like this. What turn comes next?',code:['fwd','fwd','tr','tr','fwd','fwd']}]}
+      solution:[{rep:4,body:['fwd','fwd','tr','tr','fwd','fwd','tr']}],say:'**Ada\'s challenge**: the star in **8 cards or fewer**. Or skip it.',
+      hints:['Stitch one arm, come back to the middle, then turn to the next arm.','Two right turns face the needle the other way.',{text:'One arm and back looks like this. What turn comes next?',code:['fwd','fwd','tr','tr','fwd','fwd']}]}
   ]},
-  {id:'sister',title:'A pattern for your sister',line:'Design a pattern. Can your sister predict it?',session:2,tasks:[
-    {type:'design',grid:M?[7,7]:[9,9],start:M?{x:3,y:3}:{x:4,y:4,dir:0},ops:M?ARROWS:RELS,max:M?10:12},
+  {id:'sister',title:'A pattern for your sister',pic:'sister',session:2,tasks:[
+    {type:'design',grid:mv?[7,7]:[9,9],start:mv?{x:3,y:3}:{x:4,y:4,dir:0},ops:mv?ARROWS:RELS,max:mv?10:12},
     {type:'show'}
   ]},
-  {id:'ada2',title:'What Ada saw',line:'Ada\'s own words, and a last puzzle.',session:2,tasks:[
-    {type:'story',title:'What Ada saw',quote:true,paras:M?[
-      'Today you wove patterns from cards, just as Ada imagined.',
-      'Many people call Ada the **first computer programmer**. Babbage had sketched some programs too, but Ada\'s was the first one ever printed. She saw that machines like this could one day work with music and pictures, not only numbers.'
-    ]:[
-      '"Algebraical patterns" means patterns of numbers and symbols. Today you wove patterns from cards, just as she imagined.',
-      'Many people call Ada the **first computer programmer**. Babbage had sketched some programs too, but Ada\'s was the first one ever published. And she saw further than anyone what such machines might do: work with music, words and pictures, not only numbers.',
-      'Babbage never finished his Engine. The first real computers came about a hundred years later.'
-    ]},
-    M?{type:'mcq',item:'Which code makes red blue red blue red blue?',concept:'repeating-unit',area:'ICTDT',prompt:'Which code makes this string of beads?',beads:['r','b','r','b','r','b'],
-      options:['Repeat 3 times: red, blue','Repeat 2 times: red, blue','Repeat 3 times: red, red'],easy:{options:['Repeat 3 times: red, blue','Repeat 2 times: red, blue']},
-      hints:['Find the beads that repeat.','Red, blue is one round. Count the rounds.'],why:'Yes. Red, blue, three times. Bead patterns and crochet patterns are codes too.'}
-    :{type:'mcq',item:'Which code makes (red red blue) x4?',concept:'repeating-unit',area:'ICTDT',prompt:'Which code makes this string of beads?',beads:['r','r','b','r','r','b','r','r','b','r','r','b'],
-      options:['Repeat 4 times: red, red, blue','Repeat 3 times: red, red, blue','Repeat 4 times: red, blue'],
-      hints:['Find the beads that repeat.','Red, red, blue is one round. Count the blue beads.'],why:'Yes. Knitting, beading and music all have repeats. Ada noticed that a machine could follow any of them.'},
-    M?{type:'write',wkey:'tellback',area:'EN',optional:true,prompt:'Tell a grown-up: what is a bug, and how did you find one?',sub:'Say it out loud. You can type a sentence too, if you like.'}
-     :{type:'write',wkey:'ada-saw',area:'EN',min:8,prompt:'What did Ada see that the Engine could do?',sub:'Write one or two sentences. Use **because**.'},
-    {type:'write',wkey:'next-question',area:'ICTDT',optional:true,prompt:'What would you like to program a machine to make?',sub:M?'Tell a grown-up, or type it here if you like.':'A sentence is plenty. You can leave it blank.'},
+  {id:'ada2',title:'What Ada saw',pic:'end',session:2,tasks:[
+    {type:'ada'},
+    {type:'beads',item:mv?'Beads: Repeat 3 (red, blue)':'Beads: Repeat 4 (red, red, blue)',concept:'repeating-unit',area:'ICTDT',unit:mv?['r','b']:['r','r','b'],rep:mv?3:4},
+    mv?{type:'tell'}:{type:'write',wkey:'ada-saw',area:'EN',min:8,say:'What did Ada see the Engine could do?',sub:'One or two sentences. Use **because**.',pic:'end',
+      extra:{wkey:'next-question',area:'ICTDT',prompt:'What would you like to program a machine to make? (if you like)'}},
     {type:'end'}
   ]}
   ];
@@ -500,13 +555,37 @@ function parts(){
 function tasksOf(p){return p.tasks.map(t=>S.easy&&isMaeve()&&t.easy?Object.assign({},t,t.easy):t).filter(t=>!t.skip);}
 
 /* ===================================================================
-   SCREENS
+   THE STAGE: Bobbin's line, a picture, and things to do
    =================================================================== */
+let F=null,HELP=null,winning=false;
 function whoBar(){const w=document.getElementById('who');w.textContent='';if(PLAYER==='unknown')return;
   w.appendChild(h('span',null,'Playing: ',h('b',null,NAME())));
-  if(isMaeve()){const b=h('button',{class:'chip',type:'button','aria-pressed':String(!!S.easy)},'Fewer cards: '+(S.easy?'on':'off'));
+  if(isMaeve()){const b=h('button',{class:'chip-t',type:'button','aria-pressed':String(!!S.easy)},'Fewer cards: '+(S.easy?'on':'off'));
     b.addEventListener('click',()=>{S.easy=!S.easy;save();whoBar();render();});w.appendChild(b);}
   document.body.style.setProperty('--thread',S.colour||'#2F3C8F');}
+function header(p,ts){const i=S.task;
+  return h('div',{class:'head'},h('button',{class:'back',type:'button',on:{click:()=>{S.part=null;save();render();}}},'← Map'),
+    h('h2',null,p.title),h('div',{class:'dots','aria-label':'Step '+(i+1)+' of '+ts.length},ts.map((_,k)=>h('i',{class:k<=i?'on':null}))));}
+function frame(line,one){
+  const ps=parts(),p=ps[S.part],ts=tasksOf(p);
+  app.textContent='';app.appendChild(header(p,ts));
+  const sayEl=h('p',{id:'say'});const qb=h('button',{class:'qbtn',type:'button','aria-label':'Help, please',disabled:true},'?');
+  const clue=h('div',{class:'clue',hidden:true});const pic=h('div',{class:'pic'});const side=h('div',{class:'side'});
+  const panel=h('div',{class:'panel'},h('div',{class:'bubble'},h('span',{class:'face',html:BOBBIN}),sayEl,qb),clue,h('div',{class:'stage'+(one?' one':'')},pic,side));
+  app.appendChild(panel);F={sayEl,qb,clue,pic,side,panel};HELP=null;winning=false;
+  qb.addEventListener('click',()=>{if(!HELP||HELP.n>=HELP.hints.length)return;if(HELP.n===0&&HELP.q)HELP.q.hint();showHint();});
+  say(line||'');return F;
+}
+function say(t){F.sayEl.textContent='';F.sayEl.appendChild(rich(t));}
+function showHint(){const hn=HELP.hints[HELP.n];const lab=['Remember','Hint','Look'][Math.min(HELP.n,2)];
+  F.clue.hidden=false;F.clue.textContent='';F.clue.append(h('b',null,lab+': '),rich(typeof hn==='string'?hn:hn.text));if(hn.code)F.clue.appendChild(h('div',null,miniStrip(hn.code)));
+  if(hn.act&&HELP.acts&&HELP.acts[hn.act])HELP.acts[hn.act]();HELP.n++;if(HELP.n>=HELP.hints.length)F.qb.disabled=true;}
+function setHelp(hints,q,acts){HELP=hints&&hints.length?{hints,q,acts,n:0}:null;F.clue.hidden=true;F.qb.disabled=!HELP;
+  if(HELP&&S.easy&&isMaeve()&&typeof hints[0]==='string'){showHint();}}
+let toastT=null;
+function toast(kind,text,ms){let el=F.pic.querySelector('.toast');if(!el){el=h('div',{class:'toast',role:'status'});F.pic.appendChild(el);}
+  clearTimeout(toastT);el.className='toast '+kind;el.textContent='';el.appendChild(rich(text));el.hidden=false;toastT=setTimeout(()=>{el.hidden=true;},ms||2600);}
+function win(text,wait){if(winning)return;winning=true;setHelp(null);toast('yes',text,wait||1900);setTimeout(advance,(wait||1900)+150);}
 
 function whoScreen(){app.textContent='';
   const set=p=>{try{sessionStorage.setItem('gamesroom-player',p);localStorage.setItem('gamesroom-last-player',p);}catch(e){}PLAYER=p;KEY=G.key(SAVE);S=load();whoBar();render();};
@@ -514,149 +593,168 @@ function whoScreen(){app.textContent='';
     h('button',{class:'btn',type:'button',on:{click:()=>set('maeve')}},'Maeve'),h('button',{class:'btn brass',type:'button',on:{click:()=>set('maggie')}},'Maggie'))));}
 
 function render(){window.scrollTo(0,0);if(PLAYER==='unknown')return whoScreen();if(S.part==null)return home();playTask();}
-
 function unlocked(i){const ps=parts();return i===0||S.done[ps[i-1].id]||S.done[ps[i].id];}
 function home(){app.textContent='';const ps=parts();
-  const intro=h('div',{class:'intro'},
-    h('div',null,h('p',{class:'eyebrow'},'An introduction to coding'),h('h2',{style:'font-size:clamp(1.5rem,4vw,2.1rem);color:var(--deep);margin-bottom:10px'},isMaeve()?'Make a machine stitch patterns':'Program a machine to weave'),
-      P(isMaeve()?'In 1843 Ada Lovelace imagined a machine that followed cards, the way a loom weaves patterns. Here you will make codes for a pretend pattern engine.':'In 1843 Ada Lovelace imagined a machine that followed punched cards, the way a loom weaves silk. Here you will write programs for a pretend pattern engine, find bugs, and make loops.'),
-      h('p',{class:'note'},isMaeve()?'Grown-up: agree a stopping time before you start. Every part is a good place to stop.':'There are two sessions. You can stop after any part and the engine keeps your place.')),
-    h('div',{class:'panel',style:'padding:12px'},thumb({grid:[10,5],start:{x:0,y:3}},[{rep:3,body:['up','right','down','right','right']}])));
-  app.appendChild(intro);
-  let sess=0;const grid=()=>h('div',{class:'parts'});let g=null;
-  const next=ps.findIndex(p=>!S.done[p.id]);
+  app.appendChild(h('div',{class:'intro'},
+    h('div',null,h('div',{class:'bubble'},h('span',{class:'face',html:BOBBIN}),h('p',null,rich(M('I\'m Bobbin. Let\'s make a machine stitch patterns!','I\'m Bobbin. Let\'s program a machine, the way Ada imagined.')))),
+      h('p',{class:'note',style:'margin:10px 0 0 64px'},M('Grown-up: agree a stopping time first. Every part is a good place to stop. Bobbin is made up.','Two sessions. Stop after any part: the engine keeps your place. Bobbin is made up.'))),
+    h('div',{class:'panel',style:'padding:10px'},thumb({grid:[10,5],start:{x:0,y:3}},[{rep:3,body:['up','right','down','right','right']}]))));
+  let sess=0,g=null;const next=ps.findIndex(p=>!S.done[p.id]);
   ps.forEach((p,i)=>{
-    if(p.session!==sess){sess=p.session;app.appendChild(h('h3',{class:'sess'},'Session '+sess));g=grid();app.appendChild(g);}
+    if(p.session!==sess){sess=p.session;app.appendChild(h('h3',{class:'sess'},'Session '+sess));g=h('div',{class:'parts'});app.appendChild(g);}
     const done=!!S.done[p.id],open=unlocked(i);
-    const b=h('button',{class:'part'+(done?' done':'')+(i===next?' next':'')+(open?'':' locked'),type:'button','aria-disabled':open?null:'true'},
-      h('span',{class:'num'},done?'✓':String(i+1)),h('span',null,h('b',null,p.title),h('small',null,p.line)));
-    if(open)b.addEventListener('click',()=>{S.part=i;S.task=0;S.started=true;save();G.start(GAME);G.part(p.title);render();});
+    const b=h('button',{class:'part'+(i===next?' next':'')+(open?'':' locked'),type:'button','aria-disabled':open?null:'true'},
+      h('span',{class:'pp',html:TILEPIC[p.pic]||''},done?h('span',{class:'tick'},'✓'):null),h('span',null,h('b',null,(i+1)+'. '+p.title)));
+    if(open)b.addEventListener('click',()=>{S.part=i;S.task=0;save();G.start(GAME);G.part(p.title);render();});
     g.appendChild(b);});
-  if(S.finished)app.appendChild(h('p',{class:'stopnote'},'You have finished the Pattern Engine. You can play any part again.'));
 }
-
-function header(p,ts){const i=S.task;const dots=h('div',{class:'dots','aria-label':'Step '+(i+1)+' of '+ts.length},ts.map((_,k)=>h('i',{class:k<=i?'on':null})));
-  return h('div',{class:'head'},h('button',{class:'back',type:'button',on:{click:()=>{S.part=null;save();render();}}},'← Map'),
-    h('div',null,h('p',{class:'eyebrow'},'Part '+(S.part+1)),h('h2',null,p.title)),dots);}
-
 function advance(){S.task++;save();render();}
-function playTask(){app.textContent='';const ps=parts();const p=ps[S.part];if(!p){S.part=null;return home();}
+function playTask(){const ps=parts();const p=ps[S.part];if(!p){S.part=null;return home();}
   const ts=tasksOf(p);if(S.task>=ts.length)return partDone(p);
   const t=ts[S.task];G.start(GAME);G.part(p.title);
-  app.appendChild(header(p,ts));
-  const panel=h('div',{class:'panel'});app.appendChild(panel);
-  (SCREENS[t.type]||SCREENS.story)(t,panel,p);
+  (SCREENS[t.type])(t,p);
 }
-function partDone(p){const ps=parts();const i=ps.indexOf(p);
+function partDone(p){const ps=parts();const i=ps.indexOf(ps.find(x=>x.id===p.id));
   if(!S.done[p.id]){S.done[p.id]=true;G.partDone(p.title);}save();
-  const last=i===ps.length-1;
-  app.appendChild(h('div',{class:'panel'},h('h2',{style:'color:var(--deep);margin-bottom:10px'},p.title+': done'),
-    P(i===3?'That\'s the end of **session 1**. This is a good place to stop. The engine will keep your place.':(last?'You have finished every part.':'Well worked. You can stop here, or go on.')),
-    h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.part=null;save();render();}}},'Back to the map'),
-      last?null:h('button',{class:'btn',type:'button',on:{click:()=>{S.part=i+1;S.task=0;save();render();}}},'Next part: '+ps[i+1].title))));
+  const last=i===ps.length-1;app.textContent='';
+  app.appendChild(h('div',{class:'panel'},h('div',{class:'bubble'},h('span',{class:'face',html:BOBBIN}),h('p',null,rich(i===3?'That\'s session 1 done! A good place to stop.':(last?'You finished every part!':p.title+': done!')))),
+    h('div',{class:'stage one'},h('div',{class:'pic',html:'<div style="width:220px">'+(TILEPIC[p.pic]||'')+'</div>'})),
+    h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.part=null;save();render();}}},'Map'),
+      last?null:h('button',{class:'btn',type:'button',on:{click:()=>{S.part=i+1;S.task=0;save();render();}}},'Next: '+ps[i+1].title))));
 }
-function nextBtn(label,fn){return h('button',{class:'btn',type:'button',on:{click:fn||advance}},label||'Next');}
 
 const SCREENS={};
 let finishedNow=false;
 
-SCREENS.video=(t,panel)=>{
-  panel.append(h('p',{class:'prompt'},rich(isMaeve()?'Watch the story of **Ada Lovelace** together. Then tap **Next**.':'Watch the story of **Ada Lovelace**. Then tap **Next**.')),
-    h('div',{class:'video'},h('iframe',{src:'https://www.youtube-nocookie.com/embed/lkKWGjFmFM4?start=1&rel=0&playsinline=1&modestbranding=1',title:'Ada Lovelace, Poet of Science: a read-aloud',allow:'encrypted-media; picture-in-picture; fullscreen',allowfullscreen:true,referrerpolicy:'strict-origin-when-cross-origin',loading:'lazy'})),
-    h('p',{class:'note',style:'margin-top:10px'},'A library read-aloud of Ada Lovelace, Poet of Science by Diane Stanley and Jessie Hartland. If it won\'t play, tap Next: the story comes next in words.'),
-    h('div',{class:'next-row'},nextBtn("We've watched it")));
+/* ---- Part 1: the video ---- */
+SCREENS.video=()=>{
+  frame(M('Watch Ada\'s story together.','Watch Ada\'s story.'),true);
+  F.pic.appendChild(h('div',{class:'video'},h('iframe',{src:'https://www.youtube-nocookie.com/embed/lkKWGjFmFM4?start=1&rel=0&playsinline=1&modestbranding=1',title:'Ada Lovelace, Poet of Science: a read-aloud',allow:'encrypted-media; picture-in-picture; fullscreen',allowfullscreen:true,referrerpolicy:'strict-origin-when-cross-origin',loading:'lazy'})));
+  F.side.append(h('details',{class:'fallback'},h('summary',null,'Grown-up: no video? Tap for the story in short.'),ADA_STORY.map(P)),
+    h('div',{class:'next-row'},h('button',{class:'btn',type:'button',on:{click:advance}},"We've watched it")));
 };
 
-SCREENS.story=(t,panel)=>{
-  if(t.title)panel.appendChild(h('h3',{style:'color:var(--deep);margin-bottom:10px;font-size:1.4rem'},t.title));
-  if(t.note)panel.appendChild(h('p',{class:'note'},t.note));
-  if(t.quote)panel.appendChild(h('blockquote',{class:'quote'},'"We may say most aptly, that the Analytical Engine weaves algebraical patterns just as the Jacquard-loom weaves flowers and leaves."',h('cite',null,'Ada Lovelace, Note A, 1843')));
-  const text=h('div',null,t.paras.map(P));
-  if(t.demo){const d=Object.assign({},t.demo);const cloth=Cloth(d);const s=strip(d.code,{numbered:true});const round=h('div',{class:'round'});const hl=highlighter(s,round);
-    const run=Runner(cloth,d,()=>toItems(d.code),{step:hl.step,reset:hl.clear});
-    panel.appendChild(h('div',{class:'stage'},h('div',{class:'cloth-wrap'},cloth.el,round),h('div',null,text,s,h('div',{class:'controls'},h('button',{class:'btn brass',type:'button',on:{click:()=>run.run()}},'Run'),h('button',{class:'btn ghost',type:'button',on:{click:()=>run.step()}},'Step')))));
-  }else panel.appendChild(text);
-  panel.appendChild(h('div',{class:'next-row'},nextBtn()));
+/* ---- Part 1: the punch-card loom ---- */
+SCREENS.loom=()=>{
+  const mv=isMaeve();
+  const T=mv?(S.easy?['..X..','.XXX.','XXXXX']:['..X..','.XXX.','XXXXX','..X..']):['...X...','..XXX..','.XXXXX.','..XXX..','...X...'];
+  const n=T[0].length,R=T.length;const want=T.map(r=>[...r].map(c=>c==='X'));
+  frame(mv?'Punch holes in the card. Each hole lifts a thread. Then tap **Weave**.':'Punch the card so the loom weaves the dotted row. Then tap **Weave**.',true);
+  const q=G.ask({item:mv?'Loom: weave the tree':'Loom: weave the diamond',concept:'jacquard-punched-cards',area:'ICTDT'});
+  const weave=h('div',{class:'weave',style:'--n:'+n+';--rr:'+R});const cells=[];
+  for(let y=0;y<R;y++)for(let x=0;x<n;x++){const c=h('div',{class:'wc'+(want[y][x]?' t':'')});weave.appendChild(c);cells.push(c);}
+  const chain=h('div',{class:'chain'},h('span',{class:'lab'},'Your cards'));
+  let row=0,holes=Array(n).fill(false);const used=[];
+  const holeBtns=[];const pcard=h('div',{class:'pcard'});
+  for(let x=0;x<n;x++){const b=h('button',{class:'hole',type:'button','aria-pressed':'false','aria-label':'Hole '+(x+1)},String(x+1));
+    b.addEventListener('click',()=>{if(row>=R||winning)return;holes[x]=!holes[x];b.setAttribute('aria-pressed',String(holes[x]));});holeBtns.push(b);pcard.appendChild(b);}
+  const mark=()=>cells.forEach((c,i)=>c.style.boxShadow=(Math.floor(i/n)===row&&row<R)?'inset 0 0 0 3px rgba(168,122,34,.55)':'');
+  const wbtn=h('button',{class:'btn brass',type:'button'},'Weave');
+  wbtn.addEventListener('click',()=>{if(row>=R||winning)return;
+    const ok=holes.every((v,x)=>v===want[row][x]);
+    for(let x=0;x<n;x++){const c=cells[row*n+x];c.classList.toggle('on',holes[x]);c.classList.toggle('bad',holes[x]!==want[row][x]);}
+    if(!ok){q.miss('row '+(row+1)+': '+holes.map(v=>v?'X':'.').join(''));toast('hmm','That row doesn\'t match the dots. Change the holes and try again.');
+      const r0=row;setTimeout(()=>{for(let x=0;x<n;x++){const c=cells[r0*n+x];c.classList.remove('on','bad');}},1400);return;}
+    for(let x=0;x<n;x++)cells[row*n+x].classList.remove('bad');
+    const mc=h('button',{class:'minicard',type:'button',disabled:true,'aria-label':'Card '+(row+1)},holes.map(v=>h('i',{class:v?'h':null})));used.push({el:mc,pat:holes.join()});chain.appendChild(mc);
+    row++;holes=Array(n).fill(false);holeBtns.forEach(b=>b.setAttribute('aria-pressed','false'));mark();
+    if(row<R){toast('yes','Row '+row+' woven! Next card.',1300);return;}
+    q.done();pcard.hidden=true;wbtn.hidden=true;setHelp(null);
+    if(mv){win('That\'s how Jacquard\'s loom worked: the cards told it what to do!',2600);return;}
+    // Magnolia: spot the cards that are the same
+    say('Two of your cards are exactly the same. Tap them both.');
+    const q2=G.ask({item:'Loom: spot identical cards',concept:'repeating-unit',area:'ICTDT'});let picked=[];
+    setHelp(['Look at the holes in each card in the chain.','The diamond grows, then shrinks. Which rows match?'],q2);
+    used.forEach(u=>{u.el.disabled=false;u.el.addEventListener('click',()=>{if(winning||picked.includes(u))return;picked.push(u);u.el.classList.add('pick');
+      if(picked.length===2){const [a,b]=picked;if(a.pat===b.pat){q2.done();win('Yes! Jacquard could use the same card again. That\'s a repeat.',2600);}
+        else{q2.miss('different cards');toast('hmm','Those two have different holes. Try again.');setTimeout(()=>{picked.forEach(p=>p.el.classList.remove('pick'));picked=[];},900);}}});});
+  });
+  mark();
+  F.pic.appendChild(h('div',{class:'loom'},chain,h('div',{class:'frame'},h('div',{class:'beam'}),weave,h('div',{class:'beam'}),pcard,wbtn)));
+  setHelp(['A hole lifts a thread, so the thread shows on top.','Punch a hole above each dotted square in the glowing row.',{text:'Look: punch the holes the dots show.',act:'show'}],q,
+    {show:()=>{if(row<R){say('Punch holes '+want[row].map((v,i)=>v?i+1:0).filter(Boolean).join(', ')+'. Then tap **Weave**.');}}});
 };
 
-SCREENS.mcq=(t,panel)=>{
-  const q=G.ask({item:t.item,concept:t.concept,area:t.area});const msg=h('div',{class:'msg',role:'status'});
-  panel.appendChild(h('p',{class:'prompt'},rich(t.prompt)));
-  if(t.show)panel.appendChild(h('div',{style:'margin-bottom:10px'},miniStrip(t.show)));
-  if(t.beads)panel.appendChild(h('div',{style:'margin-bottom:10px'},beads(t.beads)));
-  const order=shuffle(t.options.map((o,i)=>i));const box=h('div',{class:'opts'});let solved=false;
-  order.forEach(i=>{const o=t.options[i];const b=h('button',{class:'opt',type:'button'},typeof o==='string'?o:miniStrip(o.code));
-    b.addEventListener('click',()=>{if(solved||b.classList.contains('no'))return;
-      if(i===0){solved=true;b.classList.add('yes');q.done();say(msg,t.why||'Yes.',true);nx.disabled=false;}
-      else{b.classList.add('no');q.miss(typeof o==='string'?o:codeText(toItems(o.code)));say(msg,'Not that one. Have another look.');}});
-    box.appendChild(b);});
-  const nx=h('button',{class:'btn',type:'button',disabled:true,on:{click:advance}},'Next');
-  panel.append(box,msg,helpBox(t.hints||[],q),h('div',{class:'next-row'},nx));
+/* ---- Part 1: Ada's story in order ---- */
+SCREENS.strip=()=>{
+  const mv=isMaeve();
+  const order=mv?['loom','ada','meet','notes']:['loom','ada','meet','notes','comp'];
+  const CAP={loom:'A loom weaves with punched cards',ada:'Ada is born, and grows up loving maths',meet:'Ada meets Babbage and his machine',notes:'Ada writes the first published program',comp:'The first electronic computers are built'};
+  const YEAR={loom:'1804',ada:'1815',meet:'1833',notes:'1843',comp:'1940s'};
+  frame(mv?'Put Ada\'s story in order. Drag each picture to a box.':'Put the story in order. Drag each picture to a box.',true);
+  const q=G.ask({item:'Order the story of Ada, Babbage and the loom',concept:'ada-lovelace-timeline',area:'HSS'});
+  const slots=order.map((v,i)=>h('div',{class:'slot','data-i':i},h('span',{class:'num'},String(i+1))));
+  const chips=shuffle(order).map(v=>h('button',{class:'chip',type:'button','data-v':v,'aria-label':CAP[v]},h('span',{html:PANEL[v]}),CAP[v]));
+  let placed=0;
+  dnd(chips,slots,(ch,sl)=>{if(winning)return;const v=ch.dataset.v,i=+sl.dataset.i;
+    if(order[i]===v){ch.classList.add('used');sl.classList.add('filled');sl.textContent='';sl.append(h('span',{html:PANEL[v]}),h('span',null,CAP[v]),h('span',{class:'yr'},YEAR[v]));placed++;
+      if(placed===order.length){q.done();win('That\'s the story, in order!',2400);}}
+    else{q.miss(CAP[v]+' in box '+(i+1));ch.classList.remove('shake');void ch.offsetWidth;ch.classList.add('shake');toast('hmm',i===0?'Not first. What came before Ada was even born?':'Not there yet. What happened before that?');}});
+  F.pic.append(h('div',{class:'timeline',style:'--k:'+order.length},slots),h('div',{class:'panels'},chips));
+  setHelp(['Ada had to be born before she could meet anyone.','Babbage borrowed the loom\'s idea, so the loom came first.',{text:'Look: '+order.map(v=>CAP[v].toLowerCase()).join(', then ')+'.'}],q);
 };
 
-SCREENS.unplugged=(t,panel)=>{
-  const M=isMaeve();
-  panel.append(h('p',{class:'prompt'},rich('Before the screen: **be the engine** with your sister. A grown-up can play too.')),
-    P(M?'Get out the **Be the robot** cards from maths (they\'re in the envelope). Lay some cards in a line to make a code.':'Use Maeve\'s **Be the robot** cards from maths, or say the instructions out loud: **step forward**, **turn left**, **turn right**.'),
-    P('The engine does **exactly** what the cards say, and nothing else. A turn means spin on the spot, without stepping.'),
-    P('Try it: make a code that walks the engine to the door. If the engine bumps into something, that\'s a **bug**. Fix the code and try again.'),
-    P('Then swap, so you each have a turn.'));
+/* ---- Part 2: off the screen ---- */
+SCREENS.unplugged=()=>{
+  frame(M('Off the screen! Be the engine with Maggie.','Off the screen! Be the engine with Maeve.'),true);
+  F.pic.append(h('div',{html:KIDS,style:'width:100%;display:grid;justify-items:center'}),
+    h('div',{class:'steps3'},h('div',null,h('b',null,'1'),M('Lay out the Robot code cards.','Lay out Maeve\'s Robot code cards.')),h('div',null,h('b',null,'2'),'The engine follows them exactly.'),h('div',null,h('b',null,'3'),'Walk to the door. Then swap!')));
   const done={a:false,b:false};const nx=h('button',{class:'btn',type:'button',disabled:true,on:{click:advance}},'Next');
   const ck=(k,label)=>{const b=h('button',{class:'check',type:'button','aria-pressed':'false'},h('span',{class:'bx'}),label);b.addEventListener('click',()=>{done[k]=!done[k];b.setAttribute('aria-pressed',String(done[k]));nx.disabled=!(done.a&&done.b);});return b;};
-  panel.append(h('div',{class:'checks'},ck('a','I made a code and someone followed it.'),ck('b','I was the engine.')),
-    h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:advance}},'We did this together already'),nx));
+  F.side.append(h('div',{class:'checks'},ck('a','I made a code.'),ck('b','I was the engine.')),
+    h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:advance}},'We did this already'),nx));
 };
 
-SCREENS.pick=(t,panel)=>{
-  const q=G.ask({item:t.item,concept:t.concept,area:t.area});const msg=h('div',{class:'msg',role:'status'});
-  const cloth=Cloth(t);const s=strip(t.code,{numbered:true});const round=h('div',{class:'round'});const hl=highlighter(s,round);
-  const run=Runner(cloth,t,()=>toItems(t.code),{step:hl.step,reset:hl.clear});
-  const opts=(S.easy?t.options.slice(0,2):t.options);const order=shuffle(opts.map((o,i)=>i));const box=h('div',{class:'opts'});let solved=false;
-  const nx=h('button',{class:'btn',type:'button',disabled:true,on:{click:advance}},'Next');
-  order.forEach((i,k)=>{const b=h('button',{class:'opt',type:'button','aria-label':'Picture '+(k+1)},thumb(t,opts[i]),h('span',null,'Picture '+(k+1)));
-    b.addEventListener('click',()=>{if(solved||b.classList.contains('no'))return;
-      if(i===0){solved=true;b.classList.add('yes');q.done();say(msg,'Yes! Watch it run to check.',true);run.run();nx.disabled=false;}
-      else{b.classList.add('no');q.miss('picture '+(k+1));say(msg,'Not that one. Put your finger on the needle and follow the cards one at a time.');}});
-    box.appendChild(b);});
-  panel.appendChild(h('div',{class:'stage'},h('div',{class:'cloth-wrap'},cloth.el,round,legend(false)),
-    h('div',null,h('p',{class:'prompt'},rich('Here is a **code**. Which picture will it stitch?')),s,box,msg,helpBox(t.hints,q,{run:()=>run.run()}),h('div',{class:'next-row'},nx))));
+/* ---- Part 3: watch, then predict ---- */
+function codeSide(t,cloth,extra){const s=strip(t.code,{numbered:true});const round=h('div',{class:'round'});const hl=highlighter(s,round);
+  const run=Runner(cloth,t,()=>toItems(t.code),Object.assign({step:hl.step,reset:hl.clear},extra||{}));
+  F.pic.append(cloth.el,round);F.side.append(s);return run;}
+SCREENS.demo=(t)=>{
+  frame(t.say);const cloth=Cloth(t);
+  const run=codeSide(t,cloth,{end:()=>win('That\'s how the engine works!',2000)});
+  F.side.appendChild(h('div',{class:'controls'},h('button',{class:'btn brass',type:'button',on:{click:()=>run.run()}},'Run')));
 };
-
-SCREENS.mark=(t,panel)=>{
-  const q=G.ask({item:t.item,concept:t.concept,area:t.area});const msg=h('div',{class:'msg',role:'status'});
-  const cloth=Cloth(t);const s=strip(t.code,{numbered:true});const round=h('div',{class:'round'});const hl=highlighter(s,round);
-  const run=Runner(cloth,t,()=>toItems(t.code),{step:hl.step,reset:hl.clear});
-  const marks=new Set([key(t.start.x,t.start.y)]);let solved=false;
-  cloth.el.querySelectorAll('.cell').forEach(d=>{const k=key(+d.dataset.x,+d.dataset.y);if(k===key(t.start.x,t.start.y))return;d.classList.add('mark-able');d.setAttribute('role','button');d.setAttribute('tabindex','0');d.setAttribute('aria-label','Square '+(+d.dataset.x+1)+' across, '+(+d.dataset.y+1)+' down');
+SCREENS.endsq=(t)=>{
+  frame('Where will the needle stop? **Tap that square.**');
+  const q=G.ask({item:t.item,concept:t.concept,area:t.area});const cloth=Cloth(t);const run=codeSide(t,cloth);
+  const end=simulate(toItems(t.code),t).end;let solved=false;
+  cloth.cells.forEach(d=>{d.classList.add('tap');d.setAttribute('role','button');d.setAttribute('tabindex','0');d.setAttribute('aria-label','Square '+(+d.dataset.x+1)+' across, '+(+d.dataset.y+1)+' down');
+    const go=()=>{if(solved)return;const x=+d.dataset.x,y=+d.dataset.y;
+      if(x===end.x&&y===end.y){solved=true;q.done();d.classList.add('m');run.run();setTimeout(()=>win('Yes! It stops right there.',1800),speed(4)*4+500);}
+      else{q.miss(key(x,y));d.classList.remove('no');void d.offsetWidth;d.classList.add('no');toast('hmm','Not there. Follow the cards with your finger.');}};
+    d.addEventListener('click',go);d.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});});
+  setHelp(t.hints,q,{run:()=>run.run()});
+};
+SCREENS.mark=(t)=>{
+  frame(M('Tap the squares the needle will stitch. Then **Check**.','Tap every square it will stitch. Then **Check**.'));
+  const q=G.ask({item:t.item,concept:t.concept,area:t.area});const cloth=Cloth(t);const run=codeSide(t,cloth);
+  const sk=key(t.start.x,t.start.y);const marks=new Set([sk]);let solved=false;
+  cloth.cells.forEach(d=>{const k=key(+d.dataset.x,+d.dataset.y);if(k===sk)return;d.classList.add('tap');d.setAttribute('role','button');d.setAttribute('tabindex','0');d.setAttribute('aria-label','Square '+(+d.dataset.x+1)+' across, '+(+d.dataset.y+1)+' down');
     const tog=()=>{if(solved)return;if(marks.has(k)){marks.delete(k);d.classList.remove('m');}else{marks.add(k);d.classList.add('m');}};
     d.addEventListener('click',tog);d.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tog();}});});
-  const nx=h('button',{class:'btn',type:'button',disabled:true,on:{click:advance}},'Next');
   const check=()=>{if(solved)return;const sim=simulate(toItems(t.code),t);
-    if(eqSet(sim.seen,marks)){solved=true;q.done();say(msg,'Spot on! Watch it run.',true);run.run();nx.disabled=false;return;}
-    q.miss([...marks].join(' '));
-    const first=sim.steps.find(st=>st.stitch&&!marks.has(key(st.x,st.y)));
-    if(first)say(msg,'Not quite. Your guess and the needle part ways at **card '+first.num+'**. Have another look, then check again.');
-    else say(msg,'Nearly. The needle never visits some of the squares you marked. Take those marks off and check again.');};
-  panel.appendChild(h('div',{class:'stage'},h('div',{class:'cloth-wrap'},cloth.el,round,legend(false)),
-    h('div',null,h('p',{class:'prompt'},rich('Read the program. **Tap the squares** you think the needle will stitch, then check.')),s,
-      h('div',{class:'controls'},h('button',{class:'btn brass',type:'button',on:{click:check}},'Check my guess'),
-        h('button',{class:'btn ghost',type:'button',on:{click:()=>{if(solved)return;marks.clear();marks.add(key(t.start.x,t.start.y));cloth.el.querySelectorAll('.cell.m').forEach(d=>d.classList.remove('m'));}}},'Clear my marks')),
-      msg,helpBox(t.hints,q,{run:()=>run.run()}),h('div',{class:'next-row'},nx))));
+    if(eqSet(sim.seen,marks)){solved=true;q.done();toast('yes','Spot on! Watch it run.',1500);run.run();setTimeout(()=>win('Just as you said!',1600),speed(sim.steps.length)*sim.steps.length+700);return;}
+    q.miss([...marks].join(' '));const first=sim.steps.find(st=>st.stitch&&!marks.has(key(st.x,st.y)));
+    toast('hmm',first?'Not quite. You and the needle part ways at **card '+first.num+'**.':'Nearly. The needle never visits some squares you marked.',3000);};
+  F.side.appendChild(h('div',{class:'controls'},h('button',{class:'btn brass',type:'button',on:{click:check}},'Check'),
+    h('button',{class:'btn ghost small',type:'button',on:{click:()=>{if(solved)return;marks.clear();marks.add(sk);cloth.cells.forEach(d=>d.classList.remove('m'));}}},'Clear')));
+  setHelp(t.hints,q,{run:()=>run.run()});
+};
+SCREENS.pick=(t)=>{
+  frame('Which picture will this code stitch?');
+  const q=G.ask({item:t.item,concept:t.concept,area:t.area});const cloth=Cloth(t);const run=codeSide(t,cloth);
+  const opts=S.easy?t.options.slice(0,2):t.options;let solved=false;const box=h('div',{class:'opts'});
+  shuffle(opts.map((o,i)=>i)).forEach((i,k)=>{const b=h('button',{class:'opt',type:'button','aria-label':'Picture '+(k+1)},thumb(t,opts[i]));
+    b.addEventListener('click',()=>{if(solved||b.classList.contains('no'))return;
+      if(i===0){solved=true;b.classList.add('yes');q.done();run.run();setTimeout(()=>win('Yes! That\'s the one.',1700),speed(4)*4+500);}
+      else{b.classList.add('no');q.miss('picture '+(k+1));toast('hmm','Not that one. Follow the cards one at a time.');}});
+    box.appendChild(b);});
+  F.side.appendChild(box);setHelp(t.hints,q,{run:()=>run.run()});
 };
 
-SCREENS.choose=(t,panel,p)=>{
-  const c=S.choice[t.key];
-  if(c!=null&&t.options[c]){const inner=Object.assign({},t.options[c].t);if(S.easy&&isMaeve()&&inner.easy)Object.assign(inner,inner.easy);return SCREENS.build(inner,panel,p);}
-  panel.appendChild(h('p',{class:'prompt'},rich(t.prompt)));
-  const box=h('div',{class:'opts'});
-  t.options.forEach((o,i)=>{let tt=Object.assign({},o.t);if(S.easy&&isMaeve()&&tt.easy)Object.assign(tt,tt.easy);
-    box.appendChild(h('button',{class:'opt',type:'button',on:{click:()=>{S.choice[t.key]=i;save();render();}}},thumb(tt,tt.solution),h('b',null,o.label)));});
-  panel.appendChild(box);
-};
-
-/* the code editor, used by build and design */
+/* ---- Parts 4 to 6: the code editor ---- */
 function Editor(t,o){
-  const rel=REL();let items=t.prog?toItems(t.prog):(t.preRepeat?toItems([{rep:t.preRepeat,body:[]}]):[]);
+  let items=t.prog?toItems(t.prog):(t.preRepeat?toItems([{rep:t.preRepeat,body:[]}]):[]);
   let tray=t.parsons?shuffle(toItems(t.solution)):null;let tgt=t.preRepeat?items[0].id:'main';let sel=null;const history=[];
   const view=h('div');const codeBox=h('div');const editBox=h('div');const trayBox=h('div');const budget=h('div',{class:'budget'});
   function listOf(id,a=items){if(id==='main')return items;for(const it of a){if(it.rep){if(it.id===id)return it.body;const r=listOf(id,it.body);if(r)return r;}}return null;}
@@ -664,13 +762,13 @@ function Editor(t,o){
   function removeId(id,a=items){const i=a.findIndex(it=>it.id===id);if(i>=0){const [it]=a.splice(i,1);return it;}for(const it of a)if(it.rep){const r=removeId(id,it.body);if(r)return r;}return null;}
   function changed(){sel=null;o.changed&&o.changed();draw();}
   function full(){return t.max&&countCards(items)>=t.max;}
-  function add(op){if(full()){o.say&&o.say('That\'s the most cards for this cloth ('+t.max+').');return;}const it={id:uid(),op};let l=listOf(tgt);if(!l){tgt='main';l=items;}l.push(it);history.push(it.id);changed();}
+  function add(op){if(full()){o.say&&o.say('That\'s the most cards for this cloth.');return;}const it={id:uid(),op};let l=listOf(tgt);if(!l){tgt='main';l=items;}l.push(it);history.push(it.id);changed();}
   function addRep(){if(full())return;const it={id:uid(),rep:2,body:[]};items.push(it);tgt=it.id;history.push(it.id);changed();}
   function fromTray(it){const i=tray.indexOf(it);tray.splice(i,1);items.push(it);history.push(it.id);changed();}
   function draw(){
     numberCards(items);codeBox.textContent='';editBox.textContent='';trayBox.textContent='';
-    const drawList=(a,inRep)=>a.map(it=>{
-      if(it.rep){const open=tgt===it.id;const body=h('div',{class:'repbody'+(it.body.length?'':' empty')},drawList(it.body,true));
+    const drawList=a=>a.map(it=>{
+      if(it.rep){const open=tgt===it.id;const body=h('div',{class:'repbody'+(it.body.length?'':' empty')},drawList(it.body));
         const blk=h('div',{class:'repblock'+(open?' open':'')},
           h('div',{class:'rephead'},h('span',{class:'ic',style:'width:26px;height:26px;display:inline-block',html:ICON.rep}),'Repeat',
             o.locked?null:h('button',{type:'button','aria-label':'Fewer times',on:{click:e=>{e.stopPropagation();if(it.rep>2){it.rep--;changed();}}}},'−'),
@@ -681,10 +779,10 @@ function Editor(t,o){
         return blk;}
       return cardEl(it.op,{tag:'button',num:it.num,cls:sel===it.id?'sel':null,on:{click:e=>{e.stopPropagation();if(o.locked)return;
         if(tray){removeId(it.id);tray.push(it);changed();return;}sel=sel===it.id?null:it.id;draw();}}});});
-    const main=h('div',{class:'code'+(items.length?'':' empty'),'data-empty':tray?'Tap the cards below to put them in order.':'Tap a card below to add it to your code.'},drawList(items,false));
+    const main=h('div',{class:'code'+(items.length?'':' empty'),'data-empty':tray?'Tap the cards below, in order.':'Tap a card below to add it.'},drawList(items));
     if(!o.locked)main.addEventListener('click',()=>{if(tgt!=='main'&&!t.preRepeat){tgt='main';draw();}});
     codeBox.appendChild(main);
-    if(sel){const it=find(sel);if(it){editBox.appendChild(h('div',{class:'edit'},h('span',null,'Card '+it.num+': change to'),
+    if(sel){const it=find(sel);if(it){editBox.appendChild(h('div',{class:'edit'},h('span',null,'Card '+it.num+':'),
       t.ops.filter(op=>op!==it.op).map(op=>cardEl(op,{tag:'button',on:{click:()=>{it.op=op;changed();}}})),
       h('button',{class:'btn ghost small',type:'button',on:{click:()=>{removeId(it.id);changed();}}},'Take it out'),
       h('button',{class:'btn ghost small',type:'button',on:{click:()=>{sel=null;draw();}}},'Cancel')));}}
@@ -693,99 +791,183 @@ function Editor(t,o){
       else{const inRep=tgt!=='main';
         trayBox.appendChild(h('div',{class:'tray'},t.ops.map(op=>cardEl(op,{tag:'button',disabled:full(),on:{click:()=>add(op)}})),
           (t.allowRepeat&&!inRep)?h('button',{class:'card rep',type:'button',disabled:full(),on:{click:addRep}},h('span',{class:'ic',html:ICON.rep}),h('span',null,'Repeat')):null));
-        if(inRep&&!t.preRepeat)trayBox.appendChild(h('button',{class:'btn ghost small',type:'button',on:{click:()=>{tgt='main';draw();}}},'Finish the Repeat'));
-        if(inRep&&t.preRepeat)trayBox.appendChild(h('p',{class:'note'},'Cards go inside the Repeat. Use − and + to set how many times.'));}
+        if(inRep&&!t.preRepeat)trayBox.appendChild(h('button',{class:'btn ghost small',type:'button',on:{click:()=>{tgt='main';draw();}}},'Finish the Repeat'));}
     }
     const n=countCards(items);budget.textContent='';
     if(t.budget)budget.append('Cards used: ',h('b',null,String(n)),' (aim: '+t.budget+' or fewer)');
     else if(t.max)budget.append('Cards used: ',h('b',null,String(n)),' of '+t.max);
   }
   view.append(codeBox,editBox,trayBox,budget);draw();
-  return {el:view,items:()=>items,redraw:draw,lock(v){o.locked=v;sel=null;draw();},
+  return {el:view,items:()=>items,lock(v){o.locked=v;sel=null;draw();},
     undo(){if(tray){const it=items.pop();if(it){tray.push(it);changed();}return;}const id=history.pop();if(id){removeId(id);if(tgt===id)tgt='main';changed();}},
     clear(){if(tray){tray=tray.concat(items);items=[];}else if(t.preRepeat){items[0].body=[];tgt=items[0].id;}else{items=[];tgt='main';}history.length=0;changed();}};
 }
-
-SCREENS.build=(t,panel)=>{
-  const q=G.ask({item:t.item,concept:t.concept,area:t.area});const msg=h('div',{class:'msg',role:'status'});
+SCREENS.build=(t)=>{
+  frame(t.say);
+  const q=G.ask({item:t.item,concept:t.concept,area:t.area});
   const target=targetOf(t);const cloth=Cloth(t);cloth.setTarget(target);
-  const round=h('div',{class:'round'});let solved=false;
-  const nx=h('button',{class:'btn',type:'button',disabled:true,on:{click:advance}},'Next');
-  let edited=false;
-  const ed=Editor(t,{changed:()=>{edited=true;run&&run.reset();say(msg,'');},say:s=>say(msg,s)});
+  const round=h('div',{class:'round'});let solved=false,edited=false;
+  const ed=Editor(t,{changed:()=>{edited=true;run&&run.reset();},say:s=>toast('hmm',s)});
   let hl;const run=Runner(cloth,t,()=>ed.items(),{
     step:s=>hl.step(s),reset:()=>hl&&hl.clear(),
     busy:b=>{runB.disabled=b||solved;stepB.disabled=b||solved;},
-    empty:()=>say(msg,'Add some cards first.'),
+    empty:()=>toast('hmm','Add some cards first.'),
     end:sim=>{if(solved)return;const items=ed.items();const n=countCards(items);const exact=!sim.bumped&&eqSet(sim.seen,target);
-      if(exact&&t.budget&&n>t.budget){q.miss('right pattern, '+n+' cards: '+codeText(items));say(msg,'Right pattern! But that\'s **'+n+' cards**. Can you make it with **'+t.budget+' or fewer**? Look for cards that repeat.');return;}
-      if(exact&&t.mustRepeat&&!hasRepeat(items)){say(msg,'That works! Now make it **using the Repeat card**.');return;}
+      if(exact&&t.budget&&n>t.budget){q.miss('right pattern, '+n+' cards: '+codeText(items));toast('hmm','Right pattern! But that\'s **'+n+' cards**. Can you do it in **'+t.budget+'**?',3200);return;}
+      if(exact&&t.mustRepeat&&!hasRepeat(items)){toast('hmm','That works! Now use the **Repeat** card.',3000);return;}
       if(exact){solved=true;q.done();ed.lock(true);runB.disabled=stepB.disabled=true;
-        say(msg,t.debug?'Bug fixed! The needle stitches every dotted square.':(t.budget?'Done in '+n+' cards. That\'s the power of a loop.':'Every dotted square is stitched. Well coded!'),true);nx.disabled=false;return;}
-      if(t.debug&&!edited){say(msg,'There\'s the bug at work: the needle doesn\'t follow the dotted squares. Tap **Step** to find the first card that goes wrong, then tap that card to fix it.');return;}
-      if(sim.bumped){const last=sim.steps[sim.steps.length-1];q.miss('bump at card '+last.num+': '+codeText(items));say(msg,'Bump! **Card '+last.num+'** would take the needle off the cloth.');return;}
-      if(!subset(sim.seen,target)){q.miss(codeText(items));say(msg,'Some stitches landed off the dotted squares (the ones with dashed circles). Tap **Step** to watch one card at a time and find the first card that goes wrong.');return;}
-      say(msg,'So far so good. Some dotted squares still need stitching. What comes next?');}});
-  const runB=h('button',{class:'btn brass',type:'button',on:{click:()=>{say(msg,'');run.run();}}},'Run');
-  const stepB=h('button',{class:'btn ghost',type:'button',on:{click:()=>run.step()}},'Step');
+        win(t.debug?'Bug fixed!':(t.budget?'Done in '+n+' cards!':'Every dot stitched. Well coded!'),2000);return;}
+      if(t.debug&&!edited){toast('hmm','There\'s the bug at work. Tap **Step** to find the wrong card.',3000);return;}
+      if(sim.bumped){const last=sim.steps[sim.steps.length-1];q.miss('bump at card '+last.num+': '+codeText(items));toast('hmm','Bump! **Card '+last.num+'** goes off the cloth.');return;}
+      if(!subset(sim.seen,target)){q.miss(codeText(items));toast('hmm','Some stitches missed the dots. Tap **Step** to find the first wrong card.',3000);return;}
+      toast('hmm','So far so good! What comes next?');}});
+  const runB=h('button',{class:'btn brass',type:'button',on:{click:()=>run.run()}},'Run');
+  const stepB=h('button',{class:'btn ghost',type:'button','aria-label':'Step'},h('span',{class:'ic',style:'width:22px;height:22px;display:inline-block;vertical-align:-4px;margin-right:4px',html:ICON.step}),'Step');stepB.addEventListener('click',()=>run.step());
   const extra=t.debug?[]:[h('button',{class:'btn ghost small',type:'button',on:{click:()=>{if(!solved)ed.undo();}}},'Undo'),h('button',{class:'btn ghost small',type:'button',on:{click:()=>{if(!solved)ed.clear();}}},'Clear')];
-  const side=h('div',null,h('p',{class:'prompt'},rich(t.prompt)),
-    t.long?h('div',{style:'margin-bottom:10px'},h('p',{class:'note',style:'margin-bottom:4px'},'The long program:'),miniStrip(t.long)):null,
-    ed.el,h('div',{class:'controls'},runB,stepB,extra),msg,helpBox(t.hints,q),
-    h('div',{class:'next-row'},t.optional?h('button',{class:'btn ghost',type:'button',on:{click:advance}},'Skip the challenge'):null,nx));
-  hl=highlighter(side,round);
-  panel.appendChild(h('div',{class:'stage'},h('div',{class:'cloth-wrap'},cloth.el,round,legend(true)),side));
+  F.pic.append(cloth.el,round);
+  F.side.append(ed.el,h('div',{class:'controls'},runB,stepB,extra),t.optional?h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:advance}},'Skip the challenge')):null);
+  hl=highlighter(F.side,round);setHelp(t.hints,q);
+};
+SCREENS.choose=(t,p)=>{
+  const c=S.choice[t.key];
+  if(c!=null&&t.options[c]){const inner=Object.assign({},t.options[c].t);if(S.easy&&isMaeve()&&inner.easy)Object.assign(inner,inner.easy);return SCREENS.build(inner,p);}
+  frame(t.say,true);const box=h('div',{class:'opts',style:'width:100%;max-width:560px'});
+  t.options.forEach((o,i)=>{const tt=Object.assign({},o.t);if(S.easy&&isMaeve()&&tt.easy)Object.assign(tt,tt.easy);
+    box.appendChild(h('button',{class:'opt',type:'button',on:{click:()=>{S.choice[t.key]=i;save();render();}}},thumb(tt,tt.solution),o.label));});
+  F.pic.appendChild(box);
 };
 
-SCREENS.write=(t,panel)=>{
-  const ta=h('textarea',{'aria-label':t.prompt,placeholder:t.example||''});ta.value=S.writing[t.wkey]||'';
-  const nx=h('button',{class:'btn',type:'button',on:{click:()=>{S.writing[t.wkey]=ta.value;save();if(ta.value.trim())G.write({game:GAME,part:parts()[S.part].title,area:t.area,prompt:t.prompt,text:ta.value});advance();}}},'Next');
-  const upd=()=>{nx.disabled=!t.optional&&words(ta.value)<(t.min||1);};
-  ta.addEventListener('input',()=>{S.writing[t.wkey]=ta.value;save();G.write({game:GAME,part:parts()[S.part].title,area:t.area,prompt:t.prompt,text:ta.value});upd();});
-  upd();
-  panel.append(h('p',{class:'prompt'},rich('**'+t.prompt+'**')),P(t.sub||''),ta,h('div',{class:'next-row'},nx));
+/* ---- Part 6: find the repeat, then slide ---- */
+SCREENS.unit=(t)=>{
+  const mv=isMaeve();const long=[];for(let i=0;i<t.rep;i++)long.push(...t.unit);
+  const tt=Object.assign({},t,{solution:[{rep:t.rep,body:t.unit}]});const target=targetOf(tt);
+  frame(mv?'This long code stitches the stairs. **Tap the cards that make one stair.**':'This long program stitches the steps. **Tap the cards that make one step.**');
+  const q=G.ask({item:t.item+': spot the repeat',concept:'repeating-unit',area:t.area});
+  const cloth=Cloth(t);cloth.setTarget(target);const round=h('div',{class:'round'});
+  const longItems=toItems(long);numberCards(longItems);let picked=new Set();
+  const cards=longItems.map(it=>cardEl(it.op,{tag:'button',num:it.num,on:{click:()=>{if(phase!==1)return;const e=cards[it.num-1];if(picked.has(it.num)){picked.delete(it.num);e.classList.remove('pick');}else{picked.add(it.num);e.classList.add('pick');}}}}));
+  const box=h('div',{class:'code'},cards);let phase=1;
+  const hl=highlighter(box,round);const run=Runner(cloth,t,()=>toItems(long),{step:hl.step,reset:hl.clear});
+  const okB=h('button',{class:'btn brass',type:'button'},'These ones');
+  const watchB=h('button',{class:'btn ghost',type:'button',on:{click:()=>run.run()}},'Watch it run');
+  const ctl=h('div',{class:'controls'},okB,watchB);
+  okB.addEventListener('click',()=>{if(phase!==1)return;const k=t.unit.length;const want=[...Array(k)].map((_,i)=>i+1);
+    if(picked.size===k&&want.every(n=>picked.has(n))){q.done();toast('yes',mv?'Yes! One stair.':'Yes! That\'s the bit that repeats.',1400);setTimeout(slider,1500);}
+    else{q.miss([...picked].sort((a,b)=>a-b).join(','));toast('hmm','Not quite. Start at card 1. Where does it start again?',2800);picked.forEach(n=>cards[n-1].classList.remove('pick'));picked.clear();}});
+  F.pic.append(cloth.el,round);F.side.append(box,ctl);
+  setHelp(mv?['Read the cards in pairs.','Do cards 3 and 4 match cards 1 and 2?']:['Find where the cards start again.','Cards 5 to 8 match cards 1 to 4.'],q);
+  function slider(){phase=2;run.stop();
+    const q2=G.ask({item:t.item+': how many times',concept:'repeat-loop',area:t.area});
+    say(mv?'Now slide to repeat the stair. Match the dots!':'Now slide to set how many times. Match the dots!');
+    const body=t.unit;let n=1;
+    const blk=h('div',{class:'repblock'},h('div',{class:'rephead'},h('span',{class:'ic',style:'width:26px;height:26px;display:inline-block',html:ICON.rep}),'Repeat'),h('div',{class:'repbody'},body.map(op=>cardEl(op))));
+    const val=h('b',null,'1×');const rng=h('input',{type:'range',min:1,max:6,value:1,'aria-label':'How many times'});
+    const show=()=>{const sim=simulate(toItems([{rep:n,body}]),t);cloth.show(sim.seen,sim.end);val.textContent=n+'×';blk.querySelector('.rephead').lastChild.textContent='Repeat '+n+' times';};
+    blk.querySelector('.rephead').lastChild.textContent='Repeat 1 time';
+    rng.addEventListener('input',()=>{n=+rng.value;show();});
+    const go=h('button',{class:'btn brass',type:'button'},'That\'s it');
+    go.addEventListener('click',()=>{if(winning)return;if(n===t.rep){q2.done();win('A loop! '+long.length+' cards became '+(body.length+1)+'.',2400);}
+      else{q2.miss(String(n));toast('hmm',n<t.rep?'Some dots still need stitching. More times!':'Too many! The needle went past the dots.',2600);}});
+    F.side.textContent='';F.side.append(h('p',{class:'note'},'The long code:'),miniStrip(long),h('div',{style:'margin-top:10px'},blk),h('div',{class:'slide'},rng,val),h('div',{class:'controls'},go));
+    show();setHelp(['Each round of the Repeat stitches one '+(mv?'stair':'step')+'.','Count the '+(mv?'stairs':'steps')+' in the dots.'],q2);
+  }
 };
 
-SCREENS.design=(t,panel)=>{
-  const msg=h('div',{class:'msg',role:'status'});const cloth=Cloth(t);const round=h('div',{class:'round'});
+/* ---- Part 7: design, then show ---- */
+SCREENS.design=(t)=>{
+  frame('Make a pattern for **'+SIS()+'**. Tap **Run** to see it.');const cloth=Cloth(t);const round=h('div',{class:'round'});
   const tt=Object.assign({},t,{allowRepeat:true});if(S.design)tt.prog=S.design;
-  const ed=Editor(tt,{changed:()=>{run&&run.reset();say(msg,'');S.design=toSpec(ed.items());save();},say:s=>say(msg,s)});
-  let hl;let ran=false;const run=Runner(cloth,t,()=>ed.items(),{step:s=>hl.step(s),reset:()=>hl&&hl.clear(),empty:()=>say(msg,'Add some cards first.'),
-    end:sim=>{ran=true;if(sim.bumped){const l=sim.steps[sim.steps.length-1];say(msg,'Bump! Card '+l.num+' takes the needle off the cloth. Change it so your sister\'s pattern fits.');}else{say(msg,'There\'s your pattern. Change anything you like, or tap **I\'m finished**.',true);}}});
+  const ed=Editor(tt,{changed:()=>{run&&run.reset();S.design=toSpec(ed.items());save();},say:s=>toast('hmm',s)});
+  let hl;const run=Runner(cloth,t,()=>ed.items(),{step:s=>hl.step(s),reset:()=>hl&&hl.clear(),empty:()=>toast('hmm','Add some cards first.'),
+    end:sim=>{if(sim.bumped){const l=sim.steps[sim.steps.length-1];toast('hmm','Bump! Card '+l.num+' goes off the cloth.');}else toast('yes','There\'s your pattern!',1500);}});
   const colours=[['#2F3C8F','Indigo'],['#A8322A','Madder red'],['#3F6B3A','Moss green']];
   const sw=h('div',{class:'colours'},colours.map(([c,n])=>{const b=h('button',{class:'sw',type:'button','aria-label':n+' thread','aria-pressed':String(S.colour===c),style:'background:'+c});
     b.addEventListener('click',()=>{S.colour=c;save();document.body.style.setProperty('--thread',c);sw.querySelectorAll('.sw').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});return b;}));
   const fin=h('button',{class:'btn',type:'button',on:{click:()=>{const items=ed.items();const sim=simulate(items,t);
-    if(countCards(items)<3){say(msg,'Use at least 3 cards, so there\'s something to predict.');return;}
-    if(sim.bumped){say(msg,'Your code bumps off the cloth. Run it and fix it first.');return;}
+    if(countCards(items)<3){toast('hmm','Use at least 3 cards.');return;}
+    if(sim.bumped){toast('hmm','It bumps off the cloth. Fix it first.');return;}
     S.design=toSpec(items);save();G.write({game:GAME,part:'A pattern for your sister',area:'ICTDT',prompt:'My pattern code for my sister',text:codeText(items)});advance();}}},"I'm finished");
-  const side=h('div',null,h('p',{class:'prompt'},rich('Design a pattern for **'+SIS()+'**. Use any cards, and a Repeat if you like. Run it to see what it makes.')),
-    ed.el,h('div',{class:'controls'},h('button',{class:'btn brass',type:'button',on:{click:()=>run.run()}},'Run'),h('button',{class:'btn ghost',type:'button',on:{click:()=>run.step()}},'Step'),
-      h('button',{class:'btn ghost small',type:'button',on:{click:()=>ed.undo()}},'Undo'),h('button',{class:'btn ghost small',type:'button',on:{click:()=>ed.clear()}},'Clear')),
-    h('p',{class:'note',style:'margin:14px 0 0'},'Thread colour:'),sw,msg,h('div',{class:'next-row'},fin));
-  hl=highlighter(side,round);
-  panel.appendChild(h('div',{class:'stage'},h('div',{class:'cloth-wrap'},cloth.el,round,legend(false)),side));
+  F.pic.append(cloth.el,round,sw);
+  F.side.append(ed.el,h('div',{class:'controls'},h('button',{class:'btn brass',type:'button',on:{click:()=>run.run()}},'Run'),h('button',{class:'btn ghost small',type:'button',on:{click:()=>ed.undo()}},'Undo'),h('button',{class:'btn ghost small',type:'button',on:{click:()=>ed.clear()}},'Clear')),
+    h('div',{class:'next-row'},fin));
+  hl=highlighter(F.side,round);
 };
-
-SCREENS.show=(t,panel)=>{
+SCREENS.show=()=>{
+  frame('Show **'+SIS()+'** your code. She shades her guess on paper. Then **Run**!');
   const d=parts().find(p=>p.id==='sister').tasks[0];const spec=S.design||[];
   const cloth=Cloth(d);const s=strip(spec,{numbered:true});const round=h('div',{class:'round'});const hl=highlighter(s,round);
-  const run=Runner(cloth,d,()=>toItems(spec),{step:hl.step,reset:hl.clear});
-  panel.appendChild(h('div',{class:'stage'},h('div',{class:'cloth-wrap'},cloth.el,round,legend(false)),
-    h('div',null,h('p',{class:'prompt'},rich('Show **'+SIS()+'** your code. She reads the cards and **shades her guess** on the paper grid (or squared paper). No peeking at the screen!')),
-      s,P('When she\'s ready, tap **Run** and check her guess together.'),
-      h('div',{class:'controls'},h('button',{class:'btn brass',type:'button',on:{click:()=>run.run()}},'Run'),h('button',{class:'btn ghost',type:'button',on:{click:()=>run.step()}},'Step')),
-      h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.task--;save();render();}}},'Change my design'),nextBtn("We've checked it")))));
+  const run=Runner(cloth,d,()=>toItems(spec),{step:hl.step,reset:hl.clear,end:()=>toast('yes','Did her guess match?',2200)});
+  F.pic.append(cloth.el,round);
+  F.side.append(s,h('div',{class:'controls'},h('button',{class:'btn brass',type:'button',on:{click:()=>run.run()}},'Run')),
+    h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.task--;save();render();}}},'Change it'),h('button',{class:'btn',type:'button',on:{click:advance}},"We've checked it")));
 };
 
-SCREENS.end=(t,panel)=>{
+/* ---- Part 8: what Ada saw ---- */
+SCREENS.ada=()=>{
+  frame('Tap the **Engine** to start it.',true);
+  const pic=svgEl(engineSVG());pic.style.cursor='pointer';let went=false;
+  const goOn=h('button',{class:'btn',type:'button',hidden:true,on:{click:advance}},'Go on');
+  pic.addEventListener('click',()=>{if(went)return;went=true;pic.classList.add('go');say('Patterns, and even music!');
+    setTimeout(()=>{F.pic.appendChild(h('div',{class:'overcard'},h('p',{class:'quote'},'"… the Analytical Engine weaves algebraical patterns just as the Jacquard-loom weaves flowers and leaves."',h('cite',null,'Ada Lovelace, Note A, 1843')),
+      P(M('Ada saw that machines could one day make patterns and music, not just sums.','Ada saw that such machines could one day work with music, words and pictures, not only numbers.')),
+      isMaeve()?null:P('Babbage sketched programs too, but Ada\'s was the first one published. His Engine was never finished. Real computers came about a hundred years later.'),
+      h('div',{class:'row',style:'justify-content:flex-end'},goOn)));goOn.hidden=false;},2600);});
+  F.pic.appendChild(pic);
+};
+SCREENS.beads=(t)=>{
+  const mv=isMaeve();const target=[];for(let i=0;i<t.rep;i++)target.push(...t.unit);
+  frame(mv?'Make this bead string with a Repeat. Tap beads into the pocket, then slide.':'Make this bead string with a Repeat: fill the pocket, then slide.');
+  const q=G.ask({item:t.item,concept:t.concept,area:t.area});
+  const pocket=[];let n=1;
+  const strBead=b=>h('span',{class:'bead '+b,'aria-label':b==='r'?'red':'blue'});
+  const goal=h('div',{class:'string'},target.map(strBead));
+  const mine=h('div',{class:'string'});const pk=h('div',{class:'pocket','aria-label':'Repeat pocket'});
+  const val=h('b',null,'1×');const rng=h('input',{type:'range',min:1,max:6,value:1,'aria-label':'How many times'});
+  const draw=()=>{pk.textContent='';pocket.forEach(b=>pk.appendChild(strBead(b)));if(!pocket.length)pk.appendChild(h('span',{class:'note'},'Empty pocket'));
+    mine.textContent='';for(let i=0;i<n;i++)pocket.forEach(b=>mine.appendChild(strBead(b)));val.textContent=n+'×';};
+  rng.addEventListener('input',()=>{n=+rng.value;draw();});
+  const add=b=>{if(pocket.length>=4||winning)return;pocket.push(b);draw();};
+  const go=h('button',{class:'btn brass',type:'button'},'That\'s it');
+  go.addEventListener('click',()=>{if(winning)return;const made=[];for(let i=0;i<n;i++)made.push(...pocket);
+    if(made.join()===target.join()){q.done();win(mv?'Yes! Bead and crochet patterns are codes too.':'Yes! Knitting, beading and music all repeat. Ada saw a machine could follow any of them.',2800);}
+    else{q.miss('Repeat '+n+' ('+pocket.join(' ')+')');toast('hmm',pocket.join()!==t.unit.join()?'Look at the pocket. What is the bit that repeats?':'Right beads! Now check how many times.',2800);}});
+  F.pic.append(h('p',{class:'note',style:'margin:0'},'Make this:'),goal,h('p',{class:'note',style:'margin:8px 0 0'},'Yours:'),mine);
+  F.side.append(h('div',{class:'row'},h('button',{class:'beadbtn',type:'button','aria-label':'Add a red bead',on:{click:()=>add('r')}},h('span',{class:'bead r'}),'red'),
+      h('button',{class:'beadbtn',type:'button','aria-label':'Add a blue bead',on:{click:()=>add('b')}},h('span',{class:'bead b'}),'blue'),
+      h('button',{class:'btn ghost small',type:'button',on:{click:()=>{pocket.pop();draw();}}},'Take one out')),
+    h('div',{class:'rephead',style:'margin-top:12px'},h('span',{class:'ic',style:'width:26px;height:26px;display:inline-block',html:ICON.rep}),'Repeat this pocket:'),pk,
+    h('div',{class:'slide'},rng,val),h('div',{class:'controls'},go));
+  draw();setHelp(['Find the beads that repeat.',mv?'Red, blue is one round. Count the rounds.':'Count the blue beads. Each round has one.'],q);
+};
+SCREENS.tell=()=>{
+  frame('Tell a grown-up: what is a **bug**? How did you find one?',true);
+  F.pic.appendChild(h('div',{class:'endicons',style:'max-width:520px;width:100%'},h('div',null,h('span',{class:'ic',html:BUGPIC}),'A bug'),h('div',null,h('span',{class:'ic',html:ICON.step}),'Step'),h('div',null,h('span',{class:'ic',html:ICON.rep}),'Repeat')));
+  const ta=h('textarea',{'aria-label':'Type a sentence if you like',placeholder:'Type a sentence, if you like.',style:'min-height:70px'});ta.value=S.writing.tellback||'';
+  ta.addEventListener('input',()=>{S.writing.tellback=ta.value;save();G.write({game:GAME,part:'What Ada saw',area:'EN',prompt:'Tell-back: what is a bug, and how did you find one?',text:ta.value});});
+  F.side.append(ta,h('div',{class:'next-row'},h('button',{class:'btn',type:'button',on:{click:advance}},'We talked about it')));
+};
+SCREENS.write=(t)=>{
+  frame(t.say,true);
+  if(t.pic)F.pic.appendChild(h('div',{html:TILEPIC[t.pic],style:'width:160px'}));
+  const ta=h('textarea',{'aria-label':t.say,placeholder:t.example||''});ta.value=S.writing[t.wkey]||'';
+  const nx=h('button',{class:'btn',type:'button'},'Next');
+  const upd=()=>{nx.disabled=words(ta.value)<(t.min||1);};
+  const send=(k,area,prompt,text)=>{S.writing[k]=text;save();G.write({game:GAME,part:parts()[S.part].title,area,prompt,text});};
+  ta.addEventListener('input',()=>{send(t.wkey,t.area,t.say,ta.value);upd();});
+  let ta2=null;if(t.extra){ta2=h('textarea',{'aria-label':t.extra.prompt,style:'min-height:70px'});ta2.value=S.writing[t.extra.wkey]||'';ta2.addEventListener('input',()=>send(t.extra.wkey,t.extra.area,t.extra.prompt,ta2.value));}
+  nx.addEventListener('click',advance);upd();
+  F.side.append(P(t.sub||''),ta,t.extra?h('p',{class:'note',style:'margin:12px 0 4px'},t.extra.prompt):null,ta2,h('div',{class:'next-row'},nx));
+};
+SCREENS.end=()=>{
   if(!S.finished){S.finished=true;save();}
   const p=parts()[S.part];if(!S.done[p.id]){S.done[p.id]=true;G.partDone(p.title);save();}
   if(!finishedNow){finishedNow=true;G.finish();}
-  panel.append(h('h3',{style:'color:var(--deep);font-size:1.5rem;margin-bottom:10px'},'You finished the Pattern Engine'),
-    P('You read codes, wrote your own, found bugs and used a loop, just as Ada imagined people would one day.'),
-    h('ul',null,h('li',null,rich('A **code** (or program) is a list of steps a machine follows exactly.')),h('li',null,rich('A **bug** is a mistake in the code. Step through it to find where it goes wrong.')),h('li',null,rich('A **Repeat** runs the same cards again and again.'))),
-    h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.part=null;save();render();}}},'Back to the map'),h('a',{class:'btn',href:'../../index.html',style:'text-decoration:none;display:inline-flex;align-items:center'},'Back to the Games Room')));
+  frame('You finished the Pattern Engine!',true);
+  F.pic.append(h('div',{class:'endicons',style:'max-width:620px;width:100%'},
+    h('div',null,h('span',{class:'ic',html:ICON.right}),'A code is steps a machine follows exactly.'),
+    h('div',null,h('span',{class:'ic',html:BUGPIC}),'A bug is a mistake. Step through to find it.'),
+    h('div',null,h('span',{class:'ic',html:ICON.rep}),'A Repeat runs cards again and again.')));
+  F.side.append(h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.part=null;save();render();}}},'Map'),h('a',{class:'btn',href:'../../index.html',style:'text-decoration:none;display:inline-flex;align-items:center'},'Games Room')));
 };
 
 window.PE={simulate,toItems,parts,targetOf,state:()=>S,go(part,task){S.part=part;S.task=task||0;save();render();},setEasy(v){S.easy=v;save();whoBar();render();}};
