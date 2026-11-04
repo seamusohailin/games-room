@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fraunces:opsz,wght@9..144,700&display=swap">
 <style>
-/* Aboard Captain Hale's ship: night-sea navy, parchment charts, lantern gold, Maeve's teal for every action */
+/* Aboard Captain Hale's ship. Pictures first, one short line of text, hands-on moves. Maeve's teal for every action. */
 :root{
   --bg:#10263a; --bg-deep:#091726; --glow:#f2c75c; --parch:#f8efdc; --parch-2:#e8d9b6; --parch-3:#d6c193;
   --ink:#2a2118; --muted:#6d5c44; --teal:#16A08F; --teal-deep:#0c6b5f; --wax:#a5302a; --rope:#b0864f;
@@ -22,19 +22,18 @@
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background-color:var(--bg);background-image:radial-gradient(ellipse at 90% -5%,rgba(242,199,92,.22),transparent 55%),radial-gradient(ellipse at 0% 100%,rgba(22,160,143,.14),transparent 50%);
-  color:var(--on-dark);font-family:var(--body);font-size:1.15rem;line-height:1.45;min-height:100vh;-webkit-text-size-adjust:100%}
-.wrap{max-width:1000px;margin:0 auto;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+  color:var(--on-dark);font-family:var(--body);font-size:1.15rem;line-height:1.4;min-height:100vh;-webkit-text-size-adjust:100%}
+.wrap{max-width:960px;margin:0 auto;padding:max(12px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(90px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
 button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
 button:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
 h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
 svg text{font-family:var(--body)}
 
-.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;justify-content:space-between;padding-bottom:14px;margin-bottom:18px;border-bottom:2px dashed rgba(242,199,92,.35)}
-.brand h1{color:var(--glow);font-size:clamp(1.7rem,5.2vw,2.6rem);line-height:1.05}
-.brand p{margin:.3rem 0 0;font-size:1rem;opacity:.85}
-.status{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.top{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding-bottom:10px;margin-bottom:12px;border-bottom:2px dashed rgba(242,199,92,.35)}
+.brand h1{color:var(--glow);font-size:clamp(1.6rem,5vw,2.3rem);line-height:1.05}
+.status{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .pips{display:flex;gap:6px;list-style:none;margin:0;padding:0}
-.pips li{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem;border:2px solid var(--parch-3);color:var(--parch-3)}
+.pips li{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem;border:2px solid var(--parch-3);color:var(--parch-3)}
 .pips li.done{background:var(--teal);border-color:var(--teal);color:#fff}
 .pips li.now{background:var(--glow);border-color:var(--glow);color:var(--ink)}
 .toggle{display:inline-flex;align-items:center;gap:8px;background:var(--bg-deep);border:2px solid var(--parch-3);border-radius:999px;padding:6px 14px;min-height:46px;cursor:pointer;font-size:.95rem}
@@ -43,164 +42,220 @@ svg text{font-family:var(--body)}
 .toggle[aria-pressed="true"] .box{background:var(--teal);border-color:var(--teal)}
 .toggle[aria-pressed="true"] .box::after{content:"";width:10px;height:6px;border:solid #fff;border-width:0 0 3px 3px;transform:rotate(-45deg) translate(1px,-1px)}
 
-.panel{background:var(--parch);color:var(--ink);border-radius:14px;padding:18px 20px;box-shadow:0 6px 0 var(--bg-deep)}
-.panel h2{color:var(--wax);font-size:clamp(1.45rem,4.2vw,2rem);margin-bottom:8px}
-.say{display:flex;gap:12px;align-items:flex-start;margin:0 0 4px}
-.say .who{flex:none;width:50px;height:50px;border-radius:50%;background:var(--bg);display:grid;place-items:center;border:2px solid var(--rope)}
-.say .who svg{width:38px;height:38px}
-.say .text{flex:1}
-.say p{margin:0;font-size:1.22rem;line-height:1.45;padding-top:6px}
-.say p+p{margin-top:6px}
-.btn{font-family:var(--body);font-weight:700;font-size:1.2rem;background:var(--teal);color:#fff;border:0;border-radius:999px;padding:.55em 1.4em;min-height:56px;cursor:pointer;box-shadow:0 4px 0 var(--teal-deep);transition:transform .08s}
+.panel{background:var(--parch);color:var(--ink);border-radius:14px;padding:14px 16px 16px;box-shadow:0 6px 0 var(--bg-deep)}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.phead h2{color:var(--wax);font-size:clamp(1.3rem,4vw,1.7rem)}
+.dots{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.dots li{width:16px;height:16px;border-radius:50%;border:2px solid var(--parch-3);background:#fff}
+.dots li.on{background:var(--teal);border-color:var(--teal)}
+.bubble{display:flex;gap:10px;align-items:center;margin:10px 0 0;min-height:52px}
+.bubble .who{flex:none;width:50px;height:50px;border-radius:50%;background:var(--bg);display:grid;place-items:center;border:2px solid var(--rope)}
+.bubble .who svg{width:38px;height:38px}
+.bubble p{flex:1;margin:0;font-size:1.3rem;line-height:1.35;font-weight:700;background:#fff;border-radius:14px;padding:8px 14px;border:2px solid var(--parch-2)}
+.qbtn{flex:none;width:48px;height:48px;border-radius:50%;border:2px solid #E3BE5C;background:var(--clue-bg);font-weight:700;font-size:1.3rem;cursor:pointer;color:var(--ink)}
+.qbtn[disabled]{opacity:.35;cursor:default}
+.clue{margin:8px 0 0 60px;background:var(--clue-bg);border-radius:12px;padding:8px 12px;font-size:1.1rem}
+
+.sw{position:relative;margin-top:10px;border-radius:14px;background:#0b1c2c;padding:5px;box-shadow:inset 0 0 0 2px rgba(176,134,79,.45)}
+.sw>svg{display:block;width:100%;height:auto;border-radius:10px;touch-action:manipulation}
+.ov{position:absolute;inset:5px;pointer-events:none}
+.ov>*{pointer-events:auto}
+.toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:88%;padding:8px 18px;border-radius:999px;font-weight:700;font-size:1.2rem;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.25);z-index:5;pointer-events:none}
+.toast.yes{background:var(--ok-bg);color:var(--ok);border:3px solid var(--ok)}
+.toast.hmm{background:var(--hmm-bg);color:#7a4a12;border:3px solid #E3BE5C}
+.toast.info{background:#fff;color:var(--ink);border:3px solid var(--rope)}
+.tray{margin-top:12px;min-height:60px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center}
+.btn{font-family:var(--body);font-weight:700;font-size:1.25rem;background:var(--teal);color:#fff;border:0;border-radius:999px;padding:.5em 1.5em;min-height:58px;cursor:pointer;box-shadow:0 4px 0 var(--teal-deep)}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--teal-deep)}
 .btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink),0 4px 0 var(--parch-3)}
-.btn[disabled]{opacity:.4;cursor:default}
-.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
-.hintbtn{background:var(--clue-bg);border:2px solid #E3BE5C;border-radius:999px;padding:6px 16px;min-height:46px;cursor:pointer;font-size:1rem;color:var(--ink)}
-.hintbtn[disabled]{opacity:.5;cursor:default}
-.ask{font-size:1.25rem;font-weight:700;margin:14px 0 0}
-.tip{background:var(--clue-bg);border-radius:12px;padding:10px 14px;margin:10px 0 0;font-size:1.1rem}
+.btn[disabled]{opacity:.5}
 
-.choices{display:grid;gap:12px;margin:12px 0 4px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.choices.wide{grid-template-columns:1fr}
-.choice{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:12px 16px;min-height:60px;font-size:1.18rem;color:var(--ink);text-align:left;cursor:pointer;box-shadow:0 4px 0 var(--parch-2);display:flex;align-items:center;gap:12px}
-.choice:active:not([disabled]){transform:translateY(2px)}
-.choice svg{flex:none;width:56px;height:56px}
-.choice.yes{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
-.choice.no{opacity:.38;box-shadow:none;cursor:default}
-.fb{border-radius:12px;margin:12px 0 0;scroll-margin-bottom:100px}
-.fb:empty{display:none}
-.fb.show{padding:12px 14px}
-.fb.yes{background:var(--ok-bg)}
-.fb.hmm{background:var(--hmm-bg)}
-.fb.clue{background:var(--clue-bg)}
-.fb p{margin:0;font-size:1.15rem}
-.fb p+p{margin-top:6px}
+/* picture tiles */
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.tile{background:#fff;border:3px solid var(--parch-2);border-radius:16px;padding:8px 8px 10px;cursor:pointer;box-shadow:0 4px 0 var(--parch-2);display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;font-size:1.15rem;color:var(--ink)}
+.tile svg{width:96px;height:72px}
+.tile.yes{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
+.tile.no{opacity:.35;box-shadow:none}
 
-.scene{background:#0b1c2c;border-radius:14px;padding:6px;margin-top:12px;box-shadow:inset 0 0 0 2px rgba(176,134,79,.45)}
-.scene svg{display:block;width:100%;height:auto;border-radius:9px}
-.scene.light{background:#fff;box-shadow:inset 0 0 0 2px var(--parch-2)}
+/* things to drag */
+.chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.chip{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;border:3px solid var(--teal);border-radius:16px;padding:6px 14px;min-height:58px;display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:1.2rem;color:var(--ink);cursor:grab;box-shadow:0 4px 0 var(--teal-deep);position:relative}
+.chip svg{width:40px;height:40px;flex:none}
+.chip.lift{z-index:60;cursor:grabbing;box-shadow:0 10px 18px rgba(0,0,0,.3)}
+.chip.sel{background:#e9f7f5;box-shadow:0 0 0 4px var(--glow),0 4px 0 var(--teal-deep)}
+.chip.used{visibility:hidden}
+.chip.shake{animation:shake .45s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.chip.float{position:absolute;border-color:#1f5fa8;box-shadow:0 4px 0 #154a86;background:#e9f2fb;padding:4px 8px;min-height:52px}
+.chip.float svg{width:52px;height:52px}
+svg .drop{cursor:pointer}
+svg .drop.cando{fill:rgba(242,199,92,.25);stroke:#f2c75c;stroke-width:3;stroke-dasharray:8 6}
+svg .drop.over{fill:rgba(22,160,143,.35);stroke:#16A08F;stroke-width:4}
+#ara path.drop.cando{fill:#efe3bd;stroke:#f2c75c;stroke-width:4}
+#ara path.drop.over{fill:#cdeee8;stroke:#16A08F;stroke-width:5}
 
-/* home */
-.letter{background:#fbf4e3;border:2px solid var(--parch-2);max-width:840px;margin-bottom:22px}
-.letter .eyebrow{font-family:var(--display);color:var(--wax);font-size:1.3rem;margin:0 0 8px}
-.letter p{margin:0 0 10px;font-size:1.2rem}
-.note{font-size:.95rem;color:var(--muted);margin:10px 0 0}
-.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.part{text-align:left;border:0;cursor:pointer;padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;min-height:118px}
+/* slider */
+.slide{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--parch-2);border-radius:999px;padding:6px 16px}
+.slide svg{width:44px;height:44px;flex:none}
+.slide input{flex:1;height:48px;accent-color:var(--teal)}
+.monthbox{display:flex;align-items:center;gap:12px;justify-content:center;margin:0 0 8px}
+.monthbox b{font-family:var(--display);font-size:1.8rem;color:var(--wax);min-width:6.5em;text-align:center}
+.monthbox span{width:52px;height:52px;display:inline-block}
+.monthbox svg{width:52px;height:52px}
+
+/* poem */
+.poem{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;background:#fffaf0;border:2px solid var(--parch-2);border-radius:12px;padding:10px 14px;margin-top:10px}
+.poem p{margin:0;font-size:1.15rem;line-height:1.6;transition:opacity .5s}
+.poem p.dim{opacity:.2}
+.poem .cite{grid-column:1/-1;font-size:.85rem;color:var(--muted)}
+.gap{display:inline-block;min-width:96px;border-bottom:3px dashed var(--teal);text-align:center;color:var(--teal-deep);font-weight:700;padding:0 4px;border-radius:6px;cursor:pointer}
+.gap.cando{background:#fff4d6}
+.gap.over{background:#d9f1ed}
+.gap.filled{border-bottom-style:solid;border-color:var(--ok);color:var(--ok)}
+@media (max-width:640px){.poem{grid-template-columns:1fr}}
+
+/* chance line */
+.chance{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chance .drop{background:#fff;border:3px solid var(--parch-2);border-radius:14px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;text-align:center;color:var(--ink);cursor:pointer}
+.chance .drop svg{width:34px;height:34px}
+.chance .drop.cando{border-color:var(--glow);border-style:dashed}
+.chance .drop.over{border-color:var(--teal);background:#e9f7f5}
+.chance .drop.filled{border-color:var(--ok);background:var(--ok-bg)}
+
+/* sorting cards */
+.sorts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sorts .drop{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:6px;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.sorts .drop svg{width:100%;height:auto;max-height:110px}
+.sorts .drop b{font-size:1.05rem;min-height:1.4em;color:var(--ok)}
+.sorts .drop.cando{border-color:var(--glow);border-style:dashed}
+.sorts .drop.over{border-color:var(--teal);background:#e9f7f5}
+.sorts .drop.filled{border-color:var(--ok);background:var(--ok-bg)}
+
+/* true-story card over the picture */
+.card{position:absolute;inset:5px;background:rgba(9,23,38,.72);border-radius:10px;display:flex;align-items:center;justify-content:center;padding:12px;z-index:8}
+.card .in{background:#fffaf0;border:3px double var(--rope);border-radius:14px;padding:14px 16px;max-width:560px;width:100%;position:relative}
+.card .ribbon{position:absolute;top:-14px;left:14px;background:var(--wax);color:#fff;font-weight:700;font-size:.9rem;padding:3px 12px;border-radius:999px}
+.card h3{color:var(--wax);font-size:1.25rem;margin:4px 0 6px}
+.card svg{width:100%;height:auto;display:block;margin:4px 0 8px}
+.card p{margin:0 0 4px;font-size:1.2rem;font-weight:700}
+.card .row{margin-top:8px}
+
+/* end of a part */
+.donebox{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;background:#fff;border:3px solid var(--ok);border-radius:16px;padding:10px 14px}
+.donebox .stamp{width:56px;height:56px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:1.8rem;font-weight:700;flex:none}
+.donebox p{margin:0;font-size:1.2rem;font-weight:700;flex:1;min-width:200px}
+
+/* contents */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:center}
+@media (max-width:700px){.hero{grid-template-columns:1fr}}
+.hero p{font-size:1.25rem;margin:0 0 8px}
+.hero .note{font-size:.9rem;color:var(--muted)}
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:14px}
+.part{text-align:center;border:0;cursor:pointer;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;box-shadow:0 4px 0 var(--parch-3)}
+.part svg{width:100%;max-width:150px;height:auto}
 .part[disabled]{opacity:.45;cursor:default}
-.part .n{font-family:var(--display);color:var(--wax);font-size:1.05rem}
-.part h3{font-size:1.3rem;color:var(--ink)}
-.part p{margin:0;font-size:1rem;color:var(--muted)}
-.part .tag{margin-top:auto;font-size:.9rem;font-weight:700;color:var(--muted)}
-.part.next{box-shadow:0 0 0 4px var(--glow),0 6px 0 var(--bg-deep)}
+.part h3{font-size:1.05rem;color:var(--ink)}
+.part .tag{font-size:.85rem;font-weight:700;color:var(--muted)}
+.part.next{box-shadow:0 0 0 4px var(--glow),0 4px 0 var(--parch-3)}
 .part.next .tag{color:var(--teal-deep)}
 
-/* the poem */
-.poem{background:#fffaf0;border:2px solid var(--parch-2);border-radius:12px;padding:14px 18px;margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:4px 28px}
-.poem h3{grid-column:1/-1;color:var(--wax);font-size:1.35rem}
-.poem p{margin:6px 0;font-size:1.3rem;line-height:1.55}
-.poem .cite{grid-column:1/-1;font-size:.95rem;color:var(--muted);margin:2px 0 0}
+/* the end */
+.endgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.endgrid div{background:#fffaf0;border:2px solid var(--parch-2);border-radius:12px;padding:8px;text-align:center;font-size:1rem;font-weight:700}
+.endgrid svg{width:70px;height:56px;display:block;margin:0 auto 4px}
+.tell{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:10px 14px;margin-top:10px}
+.tell h3{color:var(--wax);font-size:1.15rem;margin-bottom:4px}
+.tell ul{margin:0;padding-left:1.2em}
+textarea{width:100%;min-height:64px;font:inherit;font-size:1.15rem;border:2px solid var(--parch-3);border-radius:12px;padding:10px;background:#fff;color:var(--ink);margin-top:6px}
 
-/* harbour hunt */
+/* harbour */
+#hb .palm-bow,#hb .flag-fly,#hb .seeds,#hb .streak,#hb .waves{opacity:0;transition:opacity .5s}
+#hb .palm-up,#hb .flag-limp{transition:opacity .5s}
+#hb.w1 .flag-fly{opacity:1}#hb.w1 .flag-limp{opacity:0}#hb.w1 .waves{opacity:.5}
+#hb.w2 .flag-fly{opacity:1}#hb.w2 .flag-limp{opacity:0}#hb.w2 .waves{opacity:1}
+#hb.w2 .palm-bow{opacity:1}#hb.w2 .palm-up{opacity:0}#hb.w2 .seeds,#hb.w2 .streak{opacity:1}
+#hb.w1 .canopy{animation:shiver 1.2s ease-in-out infinite}
+#hb.w2 .canopy{animation:shiver2 .8s ease-in-out infinite}
+#hb.w1 .drift{animation:drift 9s ease-in-out infinite alternate}
+#hb.w2 .drift{animation:drift 4s ease-in-out infinite alternate}
+#hb.w1 .flap,#hb.w2 .flap{animation:flap .8s ease-in-out infinite}
+#hb.w2 .wave{animation:wave 1.6s ease-in-out infinite}
+#hb.w2 .seed{animation:seed 4s linear infinite}
+#hb.w2 .streak{animation:streak 1.4s ease-in-out infinite}
+#hb.w2 .seed.s2{animation-delay:1.3s}#hb.w2 .seed.s3{animation-delay:2.6s}
+.canopy{transform-box:fill-box;transform-origin:50% 100%}
+.flap{transform-box:fill-box;transform-origin:100% 50%}
+@keyframes shiver{50%{transform:rotate(-2.5deg)}}
+@keyframes shiver2{50%{transform:rotate(-6deg)}}
+@keyframes drift{from{transform:translateX(20px)}to{transform:translateX(-30px)}}
+@keyframes flap{50%{transform:scaleY(.82) skewY(5deg)}}
+@keyframes wave{50%{transform:translateX(-10px)}}
+@keyframes seed{0%{transform:translate(0,0);opacity:0}10%{opacity:1}100%{transform:translate(-110px,-40px);opacity:0}}
+@keyframes streak{0%{transform:translateX(8px);opacity:.2}50%{opacity:1}100%{transform:translateX(-14px);opacity:.2}}
 .spot{cursor:pointer}
 .spot .hit{fill:transparent;stroke:none}
-.spot.got .hit{stroke:#16A08F;stroke-width:4;stroke-dasharray:8 5}
-.spot.nope{cursor:default}
+.spot.got .hit{stroke:#16A08F;stroke-width:4;stroke-dasharray:8 5;fill:rgba(22,160,143,.12)}
 .spot.nope .hit{stroke:#8a7a62;stroke-width:2;stroke-dasharray:3 5}
 .spot.ring .hit{stroke:#f2c75c;stroke-width:6}
-.beads{display:flex;gap:8px;margin:10px 0 0;align-items:center;font-size:1rem;color:var(--muted)}
-.beads i{width:24px;height:24px;border-radius:50%;border:2px solid var(--ink);background:#fff}
-.beads i.on{background:var(--teal);border-color:var(--teal)}
-.found{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-.found li{background:var(--ok-bg);border:2px solid var(--ok);border-radius:12px;padding:8px 12px;font-size:1.02rem}
-.found li b{display:block}
+.cpt{cursor:pointer}
+.cpt circle{fill:#fff;stroke:#2a2118;stroke-width:2}
+.cpt.tappable circle{fill:#fff4d6;stroke:#e3be5c;stroke-width:3}
+.cpt.no circle{fill:#ddd}
+.cpt.yes circle{fill:#e1f1e2;stroke:#2f7d4f;stroke-width:4}
 
-/* the chart scenes */
-#gl .rays,#gl .warm,#gl .risebox,#gl .cool-s,#gl .cool-c,#gl .spinlbl{opacity:0;transition:opacity .6s}
+/* globe */
+#gl .rays,#gl .warm,#gl .risebox,#gl .cool-s,#gl .cool-c,#gl .spinlbl,#gl .tradelbl{opacity:0;transition:opacity .6s}
 #gl.lit .rays{opacity:1}
-#gl.warmed .warm{opacity:1}
-#gl.rising .risebox{opacity:1}
+#gl.warmed .warm,#gl.warmed .risebox{opacity:1}
 #gl.cool .cool-s{opacity:1}
 #gl.curve .cool-s{opacity:0}
-#gl.curve .cool-c{opacity:1}
+#gl.curve .cool-c,#gl.curve .tradelbl{opacity:1}
 #gl.spin .spinlbl{opacity:1}
 #gl.spin .spinl{animation:spinl 1.6s linear infinite}
+#gl .sunbtn{cursor:pointer}
+#gl .sunring{animation:pulse 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+#gl.lit .sunring{display:none}
 @keyframes spinl{from{transform:translateX(0)}to{transform:translateX(40px)}}
+@keyframes pulse{50%{transform:scale(1.25);opacity:.3}}
 .tz{cursor:pointer}
-#gl .tz.pick{fill:rgba(22,160,143,.35)}
-#bc .heat,#bc .risebox,#bc .breeze-arr,#bc .flag-blow{opacity:0;transition:opacity .6s}
-#bc.hot .heat{opacity:.35}
+
+/* beach */
+#bc .risebox,#bc .breeze-arr,#bc .flag-blow{opacity:0;transition:opacity .6s}
 #bc.hot .risebox{opacity:1}
 #bc.breeze .breeze-arr,#bc.breeze .flag-blow{opacity:1}
 #bc.breeze .flag-limp{opacity:0}
-#atl .routes,#atl .west,#atl .trade,#atl .storm{opacity:0;transition:opacity .6s}
-#atl.routes-on .routes{opacity:1}
-#atl.west-on .west{opacity:1}
-#atl.trade-on .trade{opacity:1}
-#atl.storm-on .storm{opacity:1}
-#ara .wetw,#ara .dryw,#ara .rainl,#ara .storm{opacity:0;transition:opacity .6s}
-#ara.wet .wetw{opacity:1}
-#ara.dry .dryw{opacity:1}
-#ara.rain.wet .rainl{opacity:1}
-#ara.storm-on .storm{opacity:1}
-.seasons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.seasons .btn.ghost[aria-pressed="true"]{background:#e9f7f5;box-shadow:inset 0 0 0 3px var(--teal),0 4px 0 var(--teal-deep)}
-.seasons .btn{font-size:1.05rem;line-height:1.25;padding:.5em .8em}
+#bc.breeze .flag-blow{animation:flap .8s ease-in-out infinite;transform-box:fill-box;transform-origin:0% 50%}
 
-/* gentle movement, all of it switched off for reduced motion */
-.shiver{animation:shiver 1.3s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
-@keyframes shiver{50%{transform:rotate(-3deg)}}
-.flap{animation:flap .8s ease-in-out infinite;transform-box:fill-box;transform-origin:100% 50%}
-@keyframes flap{50%{transform:scaleY(.82) skewY(5deg)}}
-.drift{animation:drift 8s ease-in-out infinite alternate}
-@keyframes drift{from{transform:translateX(20px)}to{transform:translateX(-30px)}}
-.wave{animation:wave 2.2s ease-in-out infinite}
-@keyframes wave{50%{transform:translateX(-10px)}}
-.seed{animation:seed 4.5s linear infinite}
-.seed.s2{animation-delay:1.5s}.seed.s3{animation-delay:3s}
-@keyframes seed{0%{transform:translate(0,0);opacity:0}10%{opacity:1}100%{transform:translate(-110px,-40px);opacity:0}}
-.streak{animation:streak 1.6s ease-in-out infinite}
-@keyframes streak{0%{transform:translateX(8px);opacity:.2}50%{opacity:1}100%{transform:translateX(-14px);opacity:.2}}
-.rise{animation:rise 1.8s ease-in infinite}
-.rise.r2{animation-delay:.6s}.rise.r3{animation-delay:1.2s}
-@keyframes rise{0%{transform:translateY(6px);opacity:0}30%{opacity:1}100%{transform:translateY(-20px);opacity:0}}
+/* charts */
+#atl .routes,#atl .west,#atl .trade,#atl .slotg{opacity:0;transition:opacity .6s}
+#atl.routes-on .routes,#atl.west-on .west,#atl.trade-on .trade,#atl.slot-on .slotg{opacity:1}
+.rt{cursor:pointer}
+#wd .names{transition:opacity .6s}
+#wd.hide .names{opacity:0}
+#wd.calm.hide .names{opacity:.3}
+#ara .wetw,#ara .dryw,#ara .turnw,#ara .rainl,#ara .storm{opacity:0;transition:opacity .5s}
+#ara.wet .wetw,#ara.dry .dryw,#ara.turn .turnw,#ara.rain.wet .rainl,#ara.storm-on .storm{opacity:1}
+
 .ccw{animation:ccw 3s linear infinite;transform-box:fill-box;transform-origin:center}
 .cw{animation:cw 3s linear infinite;transform-box:fill-box;transform-origin:center}
 @keyframes ccw{to{transform:rotate(-360deg)}}
 @keyframes cw{to{transform:rotate(360deg)}}
+.rise{animation:rise 1.8s ease-in infinite}
+.rise.r2{animation-delay:.6s}.rise.r3{animation-delay:1.2s}
+@keyframes rise{0%{transform:translateY(6px);opacity:0}30%{opacity:1}100%{transform:translateY(-20px);opacity:0}}
 .zz{animation:zz 2.4s ease-in-out infinite}
 @keyframes zz{0%{opacity:0;transform:translate(0,0)}40%{opacity:1}100%{opacity:0;transform:translate(8px,-14px)}}
-@media (prefers-reduced-motion:reduce){.shiver,.flap,.drift,.wave,.seed,.streak,.rise,.ccw,.cw,.zz,#gl.spin .spinl{animation:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
 
-/* cards */
-.story{background:#fffaf0;border:3px double var(--rope);border-radius:12px;padding:16px 18px 12px;margin-top:14px;position:relative}
-.story .ribbon{position:absolute;top:-14px;left:16px;background:var(--wax);color:#fff;font-weight:700;font-size:.9rem;padding:3px 12px;border-radius:999px}
-.story h3{color:var(--wax);font-size:1.3rem;margin:4px 0 8px}
-.story p{margin:0 0 8px;font-size:1.15rem}
-.namecard{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px 16px;box-shadow:4px 4px 0 var(--parch-3)}
-.namecard h3{font-size:1.25rem;color:var(--wax);margin-bottom:6px}
-.namecard ul{margin:0;padding-left:1.2em}
-.namecard li{font-size:1.15rem}
-.namecard li+li{margin-top:4px}
-.fb .namecard p,.fb .namecard li{font-size:1.15rem}
-
-/* the log */
-.answer{background:#fff;border-left:6px solid var(--teal);border-radius:8px;padding:10px 14px;margin-top:10px}
-.tell{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:12px 14px;margin-top:12px}
-.tell h3{color:var(--wax);font-size:1.25rem;margin-bottom:6px}
-.tell ul{margin:0;padding-left:1.2em}
-.tell li+li{margin-top:6px}
-textarea{width:100%;min-height:80px;font:inherit;font-size:1.15rem;border:2px solid var(--parch-3);border-radius:12px;padding:10px;background:#fff;color:var(--ink)}
-
-.grown{margin-top:30px;padding-top:14px;border-top:2px dashed rgba(244,234,214,.25);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;opacity:.85}
+.grown{margin-top:24px;padding-top:12px;border-top:2px dashed rgba(244,234,214,.25);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;opacity:.85}
 .grown button{background:transparent;border:2px solid rgba(244,234,214,.5);border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:.95rem}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="brand"><h1>The Wind Reader</h1><p>Aboard Captain Hale’s ship</p></div>
+    <div class="brand"><h1>The Wind Reader</h1></div>
     <div class="status">
       <ol class="pips" id="pips" aria-label="Parts"></ol>
       <button class="toggle" id="easy" aria-pressed="false"><span class="box"></span>Calm seas (easier)</button>
@@ -227,58 +282,70 @@ const sleep=ms=>{const r=runId;return new Promise(res=>setTimeout(()=>{if(r===ru
 function toTop(){try{window.scrollTo({top:0,behavior:'auto'});}catch(e){window.scrollTo(0,0);}}
 
 /* ---------- saved progress, separate for each girl ---------- */
-const KEY=G.key('wind-reader-v1');
+const KEY=G.key('wind-reader-v2');
 function blank(){return {done:[],easy:false};}
 function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.done))return Object.assign(blank(),v);}catch(e){}return blank();}
 let S=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
-/* ---------- pictures ---------- */
+/* ================= pictures ================= */
 const NUTMEG='<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 15L9 3l9 8zM33 15L31 3l-9 8z" fill="#e08a3c"/><path d="M10 13l1-6 4 4zM30 13l-1-6-4 4z" fill="#f6c7a0"/><circle cx="20" cy="22" r="14" fill="#e08a3c"/><path d="M14 12q2 3 0 6M20 10v6M26 12q-2 3 0 6" stroke="#b35f1d" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="14.5" cy="22" rx="2.2" ry="3" fill="#1d1a14"/><ellipse cx="25.5" cy="22" rx="2.2" ry="3" fill="#1d1a14"/><circle cx="15.2" cy="21" r=".8" fill="#fff"/><circle cx="26.2" cy="21" r=".8" fill="#fff"/><path d="M18.6 27h2.8l-1.4 1.8z" fill="#d6577a"/><path d="M20 28.8v1.2M20 30q-2.2 1.8-4 .2M20 30q2.2 1.8 4 .2" stroke="#1d1a14" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M4 25l8 1M4 29l8-1M36 25l-8 1M36 29l-8-1" stroke="#fff" stroke-width="1" stroke-linecap="round"/></svg>';
-/* a little ship, bow to the right, centred on its waterline */
 const SHIP='<path d="M-18 0h36l-6 10h-24z" fill="#6b4a2b" stroke="#3e2a16" stroke-width="1.2"/><path d="M0 0v-30" stroke="#3e2a16" stroke-width="2.4"/><path d="M1-28v24h14z" fill="#f8efdc" stroke="#8a7a62" stroke-width="1"/><path d="M-1-24v20h-12z" fill="#f8efdc" stroke="#8a7a62" stroke-width="1"/><path d="M0-30l-8-2.5 8-2.5z" fill="#a5302a"/>';
-const STORM='<g><circle r="22" fill="#e8eef5" opacity=".92"/><path d="M0 0m-15 0a15 15 0 1 1 15 15M0 0m7 0a7 7 0 1 0-7-7" stroke="#4d5d70" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>';
-const MINIGLOBE='<svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="40" cy="28" r="14" fill="#3f7fae"/><path d="M26 28h28" stroke="#fff" stroke-dasharray="3 2"/><circle cx="9" cy="28" r="6" fill="#f6c430"/><path d="M16 22h10M16 28h10M16 34h10" stroke="#f6c430" stroke-width="1.5"/></svg>';
-const MINIBEACH='<svg viewBox="0 0 56 56" aria-hidden="true"><rect width="56" height="56" rx="8" fill="#cfe6f5"/><circle cx="28" cy="12" r="6" fill="#f6c430"/><path d="M0 34h28v22H0z" fill="#3f7fae"/><path d="M26 34q2-3 6-3h24v25H26z" fill="#e3c98d"/><path d="M40 31V14" stroke="#3e2a16" stroke-width="1.5"/><path d="M40 15h8l-2 2 2 2h-8z" fill="#a5302a"/></svg>';
-
+const STORM='<g><circle r="22" fill="#e8eef5" opacity=".95"/><path d="M0 0m-15 0a15 15 0 1 1 15 15M0 0m7 0a7 7 0 1 0-7-7" stroke="#4d5d70" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>';
 function marker(id,col){return `<marker id="${id}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto"><path d="M0 0L10 5L0 10z" fill="${col}"/></marker>`;}
+const I={
+  air:'<svg viewBox="0 0 96 72" aria-hidden="true"><g stroke="#1f5fa8" stroke-width="6" fill="none" stroke-linecap="round"><path d="M10 24h52q14 0 14-10t-12-8"/><path d="M10 40h66q12 0 12 10t-12 8"/><path d="M10 56h30"/></g></svg>',
+  cloud:'<svg viewBox="0 0 96 72" aria-hidden="true"><path d="M22 54h52a14 14 0 0 0 0-28a20 20 0 0 0-38-4a14 14 0 0 0-14 32z" fill="#fff" stroke="#9fb3c8" stroke-width="3"/></svg>',
+  sound:'<svg viewBox="0 0 96 72" aria-hidden="true"><g fill="#6d5c44"><ellipse cx="30" cy="56" rx="10" ry="8"/><ellipse cx="66" cy="50" rx="10" ry="8"/></g><path d="M39 56V16l36-8v42" stroke="#6d5c44" stroke-width="5" fill="none"/><path d="M39 24l36-8" stroke="#6d5c44" stroke-width="7"/></svg>',
+  spin:'<svg viewBox="0 0 96 72" aria-hidden="true"><defs>'+marker('ti','#16A08F')+'</defs><circle cx="48" cy="40" r="24" fill="#3f7fae"/><path d="M24 40h48" stroke="#fff" stroke-dasharray="4 3"/><path d="M16 20q32-16 62 0" stroke="#16A08F" stroke-width="5" fill="none" marker-end="url(#ti)"/></svg>',
+  sun:'<svg viewBox="0 0 96 72" aria-hidden="true"><circle cx="48" cy="36" r="16" fill="#f6c430"/><g stroke="#f6c430" stroke-width="4" stroke-linecap="round"><path d="M48 6v8M48 58v8M18 36h8M70 36h8M27 15l6 6M63 51l6 6M69 15l-6 6M33 51l-6 6"/></g></svg>',
+  tree:'<svg viewBox="0 0 96 72" aria-hidden="true"><path d="M48 70V38" stroke="#7a5a3a" stroke-width="7"/><g fill="#5d8f4e"><circle cx="40" cy="30" r="16"/><circle cx="58" cy="26" r="15"/><circle cx="48" cy="14" r="12"/></g></svg>',
+  winch:'<svg viewBox="0 0 96 72" aria-hidden="true"><defs>'+marker('tw','#16A08F')+'</defs><rect x="22" y="26" width="44" height="24" rx="10" fill="#b0864f" stroke="#6b4a2b" stroke-width="3"/><g stroke="#6b4a2b" stroke-width="3"><path d="M30 26v24M38 26v24M46 26v24M54 26v24"/></g><path d="M66 38h12v-16" stroke="#3e2a16" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M22 42q-12 4-11 20" stroke="#8a7a62" stroke-width="4" fill="none"/><path d="M4 62h14l-7 8z" fill="#3e2a16"/><path d="M34 14q14-10 28 0" stroke="#16A08F" stroke-width="4" fill="none" marker-end="url(#tw)"/></svg>',
+  rain:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 28h26a9 9 0 0 0 0-18a13 13 0 0 0-24-1a9 9 0 0 0-2 19z" fill="#cfd8e3" stroke="#6b7c90" stroke-width="2"/><g stroke="#1f5fa8" stroke-width="3" stroke-linecap="round"><path d="M14 34l-3 8M24 34l-3 8M34 34l-3 8"/></g></svg>',
+  sunS:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="10" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M24 4v6M24 38v6M4 24h6M38 24h6M10 10l4 4M34 34l4 4M38 10l-4 4M14 34l-4 4"/></g></svg>',
+  snow:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#6aa6d6" stroke-width="3.5" stroke-linecap="round"><path d="M24 6v36M8 15l32 18M8 33l32-18M19 8l5 5 5-5M19 40l5-5 5 5"/></g></svg>',
+  turn:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 30a13 13 0 1 1 6 8" stroke="#6d5c44" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M10 24l2 7 6-4" stroke="#6d5c44" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg>',
+  puff:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 32h28a8 8 0 0 0 0-16a11 11 0 0 0-21-2a8 8 0 0 0-7 18z" fill="#cfe3f6" stroke="#1f5fa8" stroke-width="2.5"/><text x="24" y="44" text-anchor="middle" font-size="9" font-weight="700" fill="#1f5fa8">cool</text></svg>',
+  drop:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6q14 18 14 26a14 14 0 0 1-28 0q0-8 14-26z" fill="#4a90d9" stroke="#1f5fa8" stroke-width="2"/></svg>',
+  storm:'<svg viewBox="0 0 48 48" aria-hidden="true"><g transform="translate(24 24)"><circle r="20" fill="#e8eef5"/><path d="M0 0m-13 0a13 13 0 1 1 13 13M0 0m6 0a6 6 0 1 0-6-6" stroke="#4d5d70" stroke-width="3.5" fill="none" stroke-linecap="round"/></g></svg>',
+  cross:'<svg viewBox="0 0 34 34" aria-hidden="true"><path d="M8 8l18 18M26 8L8 26" stroke="#a5302a" stroke-width="4" stroke-linecap="round"/></svg>',
+  tick:'<svg viewBox="0 0 34 34" aria-hidden="true"><path d="M6 18l7 7 15-16" stroke="#2f7d4f" stroke-width="4" fill="none" stroke-linecap="round"/></svg>',
+  half1:'<svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="12" fill="none" stroke="#6d5c44" stroke-width="3"/><path d="M17 5a12 12 0 0 1 10 6L17 17z" fill="#6d5c44"/></svg>',
+  half3:'<svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="12" fill="none" stroke="#6d5c44" stroke-width="3"/><path d="M17 5a12 12 0 1 1-10 6L17 17z" fill="#6d5c44"/></svg>',
+  poem:'<svg viewBox="0 0 70 56" aria-hidden="true"><rect x="12" y="4" width="46" height="48" rx="6" fill="#fffaf0" stroke="#b0864f" stroke-width="3"/><g stroke="#6d5c44" stroke-width="3" stroke-linecap="round"><path d="M20 16h30M20 26h24M20 36h28M20 44h18"/></g></svg>',
+  leaves:'<svg viewBox="0 0 70 56" aria-hidden="true"><path d="M35 54V30" stroke="#7a5a3a" stroke-width="5"/><g fill="#5d8f4e"><circle cx="28" cy="24" r="11"/><circle cx="42" cy="20" r="11"/><circle cx="35" cy="12" r="9"/></g><g fill="#76a865"><circle cx="16" cy="18" r="3"/><circle cx="10" cy="28" r="2.5"/></g></svg>',
+  grass:'<svg viewBox="0 0 70 56" aria-hidden="true"><path d="M40 4q-6 10-4 18" stroke="#8a6a44" stroke-width="3" fill="none"/><g stroke="#5d8f4e" stroke-width="3" stroke-linecap="round"><path d="M34 30l-10 6M36 34l-14 10M33 40l-12 12"/></g></svg>'
+};
 
 const SIGNS={
-  leaves:{ok:1,name:'Trembling leaves',line:'“When the leaves hang trembling, the wind is passing through.”'},
-  bow:{ok:1,name:'A bowing tree',line:'“When the trees bow down their heads, the wind is passing by.”'},
-  flag:{ok:1,name:'The flag',line:'The wind pushes the flag out sideways.'},
-  clouds:{ok:1,name:'Racing clouds',line:'The wind carries the clouds across the sky.'},
-  waves:{ok:1,name:'Waves',line:'The wind stirs up the waves on the sea.'},
-  seeds:{ok:1,name:'Flying seeds',line:'The wind carries seeds across the land, so plants can grow in new places.'},
-  sand:{ok:1,name:'Blowing sand',line:'The wind lifts grains of sand. Over a long time it can build great sand dunes.'},
-  sun:{ok:0,name:'The sun',line:'The sun shines whether the wind blows or not. Look for something that is being moved.'},
-  light:{ok:0,name:'The lighthouse',line:'The lighthouse stands still, wind or no wind. Look for something that is being pushed.'},
-  crab:{ok:0,name:'The crab',line:'The crab is just walking along its rock. Look for something the wind is moving.'}
+  leaves:{ok:1,line:'Trembling leaves!'},bow:{ok:1,line:'A bowing tree!'},flag:{ok:1,line:'The flag flies out!'},
+  clouds:{ok:1,line:'Racing clouds!'},waves:{ok:1,line:'Waves!'},seeds:{ok:1,line:'Flying seeds!'},sand:{ok:1,line:'Blowing sand!'},
+  sun:{ok:0,line:'The sun isn’t being pushed. Try again.'},light:{ok:0,line:'The lighthouse stays still. Try again.'},crab:{ok:0,line:'The crab is just walking. Try again.'}
 };
-const HARBOUR=`<svg id="hb" viewBox="0 0 600 340" role="img" aria-label="A windy harbour with a ship">
+const HARBOUR=`<svg id="hb" class="w0" viewBox="0 0 600 340" role="img" aria-label="A harbour with a ship">
   <rect width="600" height="230" fill="#cfe6f5"/>
   <rect y="215" width="600" height="125" fill="#3f7fae"/>
-  <g class="spot" data-k="sun"><circle cx="420" cy="55" r="22" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M420 22v-8M420 88v8M387 55h-8M453 55h8M397 32l-6-6M443 78l6 6M443 32l6-6M397 78l-6 6"/></g><rect class="hit" x="380" y="12" width="80" height="86" rx="12"/></g>
-  <g class="spot" data-k="clouds"><g class="drift"><g fill="#fff"><ellipse cx="150" cy="58" rx="40" ry="16"/><ellipse cx="128" cy="48" rx="20" ry="14"/><ellipse cx="166" cy="44" rx="24" ry="17"/><ellipse cx="300" cy="80" rx="36" ry="13"/><ellipse cx="286" cy="70" rx="18" ry="12"/><ellipse cx="312" cy="68" rx="20" ry="13"/></g><path d="M200 50h-26M206 58h-22M350 76h-22" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/><rect class="hit" x="95" y="22" width="270" height="76" rx="12"/></g></g>
-  <g transform="translate(555 45)" font-size="14" font-weight="700" fill="#2a2118" text-anchor="middle"><circle r="23" fill="#fffaf0" stroke="#2a2118" stroke-width="1.5"/><path d="M0-17L4 0L0 17L-4 0Z" fill="#2a2118"/><path d="M-17 0L0-4L17 0L0 4Z" fill="#8a7a62"/><text y="-27">N</text><text y="40">S</text><text x="33" y="5">E</text><text x="-33" y="5">W</text></g>
+  <g class="spot" data-k="sun"><circle cx="232" cy="40" r="20" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M232 10v-6M232 70v6M202 40h-6M262 40h6M211 19l-4-4M253 61l4 4M253 19l4-4M211 61l-4 4"/></g><rect class="hit" x="196" y="4" width="72" height="72" rx="12"/></g>
+  <g class="spot" data-k="clouds"><g class="drift"><g fill="#fff"><ellipse cx="110" cy="56" rx="38" ry="15"/><ellipse cx="90" cy="46" rx="18" ry="13"/><ellipse cx="124" cy="42" rx="22" ry="16"/><ellipse cx="350" cy="88" rx="34" ry="12"/><ellipse cx="336" cy="78" rx="17" ry="11"/><ellipse cx="362" cy="76" rx="19" ry="12"/></g><rect class="hit" x="64" y="24" width="96" height="52" rx="12"/><rect class="hit" x="306" y="62" width="90" height="42" rx="12"/></g></g>
   <path d="M0 190Q60 170 120 185Q170 195 212 232L212 340H0Z" fill="#e3c98d"/>
   <g class="spot" data-k="sand"><path d="M8 205Q50 160 104 200Z" fill="#d6b36a"/><g class="streak" stroke="#b8924b" stroke-width="2.5" stroke-linecap="round"><path d="M52 172l-26-5M64 176l-30 0M44 182l-28 2M76 182l-24 2"/></g><rect class="hit" x="4" y="152" width="106" height="55" rx="10"/></g>
-  <g class="spot" data-k="leaves"><path d="M158 210L160 140" stroke="#7a5a3a" stroke-width="7" stroke-linecap="round"/><g class="shiver" fill="#5d8f4e"><circle cx="146" cy="128" r="20"/><circle cx="170" cy="122" r="19"/><circle cx="158" cy="104" r="18"/><circle cx="134" cy="112" r="13"/></g><g class="shiver" fill="#76a865"><circle cx="128" cy="138" r="4"/><circle cx="118" cy="128" r="3.5"/><circle cx="110" cy="142" r="3"/></g><rect class="hit" x="104" y="80" width="92" height="76" rx="12"/></g>
-  <g class="spot" data-k="seeds"><path d="M190 252v-24" stroke="#5d8f4e" stroke-width="2.5"/><circle cx="190" cy="224" r="6" fill="#fff" stroke="#c9c2ad"/><g class="seed"><path d="M186 218v6M186 218l-3-3M186 218l3-3M186 218v-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></g><g class="seed s2"><path d="M192 214v6M192 214l-3-3M192 214l3-3M192 214v-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></g><g class="seed s3"><path d="M188 222v6M188 222l-3-3M188 222l3-3M188 222v-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></g><rect class="hit" x="118" y="168" width="92" height="88" rx="12"/></g>
-  <g class="spot" data-k="waves"><g class="wave" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"><path d="M232 262q12-9 24 0q12-9 24 0M60 286q12-9 24 0q12-9 24 0M370 300q12-9 24 0q12-9 24 0M240 318q12-9 24 0M110 320q12-9 24 0q12-9 24 0"/></g><rect class="hit" x="0" y="244" width="440" height="96" rx="12"/></g>
+  <g class="spot" data-k="leaves"><path d="M158 210L160 140" stroke="#7a5a3a" stroke-width="7" stroke-linecap="round"/><g class="canopy"><g fill="#5d8f4e"><circle cx="146" cy="128" r="20"/><circle cx="170" cy="122" r="19"/><circle cx="158" cy="104" r="18"/><circle cx="134" cy="112" r="13"/></g></g><rect class="hit" x="104" y="80" width="92" height="76" rx="12"/></g>
+  <g class="spot" data-k="seeds"><path d="M190 252v-24" stroke="#5d8f4e" stroke-width="2.5"/><circle cx="190" cy="224" r="6" fill="#fff" stroke="#c9c2ad"/><g class="seeds"><g class="seed"><path d="M186 218v6M186 218l-3-3M186 218l3-3M186 218v-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g><g class="seed s2"><path d="M192 214v6M192 214l-3-3M192 214l3-3M192 214v-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g><g class="seed s3"><path d="M188 222v6M188 222l-3-3M188 222l3-3M188 222v-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g></g><rect class="hit" x="118" y="168" width="92" height="76" rx="12"/></g>
+  <g class="spot" data-k="waves"><g class="waves"><g class="wave" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"><path d="M232 262q12-9 24 0q12-9 24 0M60 286q12-9 24 0q12-9 24 0M370 300q12-9 24 0q12-9 24 0M240 318q12-9 24 0M110 320q12-9 24 0q12-9 24 0"/></g></g><rect class="hit" x="0" y="250" width="440" height="90" rx="12"/></g>
   <path d="M440 222Q470 202 520 206Q570 200 600 210V340H452Q430 290 440 222Z" fill="#8f8a7d"/>
-  <g class="spot" data-k="light"><path d="M545 214L549 140H561L565 214Z" fill="#fff" stroke="#2a2118" stroke-width="1.5"/><path d="M547 170h16M548 190h15" stroke="#a5302a" stroke-width="6"/><rect x="546" y="128" width="18" height="12" fill="#f2c75c" stroke="#2a2118" stroke-width="1.5"/><path d="M542 128L555 115L568 128Z" fill="#a5302a"/><rect class="hit" x="532" y="106" width="46" height="112" rx="10"/></g>
-  <g class="spot" data-k="bow"><path d="M496 214Q490 172 462 142" stroke="#8a6a44" stroke-width="7" fill="none" stroke-linecap="round"/><g class="shiver" stroke="#4f8a45" stroke-width="5" fill="none" stroke-linecap="round"><path d="M462 142q-30-6-48 6M462 142q-28 6-44 22M462 142q-22-16-42-14M462 142q-12 14-24 30"/></g><rect class="hit" x="406" y="114" width="98" height="104" rx="12"/></g>
+  <g class="spot" data-k="light"><path d="M562 214L566 140H578L582 214Z" fill="#fff" stroke="#2a2118" stroke-width="1.5"/><path d="M564 170h16M565 190h15" stroke="#a5302a" stroke-width="6"/><rect x="563" y="128" width="18" height="12" fill="#f2c75c" stroke="#2a2118" stroke-width="1.5"/><path d="M559 128L572 115L585 128Z" fill="#a5302a"/><rect class="hit" x="552" y="124" width="44" height="94" rx="10"/></g>
+  <g class="spot" data-k="bow"><g class="palm-up"><path d="M496 214Q494 180 498 140" stroke="#8a6a44" stroke-width="7" fill="none" stroke-linecap="round"/><g stroke="#4f8a45" stroke-width="5" fill="none" stroke-linecap="round"><path d="M498 140q-26 0-36 18M498 140q24 0 36 18M498 140q-14-14-30-12M498 140q14-14 30-12"/></g></g><g class="palm-bow"><path d="M496 214Q490 172 462 142" stroke="#8a6a44" stroke-width="7" fill="none" stroke-linecap="round"/><g class="canopy" stroke="#4f8a45" stroke-width="5" fill="none" stroke-linecap="round"><path d="M462 142q-30-6-48 6M462 142q-28 6-44 22M462 142q-22-16-42-14M462 142q-12 14-24 30"/></g></g><rect class="hit" x="406" y="124" width="140" height="94" rx="12"/></g>
   <g class="spot" data-k="crab"><g transform="translate(486 296)"><ellipse rx="12" ry="8" fill="#c9452d"/><path d="M-11-2l-8-7M11-2l8-7M-8 6l-6 6M8 6l6 6M-4 7l-2 7M4 7l2 7" stroke="#c9452d" stroke-width="3" stroke-linecap="round"/><circle cx="-4" cy="-9" r="2.2" fill="#1d1a14"/><circle cx="4" cy="-9" r="2.2" fill="#1d1a14"/></g><rect class="hit" x="460" y="276" width="54" height="42" rx="10"/></g>
-  <g transform="translate(300 234)"><path d="M-72 0H72L54 26H-54Z" fill="#6b4a2b" stroke="#3e2a16" stroke-width="2"/><path d="M-62 6h124" stroke="#3e2a16" stroke-width="2"/><path d="M0 0V-112" stroke="#3e2a16" stroke-width="5"/><path d="M-32-72h64M-26-42h52" stroke="#3e2a16" stroke-width="4"/><rect x="-32" y="-78" width="64" height="8" rx="4" fill="#f3ead2" stroke="#8a7a62"/><rect x="-26" y="-48" width="52" height="8" rx="4" fill="#f3ead2" stroke="#8a7a62"/><path d="M-60 0q-6 10 0 18" stroke="#3e2a16" stroke-width="2" fill="none"/></g>
-  <g class="spot" data-k="flag"><path class="flap" d="M299 122L258 128L266 134L258 140L299 134Z" fill="#a5302a"/><rect class="hit" x="246" y="104" width="62" height="46" rx="10"/></g>
+  <g transform="translate(300 234)"><path d="M-72 0H72L54 26H-54Z" fill="#6b4a2b" stroke="#3e2a16" stroke-width="2"/><path d="M-62 6h124" stroke="#3e2a16" stroke-width="2"/><path d="M0 0V-112" stroke="#3e2a16" stroke-width="5"/><path d="M-32-72h64M-26-42h52" stroke="#3e2a16" stroke-width="4"/><rect x="-32" y="-78" width="64" height="8" rx="4" fill="#f3ead2" stroke="#8a7a62"/><rect x="-26" y="-48" width="52" height="8" rx="4" fill="#f3ead2" stroke="#8a7a62"/></g>
+  <g class="spot" data-k="flag"><path class="flag-limp" d="M300 122L307 124L305 150L300 148Z" fill="#a5302a"/><path class="flag-fly flap" d="M299 122L258 128L266 134L258 140L299 134Z" fill="#a5302a"/><rect class="hit" x="246" y="104" width="66" height="50" rx="10"/></g>
+  <g transform="translate(520 64)"><circle r="30" fill="#fffaf0" stroke="#2a2118" stroke-width="2"/><path d="M0-22L5 0L0 22L-5 0Z" fill="#2a2118"/><path d="M-22 0L0-5L22 0L0 5Z" fill="#8a7a62"/>
+    ${[['N',0,-46],['E',46,0],['S',0,46],['W',-46,0]].map(([d,x,y])=>`<g class="cpt" data-t="${d}" transform="translate(${x} ${y})"><circle r="15"/><text y="6" text-anchor="middle" font-size="17" font-weight="700" fill="#2a2118">${d}</text></g>`).join('')}</g>
 </svg>`;
 
 const GLOBE=`<svg id="gl" viewBox="0 0 470 300" role="img" aria-label="The Earth and the Sun">
   <defs><clipPath id="gclip"><circle cx="280" cy="150" r="115"/></clipPath>${marker('ab','#1f5fa8')}${marker('ar','#c0392b')}</defs>
   <rect width="470" height="300" fill="#0f2438"/>
-  <circle cx="40" cy="150" r="28" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M40 112v-8M40 188v8M10 122l-5-5M70 178l5 5M70 122l5-5M10 178l-5 5"/></g>
-  <text x="40" y="214" fill="#f4ead6" font-size="14" text-anchor="middle">the Sun</text>
+  <g class="sunbtn" id="sunbtn"><circle class="sunring" cx="40" cy="150" r="34" fill="none" stroke="#f6c430" stroke-width="3"/><circle cx="40" cy="150" r="26" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M40 112v-8M40 188v8M10 122l-5-5M70 178l5 5M70 122l5-5M10 178l-5 5"/></g><rect x="0" y="100" width="84" height="100" fill="transparent"/></g>
   <g class="rays" stroke="#f6c430" stroke-width="3" stroke-dasharray="7 5"><path d="M76 55H215M76 100H177M76 150H165M76 200H177M76 245H215"/></g>
   <circle cx="280" cy="150" r="115" fill="#3f7fae"/>
   <g clip-path="url(#gclip)">
@@ -286,14 +353,14 @@ const GLOBE=`<svg id="gl" viewBox="0 0 470 300" role="img" aria-label="The Earth
     <rect x="160" y="30" width="240" height="46" fill="#eef4f8" opacity=".9"/>
     <rect x="160" y="224" width="240" height="46" fill="#eef4f8" opacity=".9"/>
     <rect class="warm" x="160" y="118" width="240" height="64" fill="#f39b3f"/>
-    <rect class="tz" data-z="north" x="160" y="30" width="240" height="64" fill="transparent"/>
-    <rect class="tz" data-z="eq" x="160" y="118" width="240" height="64" fill="transparent"/>
-    <rect class="tz" data-z="south" x="160" y="206" width="240" height="64" fill="transparent"/>
+    <rect class="tz" data-t="north" x="160" y="30" width="240" height="64" fill="transparent"/>
+    <rect class="tz drop" data-t="eq" x="160" y="118" width="240" height="64" fill="transparent"/>
+    <rect class="tz" data-t="south" x="160" y="206" width="240" height="64" fill="transparent"/>
   </g>
   <path d="M165 150H395" stroke="#fff" stroke-dasharray="6 5" stroke-width="2" pointer-events="none"/>
   <text x="400" y="155" fill="#f4ead6" font-size="15">Equator</text>
   <text x="280" y="24" fill="#f4ead6" font-size="15" text-anchor="middle">North Pole</text>
-  <text x="280" y="288" fill="#f4ead6" font-size="15" text-anchor="middle">South Pole</text>
+  <text x="280" y="290" fill="#f4ead6" font-size="15" text-anchor="middle">South Pole</text>
   <g class="risebox" pointer-events="none" stroke="#c0392b" stroke-width="4" fill="none" stroke-linecap="round">
     <g class="rise"><path d="M232 162q-5-7 0-14q5-7 0-14" marker-end="url(#ar)"/></g>
     <g class="rise r2"><path d="M280 162q-5-7 0-14q5-7 0-14" marker-end="url(#ar)"/></g>
@@ -301,35 +368,38 @@ const GLOBE=`<svg id="gl" viewBox="0 0 470 300" role="img" aria-label="The Earth
   </g>
   <g class="cool-s" pointer-events="none" stroke="#1f5fa8" stroke-width="6" fill="none" stroke-linecap="round"><path d="M240 62V126" marker-end="url(#ab)"/><path d="M320 62V126" marker-end="url(#ab)"/><path d="M240 238V174" marker-end="url(#ab)"/><path d="M320 238V174" marker-end="url(#ab)"/></g>
   <g class="cool-c" pointer-events="none" stroke="#1f5fa8" stroke-width="6" fill="none" stroke-linecap="round"><path d="M262 62Q262 118 212 130" marker-end="url(#ab)"/><path d="M342 62Q342 118 292 130" marker-end="url(#ab)"/><path d="M262 238Q262 182 212 170" marker-end="url(#ab)"/><path d="M342 238Q342 182 292 170" marker-end="url(#ab)"/></g>
-  <text class="spinlbl" x="72" y="272" fill="#f4ead6" font-size="15" font-weight="700" text-anchor="middle" pointer-events="none">The Earth spins →</text>
+  <g class="tradelbl" pointer-events="none"><rect x="10" y="232" width="132" height="54" rx="10" fill="#f2c75c"/><text x="76" y="254" text-anchor="middle" font-size="16" font-weight="700" fill="#2a2118">trade winds</text><text x="76" y="276" text-anchor="middle" font-size="15" fill="#2a2118">east → west</text></g>
+  <text class="spinlbl" x="78" y="40" fill="#f4ead6" font-size="16" font-weight="700" text-anchor="middle" pointer-events="none">spinning →</text>
 </svg>`;
 
-const BEACH=`<svg id="bc" viewBox="0 0 600 300" role="img" aria-label="A beach on a hot afternoon">
+const BEACH=`<svg id="bc" viewBox="0 0 600 300" role="img" aria-label="A beach">
   <defs>${marker('ab2','#1f5fa8')}${marker('ar2','#c0392b')}</defs>
   <rect width="600" height="300" fill="#cfe6f5"/>
-  <circle cx="300" cy="44" r="22" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M300 12v-6M300 76v6M268 44h-6M332 44h6M277 21l-4-4M323 67l4 4M323 21l4-4M277 67l-4 4"/></g>
+  <g id="bsun" transform="translate(80 150)"><circle r="22" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M0-32v-6M0 32v6M-32 0h-6M32 0h6M-23-23l-4-4M23 23l4 4M23-23l4-4M-23 23l-4 4"/></g></g>
   <path d="M0 190H300V300H0Z" fill="#3f7fae"/>
-  <g stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"><path d="M40 230q10-7 20 0M150 260q10-7 20 0M220 220q10-7 20 0"/></g>
+  <g stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"><path d="M40 230q10-7 20 0M150 290q10-7 20 0M230 220q10-7 20 0"/></g>
   <path d="M288 192Q298 176 322 174H600V300H288Z" fill="#e3c98d"/>
-  <path class="heat" d="M288 192Q298 176 322 174H600V300H288Z" fill="#f08a3c"/>
+  <path id="bheat" d="M288 192Q298 176 322 174H600V300H288Z" fill="#f08a3c" opacity="0"/>
   <g transform="translate(500 140)"><path d="M0 34V8L22-8L44 8V34Z" fill="#f8efdc" stroke="#6d5c44" stroke-width="2"/><rect x="16" y="16" width="12" height="18" fill="#6b4a2b"/><path d="M52 34V14L68 2L84 14V34Z" fill="#f8efdc" stroke="#6d5c44" stroke-width="2"/></g>
-  <text x="130" y="288" fill="#fff" font-size="18" font-weight="700" text-anchor="middle">Sea</text>
-  <text x="440" y="288" fill="#5b4a2e" font-size="18" font-weight="700" text-anchor="middle">Land</text>
+  <g transform="translate(150 200)"><rect x="-10" y="0" width="20" height="74" rx="10" fill="#fff" stroke="#2a2118" stroke-width="2"/><rect id="tsea" x="-4" y="56" width="8" height="10" fill="#c0392b"/><circle cy="78" r="12" fill="#c0392b" stroke="#2a2118" stroke-width="2"/></g>
+  <g transform="translate(430 196)"><rect x="-10" y="0" width="20" height="74" rx="10" fill="#fff" stroke="#2a2118" stroke-width="2"/><rect id="tland" x="-4" y="56" width="8" height="10" fill="#c0392b"/><circle cy="78" r="12" fill="#c0392b" stroke="#2a2118" stroke-width="2"/></g>
+  <rect class="tz" data-t="sea" x="0" y="190" width="290" height="110" fill="transparent"/>
+  <rect class="tz drop" data-t="land" x="296" y="120" width="304" height="180" fill="transparent"/>
   <path d="M390 176V92" stroke="#3e2a16" stroke-width="4" stroke-linecap="round"/>
   <path class="flag-limp" d="M392 96L402 98L400 130L392 128Z" fill="#a5302a"/>
-  <path class="flag-blow flap" d="M392 96L438 102L430 108L438 114L392 112Z" fill="#a5302a" style="transform-origin:0% 50%"/>
-  <g class="risebox" stroke="#c0392b" stroke-width="4" fill="none" stroke-linecap="round">
-    <g class="rise"><path d="M450 168q-5-7 0-14q5-7 0-14" marker-end="url(#ar2)"/></g>
-    <g class="rise r2"><path d="M520 130q-5-7 0-14q5-7 0-14" marker-end="url(#ar2)"/></g>
-    <g class="rise r3"><path d="M340 160q-5-7 0-14q5-7 0-14" marker-end="url(#ar2)"/></g>
+  <path class="flag-blow" d="M392 96L438 102L430 108L438 114L392 112Z" fill="#a5302a"/>
+  <g class="risebox" stroke="#c0392b" stroke-width="4" fill="none" stroke-linecap="round" pointer-events="none">
+    <g class="rise"><path d="M470 168q-5-7 0-14q5-7 0-14" marker-end="url(#ar2)"/></g>
+    <g class="rise r2"><path d="M540 130q-5-7 0-14q5-7 0-14" marker-end="url(#ar2)"/></g>
+    <g class="rise r3"><path d="M350 160q-5-7 0-14q5-7 0-14" marker-end="url(#ar2)"/></g>
   </g>
-  <g class="breeze-arr" stroke="#1f5fa8" stroke-width="6" fill="none" stroke-linecap="round"><path d="M40 160H200" marker-end="url(#ab2)"/><path d="M140 128H300" marker-end="url(#ab2)"/><path d="M200 168H360" marker-end="url(#ab2)"/></g>
+  <g class="breeze-arr" stroke="#1f5fa8" stroke-width="6" fill="none" stroke-linecap="round" pointer-events="none"><path d="M40 160H200" marker-end="url(#ab2)"/><path d="M140 128H300" marker-end="url(#ab2)"/><path d="M200 168H360" marker-end="url(#ab2)"/></g>
 </svg>`;
 
 const ATLANTIC=`<svg id="atl" viewBox="0 0 600 380" role="img" aria-label="A chart of the Atlantic Ocean">
   <defs>${marker('aw','#f4ead6')}${marker('at','#f2c75c')}</defs>
   <rect width="600" height="380" fill="#3f7fae"/>
-  <path d="M0 285H600" stroke="#fff" stroke-dasharray="7 6" stroke-width="2" opacity=".75"/>
+  <path d="M0 300H600" stroke="#fff" stroke-dasharray="7 6" stroke-width="2" opacity=".75"/>
   <g fill="#d8c79a" stroke="#8a7a62" stroke-width="2">
     <path d="M0 30H150L172 80L150 128L118 160L150 190L140 205L104 200L88 170L58 150L0 152Z"/>
     <path d="M104 200L140 208L152 234L136 242L110 216Z"/>
@@ -339,50 +409,55 @@ const ATLANTIC=`<svg id="atl" viewBox="0 0 600 380" role="img" aria-label="A cha
     <circle cx="438" cy="186" r="4"/><circle cx="448" cy="192" r="4"/><circle cx="458" cy="186" r="4"/>
     <ellipse cx="166" cy="198" rx="14" ry="5"/><ellipse cx="196" cy="204" rx="10" ry="4"/><circle cx="214" cy="212" r="3.5"/><circle cx="222" cy="222" r="3"/>
   </g>
-  <g fill="#2a2118" font-size="15" font-weight="700" text-anchor="middle">
-    <text x="70" y="100">North America</text><text x="196" y="320">South America</text>
-    <text x="530" y="80">Europe</text><text x="548" y="240">Africa</text>
+  <g fill="#2a2118" font-size="15" font-weight="700" text-anchor="middle"><text x="70" y="100">America</text><text x="530" y="80">Europe</text><text x="548" y="240">Africa</text></g>
+  <g fill="#f4ead6" font-size="14" text-anchor="middle"><text x="414" y="172">Canary Islands</text><text x="196" y="186">Caribbean</text><text x="340" y="318">Equator</text></g>
+  <g class="routes">
+    <g fill="none" stroke="#fffaf0" stroke-width="3" stroke-dasharray="9 7"><path id="pA" d="M455 125L150 118"/><path id="pB" d="M455 125Q448 164 446 192Q330 202 210 204"/></g>
+    <g fill="#fffaf0" font-size="22" font-weight="700" text-anchor="middle"><text x="300" y="108">A</text><text x="330" y="230">B</text></g>
+    <path class="rt" data-t="A" d="M455 125L150 118" stroke="transparent" stroke-width="46" fill="none" pointer-events="stroke"/>
+    <path class="rt" data-t="B" d="M455 125Q448 164 446 192Q330 202 210 204" stroke="transparent" stroke-width="46" fill="none" pointer-events="stroke"/>
   </g>
-  <g fill="#f4ead6" font-size="14" text-anchor="middle">
-    <text x="320" y="60" font-size="17" font-weight="700">Atlantic Ocean</text>
-    <text x="414" y="172">Canary Islands</text>
-    <text x="196" y="186">Caribbean islands</text>
-    <text x="330" y="302">Equator</text>
-  </g>
-  <g class="routes" fill="none" stroke="#fffaf0" stroke-width="3" stroke-dasharray="9 7">
-    <path id="pA" d="M455 125L150 118"/>
-    <path id="pB" d="M455 125Q448 164 446 192Q330 202 210 204"/>
-  </g>
-  <g class="routes" fill="#fffaf0" font-size="18" font-weight="700" text-anchor="middle"><text x="300" y="110">Route A</text><text x="330" y="228">Route B</text></g>
   <g class="west" stroke="#f4ead6" stroke-width="5" fill="none" stroke-linecap="round"><path d="M190 86h60" marker-end="url(#aw)"/><path d="M300 86h60" marker-end="url(#aw)"/></g>
   <g class="trade" stroke="#f2c75c" stroke-width="5" fill="none" stroke-linecap="round"><path d="M440 238l-70 7" marker-end="url(#at)"/><path d="M340 244l-70 7" marker-end="url(#at)"/><path d="M250 246l-60 6" marker-end="url(#at)"/></g>
-  <g class="storm" transform="translate(340 330)"><g class="ccw">${STORM}</g></g>
+  <g class="slotg"><rect class="drop" data-t="slot" x="236" y="256" width="200" height="34" rx="10" style="fill:#fffaf0;stroke:#f2c75c;stroke-width:3;stroke-dasharray:6 5"/><text id="slottxt" x="336" y="279" text-anchor="middle" font-size="17" font-weight="700" fill="#6d5c44" pointer-events="none">______ winds</text></g>
   <g id="shipA" transform="translate(455 125) scale(-1 1)">${SHIP}</g>
 </svg>`;
 
-const ARABIAN=`<svg id="ara" viewBox="0 0 600 380" role="img" aria-label="A chart of the Arabian Sea">
+/* one world map for the storm names */
+const WSTORMS=[{t:'h',x:228,y:150,name:'Hurricane',sea:'Atlantic'},{t:'t',x:578,y:132,name:'Typhoon',sea:'near Asia'},{t:'c1',x:408,y:236,name:'Cyclone',sea:'Indian Ocean'},{t:'c2',x:582,y:236,name:'Cyclone',sea:'near Australia'}];
+const WORLD=`<svg id="wd" viewBox="0 0 630 320" role="img" aria-label="A map of the world with four storms">
+  <rect width="630" height="320" fill="#3f7fae"/>
+  <g fill="#d8c79a" stroke="#8a7a62" stroke-width="2">
+    <path d="M30 40H190L200 90L170 130L140 152L122 142L92 112L40 100Z"/>
+    <path d="M140 170L196 176L212 212L188 282L168 302L158 252L144 202Z"/>
+    <path d="M268 38H338L340 80L300 90L278 80Z"/>
+    <path d="M278 100H340L362 150L342 230L322 252L302 202L276 140Z"/>
+    <path d="M345 38H548L566 90L528 128L478 140L448 170L420 132L376 122L346 80Z"/>
+    <path d="M466 208L536 202L558 238L528 270L478 266L460 240Z"/>
+  </g>
+  <g fill="#2a2118" font-size="13" font-weight="700" text-anchor="middle"><text x="508" y="244">Australia</text><text x="460" y="80">Asia</text><text x="318" y="170">Africa</text><text x="110" y="78">America</text></g>
+  ${WSTORMS.map(s=>`<g class="storm" transform="translate(${s.x} ${s.y})"><g class="${s.y<200?'ccw':'cw'}">${STORM}</g><circle class="drop" data-t="${s.t}" r="34" fill="transparent"/><g class="names" pointer-events="none"><rect x="-43" y="26" width="86" height="22" rx="8" fill="#fffaf0"/><text y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#a5302a">${s.name}</text></g><text y="-28" text-anchor="middle" font-size="12" fill="#f4ead6" pointer-events="none">${s.sea}</text></g>`).join('')}
+</svg>`;
+
+const ARABIAN=`<svg id="ara" class="wet" viewBox="0 0 600 380" role="img" aria-label="A chart of the Arabian Sea">
   <defs>${marker('aw2','#f4ead6')}${marker('at2','#f2c75c')}</defs>
   <rect width="600" height="380" fill="#3f7fae"/>
-  <g fill="#d8c79a" stroke="#8a7a62" stroke-width="2">
-    <path d="M140 0H420L405 40L360 80L300 110L250 118L215 100L190 70L160 40Z"/>
-    <path d="M0 70L120 85L170 115L205 140L160 165L130 210L105 260L95 320L80 380H0Z"/>
-    <path d="M430 0H600V95L565 110L540 170L520 240L500 300L478 250L462 180L448 120L436 70Z"/>
-  </g>
-  <g fill="#2a2118" font-size="15" font-weight="700" text-anchor="middle">
-    <text x="55" y="200">Africa</text><text x="290" y="45">Arabia</text><text x="535" y="60">India</text>
-  </g>
-  <g class="rainl" stroke="#1f5fa8" stroke-width="2.5" stroke-linecap="round"><path d="M500 120l-6 12M530 130l-6 12M560 118l-6 12M510 160l-6 12M540 170l-6 12M495 200l-6 12M520 205l-6 12M575 140l-6 12"/></g>
+  <path class="drop" data-t="arabia" fill="#d8c79a" stroke="#8a7a62" stroke-width="2" d="M140 0H420L405 40L360 80L300 110L250 118L215 100L190 70L160 40Z"/>
+  <path d="M0 70L120 85L170 115L205 140L160 165L130 210L105 260L95 320L80 380H0Z" fill="#d8c79a" stroke="#8a7a62" stroke-width="2"/>
+  <path class="drop" data-t="india" fill="#d8c79a" stroke="#8a7a62" stroke-width="2" d="M430 0H600V95L565 110L540 170L520 240L500 300L478 250L462 180L448 120L436 70Z"/>
+  <g fill="#2a2118" font-size="15" font-weight="700" text-anchor="middle" pointer-events="none"><text x="55" y="200">Africa</text><text x="290" y="45">Arabia</text><text x="535" y="60">India</text></g>
+  <g class="rainl" stroke="#1f5fa8" stroke-width="2.5" stroke-linecap="round" pointer-events="none"><path d="M500 120l-6 12M530 130l-6 12M560 118l-6 12M510 160l-6 12M540 170l-6 12M495 200l-6 12M520 205l-6 12M575 140l-6 12"/></g>
   <circle cx="100" cy="290" r="6" fill="#a5302a"/><text x="90" y="285" font-size="14" font-weight="700" fill="#2a2118" text-anchor="end">Malindi</text>
-  <circle cx="476" cy="240" r="6" fill="#a5302a"/><text x="486" y="236" font-size="14" font-weight="700" fill="#2a2118">Calicut</text>
-  <g fill="#f4ead6" text-anchor="middle"><text x="320" y="160" font-size="17" font-weight="700">Arabian Sea</text><text x="300" y="372" font-size="15">Indian Ocean</text></g>
+  <circle cx="476" cy="240" r="6" fill="#a5302a"/><text x="486" y="236" font-size="14" font-weight="700" fill="#2a2118" pointer-events="none">Calicut</text>
   <path id="pH" d="M466 246Q300 300 110 290" fill="none"/>
-  <g class="wetw" stroke="#f4ead6" stroke-width="5" fill="none" stroke-linecap="round"><path d="M170 320l80-46" marker-end="url(#aw2)"/><path d="M270 316l80-46" marker-end="url(#aw2)"/><path d="M340 252l80-44" marker-end="url(#aw2)"/></g>
-  <g class="dryw" stroke="#f2c75c" stroke-width="5" fill="none" stroke-linecap="round"><path d="M440 160l-80 46" marker-end="url(#at2)"/><path d="M380 232l-80 46" marker-end="url(#at2)"/><path d="M270 250l-80 44" marker-end="url(#at2)"/></g>
-  <g class="storm" transform="translate(420 340)"><g class="cw">${STORM}</g></g>
+  <g class="wetw" stroke="#f4ead6" stroke-width="5" fill="none" stroke-linecap="round" pointer-events="none"><path d="M170 320l80-46" marker-end="url(#aw2)"/><path d="M270 316l80-46" marker-end="url(#aw2)"/><path d="M340 252l80-44" marker-end="url(#aw2)"/></g>
+  <g class="dryw" stroke="#f2c75c" stroke-width="5" fill="none" stroke-linecap="round" pointer-events="none"><path d="M440 160l-80 46" marker-end="url(#at2)"/><path d="M380 232l-80 46" marker-end="url(#at2)"/><path d="M270 250l-80 44" marker-end="url(#at2)"/></g>
+  <g class="turnw" stroke="#f4ead6" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8" pointer-events="none"><path d="M250 220q20-30 50-10t40 10"/><path d="M330 290q-20-25 10-35"/></g>
+  <g class="storm" transform="translate(420 336)"><g class="cw">${STORM}</g><circle class="drop" data-t="storm" r="34" fill="transparent"/></g>
   <g id="shipB" transform="translate(466 246) scale(-1 1)">${SHIP}</g>
 </svg>`;
 
-const HOMEPORT=`<svg viewBox="0 0 600 210" role="img" aria-label="The ship safe in harbour at sunset, with Nutmeg asleep">
+const HOMEPORT=`<svg viewBox="0 0 600 210" role="img" aria-label="The ship home at sunset, with Nutmeg asleep">
   <defs><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b4a7a"/><stop offset=".6" stop-color="#e9a15a"/><stop offset="1" stop-color="#f6c98a"/></linearGradient></defs>
   <rect width="600" height="150" fill="url(#dusk)"/><circle cx="470" cy="140" r="26" fill="#f6c430" opacity=".9"/>
   <rect y="140" width="600" height="70" fill="#2f5f87"/>
@@ -393,82 +468,147 @@ const HOMEPORT=`<svg viewBox="0 0 600 210" role="img" aria-label="The ship safe 
   <g fill="#f4ead6" font-weight="700" font-size="16"><text class="zz" x="92" y="140">z</text><text class="zz" x="100" y="128" style="animation-delay:.8s">z</text></g>
 </svg>`;
 
-/* ---------- small building blocks ---------- */
-function sayHTML(lines){return `<div class="say"><span class="who">${NUTMEG}</span><div class="text">${[].concat(lines).map(p=>`<p>${p}</p>`).join('')}</div></div>`;}
-function panel(o){
-  toTop();
-  main.innerHTML=`<section class="panel">${o.title?`<h2>${o.title}</h2>`:''}<div id="say">${o.say?sayHTML(o.say):''}</div>${o.body||''}<div id="act"></div><div class="fb" id="fb" aria-live="polite"></div></section>`;
+/* little pictures for the true-story cards */
+const COLUMBUS_PIC=`<svg viewBox="0 0 320 120" aria-hidden="true"><rect width="320" height="120" rx="8" fill="#3f7fae"/>
+  <path d="M250 0H320V40H280Z" fill="#d8c79a"/><path d="M262 60L320 52V120H286Z" fill="#d8c79a"/><path d="M0 0H60L70 30L40 60H0Z" fill="#d8c79a"/>
+  <g fill="#d8c79a"><circle cx="246" cy="62" r="3"/><circle cx="254" cy="66" r="3"/><ellipse cx="62" cy="76" rx="10" ry="4"/><circle cx="80" cy="80" r="3"/></g>
+  <path d="M270 30Q250 50 250 62Q160 70 70 76" stroke="#fffaf0" stroke-width="2.5" stroke-dasharray="6 5" fill="none"/>
+  <g transform="translate(150 70) scale(-.7 .7)">${SHIP}</g><g transform="translate(178 68) scale(-.6 .6)">${SHIP}</g><g transform="translate(124 72) scale(-.6 .6)">${SHIP}</g>
+  <g transform="translate(150 100)"><rect x="-30" y="-12" width="60" height="24" rx="5" fill="#fffaf0"/><text y="6" text-anchor="middle" font-size="15" font-weight="700" fill="#a5302a">36 days</text></g>
+  <g fill="#fffaf0" font-size="11" font-weight="700"><text x="276" y="22">Spain</text><text x="206" y="56">Canaries</text><text x="8" y="98">Caribbean</text></g></svg>`;
+const DAGAMA_PIC=`<svg viewBox="0 0 320 110" aria-hidden="true"><rect width="320" height="110" rx="8" fill="#fffaf0"/>
+  <text x="10" y="24" font-size="14" font-weight="700" fill="#2a2118">To India, wind behind him</text>
+  <rect x="10" y="32" width="60" height="18" rx="6" fill="#16A08F"/><text x="78" y="46" font-size="14" font-weight="700" fill="#0c6b5f">24 days</text>
+  <text x="10" y="76" font-size="14" font-weight="700" fill="#2a2118">Home, against the wind</text>
+  <rect x="10" y="84" width="232" height="18" rx="6" fill="#a5302a"/><text x="250" y="98" font-size="14" font-weight="700" fill="#a5302a">3+ months</text></svg>`;
+
+/* little pictures for sorting the winds */
+const SORT_TRADE=`<svg viewBox="0 0 120 90" aria-hidden="true"><defs>${marker('s1','#f2c75c')}</defs><rect width="120" height="90" rx="8" fill="#3f7fae"/><path d="M0 72H120" stroke="#fff" stroke-dasharray="5 4" opacity=".7"/><g stroke="#f2c75c" stroke-width="4" stroke-linecap="round"><path d="M112 42H76" marker-end="url(#s1)"/><path d="M64 58H28" marker-end="url(#s1)"/></g><g transform="translate(50 36) scale(-.8 .8)">${SHIP}</g></svg>`;
+const SORT_MONSOON=`<svg viewBox="0 0 120 90" aria-hidden="true"><rect width="120" height="90" rx="8" fill="#3f7fae"/><path d="M70 0H120V40L100 90L84 40Z" fill="#d8c79a"/><g stroke="#1f5fa8" stroke-width="2.5" stroke-linecap="round"><path d="M96 20l-4 8M106 30l-4 8M92 44l-4 8"/></g><g transform="translate(36 44)"><circle r="22" fill="#fffaf0" stroke="#6d5c44" stroke-width="2"/><path d="M-22 0A22 22 0 0 1 0-22V0Z" fill="#4a90d9" opacity=".5"/><path d="M0 22A22 22 0 0 1-22 0H0Z" fill="#f6c430" opacity=".6"/><path d="M0 0V-15M0 0L11 8" stroke="#2a2118" stroke-width="3" stroke-linecap="round"/></g></svg>`;
+const SORT_BREEZE=`<svg viewBox="0 0 120 90" aria-hidden="true"><defs>${marker('s3','#1f5fa8')}</defs><rect width="120" height="90" rx="8" fill="#cfe6f5"/><path d="M0 60H58V90H0Z" fill="#3f7fae"/><path d="M56 62Q60 54 70 54H120V90H56Z" fill="#e3c98d"/><circle cx="60" cy="16" r="9" fill="#f6c430"/><path d="M84 54V24" stroke="#3e2a16" stroke-width="2.5"/><path d="M85 25l20 3-4 3 4 3-20 2z" fill="#a5302a"/><path d="M8 44H64" stroke="#1f5fa8" stroke-width="4" stroke-linecap="round" marker-end="url(#s3)"/></svg>`;
+
+/* part pictures on the contents page */
+const TILEPIC={
+  see:`<svg viewBox="0 0 150 90" aria-hidden="true"><rect width="150" height="90" rx="10" fill="#cfe6f5"/><rect y="60" width="150" height="30" fill="#3f7fae"/><path d="M40 70V30" stroke="#7a5a3a" stroke-width="5"/><g fill="#5d8f4e"><circle cx="34" cy="28" r="12"/><circle cx="48" cy="24" r="11"/></g><g fill="#76a865"><circle cx="16" cy="22" r="3"/><circle cx="10" cy="32" r="2.5"/></g><path d="M100 60V20" stroke="#3e2a16" stroke-width="3"/><path d="M100 22L76 26l5 4-5 4 24-3z" fill="#a5302a"/></svg>`,
+  engine:`<svg viewBox="0 0 150 90" aria-hidden="true"><rect width="150" height="90" rx="10" fill="#0f2438"/><circle cx="24" cy="45" r="12" fill="#f6c430"/><circle cx="96" cy="45" r="36" fill="#3f7fae"/><rect x="60" y="36" width="72" height="18" fill="#f39b3f"/><path d="M84 46q-3-5 0-10q3-5 0-10M108 46q-3-5 0-10q3-5 0-10" stroke="#c0392b" stroke-width="3" fill="none"/></svg>`,
+  beach:`<svg viewBox="0 0 150 90" aria-hidden="true"><rect width="150" height="90" rx="10" fill="#cfe6f5"/><rect y="56" width="70" height="34" fill="#3f7fae"/><path d="M68 58q4-6 12-6h70v38H68z" fill="#e3c98d"/><circle cx="75" cy="20" r="10" fill="#f6c430"/><path d="M110 52V24" stroke="#3e2a16" stroke-width="2.5"/><path d="M111 25l18 3-4 3 4 3-18 2z" fill="#a5302a"/></svg>`,
+  ocean:`<svg viewBox="0 0 150 90" aria-hidden="true"><rect width="150" height="90" rx="10" fill="#3f7fae"/><path d="M0 0H40L46 30L20 56H0Z" fill="#d8c79a"/><path d="M118 0H150V90H128L118 50Z" fill="#d8c79a"/><path d="M112 40Q80 58 40 60" stroke="#fffaf0" stroke-width="2.5" stroke-dasharray="5 4" fill="none"/><g transform="translate(78 54) scale(-.9 .9)">${SHIP}</g></svg>`,
+  monsoon:`<svg viewBox="0 0 150 90" aria-hidden="true"><rect width="150" height="90" rx="10" fill="#3f7fae"/><path d="M100 0H150V40L126 90L112 40Z" fill="#d8c79a"/><path d="M0 20L30 30L20 90H0Z" fill="#d8c79a"/><g stroke="#f2c75c" stroke-width="4" stroke-linecap="round"><path d="M96 34l-30 16"/></g><g transform="translate(60 66) scale(-.8 .8)">${SHIP}</g></svg>`,
+  log:`<svg viewBox="0 0 150 90" aria-hidden="true"><rect width="150" height="90" rx="10" fill="#e9a15a"/><rect y="62" width="150" height="28" fill="#2f5f87"/><g transform="translate(90 70) scale(1.2)">${SHIP}</g><path d="M0 74H50V90H0Z" fill="#8a6a44"/><circle cx="26" cy="68" r="7" fill="#e08a3c"/></svg>`
+};
+
+/* ================= the stage: one picture, one short line, one thing to do ================= */
+let STEP={n:0,of:0};
+let HELP=null,HELPN=0,HELPQ=[],HELPX=null;
+function stage(o){
+  toTop();untoast();
+  main.innerHTML=`<section class="panel"><div class="phead"><h2>${o.title}</h2><ol class="dots" id="dots" aria-label="Steps"></ol></div>
+    <div class="bubble"><span class="who">${NUTMEG}</span><p id="say"></p><button class="qbtn" id="help" aria-label="Help, please" disabled>?</button></div>
+    <p class="clue" id="clue" hidden></p>
+    <div class="sw" id="sw" ${o.scene?'':'hidden'}>${o.scene||'<svg></svg>'}<div class="ov" id="ov"></div><div class="toast" id="toast" hidden></div></div>
+    <div class="tray" id="tray"></div></section>`;
+  STEP={n:0,of:o.steps||0};dots();if(o.say)say(o.say);
+  $('#help').onclick=()=>{if(!HELP||HELPN>=HELP.length)return;HELPQ.forEach(q=>q&&q.hint());clue(`<b>${['Remember','Hint','Look'][Math.min(HELPN,2)]}:</b> ${HELP[HELPN]}`);if(HELPX)HELPX(HELPN);HELPN++;if(HELPN>=HELP.length)$('#help').disabled=true;};
 }
-function say(lines){const s=$('#say');if(s)s.innerHTML=sayHTML(lines);}
-function goBtn(label,id){return `<div class="row"><button class="btn" id="${id||'go'}">${label}</button></div>`;}
-function click(sel){return new Promise(res=>{const b=$(sel);if(b)b.onclick=()=>res();});}
-function seen(el){try{el.scrollIntoView({block:'nearest',behavior:'auto'});}catch(e){}}
-function fb(kind,html){const f=$('#fb');if(!f)return;f.className='fb show '+kind;f.innerHTML=[].concat(html).map(p=>p.trim().startsWith('<div')?p:`<p>${p}</p>`).join('');seen(f);}
-function fbClear(){const f=$('#fb');if(f){f.className='fb';f.innerHTML='';}}
-function rightThenGo(why,label){
-  return new Promise(res=>{const f=$('#fb');f.className='fb show yes';f.innerHTML=`<p><b>Yes.</b> ${why||''}</p>`+goBtn(label||'Go on','go2');$('#go2').onclick=()=>{fbClear();res();};seen(f);});
-}
-function note(html,label){
-  return new Promise(res=>{$('#act').innerHTML='';const f=$('#fb');f.className='fb show clue';f.innerHTML=[].concat(html).map(p=>p.trim().startsWith('<div')?p:`<p>${p}</p>`).join('')+goBtn(label||'Go on','go2');$('#go2').onclick=()=>{fbClear();res();};seen(f);});
-}
-function story(c){
-  return new Promise(res=>{fbClear();$('#act').innerHTML=`<div class="story"><span class="ribbon">True story</span><h3>${c.title}</h3>${c.ps.map(p=>`<p>${p}</p>`).join('')}</div>${goBtn(c.go||'Go on','sgo')}`;seen($('#act .story'));$('#sgo').onclick=()=>res();});
-}
-function helpRow(){return '<div class="row"><button class="hintbtn" id="help">Help, please</button></div>';}
-/* help in three levels: a reminder, a focused hint, then a worked example.
-   In calm seas the reminder is already on screen, so the button starts at the hint. */
-function wireHelp(levels,q,extra,start){
-  const b=$('#help');if(!b||!levels)return;let n=start||0;
-  b.onclick=()=>{if(n>=levels.length)return;q&&q.hint();fb('clue',`<b>${['Remember','Hint','Example'][n]}:</b> ${levels[n]}`);if(extra)extra(n);n++;b.textContent=n>=levels.length?'No more help':'More help';if(n>=levels.length)b.disabled=true;};
-}
-function tipHTML(help){return S.easy&&help&&help[0]?`<p class="tip"><b>Nutmeg’s tip:</b> ${help[0]}</p>`:'';}
-/* a question with buttons, drawn under whatever is already on screen */
-function choose(o){
+function setScene(svg){const sw=$('#sw');const old=sw.querySelector(':scope>svg');const tmp=document.createElement('div');tmp.innerHTML=svg;old.replaceWith(tmp.firstElementChild);$('#ov').innerHTML='';}
+function dots(){const d=$('#dots');if(d)d.innerHTML=Array.from({length:STEP.of},(_,i)=>`<li class="${i<STEP.n?'on':''}"></li>`).join('');}
+function stepDone(){STEP.n++;dots();}
+function say(t){const s=$('#say');if(s)s.innerHTML=t;}
+function clue(t){const c=$('#clue');if(!c)return;if(!t){c.hidden=true;c.innerHTML='';return;}c.hidden=false;c.innerHTML=t;}
+let toastT=null;
+function toast(kind,t,ms){const el=$('#toast');if(!el)return;clearTimeout(toastT);el.className='toast '+kind;el.innerHTML=t;el.hidden=false;if(ms)toastT=setTimeout(()=>{el.hidden=true;},ms);}
+function untoast(){clearTimeout(toastT);const el=$('#toast');if(el)el.hidden=true;}
+function setHelp(levels,qs,extra){HELP=levels||null;HELPN=0;HELPQ=[].concat(qs||[]);HELPX=extra||null;clue(null);const b=$('#help');if(!b)return;b.disabled=!levels;if(S.easy&&levels&&levels.length>1){clue(`<b>Tip:</b> ${levels[0]}`);HELPN=1;}}
+async function yes(t,ms){toast('yes',t);await sleep(ms||1500);untoast();}
+function ask(o,suffix){return G.ask({item:o.item+(suffix||'')+(S.easy?'-calm':''),concept:o.concept,area:o.area||'SC'});}
+function tray(html){const t=$('#tray');if(t)t.innerHTML=html||'';}
+function press(label){tray(`<div class="row"><button class="btn" id="pr">${label}</button></div>`);return new Promise(res=>{$('#pr').onclick=()=>res();});}
+
+/* pick a picture */
+function pics(o){
   return new Promise(res=>{
-    const isRight=v=>o.isRight?o.isRight(v):v===o.answer;
     let opts=o.options.slice();
-    if(S.easy&&opts.length>2){
-      const right=opts.filter(op=>isRight(op.v)).slice(0,1);
-      const wrong=opts.filter(op=>!isRight(op.v));
-      const pick=wrong.filter(op=>op.v===o.easyWrong);
-      opts=right.concat(pick.length?pick:wrong.slice(0,1));
-    }
+    if(S.easy&&opts.length>2){const r=opts.find(x=>x.v===o.answer);const w=opts.filter(x=>x.v!==o.answer);opts=[r,w.find(x=>x.v===o.easyWrong)||w[0]];}
     if(!o.keep)opts=shuffle(opts);
-    $('#act').innerHTML=`${o.ask?`<p class="ask">${o.ask}</p>`:''}${tipHTML(o.help)}<div class="choices ${o.wide?'wide':''}">${opts.map((op,i)=>`<button class="choice" data-i="${i}">${op.html||''}<span>${op.label}</span></button>`).join('')}</div>${o.help?helpRow():''}`;
-    fbClear();
-    const q=o.concept?G.ask({item:o.item+(S.easy?'-calm':''),concept:o.concept,area:o.area||'SC'}):null;
-    wireHelp(o.help,q,null,S.easy?1:0);
+    if(o.say)say(o.say);untoast();
+    tray(`<div class="tiles">${opts.map((op,i)=>`<button class="tile" data-i="${i}">${op.pic||''}<span>${op.label}</span></button>`).join('')}</div>`);
+    const q=ask(o);setHelp(o.help,q);
     let locked=false;
-    $$('#act .choice').forEach(b=>b.onclick=async()=>{
-      if(locked||b.disabled)return;
-      const op=opts[+b.dataset.i];
-      if(isRight(op.v)){
-        locked=true;q&&q.done();b.classList.add('yes');$$('#act .choice').forEach(x=>{if(x!==b)x.disabled=true;});const h=$('#help');if(h)h.disabled=true;
-        if(o.onRight)o.onRight(op.v);
-        if(o.quick){await sleep(700);res(op.v);}else{await rightThenGo(typeof o.why==='function'?o.why(op.v):o.why,o.go);res(op.v);}
-      }else{
-        q&&q.miss(op.label.replace(/<[^>]+>/g,''));b.classList.add('no');b.disabled=true;
-        fb('hmm',(o.miss&&o.miss(op.v))||'Not that one. Look again and try another.');
-      }
+    $$('#tray .tile').forEach(b=>b.onclick=async()=>{
+      if(locked||b.disabled)return;const op=opts[+b.dataset.i];
+      if(op.v===o.answer){locked=true;q.done();b.classList.add('yes');$$('#tray .tile').forEach(x=>x.disabled=true);setHelp(null);if(o.onRight)o.onRight();await yes(o.yes,o.ms);stepDone();res();}
+      else{q.miss(op.label.replace(/<[^>]+>/g,''));b.classList.add('no');b.disabled=true;toast('hmm',o.miss?o.miss(op.v):'Not that one. Try again.');}
     });
   });
 }
-/* tap a place on a picture to answer */
-function tapAsk(o){
+/* tap the right place on the picture */
+function tapScene(o){
   return new Promise(res=>{
-    $('#act').innerHTML=`<p class="ask">${o.ask}</p>${tipHTML(o.help)}${helpRow()}`;
-    fbClear();
-    const q=G.ask({item:o.item+(S.easy?'-calm':''),concept:o.concept,area:o.area||'SC'});
-    wireHelp(o.help,q,null,S.easy?1:0);
-    let locked=false;const tried={};
-    $$(o.sel).forEach(z=>z.addEventListener('click',async()=>{
-      if(locked)return;const k=z.dataset.z;
-      if(k===o.answer){locked=true;q.done();z.classList.add('pick');const h=$('#help');if(h)h.disabled=true;if(o.onRight)o.onRight();await rightThenGo(o.why);res();}
-      else if(!tried[k]){tried[k]=1;q.miss(o.names[k]);fb('hmm',o.miss(k));}
-    }));
+    if(o.say)say(o.say);untoast();tray(o.tray||'');
+    const q=ask(o);setHelp(o.help,q,o.helpExtra);
+    let locked=false;const tried={};const els=$$(o.sel);
+    els.forEach(el=>{el.classList.add('tappable');el.addEventListener('click',async()=>{
+      if(locked)return;const k=el.dataset.t;
+      if(k===o.answer){locked=true;q.done();els.forEach(e=>e.classList.remove('tappable'));el.classList.add('yes');setHelp(null);if(o.onRight)await o.onRight(el);await yes(o.yes,o.ms);stepDone();res();}
+      else if(!tried[k]){tried[k]=1;q.miss(o.names?o.names[k]:k);el.classList.add('no');if(o.onMiss)o.onMiss(k);toast('hmm',o.miss(k));}
+    });});
   });
 }
-/* move a ship along a path; flip turns its bow to face west */
+/* drag things onto the picture. Tapping a thing and then a place works too. */
+function drag(o){
+  return new Promise(res=>{
+    if(o.say)say(o.say);untoast();
+    let chips=o.chips.slice();
+    if(S.easy&&o.easyDrop)chips=chips.filter(c=>!o.easyDrop.includes(c.v));
+    if(!o.keep)chips=shuffle(chips);
+    const inTray=chips.filter(c=>c.x==null),floats=chips.filter(c=>c.x!=null);
+    const chipHTML=c=>`<button class="chip ${c.x!=null?'float':''}" data-v="${c.v}" ${c.x!=null?`style="left:${c.x}%;top:${c.y}%;translate:-50% -50%"`:''} aria-label="${c.aria||c.label||'drag me'}">${c.pic||''}${c.label?`<span>${c.label}</span>`:''}</button>`;
+    tray((o.trayHead||'')+(inTray.length?`<div class="chips">${inTray.map(chipHTML).join('')}</div>`:'<p style="text-align:center;margin:4px 0;font-weight:700;color:#6d5c44">Drag it on the picture.</p>'));
+    if(floats.length)$('#ov').insertAdjacentHTML('beforeend',floats.map(chipHTML).join(''));
+    const targets=$$(o.targets);
+    const decoy=t=>(o.decoys||[]).includes(t.dataset.t);
+    const qs={};let firstQ=null;
+    if(o.oneAsk){firstQ=ask(o);targets.forEach(t=>{if(!decoy(t))qs[t.dataset.t]=firstQ;});}
+    else targets.forEach(t=>{if(decoy(t))return;const k=t.dataset.t;qs[k]=ask(o,'-'+k);if(!firstQ)firstQ=qs[k];});
+    const allQ=[...new Set(Object.values(qs))];
+    setHelp(o.help,allQ,o.helpExtra);
+    const need=o.need||targets.filter(t=>!decoy(t)).length;
+    let placed=0,sel=null,finished=false;
+    const open=t=>!t.classList.contains('filled');
+    function targetAt(x,y){const p=o.pad==null?12:o.pad;let best=null;for(const t of targets){if(!open(t))continue;const r=t.getBoundingClientRect();if(x>=r.left-p&&x<=r.right+p&&y>=r.top-p&&y<=r.bottom+p){if(!best||decoy(best))best=t;}}return best;}
+    function mark(on){targets.forEach(t=>t.classList.toggle('cando',on&&open(t)));}
+    async function attempt(chip,t){
+      const v=chip.dataset.v,k=t.dataset.t,q=qs[k]||firstQ;
+      if(!decoy(t)&&o.fits(v,k)){
+        if(q&&!q._d){q.done();q._d=1;}
+        placed++;if(!o.reuse)chip.classList.add('used');if(!o.multi)t.classList.add('filled');
+        if(o.onPlace)o.onPlace(v,k,chip,t);
+        if(placed>=need&&!finished){finished=true;mark(false);setHelp(null);allQ.forEach(x=>{if(x&&!x._d){x.done();x._d=1;}});await yes(o.yes,o.ms);stepDone();res();}
+        else if(o.each)toast('yes',o.each(v,k),1200);
+      }else{
+        if(q)q.miss(o.label?o.label(v):v);chip.classList.remove('shake');void chip.offsetWidth;chip.classList.add('shake');
+        toast('hmm',o.miss(v,k));
+      }
+    }
+    const reset=chip=>{chip.style.transform='';};
+    [...$$('#tray .chip'),...$$('#ov .chip')].forEach(chip=>{
+      let sx=0,sy=0,moved=false,on=false;
+      chip.addEventListener('pointerdown',e=>{if(chip.classList.contains('used')||finished)return;on=true;moved=false;sx=e.clientX;sy=e.clientY;try{chip.setPointerCapture(e.pointerId);}catch(_){}chip.classList.add('lift');e.preventDefault();});
+      chip.addEventListener('pointermove',e=>{if(!on)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.hypot(dx,dy)>8)moved=true;chip.style.transform=`translate(${dx}px,${dy}px)`;const over=targetAt(e.clientX,e.clientY);targets.forEach(t=>t.classList.toggle('over',t===over));});
+      chip.addEventListener('pointerup',e=>{if(!on)return;on=false;chip.classList.remove('lift');reset(chip);targets.forEach(t=>t.classList.remove('over'));
+        if(!moved){sel=sel===chip?null:chip;$$('.chip').forEach(c=>c.classList.toggle('sel',c===sel));mark(!!sel);return;}
+        const t=targetAt(e.clientX,e.clientY);if(t)attempt(chip,t);});
+      chip.addEventListener('pointercancel',()=>{on=false;chip.classList.remove('lift');reset(chip);});
+    });
+    targets.forEach(t=>t.addEventListener('click',()=>{if(!sel||finished||!open(t))return;const c=sel;sel=null;c.classList.remove('sel');mark(false);attempt(c,t);}));
+  });
+}
+/* a card over the picture */
+function card(c){
+  return new Promise(res=>{untoast();const d=document.createElement('div');d.className='card';
+    d.innerHTML=`<div class="in"><span class="ribbon">True story</span><h3>${c.title}</h3>${c.pic||''}${c.ps.map(p=>`<p>${p}</p>`).join('')}<div class="row"><button class="btn" id="cgo">${c.go||'Go on'}</button></div></div>`;
+    $('#sw').appendChild(d);setHelp(null);tray('');$('#cgo').onclick=()=>{d.remove();res();};});
+}
 function sail(ship,path,from,to,ms,flip){
   return new Promise(res=>{
     const L=path.getTotalLength();
@@ -480,302 +620,286 @@ function sail(ship,path,from,to,ms,flip){
   });
 }
 
-/* ---------- the parts ---------- */
+/* ================= parts ================= */
 const PARTS=[
-  {id:'see',name:'Who has seen the wind?',blurb:'Find the signs of a wind nobody can see.',fn:()=>partSee()},
-  {id:'engine',name:'The wind engine',blurb:'Find out what makes the air move.',fn:()=>partEngine()},
-  {id:'ocean',name:'Across the ocean',blurb:'Catch a wind that will carry the ship west.',fn:()=>partOcean()},
-  {id:'monsoon',name:'Home with the monsoon',blurb:'Wait for the wind to turn.',fn:()=>partMonsoon()},
-  {id:'log',name:'The captain’s log',blurb:'Two last questions, then write up the voyage.',fn:()=>partLog()}
+  {id:'see',name:'Who has seen the wind?',fn:()=>partSee()},
+  {id:'engine',name:'The wind engine',fn:()=>partEngine()},
+  {id:'ocean',name:'Across the ocean',fn:()=>partOcean()},
+  {id:'monsoon',name:'Home with the monsoon',fn:()=>partMonsoon()},
+  {id:'log',name:'The captain’s log',fn:()=>partLog()}
 ];
 const done=id=>S.done.includes(id);
 const unlocked=i=>i===0||done(PARTS[i-1].id);
-function pips(cur){$('#pips').innerHTML=PARTS.map((p,i)=>`<li class="${done(p.id)?'done':''} ${i===cur?'now':''}" title="${p.name}">${i+1}</li>`).join('');}
+function pips(c){$('#pips').innerHTML=PARTS.map((p,i)=>`<li class="${done(p.id)?'done':''} ${i===c?'now':''}" title="${p.name}">${i+1}</li>`).join('');}
 let cur=-1;
 function finishPart(i){const p=PARTS[i];if(!done(p.id))S.done.push(p.id);save();G.partDone(p.name);}
-function afterPart(i,msg){
-  pips(-1);
+function afterPart(i,line){
+  pips(-1);setHelp(null);untoast();
   const next=PARTS.findIndex((p,k)=>!done(p.id)&&unlocked(k));
-  $('#act').innerHTML=`<div class="answer">${msg}</div><div class="row">${next>=0?`<button class="btn" id="nx">Next: ${PARTS[next].name}</button>`:''}<button class="btn ghost" id="ct">Back to the contents</button></div>`;
-  fbClear();
+  tray(`<div class="donebox"><span class="stamp">✓</span><p>${line}</p><div class="row">${next>=0?`<button class="btn" id="nx">Next part</button>`:''}<button class="btn ghost" id="ct">Contents</button></div></div>`);
   if(next>=0)$('#nx').onclick=()=>runPart(next);
   $('#ct').onclick=home;
-  seen($('#act'));
+  try{$('#tray').scrollIntoView({block:'nearest'});}catch(e){}
 }
 function runPart(i){runId++;cur=i;pips(i);G.start(GAME);G.part(PARTS[i].name);PARTS[i].fn();}
 
 function home(){
   runId++;cur=-1;pips(-1);toTop();
-  main.innerHTML=`<section class="panel letter">
-      <p class="eyebrow">A message from the ship</p>
-      ${sayHTML(['Ahoy! I’m Nutmeg, the cat on Captain Hale’s ship.','You helped the Captain read the sky for his voyage home. Now he’s off to sea again, but his navigator is sick in bed. He needs a <b>wind reader</b>: someone who can find a wind that nobody can see, and tell which way it will carry the ship.','He’s asked for you. Tap <b>Help, please</b> whenever you want me.'])}
-      <p class="note">Captain Hale and Nutmeg are made up. Everything you find out about the wind is true, and so are the true-story cards.</p>
-    </section>
+  main.innerHTML=`<section class="panel"><div class="hero"><div class="sw" style="margin:0">${HOMEPORT}</div><div>
+      <div class="bubble" style="margin:0 0 8px"><span class="who">${NUTMEG}</span><p>Ahoy! I’m Nutmeg, the ship’s cat.</p></div>
+      <p>Captain Hale needs a <b>wind reader</b> to find a wind nobody can see. Will you help?</p>
+      <p class="note">Captain Hale and Nutmeg are made up. The wind facts and the true stories are real.</p></div></div>
     <div class="parts">${PARTS.map((p,i)=>{const ok=unlocked(i),d=done(p.id),nx=ok&&!d;
-      return `<button class="panel part ${nx?'next':''}" data-i="${i}" ${ok?'':'disabled'}><span class="n">Part ${i+1}</span><h3>${p.name}</h3><p>${p.blurb}</p><span class="tag">${d?'Done. Tap to play again':ok?'Ready':'Opens after the part before'}</span></button>`;}).join('')}</div>`;
+      return `<button class="panel part ${nx?'next':''}" data-i="${i}" ${ok?'':'disabled'}>${TILEPIC[p.id]}<h3>${i+1}. ${p.name}</h3><span class="tag">${d?'Done ✓':ok?'Ready':'Locked'}</span></button>`;}).join('')}</div></section>`;
   $$('.part').forEach(b=>b.onclick=()=>{if(!b.disabled)runPart(+b.dataset.i);});
 }
 
-/* ===================== Part 1: who has seen the wind? ===================== */
+/* ===== Part 1: who has seen the wind? ===== */
 function partSee(){
-  panel({title:'Who has seen the wind?',say:['Every wind reader learns this poem first. Read it, and listen for what it says about the wind.'],
-    body:`<div class="poem"><h3>Who Has Seen the Wind?</h3><p>Who has seen the wind?<br>Neither I nor you:<br>But when the leaves hang trembling,<br>The wind is passing through.</p><p>Who has seen the wind?<br>Neither you nor I:<br>But when the trees bow down their heads,<br>The wind is passing by.</p><p class="cite">Christina Rossetti, from <i>Sing-Song</i> (1872)</p></div>`});
+  stage({title:'Who has seen the wind?',steps:4,scene:HARBOUR,say:'Nobody can see the wind. Slide it and watch!'});
+  const hb=$('#hb');
   (async()=>{
-    await choose({item:'see-nobody',concept:'We see what the wind does, not the wind',ask:'Who has seen the wind?',wide:true,
-      options:[{v:'no',label:'Nobody. We only see what the wind does.'},{v:'sailors',label:'Sailors can, if they look very hard.'},{v:'storm',label:'Everyone can, on a stormy day.'}],answer:'no',
-      help:['Read the second line of each verse again.','“Neither I nor you” means: not me, and not you either. So who has seen it?','Nobody has seen the wind. We see the leaves tremble and the trees bow, and that’s how we know it’s there.'],
-      miss:()=>'Look at the poem again. Does it say anyone has seen the wind?',
-      why:'Nobody has ever seen the wind. We see what it does: trembling leaves and bowing trees.'});
-    await choose({item:'see-what-is-wind',concept:'Wind is moving air',ask:'So what <i>is</i> the wind?',
-      options:[{v:'air',label:'Moving air'},{v:'cloud',label:'An invisible cloud'},{v:'sound',label:'The sound the trees make'}],answer:'air',
-      help:['Wave your hand fast in front of your face. What do you feel?','The air is all around us. What do we call it when the air moves?','Wind is moving air. When air rushes along, we call it wind.'],
-      miss:v=>v==='cloud'?'Clouds are made of tiny drops of water, and we can see them. The wind is something else.':'The trees make a sound when the wind blows through them. But what is the wind itself?',
-      why:'Wind is moving air.'});
-    harbour();
+    tray(`<div class="slide"><svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="7" fill="#9fb3c8"/></svg><input type="range" id="rng" min="0" max="2" step="1" value="0" aria-label="How hard the wind blows"><svg viewBox="0 0 44 44" aria-hidden="true"><g stroke="#1f5fa8" stroke-width="4" fill="none" stroke-linecap="round"><path d="M4 14h26q8 0 8-6t-7-4"/><path d="M4 24h32q7 0 7 6t-7 4"/><path d="M4 34h16"/></g></svg></div>
+      <div class="poem"><p id="v1" class="dim">Who has seen the wind?<br>Neither I nor you:<br>But when the leaves hang trembling,<br>The wind is passing through.</p><p id="v2" class="dim">Who has seen the wind?<br>Neither you nor I:<br>But when the trees bow down their heads,<br>The wind is passing by.</p><p class="cite">Christina Rossetti, <i>Sing-Song</i> (1872)</p></div>`);
+    setHelp(['Drag the slider all the way to the right.']);
+    await new Promise(res=>{const r=$('#rng');r.oninput=()=>{const v=+r.value;hb.classList.remove('w0','w1','w2');hb.classList.add('w'+v);if(v>=1)$('#v1').classList.remove('dim');if(v>=2){$('#v2').classList.remove('dim');res();}};});
+    toast('info','The trees bow down their heads!');await sleep(2400);untoast();stepDone();
+    await pics({item:'see-what-is-wind',concept:'Wind is moving air',say:'So what <i>is</i> the wind?',
+      options:[{v:'air',label:'Moving air',pic:I.air},{v:'cloud',label:'A cloud',pic:I.cloud},{v:'sound',label:'A sound',pic:I.sound}],answer:'air',easyWrong:'cloud',
+      help:['Wave your hand fast near your face. What do you feel?','The air is all around us. Wind is air that ___.','Wind is moving air.'],
+      miss:v=>v==='cloud'?'We can see clouds. Try again.':'Trees make a sound in the wind. But what <i>is</i> it?',yes:'Yes! Wind is moving air.'});
+    const need=S.easy?3:5;
+    say(`Tap ${need} things the wind is moving.`);
+    tray(`<div class="row" id="beads" style="gap:8px">${Array.from({length:need},()=>'<span style="width:30px;height:30px;border-radius:50%;border:3px solid #2a2118;background:#fff;display:inline-block"></span>').join('')}</div>`);
+    const q=G.ask({item:'harbour-signs'+(S.easy?'-calm':''),concept:'Signs of the wind',area:'SC'});
+    setHelp(['Look for something being pushed or moved.','Look at the treetops, and at the flag on the mast.','The flag is flying out sideways. That’s one!'],q,n=>{if(n===2)$('#hb [data-k="flag"]').classList.add('ring');});
+    let got=0;const tapped={};
+    await new Promise(res=>{$$('#hb .spot').forEach(g=>g.addEventListener('click',()=>{
+      const k=g.dataset.k;if(tapped[k]||got>=need)return;tapped[k]=1;const s=SIGNS[k];
+      if(s.ok){got++;g.classList.add('got');g.classList.remove('ring');$$('#beads span').forEach((x,i)=>{if(i<got){x.style.background='#16A08F';x.style.borderColor='#16A08F';}});toast('yes',s.line,1300);if(got>=need){q.done();res();}}
+      else{q.miss(k);g.classList.add('nope');toast('hmm',s.line);}
+    }));});
+    await sleep(1300);setHelp(null);stepDone();
+    await tapScene({item:'harbour-from',concept:'A wind is named for where it comes from',sel:'#hb .cpt',answer:'E',names:{N:'North',E:'East',S:'South',W:'West'},
+      say:'The flag blows to the west. Tap where the wind comes <u>from</u>.',
+      help:['A wind is named for where it comes from.','The flag points where the wind is going. Look the other way.','The opposite of west is east.'],
+      miss:k=>k==='W'?'That’s where it’s going. Where’s it from?':'Follow the flag back. Try again.',
+      yes:'East! It’s an east wind.'});
+    finishPart(0);
+    afterPart(0,'Wind is moving air. We name it by where it comes from.');
   })();
 }
-async function harbour(){
-  const need=S.easy?3:5;
-  panel({title:'The harbour',say:[`Here is the Captain’s harbour. The wind is blowing hard, but you can’t see it. Find ${need} signs that the wind is passing through. Tap each one.`],
-    body:`<div class="scene">${HARBOUR}</div><div class="beads" id="beads">${'<i></i>'.repeat(need)}</div><ul class="found" id="found"></ul>`});
-  const q=G.ask({item:'harbour-signs'+(S.easy?'-calm':''),concept:'Signs of the wind',area:'SC'});
-  $('#act').innerHTML=tipHTML(['Look for something that is being moved or pushed.'])+helpRow();
-  wireHelp(['Look for something that is being moved or pushed.','Look at the tops of the trees, and at the little flag at the top of the ship’s mast.','The flag is streaming out sideways, because the wind is pushing it. Can you find more things like that?'],q,n=>{if(n===2){const f=$('#hb [data-k="flag"]');if(f&&!f.classList.contains('got'))f.classList.add('ring');}},S.easy?1:0);
-  let got=0;const tapped={};
-  await new Promise(res=>{$$('#hb .spot').forEach(g=>g.addEventListener('click',()=>{
-    const k=g.dataset.k;if(tapped[k]||got>=need)return;tapped[k]=1;
-    const s=SIGNS[k];
-    if(s.ok){
-      got++;g.classList.add('got');g.classList.remove('ring');
-      const li=document.createElement('li');li.className='got';const b=document.createElement('b');b.textContent=s.name;li.appendChild(b);li.appendChild(document.createTextNode(s.line));$('#found').appendChild(li);
-      $$('#beads i').forEach((x,i)=>x.classList.toggle('on',i<got));
-      fb('yes',s.line);
-      if(got>=need){q.done();res();}
-    }else{q.miss(s.name);g.classList.add('nope');fb('hmm',s.line);}
-  }));});
-  await sleep(900);
-  say(['Well spotted! Now, a wind reader always gives a wind its name. Look at the flag at the top of the mast, and at the compass in the corner.']);
-  await choose({item:'harbour-from',concept:'A wind is named for where it comes from',keep:true,ask:'The flag is being blown towards the west. Where is the wind coming <i>from</i>?',
-    options:['North','East','South','West'].map(d=>({v:d,label:d})),answer:'East',easyWrong:'West',
-    help:['A wind is named for the place it comes from, not the place it’s going.','The flag points the way the wind is going: west. The wind must be coming from the opposite side.','West is on the left of the compass. The opposite of west is east. So the wind is coming from the east.'],
-    miss:v=>v==='West'?'The flag points to where the wind is <i>going</i>. Wind readers name a wind by where it comes <i>from</i>. Look at the other end of the flag.':'Look at the compass. The flag stretches from one side to the other. Which side is the wind blowing from?',
-    why:'It’s coming from the east, so sailors call it an <b>east wind</b>. A wind is always named for where it comes from.'});
-  finishPart(0);
-  afterPart(0,'<b>Part 1 done.</b> Nobody can see the wind, but a wind reader can read what it does. Wind is moving air, and it’s named for where it comes from.');
-}
 
-/* ===================== Part 2: the wind engine ===================== */
+/* ===== Part 2: the wind engine ===== */
 function partEngine(){
   const st={globe:false,beach:false};
-  function pick(){
-    panel({title:'The wind engine',say:[st.globe||st.beach?'One more experiment to go.':'Why does the air move at all? Two experiments will show us. Which one do you want to try first?'],body:''});
-    $('#act').innerHTML=`<div class="choices">${['globe','beach'].map(k=>`<button class="choice" data-k="${k}" ${st[k]?'disabled':''}>${k==='globe'?MINIGLOBE:MINIBEACH}<span>${k==='globe'?'The whole Earth':'A day at the beach'}${st[k]?' (done)':''}</span></button>`).join('')}</div>`;
-    return new Promise(res=>$$('#act .choice').forEach(b=>b.onclick=()=>{if(!b.disabled)res(b.dataset.k);}));
-  }
   (async()=>{
-    while(!(st.globe&&st.beach)){const k=await pick();if(k==='globe')await globe();else await beach();st[k]=true;}
+    while(!(st.globe&&st.beach)){
+      stage({title:'The wind engine',steps:0,say:st.globe||st.beach?'One more experiment!':'Why does air move? Pick an experiment.'});
+      tray(`<div class="tiles">${['globe','beach'].filter(k=>!st[k]).map(k=>`<button class="tile" data-k="${k}" style="max-width:300px;justify-self:center;width:100%">${k==='globe'?TILEPIC.engine:TILEPIC.beach}<span>${k==='globe'?'The whole Earth':'A day at the beach'}</span></button>`).join('')}</div>`);
+      $$('#tray .tile svg').forEach(s=>{s.style.width='100%';s.style.height='auto';});
+      const k=await new Promise(res=>$$('#tray .tile').forEach(b=>b.onclick=()=>res(b.dataset.k)));
+      if(k==='globe')await globe();else await beach();st[k]=true;
+    }
     finishPart(1);
-    panel({title:'The wind engine',say:['Both experiments done!']});
-    afterPart(1,'<b>Part 2 done.</b> The Sun warms some places more than others. Warm air rises, and cooler air moves in to take its place. That moving air is the wind. And because the Earth spins, the winds curve.');
+    stage({title:'The wind engine',steps:0,say:'Both experiments done!'});
+    afterPart(1,'Warm air rises. Cool air moves in. That’s wind!');
   })();
 }
 async function globe(){
-  panel({title:'The whole Earth',say:['Here is the Earth, and the Sun far away. Tap the button to let the Sun shine.'],body:`<div class="scene">${GLOBE}</div>`});
+  stage({title:'The whole Earth',steps:S.easy?3:4,scene:GLOBE,say:'Tap the Sun to make it shine.'});
   const gl=$('#gl');
-  $('#act').innerHTML=goBtn('Let the Sun shine','sun');
-  await click('#sun');
-  gl.classList.add('lit');
-  say(['The Sun’s light falls on the Earth. At the Equator it shines straight on. Near the poles it only glances, at a slant.']);
-  await tapAsk({item:'globe-warmest',concept:'Direct sunlight warms more than slanting sunlight',sel:'#gl .tz',answer:'eq',names:{north:'Near the North Pole',south:'Near the South Pole',eq:'The Equator'},
-    ask:'Tap the part of the Earth the Sun warms the most.',
-    help:['Straight-on sunlight warms more than slanting sunlight.','Where does the sunlight hit the Earth straight on?','The light hits the Equator straight on, so the Equator gets the most warmth.'],
-    miss:k=>'Near the poles the sunlight only glances, at a slant, so it warms less. Where does it shine straight on?',
-    why:'The Equator gets the most warmth from the Sun.',onRight:()=>gl.classList.add('warmed')});
-  gl.classList.add('rising');
-  say(['Near the Equator the air gets warm, and warm air rises. Up, up it goes! That leaves a gap down low.']);
-  await choose({item:'globe-cool-in',concept:'Warm air rises and cooler air moves in',ask:'The warm air has risen. What moves in to take its place?',wide:true,
-    options:[{v:'cool',label:'Cooler air, from the cold places nearer the poles'},{v:'none',label:'Nothing. The gap stays empty.'},{v:'sun',label:'Hot air, straight from the Sun'}],answer:'cool',easyWrong:'none',
-    help:['Air always moves to fill a gap.','Where is there plenty of cool air waiting?','Cooler air from the cold places nearer the poles moves in to take the warm air’s place.'],
-    miss:v=>v==='none'?'Air never leaves a gap empty for long. Something always rushes in to fill it.':'The Sun’s warmth reaches us, but it doesn’t send air. Where is there cool air close by?',
-    why:'Cooler air moves in from the cold places nearer the poles. That moving air is the wind!',onRight:()=>gl.classList.add('cool')});
-  say(['But the Earth never keeps still. It spins round and round, all the time. Tap to spin it.']);
-  $('#act').innerHTML=goBtn('Spin the Earth','spin');fbClear();
-  await click('#spin');
-  gl.classList.add('spin');
-  await sleep(RM?200:1300);
-  gl.classList.add('curve');
-  if(S.easy){
-    say(['Look! As the Earth spins, the winds don’t go in straight lines any more. They curve.']);
-  }else{
-    say(['Look what happened to the winds.']);
-    await choose({item:'globe-curve',concept:'Winds curve because the Earth spins',ask:'What made the winds curve?',
-      options:[{v:'spin',label:'The Earth spinning'},{v:'sun',label:'The Sun pushing them'},{v:'trees',label:'Trees bending them'}],answer:'spin',
-      help:['What did you just tap?','The winds were straight. Then something happened, and they curved.','When the Earth spins, the winds can’t go in straight lines. They curve.'],
-      miss:v=>v==='sun'?'The Sun warms the air, but the curve came when something else happened. What did you just tap?':'There are no trees out over the ocean. What did you just tap?',
-      why:'The Earth spins, so the winds don’t go in straight lines. They curve.'});
+  setHelp(['The Sun is the yellow circle on the left.']);
+  await new Promise(res=>$('#sunbtn').addEventListener('click',()=>{gl.classList.add('lit');res();},{once:true}));
+  await sleep(600);
+  await tapScene({item:'globe-warmest',concept:'Direct sunlight warms more than slanting sunlight',sel:'#gl .tz',answer:'eq',names:{north:'Near the North Pole',south:'Near the South Pole',eq:'The Equator'},
+    say:'Tap where the Sun warms the Earth most.',
+    help:['Straight-on sunlight warms more than slanting light.','Where do the rays hit the Earth straight on?','The middle: the Equator.'],
+    miss:()=>'Here the light only glances. Try again.',onRight:()=>gl.classList.add('warmed'),yes:'The Equator! Warm air rises.'});
+  await drag({item:'globe-cool-in',concept:'Warm air rises and cooler air moves in',targets:'#gl .drop',oneAsk:true,need:2,multi:true,
+    say:'Drag the cool air in to fill the gap.',
+    chips:[{v:'cool',pic:I.puff,x:76,y:17,aria:'Cool air from the north'},{v:'cool',pic:I.puff,x:76,y:83,aria:'Cool air from the south'}],
+    fits:(v,k)=>k==='eq',each:()=>'One more!',miss:()=>'Into the warm gap at the Equator.',
+    help:['Where did the warm air rise from?','Drag each cloud onto the orange band.','Cool air from both poles moves in to the Equator.'],
+    onPlace:(v,k,chip)=>{chip.style.visibility='hidden';},
+    yes:'That moving air is wind!'});
+  gl.classList.add('cool');
+  say('Now spin the Earth!');
+  setHelp(null);
+  await press('Spin it!');
+  gl.classList.add('spin');tray('');await sleep(RM?200:1300);gl.classList.add('curve');stepDone();
+  if(!S.easy){
+    await pics({item:'globe-curve',concept:'Winds curve because the Earth spins',say:'The winds curve! What made them curve?',
+      options:[{v:'spin',label:'Spinning Earth',pic:I.spin},{v:'sun',label:'The Sun',pic:I.sun},{v:'tree',label:'Trees',pic:I.tree}],answer:'spin',
+      help:['What did you just do?','You pressed Spin, and they curved.','The Earth spinning makes the winds curve.'],
+      miss:()=>'What did you just press?',yes:'Yes! The spinning Earth curves them.'});
   }
-  await note(['Look where the curving winds end up near the Equator: blowing from the east towards the west. Sailors call these winds the <b>trade winds</b>.','Remember them, wind reader. You’ll need them soon!'],'Back to the experiments');
+  say('Near the Equator they blow east to west. Sailors call them the <b>trade winds</b>.');
+  await press('Back to the experiments');
 }
 async function beach(){
-  panel({title:'A day at the beach',say:['It’s a hot summer afternoon. The Sun has been shining on the sea and on the sand all day. There’s no wind yet. Look at the flag: it’s hanging straight down.'],body:`<div class="scene">${BEACH}</div>`});
+  stage({title:'A day at the beach',steps:3,scene:BEACH,say:'Slide from morning to afternoon. Watch the thermometers!'});
   const bc=$('#bc');
-  await choose({item:'beach-heats',concept:'Land heats faster than the sea',ask:'Which warms up more quickly in the sun?',
-    options:[{v:'land',label:'The land and the sand'},{v:'sea',label:'The sea'}],answer:'land',
-    help:['Think about walking barefoot at the beach on a hot day.','The sand can get too hot to stand on, while the water still feels cool.','The land warms up more quickly than the sea.'],
-    miss:()=>'Think about a hot day at the beach. Is it the sand that burns your feet, or the water?',
-    why:'The land warms up more quickly than the sea. By the afternoon the sand is hot, and the sea is still cool.',onRight:()=>bc.classList.add('hot')});
-  say(['The warm air over the hot land rises, just like at the Equator. Now there’s a gap down low, over the land.']);
-  await choose({item:'beach-breeze',concept:'The sea breeze',ask:'Which way will the breeze blow?',
-    options:[{v:'in',label:'From the sea onto the land'},{v:'out',label:'From the land out to sea'}],answer:'in',
-    help:['Cooler air moves in to take the place of the warm air that rose.','Where is the cooler air: over the land, or over the sea?','The cool air over the sea moves in to fill the gap over the land. So the breeze blows from the sea onto the land.'],
-    miss:()=>'Which air is warm and rising, and which is cool? The cool air moves in to fill the gap.',
-    why:'The cool air over the sea moves in to fill the gap. It’s the wind engine again, only smaller! A breeze from the sea is called a <b>sea breeze</b>.',onRight:()=>bc.classList.add('breeze')});
+  tray(`<div class="slide"><span style="font-weight:700">morning</span><input type="range" id="rng" min="0" max="100" value="0" aria-label="Time of day"><span style="font-weight:700">afternoon</span></div>`);
+  setHelp(['Slide all the way to the right.']);
+  await new Promise(res=>{const r=$('#rng');r.oninput=()=>{const t=+r.value/100;
+    $('#bsun').setAttribute('transform',`translate(${80+220*t} ${150-110*t})`);
+    const sea=10+14*t,land=10+52*t;$('#tsea').setAttribute('y',66-sea);$('#tsea').setAttribute('height',sea);$('#tland').setAttribute('y',66-land);$('#tland').setAttribute('height',land);
+    $('#bheat').setAttribute('opacity',(.4*t).toFixed(2));if(t>=1)res();};});
+  stepDone();await sleep(500);
+  await tapScene({item:'beach-heats',concept:'Land heats faster than the sea',sel:'#bc .tz',answer:'land',names:{land:'The land',sea:'The sea'},
+    say:'Tap the part that got hotter.',
+    help:['Look at the two red thermometers.','Which one went up higher?','The land heats up faster than the sea.'],
+    miss:()=>'Look at the thermometers again.',onRight:()=>bc.classList.add('hot'),yes:'The land! Warm air rises over it.'});
+  await drag({item:'beach-breeze',concept:'The sea breeze',targets:'#bc .drop',oneAsk:true,
+    say:'Drag the cool sea air to fill the gap.',
+    chips:[{v:'cool',pic:I.puff,x:22,y:50,aria:'Cool air over the sea'}],
+    fits:(v,k)=>k==='land',miss:()=>'Where is warm air rising?',
+    help:['Cool air moves in where warm air rose.','Warm air is rising over the land.','Drag the cloud onto the land.'],
+    onPlace:(v,k,chip)=>{chip.style.visibility='hidden';bc.classList.add('breeze');},yes:'A sea breeze! The flag flies.',ms:2200});
 }
 
-/* ===================== Part 3: across the ocean ===================== */
-const NAMECARD='<div class="namecard"><h3>One storm, three names</h3><ul><li><b>Hurricane:</b> in the Atlantic Ocean</li><li><b>Typhoon:</b> in the Pacific Ocean, near Asia</li><li><b>Cyclone:</b> near Australia, and in the Indian Ocean</li></ul></div>';
+/* ===== Part 3: across the ocean ===== */
 function partOcean(){
-  panel({title:'Across the ocean',say:['Captain Hale must sail west across the Atlantic Ocean, to the islands of the Caribbean. Before we go, he shouts an order.'],body:`<div class="scene">${ATLANTIC}</div>`});
-  const atl=$('#atl'),ship=$('#shipA'),pA=$('#pA'),pB=$('#pB');
-  let pushed=Promise.resolve();
+  stage({title:'Across the ocean',steps:4,scene:ATLANTIC,say:''});
+  const atl=$('#atl');let ship=$('#shipA');
   (async()=>{
-    await choose({item:'ocean-homonym',concept:'Wind has two meanings',area:'EN',ask:'“Wind up the anchor rope!” Which kind of <i>wind</i> does the Captain mean?',wide:true,
-      options:[{v:'turn',label:'<b>wind</b> (it rhymes with <i>find</i>): turn it round and round'},{v:'air',label:'<b>wind</b> (it rhymes with <i>pinned</i>): moving air'}],answer:'turn',keep:true,
-      help:['<i>Wind</i> is a word with two meanings, and two ways to say it.','What do sailors do with a long anchor rope to get the anchor up?','They turn a big wheel round and round, so the rope coils up. That’s <i>wind</i>, rhyming with <i>find</i>.'],
-      miss:()=>'Can moving air pull up an anchor? Think about what the sailors do with the rope.',
-      why:'The sailors turn a big wheel round and round to <i>wind</i> up the rope, and up comes the anchor. Same letters, different word!'});
+    await pics({item:'ocean-homonym',concept:'Wind has two meanings',area:'EN',say:'“<b>Wind</b> up the anchor!” Which wind?',keep:true,
+      options:[{v:'turn',label:'wind, like <i>find</i>: turn it',pic:I.winch},{v:'air',label:'wind, like <i>pinned</i>: air',pic:I.air}],answer:'turn',
+      help:['Same letters, two words.','How do sailors pull up a heavy anchor?','They turn a wheel round and round: wind, like find.'],
+      miss:()=>'Can air pull up an anchor?',yes:'Yes! Round and round goes the rope.'});
     atl.classList.add('routes-on');
-    say(['Anchor up! Now, which way should we go? Remember what you found out about the winds near the Equator.']);
-    await choose({item:'ocean-route',concept:'Trade winds blow from east to west near the Equator',ask:'Which route will the wind carry us along?',wide:true,keep:true,
-      options:[{v:'A',label:'Route A: straight west from Europe'},{v:'B',label:'Route B: south to the Canary Islands first, then west, nearer the Equator'}],answer:'B',
-      help:['We need a wind that blows towards the west.','In the wind engine, where did the curving winds blow from the east towards the west?','Near the Equator, the trade winds blow from the east towards the west. Route B goes there.'],
-      miss:()=>{pushed=(async()=>{atl.classList.add('west-on');await sail(ship,pA,0,.22,1400,true);await sail(ship,pA,.22,0,1100,true);})();
-        return 'Up here in the north, the wind mostly blows from the west, straight into our faces! It pushes the ship back. Where were the winds that blow towards the west?';},
-      why:'Route B. Near the Equator, the trade winds blow from the east towards the west, nearly all the time.',go:'Set sail',
-      onRight:()=>{atl.classList.add('trade-on');}});
-    say(['The trade winds fill the sails, and away we go!']);
-    $('#act').innerHTML='';
-    await pushed;
-    await sail(ship,pB,0,.55,3200,true);
-    await choose({item:'ocean-prevailing',concept:'Prevailing winds',ask:'The trade winds blow the same way nearly all the time. What are winds like that called?',
-      options:[{v:'p',label:'Prevailing winds'},{v:'m',label:'Monsoon winds'},{v:'s',label:'Sea breezes'}],answer:'p',easyWrong:'s',
-      help:['It’s a long word that begins with <i>p</i>.','When something <i>prevails</i>, it wins most of the time. These winds win most days.','Winds that blow the same way most of the time are called prevailing winds.'],
-      miss:v=>v==='m'?'Monsoon winds change direction with the seasons. These winds hardly change at all.':'A sea breeze blows on a hot afternoon at the beach. These winds blow across a whole ocean, nearly all the time.',
-      why:'<b>Prevailing winds</b> blow the same way most of the time. Sailors could count on them.'});
-    atl.classList.add('storm-on');
-    say(['Look, far to the south! A great storm, with winds rushing round and round in a huge circle over the warm sea. We’ll keep well clear of it.']);
-    await note(['The same kind of storm has different names in different places. Read this card. When you’re ready, I’ll hide it and ask you.',NAMECARD],'Hide the card');
-    await choose({item:'ocean-storm-name',concept:'Storm names by place',area:'HSS',ask:'We’re in the Atlantic Ocean. What do sailors here call a storm like this?',
-      options:[{v:'h',label:'A hurricane'},{v:'t',label:'A typhoon'},{v:'c',label:'A cyclone'}],answer:'h',
-      help:['It’s the same kind of storm everywhere. Only the name changes.','Typhoons are near Asia. Cyclones are near Australia and in the Indian Ocean. So what about the Atlantic?','In the Atlantic Ocean, it’s called a hurricane.'],
-      miss:v=>v==='t'?'Typhoons are in the Pacific Ocean, near Asia. We’re in the Atlantic.':'Cyclones are near Australia and in the Indian Ocean. We’re in the Atlantic.',
-      why:'In the Atlantic Ocean, it’s a <b>hurricane</b>. Same storm, different name.'});
-    $('#act').innerHTML='';
-    await sail(ship,pB,.55,1,2600,true);
-    say(['Land ho! The trade winds have carried us all the way to the Caribbean islands.']);
-    await story({title:'Christopher Columbus and the trade winds, 1492',ps:[
-      'In 1492, Christopher Columbus set out from Spain to sail west across the Atlantic Ocean. Sailors before him had tried heading west from further north, and the wind had beaten them back.',
-      'So Columbus sailed south first, to the Canary Islands. From there, the trade winds carried his three ships west. After 36 days at sea, his sailors saw land: an island in the Caribbean.',
-      'To get home again, he sailed further north, where the winds blow the other way.']});
+    let pushed=Promise.resolve();
+    await tapScene({item:'ocean-route',concept:'Trade winds blow from east to west near the Equator',sel:'#atl .rt',answer:'B',names:{A:'Route A',B:'Route B'},
+      say:'We must go west. Tap the route the wind will carry us on.',
+      help:['Remember the trade winds?','They blow east to west, near the Equator.','Route B goes south, nearer the Equator.'],
+      onMiss:()=>{pushed=(async()=>{atl.classList.add('west-on');await sail(ship,$('#pA'),0,.22,1300,true);await sail(ship,$('#pA'),.22,0,1000,true);})();},
+      miss:()=>'Pushed back! Up north the wind blows from the west.',
+      onRight:()=>{atl.classList.add('trade-on');},yes:'The trade winds!',ms:900});
+    await pushed;say('Away we go!');tray('');
+    await sail(ship,$('#pB'),0,.55,3000,true);
+    atl.classList.add('slot-on');
+    await drag({item:'ocean-prevailing',concept:'Prevailing winds',targets:'#atl .drop',oneAsk:true,
+      say:'Winds that blow the same way nearly every day are called…',
+      chips:[{v:'prevailing',label:'prevailing'},{v:'monsoon',label:'monsoon'},{v:'sea breeze',label:'sea breeze'}],easyDrop:['sea breeze'],
+      fits:v=>v==='prevailing',label:v=>v,
+      miss:v=>v==='monsoon'?'Monsoons change with the seasons.':'Sea breezes are at the beach.',
+      help:['It starts with <i>p</i>.','It means “winning most days”.','Prevailing winds.'],
+      onPlace:()=>{$('#slottxt').textContent='prevailing winds';$('#slottxt').setAttribute('fill','#2f7d4f');},yes:'Prevailing winds!'});
+    const shipT=ship.getAttribute('transform');
+    setScene(WORLD);const wd=$('#wd');if(S.easy)wd.classList.add('calm');
+    say('Look! One kind of storm, but three names.');
+    setHelp(null);
+    await press('I’ve read them. Hide the names!');
+    wd.classList.add('hide');
+    await drag({item:'ocean-storm',concept:'Storm names by place',area:'HSS',targets:'#wd .drop',reuse:true,
+      say:'Drag a name onto each storm.',
+      chips:[{v:'h',label:'Hurricane',pic:I.storm},{v:'t',label:'Typhoon',pic:I.storm},{v:'c',label:'Cyclone',pic:I.storm}],keep:true,
+      fits:(v,k)=>k.charAt(0)===v,label:v=>({h:'Hurricane',t:'Typhoon',c:'Cyclone'})[v],
+      each:()=>'Yes!',miss:()=>'Not that one. Try another name.',
+      help:['Hurricanes are near America.','Typhoons are near Asia. Cyclones are near us!','Two storms are cyclones: the Indian Ocean and Australia.'],
+      onPlace:(v,k,chip,t)=>{t.closest('.storm').querySelector('.names').style.opacity=1;},yes:'One storm, three names!'});
+    setScene(ATLANTIC);$('#atl').classList.add('routes-on','trade-on');ship=$('#shipA');ship.setAttribute('transform',shipT);
+    say('Land ho!');
+    await sail(ship,$('#pB'),.55,1,2400,true);
+    await card({title:'Columbus, 1492',pic:COLUMBUS_PIC,ps:['Columbus sailed south first, to catch the trade winds.','They carried his three ships to the Caribbean in 36 days.']});
     finishPart(2);
-    afterPart(2,'<b>Part 3 done.</b> Near the Equator, the trade winds blow from the east towards the west. Winds that blow the same way most of the time are called prevailing winds.');
+    afterPart(2,'Trade winds blow east to west, nearly every day.');
   })();
 }
 
-/* ===================== Part 4: home with the monsoon ===================== */
+/* ===== Part 4: home with the monsoon ===== */
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const season=m=>(m>=5&&m<=8)?'wet':(m>=10||m<=1)?'dry':'turn';
 function partMonsoon(){
-  panel({title:'Home with the monsoon',say:['Captain Hale has sailed a long way round Africa, to Calicut in India, to buy pepper. (Calicut is a real place. Today it’s called Kozhikode.)','It’s July. The pepper is loaded, and the Captain wants to sail west across the Arabian Sea to Africa, on the way home. Look at the wind arrows on the chart.'],body:`<div class="scene">${ARABIAN}</div><div id="seasonsBox"></div>`});
-  const ara=$('#ara'),ship=$('#shipB'),pH=$('#pH');
-  ara.classList.add('wet');
+  stage({title:'Home with the monsoon',steps:4,scene:ARABIAN,say:''});
+  const ara=$('#ara'),ship=$('#shipB');
   (async()=>{
-    await choose({item:'monsoon-sail-now',concept:'Sailing with the wind, not against it',area:'HSS',ask:'Can we sail west to Africa today?',wide:true,
-      options:[{v:'no',label:'No. The wind is blowing towards India, into our faces.'},{v:'yes',label:'Yes. The wind will push us west to Africa.'},{v:'row',label:'Yes, if the sailors row very fast.'}],answer:'no',easyWrong:'yes',
-      help:['Look at which way the arrows point.','The arrows point from Africa towards India. Which way do we want to go?','The wind is blowing towards India, and we want to go the other way, to Africa. So we can’t sail yet.'],
-      miss:v=>v==='yes'?'Look at the arrows again. Are they pointing towards Africa, or towards India?':'A big sailing ship has no oars. It goes where the wind can carry it.',
-      why:'The wind is blowing towards India. A sailing ship can’t go straight into the wind.'});
-    await choose({item:'monsoon-rain',concept:'Winds carry the weather',ask:'This wind blows from the sea onto the land. What does it bring to India?',
-      options:[{v:'rain',label:'Heavy rain'},{v:'dry',label:'Dry days with no clouds'},{v:'snow',label:'Snow'}],answer:'rain',easyWrong:'dry',
-      help:['A wind brings the weather from the place it blew across.','This wind has blown a long way across the warm sea. Will it be wet or dry?','A wind from the sea brings rain. This one brings India heavy rain.'],
-      miss:v=>v==='dry'?'A dry wind comes from dry land. This one has blown across the sea. Wet or dry?':'This wind has crossed a warm sea, not snowy mountains. Will it bring snow?',
-      why:'A wind from the sea brings rain. This is the <b>monsoon</b>, and in this season it brings India heavy rain.',onRight:()=>ara.classList.add('rain')});
-    await choose({item:'monsoon-certain',concept:'Certain or only likely',area:'MA',ask:'The rice farmers of Calicut ask the Captain: “Will the rains start on exactly the first of June next year?”',wide:true,
-      options:[{v:'cert',label:'Certain. They always start on the first of June.'},{v:'likely',label:'Likely around then, but not always on that exact day.'},{v:'imp',label:'Impossible. The rains will never come again.'}],answer:'likely',easyWrong:'cert',
-      help:['Can anyone promise the weather?','The monsoon comes every year, so people plan for it. But does it come on exactly the same day each year?','The rains usually start around the beginning of June. Some years they come a week early or a week late. So it’s likely, not certain.'],
-      miss:v=>v==='cert'?'Could the rains come a few days early, or a few days late? If they could, is it certain?':'The monsoon comes back every year. People plan their farming around it.',
-      why:'Likely, not certain. Here the rains usually start around the beginning of June, but some years they’re a week early or a week late.'});
-    say(['The monsoon wind changes with the seasons. Tap each season to see which way its wind blows.']);
-    fbClear();$('#act').innerHTML='';
-    $('#seasonsBox').innerHTML=`<div class="seasons"><button class="btn ghost" data-s="wet" aria-pressed="true">Wet season<br><small>about June to September</small></button><button class="btn ghost" data-s="dry" aria-pressed="false">Dry season<br><small>about November to February</small></button></div>`;
-    const looked={wet:true,dry:false};
-    const setSeason=s=>{ara.classList.toggle('wet',s==='wet');ara.classList.toggle('dry',s==='dry');$$('.seasons .btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===s?'true':'false'));};
-    await new Promise(res=>$$('.seasons .btn').forEach(b=>b.onclick=()=>{setSeason(b.dataset.s);looked[b.dataset.s]=true;if(looked.wet&&looked.dry)res();}));
-    await sleep(700);
-    await choose({item:'monsoon-which-season',concept:'Monsoon winds change with the seasons',area:'HSS',ask:'Which season’s wind will carry us west to Africa?',
-      options:[{v:'wet',label:'The wet-season wind'},{v:'dry',label:'The dry-season wind'}],answer:'dry',
-      help:['Tap each season again and watch the arrows.','We want a wind that blows from India towards Africa.','In the dry season, the wind blows from the land, out to sea, towards Africa. That’s our wind.'],
-      miss:()=>'In the wet season, the wind blows towards India. We want to go the other way.',
-      why:'The dry-season wind. The wind turns right round and blows from the land, out to sea, towards Africa. So the Captain waits in Calicut until the wind turns.',
-      onRight:()=>{setSeason('dry');$$('.seasons .btn').forEach(b=>b.disabled=true);}});
-    $('#seasonsBox').innerHTML='';
-    say(['The months pass. In November the wind turns, and we set sail for Africa.']);
-    $('#act').innerHTML='';
-    await sail(ship,pH,0,.5,2800,true);
+    await drag({item:'monsoon-rain',concept:'Winds carry the weather',targets:'#ara path.drop',oneAsk:true,decoys:['arabia'],need:1,
+      say:'July in India. This wind blows in off the sea. What does it bring? Drag it to India.',
+      chips:[{v:'rain',label:'Rain',pic:I.rain},{v:'sun',label:'Sun',pic:I.sunS},{v:'snow',label:'Snow',pic:I.snow}],easyDrop:['snow'],
+      fits:(v,k)=>v==='rain'&&k==='india',label:v=>v,
+      miss:(v,k)=>k==='arabia'?'The arrows point to India.':v==='sun'?'Dry, sunny winds come from land.':'No snow from a warm sea!',
+      help:['It blew over the sea.','A wind from the sea is wet.','Rain! Drag it onto India.'],
+      onPlace:()=>ara.classList.add('rain'),yes:'Monsoon rain!'});
+    await drag({item:'monsoon-certain',concept:'Certain or only likely',area:'MA',targets:'#tray .chance .drop',oneAsk:true,need:1,
+      say:'Will the rains come around the start of June next year?',
+      trayHead:`<div class="chance"><div class="drop" data-t="imp">${I.cross}impossible</div><div class="drop" data-t="unl">${I.half1}unlikely</div><div class="drop" data-t="lik">${I.half3}likely</div><div class="drop" data-t="cer">${I.tick}certain</div></div><div style="height:10px"></div>`,
+      chips:[{v:'rain',pic:I.drop,label:'June rains'}],
+      fits:(v,k)=>k==='lik',label:()=>'June rains',
+      miss:(v,k)=>k==='cer'?'Could they come a week late?':k==='imp'?'They come every year!':'They nearly always come around then.',
+      help:['Can anyone promise the weather?','They come every year, but not always on time.','Likely, not certain.'],
+      yes:'Likely! Some years they’re a week late.',ms:1800});
+    say('Now, when will the wind carry us home? Pick a month, then set sail!');
+    tray(`<div class="monthbox"><span id="mpic"></span><b id="mname">July</b></div><div class="slide"><span style="font-weight:700">Jan</span><input type="range" id="rng" min="0" max="11" value="6" aria-label="Month"><span style="font-weight:700">Dec</span></div><div class="row" style="margin-top:10px"><button class="btn" id="go">Set sail!</button></div>`);
+    const q=G.ask({item:'monsoon-month'+(S.easy?'-calm':''),concept:'Monsoon winds change with the seasons',area:'HSS'});
+    setHelp(['Watch the arrows as you slide.','We need arrows that point towards Africa.','Try November.'],q);
+    const show=m=>{untoast();const s=season(m);ara.classList.remove('wet','dry','turn');ara.classList.add(s);$('#mname').textContent=MONTHS[m];$('#mpic').innerHTML=s==='wet'?I.rain:s==='dry'?I.sunS:I.turn;};
+    show(6);$('#rng').oninput=()=>show(+$('#rng').value);
+    const tried={};
+    await new Promise(res=>{$('#go').onclick=async()=>{
+      const m=+$('#rng').value,s=season(m);$('#go').disabled=true;
+      if(s==='dry'){q.done();setHelp(null);toast('yes',MONTHS[m]+'! The wind has turned.');await sail(ship,$('#pH'),0,.5,2600,true);untoast();res();}
+      else if(s==='wet'){if(!tried[m]){q.miss(MONTHS[m]);tried[m]=1;}toast('hmm','Pushed back! It blows towards India.');await sail(ship,$('#pH'),0,.12,900,true);await sail(ship,$('#pH'),.12,0,800,true);$('#go').disabled=false;}
+      else{if(!tried[m]){q.miss(MONTHS[m]);tried[m]=1;}toast('hmm','The wind is still turning. Try another month.');$('#go').disabled=false;}
+    };});
+    stepDone();
     ara.classList.add('storm-on');
-    await choose({item:'monsoon-storm-name',concept:'Storm names by place',area:'HSS',ask:'Far to the south, another great circling storm! We’re in the Indian Ocean now. What do sailors here call it?',
-      options:[{v:'h',label:'A hurricane'},{v:'t',label:'A typhoon'},{v:'c',label:'A cyclone'}],answer:'c',easyWrong:'h',
-      help:['Remember the card from the Atlantic: one storm, three names.','Hurricanes are in the Atlantic. Typhoons are in the Pacific, near Asia. What about the Indian Ocean?','In the Indian Ocean, and near Australia, it’s called a cyclone.'],
-      miss:v=>v==='h'?'Hurricanes are in the Atlantic Ocean. We’re in the Indian Ocean now.':'Typhoons are in the Pacific Ocean, near Asia. We’re in the Indian Ocean now.',
-      why:'In the Indian Ocean, it’s a <b>cyclone</b>.'});
-    $('#act').innerHTML='';
-    await sail(ship,pH,.5,1,2400,true);
-    say(['Land ho! Africa! The dry-season wind carried us all the way.']);
-    await story({title:'Vasco da Gama and the monsoon, 1498',ps:[
-      'In 1498, the Portuguese explorer Vasco da Gama sailed from Malindi, in Africa, to Calicut, in India. A pilot from Malindi who knew the winds showed him the way. With the monsoon wind behind his ships, the crossing took about three and a half weeks.',
-      'But he set off for home before the wind had turned. Sailing against it, the crossing back to Africa took more than three months, and many of his sailors fell very sick.',
-      'Sailors from India, Arabia and Africa had used the monsoon for hundreds of years before him. They knew to wait for the wind.']});
+    await drag({item:'monsoon-storm',concept:'Storm names by place',area:'HSS',targets:'#ara .storm .drop',oneAsk:true,
+      say:'A storm in the Indian Ocean! What’s its name?',
+      chips:[{v:'h',label:'Hurricane',pic:I.storm},{v:'t',label:'Typhoon',pic:I.storm},{v:'c',label:'Cyclone',pic:I.storm}],keep:true,easyDrop:['t'],
+      fits:v=>v==='c',label:v=>({h:'Hurricane',t:'Typhoon',c:'Cyclone'})[v],
+      miss:v=>v==='h'?'Hurricanes are near America.':'Typhoons are near Asia.',
+      help:['Remember the world map.','The Indian Ocean and Australia share a name.','Cyclone.'],yes:'A cyclone!'});
+    say('Africa, ho!');tray('');setHelp(null);
+    await sail(ship,$('#pH'),.5,1,2200,true);
+    await card({title:'Vasco da Gama, 1498',pic:DAGAMA_PIC,ps:['He didn’t wait for the wind to turn.','Going home took more than three months!']});
     finishPart(3);
-    afterPart(3,'<b>Part 4 done.</b> Monsoon winds change direction with the seasons. A wind from the sea brings rain. A wise captain waits for the wind to turn.');
+    afterPart(3,'Monsoon winds change with the seasons. Wait for the wind!');
   })();
 }
 
-/* ===================== Part 5: the captain's log ===================== */
+/* ===== Part 5: the captain's log ===== */
 function partLog(){
-  panel({title:'The captain’s log',say:['We’re home, safe and sound! Before the Captain writes up the voyage, two last questions for the wind reader.'],body:`<div class="scene">${HOMEPORT}</div>`});
+  stage({title:'The captain’s log',steps:2,scene:HOMEPORT,say:'Home! Drag the missing words into the poem.'});
   (async()=>{
-    await choose({item:'log-queensland',concept:'Storm names by place',area:'HSS',ask:'Back home in Australia, a great circling storm is spinning in the sea off Queensland. What do we call it here?',
-      options:[{v:'h',label:'A hurricane'},{v:'t',label:'A typhoon'},{v:'c',label:'A cyclone'}],answer:'c',easyWrong:'t',
-      help:['Same storm, three names. Which name goes with Australia?','Hurricanes are in the Atlantic. Typhoons are near Asia.','Near Australia, it’s called a cyclone. You may hear about cyclones on the news in summer.'],
-      miss:v=>v==='h'?'Hurricanes are in the Atlantic, on the other side of the world.':'Typhoons are in the Pacific near Asia, further north than us.',
-      why:'Near Australia it’s a <b>cyclone</b>. You may hear about cyclones on the news in summer.'});
-    await choose({item:'log-poem',concept:'Who Has Seen the Wind? (memory work)',area:'EN',ask:'Finish the line from the poem: “But when the trees bow down their heads, the wind is …”',
-      options:[{v:'by',label:'passing by'},{v:'asleep',label:'fast asleep'},{v:'high',label:'up so high'}],answer:'by',easyWrong:'asleep',
-      help:['It’s the last line of the second verse.','The first verse ends “The wind is passing through.” The second verse ends with a word that rhymes with “I”.','“The wind is passing by.”'],
-      miss:()=>'Say the second verse out loud. The last word rhymes with “I”, and the line sounds a lot like the end of the first verse.',
-      why:'“The wind is passing by.” Can you say the whole first verse without looking?'});
+    const gaps=S.easy?['trembling','by']:['trembling','bow','by'];
+    const gap=k=>gaps.includes(k)?`<span class="gap drop" data-t="${k}">&nbsp;</span>`:k;
+    await drag({item:'log-poem',concept:'Who Has Seen the Wind? (memory work)',area:'EN',targets:'#tray .gap',
+      trayHead:`<div class="poem"><p>Who has seen the wind?<br>Neither I nor you:<br>But when the leaves hang ${gap('trembling')},<br>The wind is passing through.</p><p>Who has seen the wind?<br>Neither you nor I:<br>But when the trees ${gap('bow')} down their heads,<br>The wind is passing ${gap('by')}.</p></div><div style="height:10px"></div>`,
+      chips:[{v:'trembling',label:'trembling'},{v:'bow',label:'bow'},{v:'by',label:'by'},{v:'dancing',label:'dancing'},{v:'high',label:'high'}].filter(c=>!S.easy||gaps.includes(c.v)),
+      fits:(v,k)=>v===k,label:v=>v,each:()=>'Yes!',
+      miss:()=>'Say the line out loud. Does it sound right?',
+      help:['Say each verse out loud.','The last line rhymes with “I”.','Leaves hang trembling. Trees bow. Passing by.'],
+      onPlace:(v,k,chip,t)=>{t.textContent=v;},yes:'Lovely! Say it once more, out loud.',ms:1800});
+    await drag({item:'log-sort',concept:'Kinds of wind',targets:'#tray .sorts .drop',
+      say:'Last job: match each wind to its picture.',
+      trayHead:`<div class="sorts"><div class="drop" data-t="trade">${SORT_TRADE}<b></b></div><div class="drop" data-t="monsoon">${SORT_MONSOON}<b></b></div><div class="drop" data-t="breeze">${SORT_BREEZE}<b></b></div></div><div style="height:10px"></div>`,
+      chips:[{v:'trade',label:'trade winds'},{v:'monsoon',label:'monsoon'},{v:'breeze',label:'sea breeze'}],
+      fits:(v,k)=>v===k,label:v=>v,each:()=>'Yes!',
+      miss:v=>({trade:'Trade winds cross whole oceans.',monsoon:'The monsoon changes with the seasons.',breeze:'A sea breeze blows onto a hot beach.'})[v],
+      help:['Look for the ocean, the season clock and the beach.','The clock means the wind changes with the seasons.','Ocean: trade winds. Clock: monsoon. Beach: sea breeze.'],
+      onPlace:(v,k,chip,t)=>{t.querySelector('b').textContent=chip.textContent.trim();},yes:'A real wind reader!'});
     ending();
   })();
 }
-async function ending(){
+function ending(){
   runId++;toTop();pips(-1);
-  main.innerHTML=`<section class="panel"><h2>The voyage is over</h2>
-    <div class="scene">${HOMEPORT}</div>
-    ${sayHTML(['Thank you, wind reader. The Captain says he’s never had a better one. Purr.'])}
-    <div class="answer"><b>How a wind reader finds a wind nobody can see:</b> watch what it moves, name it by where it comes from, and know which winds blow where, and when.</div>
-    <div class="answer"><b>Why the wind blows:</b> the Sun warms some places more than others. Warm air rises, and cooler air moves in to take its place. Because the Earth spins, the winds curve.</div>
-    <div class="tell"><h3>Tell a grown-up</h3><ul>
-      <li>Why does the wind blow? Start your answer with “Because…”</li>
-      <li>Why did Captain Hale have to wait in Calicut?</li>
-      <li>A question for another day: at the beach at night, when the land cools down, which way do you think the breeze blows?</li></ul></div>
-    <p style="margin:14px 0 6px">If you like, write one line in the captain’s log.</p>
+  main.innerHTML=`<section class="panel"><div class="phead"><h2>The voyage is over</h2></div>
+    <div class="sw">${HOMEPORT}</div>
+    <div class="bubble"><span class="who">${NUTMEG}</span><p>Thank you, wind reader. Purr.</p></div>
+    <div class="tell"><h3>Tell a grown-up</h3><ul><li>Why does the wind blow? Start with “Because…”</li><li>Why did the Captain wait in India?</li></ul></div>
+    <p style="margin:12px 0 0;font-weight:700">Write one line in the log, if you like.</p>
     <textarea id="note" maxlength="300" placeholder="We got home because..."></textarea>
-    <div class="tell"><h3>Now put the iPad away</h3><p style="margin:0">Go outside with a grown-up. Say the first verse of “Who Has Seen the Wind?”. Find three signs that the wind is passing through. Then drop a pinch of grass: which way is the wind coming from? What do you think it might bring?</p></div>
-    ${goBtn('Close the log')}</section>`;
+    <div class="tell"><h3>Now go outside with a grown-up</h3>
+      <div class="endgrid"><div>${I.poem}Say the poem</div><div>${I.leaves}Find 3 wind signs</div><div>${I.grass}Drop some grass. Where is the wind from?</div></div></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="go">Close the log</button></div></section>`;
   const NK=G.key('wind-reader-log');
   const ta=$('#note');try{ta.value=localStorage.getItem(NK)||'';}catch(e){}
   ta.oninput=()=>{try{localStorage.setItem(NK,ta.value);}catch(e){}G.write({prompt:'Captain’s log: We got home because',text:ta.value,game:GAME,part:'The captain’s log',area:'EN'});};
   finishPart(4);
   G.finish();
-  await click('#go');home();
+  $('#go').onclick=home;
 }
 
 /* ---------- grown-up controls ---------- */
