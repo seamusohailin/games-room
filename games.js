@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "peahens-visit",
+    title: "The Peahen's Visit",
+    blurb: "A peahen came to visit! Find out who she is, and plan our place so she'll want to stay.",
+    players: ["maggie", "maeve"],
+    subject: "Science",
+    source: "Nature study: the Indian peafowl (identification, origin, daily routine, diet, nesting, the train), and planning our place to welcome one. Prompted by a peahen's visit, 10 November 2026",
+    added: "2026-11-10",
+    colour: "#0E6E6A",
+    href: "games/peahens-visit/index.html"
+  },
+  {
     id: "pattern-engine",
     title: "The Pattern Engine",
     blurb: "Watch Ada Lovelace's story, then punch cards to make a machine stitch patterns.",
