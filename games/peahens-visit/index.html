@@ -60,7 +60,8 @@ p{margin:0 0 .55em}
 
 .stage{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start;margin-top:14px}
 .stage.one{grid-template-columns:1fr}
-@media (max-width:860px){.stage{grid-template-columns:1fr}}
+.stage.plan{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:14px}
+@media (max-width:860px){.stage,.stage.plan{grid-template-columns:1fr}}
 .pic{position:relative;display:grid;gap:10px;justify-items:center;min-width:0}
 .side{min-width:0;display:grid;gap:12px;align-content:start}
 .artbox{width:100%;display:grid;place-items:center}
@@ -218,7 +219,9 @@ input[type=range]{width:100%;height:44px;accent-color:var(--teal)}
 .place .zone{cursor:pointer}
 .place .zone.glow{filter:drop-shadow(0 0 6px #F2C14E) brightness(1.06)}
 .place .zone.over{filter:brightness(1.12) drop-shadow(0 0 6px #E0674A)}
-.plan-tray .card{font-size:1rem}
+.plan-tray .card{font-size:.95rem;min-height:48px;padding:5px 10px;gap:6px}
+.plan-tray .ic{width:30px;height:30px}
+.artbox.day svg{max-width:520px}
 
 /* finale */
 .notebook-cover{width:160px}
@@ -536,7 +539,10 @@ function win(text,extra){F.help(null);SEL=null;
 
 /* ---------- drag, or tap then tap ---------- */
 function clearSel(){if(SEL){SEL.chip.classList.remove('sel');document.querySelectorAll('.target.glow').forEach(t=>t.classList.remove('glow'));}SEL=null;}
-function hitTest(targets,x,y){for(const t of targets){if(t.classList.contains('full'))continue;const r=t.getBoundingClientRect();if(x>=r.left-6&&x<=r.right+6&&y>=r.top-6&&y<=r.bottom+6)return t;}return null;}
+// What is actually under her finger wins. If nothing is, the smallest nearby target does (so a drop on the house isn't taken as the yard around it).
+function hitTest(targets,x,y){const ok=t=>t&&targets.includes(t)&&!t.classList.contains('full');
+  let el=document.elementFromPoint(x,y);while(el&&el!==document.body){if(el.classList&&el.classList.contains('target')){if(ok(el))return el;break;}el=el.parentNode;}
+  let best=null,ba=Infinity;for(const t of targets){if(!ok(t))continue;const r=t.getBoundingClientRect();if(x>=r.left-6&&x<=r.right+6&&y>=r.top-6&&y<=r.bottom+6){const a=r.width*r.height;if(a<ba){ba=a;best=t;}}}return best;}
 function draggable(chip,targets,drop,o){o=o||{};chip.classList.add('chip');chip.setAttribute('role','button');chip.tabIndex=0;
   chip.addEventListener('pointerdown',e=>{if(chip.classList.contains('used'))return;e.preventDefault();
     const sx=e.clientX,sy=e.clientY;let ghost=null,moved=false;try{chip.setPointerCapture(e.pointerId);}catch(_){}
@@ -784,7 +790,7 @@ T.day=function(F){
   if(M){slots=slots.filter((_,i)=>i!==3);cards=[{t:'Hops down from her tree',pos:0},{t:'Busy feeding',pos:1},{t:'Quiet time, resting',pos:2},{t:'Flies up to roost',pos:3}];}
   if(E){slots=[slots[0],slots[1],slots[3]];cards=[{t:'Hops down from her tree',pos:0},{t:'Busy feeding',pos:1},{t:'Flies up to roost',pos:2}];}
   const row=h('div',{class:'slots'},slots.map((s,i)=>target(h('div',{class:'dslot','data-i':i},h('div',{class:'dslot-h'},h('span',{class:'dnum'},String(i+1)),h('span',null,s.t)),h('div',{class:'dslot-b'})))));
-  F.pic.append(pic(ART.dayScene(slots.length),'wide'),row);
+  F.pic.append(pic(ART.dayScene(slots.length),'wide day'),row);
   const tray=h('div',{class:'tray center'});let left=cards.length;
   shuffle(cards).forEach(c=>{const q=ask('Day: '+c.t,"A peafowl's day",'SC');
     const el=h('div',{class:'card'},c.t);
@@ -1013,29 +1019,35 @@ function drawPlan(svg,placed){const NS='http://www.w3.org/2000/svg';svg.querySel
 T.plan=function(F){
   const M=isM(),E=easy();
   F.say(M?'Drag each idea onto our place. Light up all her needs!':'Plan our place. Drag each idea to the best spot. Some ideas aren’t good ones: decide for yourself. Light up all her needs.');
-  const box=pic(ART.place(),'wide placebox');F.pic.appendChild(box);F.one();
+  const box=pic(ART.place(),'wide placebox');F.pic.appendChild(box);F.stage.classList.add('plan');
   const svg=box.querySelector('svg');
   const zones=[...svg.querySelectorAll('[data-zone]')].map(z=>target(z));
   const want=planNeeds();
-  const met=new Set();
+  const met=new Set();let won=false;
   const bar=h('div',{class:'needs'},want.map(n=>h('div',{class:'need','data-n':n},icon(NEEDS[n][1]),h('span',null,NEEDS[n][0]))));
   F.pic.insertBefore(bar,box);
-  S.plan=[];save();
+  // Keep what she has already placed, if she left part-way and came back
+  const items=planItems();
+  S.plan=(S.plan||[]).filter(p=>items.includes(p.item)&&ITEMS[p.item].zones.includes(p.zone));save();
+  const already=new Set(S.plan.map(p=>p.item));
+  const lightUp=k=>ITEMS[k].needs.forEach(n=>{met.add(n);const el=bar.querySelector(`[data-n="${n}"]`);if(el)el.classList.add('lit');});
+  drawPlan(svg,S.plan);S.plan.forEach(p=>lightUp(p.item));
   const tray=h('div',{class:'tray plan-tray'});
   const qBread=ask('Choosing natural food over scraps','Making a place peafowl-friendly','SC');
   let qChook=null;if(!M&&!E)qChook=ask('Keeping peafowl and chooks apart','Making a place peafowl-friendly','SC');
-  planItems().forEach(k=>{const it=ITEMS[k];const q=it.zones.length?ask('Plan: '+it.t,'Making a place peafowl-friendly','SC'):null;
+  items.forEach(k=>{const it=ITEMS[k];if(already.has(k))return;const q=it.zones.length?ask('Plan: '+it.t,'Making a place peafowl-friendly','SC'):null;
     const c=h('div',{class:'card'},icon(it.icon),h('span',null,it.t));
     if(!it.zones.length){c.addEventListener('click',()=>{if(c.classList.contains('used'))return;tryBad();});}
     function tryBad(){c.classList.add('used','crossed');(k==='bread'?qBread:qChook).miss(k);toast('hmm',it.no,5200);}
     draggable(c,()=>zones,(chip,z)=>{const zone=z.getAttribute('data-zone');
       if(!it.zones.length){tryBad();return;}
       if(it.zones.includes(zone)){q.done();chip.classList.add('used','gone');S.plan.push({item:k,zone});save();drawPlan(svg,S.plan);
-        it.needs.forEach(n=>{met.add(n);const el=bar.querySelector(`[data-n="${n}"]`);if(el)el.classList.add('lit');});
-        toast('yes',it.ok,3000);check();}
+        lightUp(k);toast('yes',it.ok,3000);check();}
       else{q.miss(zone);toast('hmm',zoneMsg(k,zone),4200);}},{glow:M});
     tray.appendChild(c);});
   F.side.appendChild(tray);
+  if(S.plan.length)toast('yes','Welcome back! Your plan is just as you left it.',3000);
+  check();
   F.help(['Look at the needs at the top. Which idea lights up each one?','Long grass helps with two needs at once. Where on our place could grass grow long?',M?'Tall gums → the gums. Long grass → the paddock. Dogs inside → the house.':'Some ideas sound kind but cause problems. Think about the garden and the chooks.']);
   function zoneMsg(k,zone){
     if(k==='gums')return 'The tall gums are along the fence line, at the top of the map.';
@@ -1046,7 +1058,7 @@ T.plan=function(F){
     if(zone==='chooks')return 'Keep her things out of the chook pen. Peafowl and chooks are best kept apart.';
     if(zone==='house'||zone==='gums')return `That doesn’t fit in ${ZONEN[zone]}. Try somewhere out on the ground.`;
     return 'Try another spot.';}
-  function check(){if(want.every(n=>met.has(n))){qBread.done();if(qChook)qChook.done();
+  function check(){if(!won&&want.every(n=>met.has(n))){won=true;qBread.done();if(qChook)qChook.done();
     setTimeout(()=>win(M?'Every need is lit up! Our place would suit a peafowl.':'Every need is lit up. Our place could welcome a peafowl, and the veggies and chooks are looked after too.'),900);}}
 };
 
