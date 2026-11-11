@@ -91,6 +91,11 @@ button.chip-t[aria-pressed="true"]{border-color:var(--act);background:var(--act)
 .tile.yes{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
 .tile.no{opacity:.4;box-shadow:none}
 /* scenes */
+.pic{max-width:600px;margin-left:auto;margin-right:auto}
+.scene.pic{background:linear-gradient(#f6b25a,#fbe1a6 70%)}
+.pulse{animation:pulse 1.3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.tourtap{text-align:center;color:var(--muted);font-weight:700;margin:8px 0 0}
 .scene{border-radius:14px;overflow:hidden;background:#0f1d2a;box-shadow:inset 0 0 0 2px rgba(154,91,51,.5)}
 .scene svg{display:block;width:100%;height:auto;touch-action:manipulation}
 .slide{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--parch-2);border-radius:999px;padding:6px 16px;margin-top:12px}
@@ -267,12 +272,86 @@ function tilesTask(stage,o){const q=o.record===false?null:G.ask({item:o.item,con
       else{if(q)q.miss(bad.map(i=>o.options[i].t).join(' + '));bad.forEach(i=>tiles[i].classList.add('no'));chosen=chosen.filter(i=>!bad.includes(i));tiles.forEach((x,j)=>x.classList.toggle('picked',chosen.includes(j)));chk.disabled=true;toast(o.options[bad[0]].why,'hmm');}});}
   return {tiles};}
 
+
+/* ---------- widget: a guided tour (tap to discover, then read) ---------- */
+const HOT=(x,y,r)=>`<g class="hot" tabindex="0" role="button" aria-label="Tap to find out"><circle class="pulse" cx="${x}" cy="${y}" r="${r}" fill="#f0c062" stroke="#1a110a" stroke-width="${Math.max(2,r/8)}"/><text x="${x}" y="${y+r*0.38}" text-anchor="middle" font-size="${r*1.1}" font-weight="700" fill="#1a110a">?</text></g>`;
+const withHot=(svg,seen,x,y,r)=>seen?svg:svg.replace(/<\/svg>\s*$/,HOT(x,y,r)+'</svg>');
+function makeTour(part,stops,endLabel){return function(){const M=isM();let i=0;part=allParts()[S.part];
+  function show(){const s=stops[i];const st=frame(part,s.prompt,null);let seen=false;
+    const sc=h('div',{class:'scene pic'});const tap=P('Tap the yellow circle.','tourtap');const box=h('div');
+    function draw(){sc.innerHTML=s.art(seen);const g=sc.querySelector('.hot');
+      if(g){const go=()=>{if(seen)return;seen=true;draw();reveal();};g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});}}
+    function reveal(){tap.remove();box.textContent='';
+      box.append(h('div',{class:'fact'},h('span',{class:'rib'},'Tour: stop '+(i+1)+' of '+stops.length),h('h3',null,s.title),(M&&s.m?s.m:s.g).map(t=>P(t))));
+      const last=i===stops.length-1;const b=h('button',{class:'btn',type:'button'},last?(endLabel||'Now try it →'):'Next stop →');
+      b.addEventListener('click',()=>{if(last)advance();else{i++;show();}});box.append(h('div',{class:'row'},b));
+      box.scrollIntoView({behavior:'smooth',block:'nearest'});}
+    draw();st.append(sc,tap,box);}
+  show();};}
+
+ART.diary=function(){return `<svg viewBox="0 0 320 200" role="img" aria-label="A papyrus scroll"><rect width="320" height="200" fill="#f3e6c4"/>
+  <rect x="40" y="40" width="240" height="120" fill="#efe0b8" stroke="#8a6a3a" stroke-width="3"/><rect x="28" y="34" width="18" height="132" rx="8" fill="#d9c08a" stroke="#8a6a3a" stroke-width="3"/><rect x="274" y="34" width="18" height="132" rx="8" fill="#d9c08a" stroke="#8a6a3a" stroke-width="3"/>
+  <g stroke="#3a2a1a" stroke-width="3" fill="none" stroke-linecap="round"><path d="M70 66q10-8 20 0t20 0M120 64h30M160 66q8 6 16 0M190 64h40M240 66q6-8 14 0"/><path d="M70 92h24M104 92q10 8 20 0t20 0M156 92h50M216 92q8-6 16 0t16 0"/><path d="M70 118q12-6 24 0M104 118h44M158 118q10 8 20 0M190 118h56"/></g>
+  <path d="M70 140h60" stroke="#a5302a" stroke-width="4"/></svg>`;};
+ART.drag=function(){return `<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#f3e6c4"/><rect y="72" width="160" height="28" fill="#e8cd92"/><path d="M10 72H66" stroke="#6e3f22" stroke-width="6" stroke-linecap="round"/><rect x="14" y="46" width="44" height="24" fill="#fffaf0" stroke="#5a4020" stroke-width="3"/><path d="M66 68L112 52" stroke="#8a6a3a" stroke-width="3"/>
+  <g stroke="#7a4e2e" stroke-width="4" stroke-linecap="round" fill="#7a4e2e"><circle cx="118" cy="40" r="5"/><path d="M118 46V60M118 50L110 54M118 60L113 72M118 60L123 72"/><circle cx="140" cy="40" r="5"/><path d="M140 46V60M140 50L132 54M140 60L135 72M140 60L145 72"/></g></svg>`;};
+function mapSvg(flood,boat){const B={tura:[372,286],giza:flood?[248,178]:[318,178]}[boat]||[372,286];
+  return `<svg viewBox="0 0 640 360" role="img" aria-label="Map of the Nile between the Tura quarries and Giza"><rect width="640" height="360" fill="#ecd39b"/>
+  ${flood?'<path d="M215 0C245 120 222 240 262 360H480C450 240 478 120 452 0Z" fill="#9cc9e0"/><text x="420" y="120" font-size="18" font-weight="700" fill="#1f5f80" text-anchor="middle">flood water</text>':''}
+  <path d="M292 0C322 120 302 240 342 360H392C362 240 382 120 352 0Z" fill="#2f7fa8"/>
+  <text x="340" y="48" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">Nile</text>
+  <g transform="translate(96 112)"><path d="M0 74L46 0L92 74Z" fill="#f4ecd8" stroke="#5a4020" stroke-width="3"/><path d="M46 0L92 74H62Z" fill="#e2d5b6"/><path d="M76 74L104 30L132 74Z" fill="#e8dcc0" stroke="#5a4020" stroke-width="3"/></g>
+  <text x="160" y="214" font-size="22" font-weight="700" fill="#4a2c18" text-anchor="middle">Giza</text>
+  <path d="M470 306L498 252L538 266L578 244L624 262V330H470Z" fill="#efe6d2" stroke="#5a4020" stroke-width="3"/><rect x="512" y="284" width="30" height="20" fill="#fffaf0" stroke="#5a4020" stroke-width="2"/><rect x="552" y="276" width="26" height="18" fill="#fffaf0" stroke="#5a4020" stroke-width="2"/>
+  <text x="548" y="352" font-size="20" font-weight="700" fill="#4a2c18" text-anchor="middle">Tura quarries</text>
+  <g transform="translate(${B[0]-34} ${B[1]-30})"><path d="M0 26H68L58 40H10Z" fill="#9a5b33" stroke="#4a2c18" stroke-width="2.5"/><rect x="18" y="12" width="26" height="14" fill="#fffaf0" stroke="#5a4020" stroke-width="2"/><path d="M52 26V0L64 18H52" stroke="#4a2c18" stroke-width="2" fill="#f4ecd8"/></g>
+  <path d="M600 20l0 26M600 20l-7 10M600 20l7 10" stroke="#4a2c18" stroke-width="3" fill="none"/><text x="600" y="64" font-size="16" font-weight="700" fill="#4a2c18" text-anchor="middle">N</text></svg>`;}
+
+/* ---------- tours ---------- */
+const TOUR1=makeTour(null,[
+  {prompt:'Let’s walk through time. Tap the room under the ground.',title:'The bench tomb',art:seen=>withHot(ART.mastaba(),seen,80,94,13),
+    m:['Egypt’s first kings were buried in a room deep under the ground.','On top was a flat building of mud bricks, like a bench. It’s called a mastaba.'],
+    g:['About 5,000 years ago, Egypt’s kings were buried in a room cut deep under the ground.','On top stood a flat building of mud bricks with sloping sides. It looked like a bench, so it’s called a mastaba, from the Arabic word for “bench”.']},
+  {prompt:'Hundreds of years later, something new. Tap the steps.',title:'The Step Pyramid',art:seen=>withHot(ART.step(),seen,80,46,13),
+    m:['A clever builder called Imhotep made King Djoser’s tomb out of stone.','He made it bigger and bigger, step on step, until it had six steps.'],
+    g:['About 4,650 years ago, a builder called Imhotep made King Djoser’s tomb out of stone instead of mud bricks.','He made it bigger and bigger, step on step, until it had six giant steps. It was one of the first huge stone buildings ever made.']},
+  {prompt:'The next king wanted smooth sides. Tap the bend.',title:'The Bent Pyramid',art:seen=>withHot(ART.bent(),seen,38,58,12),
+    m:['King Sneferu wanted smooth sides, not steps.','His builders started very steep. Halfway up, they changed to a gentler slope!'],
+    g:['King Sneferu wanted a pyramid with smooth sides, not steps.','His builders started with very steep sides. Halfway up, they changed to a gentler slope. It’s called the Bent Pyramid.']},
+  {prompt:'At last! Tap the top of the pyramid.',title:'The Great Pyramid',art:seen=>withHot(ART.smooth(),seen,80,26,12),
+    m:['Sneferu’s son, King Khufu, built the Great Pyramid, with smooth sides all the way up.','It was the tallest building in the world for nearly 4,000 years!'],
+    g:['Sneferu’s son, King Khufu, built the Great Pyramid at Giza about 4,500 years ago, with smooth sides all the way to the top.','It was the tallest building in the world for nearly 4,000 years.']}
+],'Now put them in order →');
+const TOUR2=makeTour(null,[
+  {prompt:'Let’s look closely at Sneferu’s Bent Pyramid. Tap the bend.',title:'Steep, then gentle',art:seen=>withHot(pyrSvg(54,false,true),seen,191,166,20),
+    m:['At the bottom, the sides are steep.','At the top, they are gentler.'],
+    g:['The bottom part rises steeply. Partway up, the slope changes and the top part is gentler.','Nobody built a pyramid this way on purpose again.']},
+  {prompt:'Why did the builders change their minds? Tap the pyramid.',title:'Nobody knows for sure',art:seen=>withHot(pyrSvg(54,false,true),seen,300,120,20),
+    m:['Experts think the builders may have worried that the steep sides weren’t safe.','So they finished more gently.'],
+    g:['Experts still argue. Many think the builders worried the steep sides weren’t safe, perhaps because of cracks, or trouble at another pyramid.','Others think a gentler top needed less stone, so it was quicker to finish.']}
+]);
+const TOUR3=makeTour(null,[
+  {prompt:'Archaeologists found something amazing in 2013. Tap it.',title:'Merer’s diary',art:seen=>withHot(ART.diary(),seen,160,100,22),
+    m:['It was the diary of a man called Merer, who was in charge of about 40 boatmen.','It is the oldest writing on papyrus ever found!'],
+    g:['In 2013, archaeologists found the diary of a man called Merer, who was in charge of about 40 boatmen. It is the oldest papyrus with writing ever found.','It tells how his crew carried stone for King Khufu’s Great Pyramid, about 4,500 years ago.']},
+  {prompt:'Where did the stone come from? Tap the quarries.',title:'The quarries at Tura',art:seen=>withHot(mapSvg(false,'tura'),seen,540,250,22),
+    m:['Merer’s crew loaded white stone onto their boat at the Tura quarries.','The quarries were across the river from the pyramid.'],
+    g:['Merer’s crew loaded blocks of fine white stone onto their boats at the Tura quarries, across the river from Giza.','Each block weighed about as much as two cars.']},
+  {prompt:'How did the boats get close to the pyramid? Tap the river.',title:'The flood',art:seen=>withHot(mapSvg(seen,'tura'),seen,330,160,22),
+    m:['Every summer, the Nile flooded.','The high water let boats sail right up close to the pyramid.'],
+    g:['Every summer, the Nile flooded. The high water let boats sail right up close to the building site.','Merer’s diary covers July to November, the flood months.']},
+  {prompt:'The boat has reached Giza. Tap Giza.',title:'Sledges and ramps',art:seen=>withHot(mapSvg(true,seen?'giza':'tura'),seen,160,150,22),
+    m:['Each block was tied onto a wooden sledge and dragged across the sand.','Then it was hauled up a ramp.'],
+    g:['At Giza, each block was tied onto a wooden sledge and dragged across the sand by a team of workers.','Then it was hauled up a ramp to where the pyramid was being built.']}
+],'Now follow a block →');
+
 /* ---------- part 1: bench to mountain ---------- */
 const TOMBS=[
   {id:'mastaba',label:'Mud bricks, flat like a bench',art:ART.mastaba()},
   {id:'step',label:'The first giant stone tomb, with steps',art:ART.step()},
   {id:'bent',label:'The slope changes halfway up',art:ART.bent()},
   {id:'smooth',label:'Smooth all the way to the top',art:ART.smooth()}];
+function tour1(){TOUR1.call(null);}
 function p1order(){const order=easy()?['mastaba','smooth']:['mastaba','step','bent','smooth'];
   const st=frame(PART1,'Egypt’s kings needed safe tombs. Put them in order, oldest first.',[
     'Read the words on each picture.','Which is easier to make: mud bricks or cut stone? The easier one came first.',()=>o.example()]);
@@ -295,7 +374,7 @@ function p1why(){const M=isM();
     {t:'It was built by people from another country',ok:false,why:'No. The same Egyptian king, Sneferu, built the bent pyramid and then a smooth one.'},
     {t:'It is the smallest pyramid',ok:false,why:'It’s huge, over 100 metres tall. Size isn’t what puts it in the middle.'}];
   tilesTask(st,{item:M?'Bench to steps: what changed':'Why the bent pyramid comes between',concept:M?'mud-brick-to-stone':'learning-smooth-sides',options:opts,then:s=>nextBtn(s)});}
-const PART1={id:'p1',title:'Bench to mountain',blurb:'Put the royal tombs in order',get tasks(){return easy()?[p1order]:[p1order,p1why];}};
+const PART1={id:'p1',title:'Bench to mountain',blurb:'A tour through time, then put the tombs in order',get tasks(){return easy()?[tour1,p1order]:[tour1,p1order,p1why];}};
 
 /* ---------- part 2: the pyramid with a bend ---------- */
 function pyrSvg(angle,ghost,bend,h2){const W=600,H=300,base=250,hb=170;const r=Math.PI/180;
@@ -307,7 +386,7 @@ function pyrSvg(angle,ghost,bend,h2){const W=600,H=300,base=250,hb=170;const r=M
   <rect width="${W}" height="${H}" fill="url(#sky)"/><circle cx="520" cy="70" r="30" fill="#fff3c8"/>${ART.ground(W,base)}
   <polygon points="${pts}" fill="#dcc08a" stroke="#5a4020" stroke-width="4" stroke-linejoin="round"/>${g}${h2||''}</svg>`;}
 function p2slope(){const M=isM();
-  const st=frame(PART2,'King Sneferu’s builders began with very steep sides. Slide to make the sides steep, up to the yellow lines.',['Slide the button to the right to make it steeper.','Make the sides match the yellow dashed lines.']);
+  const st=frame(PART2,'Now you be Sneferu’s builder. Slide to make the sides steep, up to the yellow lines.',['Slide the button to the right to make it steeper.','Make the sides match the yellow dashed lines.']);
   const q=G.ask({item:'Set the steep starting slope',concept:'bent-pyramid-slope',area:AREA});HINTQ=q;
   const sc=h('div',{class:'scene',svg:pyrSvg(35,true)});const rd=h('span',null,'gentle');
   const inp=h('input',{type:'range',min:30,max:66,value:35,'aria-label':'How steep the sides are'});
@@ -328,8 +407,7 @@ function p2slope(){const M=isM();
           {t:'The king wanted a funny shape',ok:false,why:'No record says that, and Sneferu’s next pyramid wasn’t bent at all.'},
           {t:'A gentler top needs less stone, so it’s quicker to finish',ok:true},
           {t:'They ran out of sand',ok:false,why:'Egypt has plenty of sand, and pyramids are built of stone.'}],then:s=>reveal(s)});}});}
-  function reveal(s){fact(s,'Nobody knows for sure',[M?'Experts think the builders may have worried that the steep sides weren’t safe. So they finished more gently.':
-    'Experts still argue. Many think the builders worried the steep sides weren’t safe, perhaps after cracks or trouble at another pyramid. Others say a gentler top was quicker to finish. No proof has been found either way.']);}}
+  function reveal(s){nextBtn(s);}}
 function p2next(){const M=isM();
   const st=frame(PART2,'Sneferu built one more pyramid after the bent one. If you were his builder, which would you choose?');
   st.append(h('div',{class:'scene',svg:pyrSvg(54,false,true)}));
@@ -343,7 +421,8 @@ function p2next(){const M=isM();
           {t:'They had learnt how to build steep sides safely',ok:true,why:'Yes. Each pyramid taught the builders something.'},
           {t:'They forgot about the bent pyramid',ok:false,why:'Builders passed on what they learnt. Going steep again shows confidence, not forgetting.'},
           {t:'Steeper pyramids need less stone',ok:false,why:'On the same base, steeper means taller, so it needs more stone, not less.'}],then:x=>nextBtn(x)});}}});}
-const PART2={id:'p2',title:'The pyramid with a bend',blurb:'Why did the builders change their minds?',tasks:[p2slope,p2next]};
+const PART2={id:'p2',title:'The pyramid with a bend',blurb:'Why did the builders change their minds?',tasks:[tour2,p2slope,p2next]};
+function tour2(){TOUR2.call(null);}
 
 /* ---------- part 3: Merer's boat ---------- */
 const STEPS=[
@@ -351,12 +430,11 @@ const STEPS=[
   {id:'boat',label:'Loaded onto Merer’s boat',art:ART.boat()},
   {id:'flood',label:'Sailed on the flood to Giza',art:ART.flood()},
   {id:'sledge',label:'Tied onto a sledge',art:ART.sledge()},
-  {id:'wet',label:'Pulled over wet sand',art:ART.wet()},
+  {id:'drag',label:'Dragged over the sand',art:ART.drag()},
   {id:'ramp',label:'Hauled up the ramp',art:ART.ramp()}];
 function p3journey(){const M=isM();
-  const order=easy()?['quarry','boat','ramp']:M?['quarry','boat','sledge','ramp']:['quarry','boat','flood','sledge','wet','ramp'];
-  const st=frame(PART3,M?'Merer’s crew carried white stone for the Great Pyramid. Put one block’s journey in order.':
-    'About 4,500 years ago, an inspector named Merer kept a diary of his crew carrying white stone to the Great Pyramid. Put one block’s journey in order.',
+  const order=easy()?['quarry','boat','ramp']:M?['quarry','boat','sledge','ramp']:['quarry','boat','flood','sledge','drag','ramp'];
+  const st=frame(PART3,'Now put one block’s journey in order, from the quarry to the pyramid.',
     ['Where does a block of stone start?','The quarry is by the river, and the pyramid is far from the water.',()=>o.example()]);
   const labels=order.map((_,i)=>i===0?'First':i===order.length-1?'Last':'');
   const o=orderTask(st,{item:'A block’s journey from quarry to pyramid',concept:'stone-journey',items:STEPS,correct:order,labels,
@@ -365,8 +443,7 @@ function p3journey(){const M=isM();
       if(pl.indexOf('boat')>pl.indexOf('sledge')&&pl.indexOf('sledge')>=0)return 'The quarry is across the river. How does the block cross the water first?';
       if(pl[pl.length-1]!=='ramp')return 'The ramp takes the block up the pyramid. That has to be the end of the trip.';
       return 'Think: the boat brings it to Giza, then it’s dragged over the sand to the ramp.';},
-    then(stage){fact(stage,'Merer’s diary',[M?'Merer’s diary was found in 2013. It is the oldest writing on papyrus ever found!':
-      'Merer’s diary was found in 2013 at an old harbour by the Red Sea. It is the oldest papyrus with writing ever found. His crew of about 40 made two or three trips every ten days, about 30 blocks at a time.']);}});}
+    then(stage){if(M)nextBtn(stage);else fact(stage,'From Merer’s diary',['His crew made two or three trips every ten days or so, carrying about 30 blocks each time.']);}});}
 function sandSvg(wet,n,moved){let men='';for(let i=0;i<n;i++){const x=330+i*26;men+=`<g transform="translate(${x} ${moved?-0:0})"><circle cx="0" cy="168" r="8" fill="#7a4e2e"/><path d="M0 176V200M0 184L-12 178M0 200L-8 220M0 200L8 220" stroke="#7a4e2e" stroke-width="5" stroke-linecap="round"/></g>`;}
   const off=moved?120:0;
   return `<svg viewBox="0 0 640 260" role="img" aria-label="A sledge with a stone block and a team pulling it"><rect width="640" height="260" fill="#fbe1a6"/>
@@ -401,7 +478,8 @@ function p3sand(){const M=isM();
       {t:'The Nile flooded, so boats could get close to Giza',ok:true,why:'Yes. High water let boats reach close to the building site.'},
       {t:'It was winter there, so it was cooler',ok:false,why:'Egypt is in the north, so July is summer there. Think about the river.'},
       {t:'The quarries were closed the rest of the year',ok:false,why:'Nothing tells us that. What happens to the Nile each year?'}],then:y=>nextBtn(y)});}}
-const PART3={id:'p3',title:'Merer’s boat',blurb:'Follow a block from the quarry to the top',get tasks(){return easy()?[p3journey]:[p3journey,p3sand];}};
+const PART3={id:'p3',title:'Merer’s boat',blurb:'Follow a block from the quarry to the pyramid',get tasks(){return easy()?[tour3,p3journey]:[tour3,p3journey,p3sand];}};
+function tour3(){TOUR3.call(null);};
 
 /* ---------- part 4: who built it? ---------- */
 function townSvg(found){const mark=(id,x,y)=>found[id]?`<circle cx="${x}" cy="${y}" r="20" fill="#2f7d4f"/><path d="M${x-9} ${y}l6 7l12-14" stroke="#fff" stroke-width="5" fill="none"/>`:
@@ -418,7 +496,7 @@ const CLUES={bakery:['Bakeries','Archaeologists found bakeries big enough to fee
   tombs:['Workers’ tombs','The workers had their own tombs, built close to the king’s pyramid.'],
   splint:['Mended bones','Some workers’ broken arms had been held straight with wooden splints. Someone looked after them when they were hurt.']};
 function p4clues(){const M=isM();
-  const st=frame(PART4,'Who built the Great Pyramid? Tap the three yellow clues in the builders’ town.',['Tap a yellow circle with a question mark.']);
+  const st=frame(PART4,'Long ago, people said slaves with whips built the pyramids. Then archaeologists dug beside them and found the builders’ town. Tap the three clues they found.',['Tap a yellow circle with a question mark.']);
   const found={};const sc=h('div',{class:'scene'});const card=h('div');
   function draw(){sc.innerHTML=townSvg(found);sc.querySelectorAll('.hot').forEach(g=>{const go=()=>open(g.getAttribute('data-hot'));g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')go();});});}
   function open(id){found[id]=true;draw();const [t,b]=CLUES[id];card.textContent='';card.append(h('div',{class:'fact'},h('span',{class:'rib'},'Clue'),h('h3',null,t),P(b)));
@@ -479,7 +557,7 @@ function home(){app.textContent='';const ps=allParts();
   const doneN=ps.filter(p=>S.done[p.id]).length;
   app.append(whoBar(),h('div',{class:'panel'},h('div',{class:'intro'},h('div',{svg:ART.smooth()}),h('div',null,
     h('h2',null,'How did Egypt build a mountain?'),
-    P(S.finished?'You did it! Now try the Minecraft challenge.':'Kings were once buried under a mud-brick bench. Then came the Great Pyramid. Four parts to find out how.'),
+    P(S.finished?'You did it! Now try the Minecraft challenge.':'Kings were once buried under a mud-brick bench. Then came the Great Pyramid. Each part starts with a short tour, then it’s your turn.'),
     list,P(doneN&&!S.finished?'Everything is saved. You can stop and come back any time.':'','note'),
     S.finished?h('div',{class:'row'},h('button',{class:'btn',type:'button',on:{click:challenge}},'The Minecraft challenge →')):null))));}
 function whoScreen(){app.textContent='';
