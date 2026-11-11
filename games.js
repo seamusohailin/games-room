@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "tooth-worm-inquiry",
+    title: "The Tooth Worm Inquiry",
+    blurb: "People once blamed a worm for holes in teeth. Reopen the case, test it in the kitchen, and make a snack your teeth will thank you for.",
+    players: ["maggie", "maeve"],
+    subject: "Health and PE",
+    source: "Health education: teeth and oral health (tooth structure, how decay works, the history of explanations, fluoride, brushing, tooth-friendly snacks). Two cases with two kitchen tasks, for the Thursday Games Room health slot",
+    added: "2026-11-11",
+    colour: "#6B2D5C",
+    href: "games/tooth-worm-inquiry/index.html"
+  },
+  {
     id: "pyramid-builders",
     title: "The Pyramid Builders",
     blurb: "Find out how Egypt went from a mud-brick bench to the Great Pyramid, then build it in Minecraft.",
