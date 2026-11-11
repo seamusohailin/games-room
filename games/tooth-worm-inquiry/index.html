@@ -135,6 +135,7 @@ textarea{width:100%;border:2px solid var(--line);border-radius:14px;padding:12px
 .tray.center{justify-content:center}
 .card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:3px solid var(--plum);border-radius:14px;padding:8px 14px;min-height:56px;font-weight:700;font-size:1.05rem;touch-action:none;user-select:none;-webkit-user-select:none;box-shadow:0 4px 0 #D9C3D3;cursor:grab;text-align:left}
 .card.word{background:#F7EEF3}
+.teachcard{display:inline-flex;align-items:center;gap:8px;background:#F7F3FA;border:2px solid #E3D6EC;border-radius:14px;padding:8px 14px;min-height:56px;font-weight:700;font-size:1.05rem}
 .card.sel{outline:4px solid var(--brass);transform:translateY(-2px)}
 .card.lifted{opacity:.35}
 .card.gone{display:none}
@@ -352,7 +353,7 @@ const isM=()=>PLAYER==='maeve';
 const easy=()=>isM()&&S.easy;
 const SIS=()=>isM()?'Maggie':'Maeve';
 
-function defaults(){return {easy:false,done:{},part:null,task:0,writing:{},pred:null,noKit:false,plate:[],labels:[],finished:false,checkin:null};}
+function defaults(){return {easy:false,done:{},part:null,task:0,writing:{},plate:[],labels:[],finished:false};}
 function load(){try{return Object.assign(defaults(),JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){return defaults();}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
@@ -539,18 +540,17 @@ const FOODS={
 function parts(){
   const M=isM();
   return [
-    {id:'teeth',kase:1,title:'Meet your teeth',blurb:'What is a tooth made of?',col:'#6B2D5C',tasks:[T.brief,T.build,T.journey]},
-    {id:'suspects',kase:1,title:'The suspects',blurb:'Worms? Sugar? Tiny creatures?',col:'#B8862B',tasks:M?[T.files,T.timeline,T.match,T.reveal]:[T.files,T.board,T.verdict,T.reveal]},
-    {id:'acidtest',kase:1,kit:true,title:'Kitchen task: the acid test',blurb:'Eggshell, vinegar and water',col:'#2D5B8A',tasks:[T.kit,T.setup,T.watch,T.result,M?T.whyWater:T.fair,T.tonight]},
-    {id:'clock',kase:2,title:'The acid clock',blurb:'Why “when” matters as much as “what”',col:'#C2443E',tasks:M?[T.checkin,T.clockM,T.clockWhy]:[T.checkin,T.clockG,T.lemonade,T.erosion]},
-    {id:'defenders',kase:2,title:'The defenders',blurb:'Saliva, fluoride and your toothbrush',col:'#1F7A6B',tasks:[T.mckay,T.defend,M?T.chanceLine:T.howSure,T.routine]},
-    {id:'snack',kase:2,kit:true,title:'Kitchen task: a tooth-friendly snack',blurb:'Plan it, make it, test it, eat it',col:'#D9667E',tasks:[T.sortFood,T.make,T.plate,T.eat]},
-    {id:'closed',kase:2,title:'Case closed',blurb:'What do you remember?',col:'#5A4C8A',tasks:[T.recall,T.debrief]}
+    {id:'teeth',title:'Meet your teeth',blurb:'What is a tooth made of?',col:'#6B2D5C',mins:2,tasks:[T.brief,T.build]},
+    {id:'suspects',title:'The suspects',blurb:'Worms? Sugar? Tiny creatures?',col:'#B8862B',mins:4,tasks:M?[T.files,T.match,T.reveal]:[T.files,T.board,T.verdict]},
+    {id:'clock',title:'The acid clock',blurb:'Why “when” matters as much as “what”',col:'#C2443E',mins:4,tasks:M?[T.clockTeach,T.clockM,T.clockWhy]:[T.clockTeach,T.clockG,T.lemonade]},
+    {id:'defenders',title:'The defenders',blurb:'Saliva, fluoride and your toothbrush',col:'#1F7A6B',mins:3,tasks:M?[T.defTeach,T.defend]:[T.defTeach,T.defend,T.howSure]},
+    {id:'snack',kit:true,title:'Kitchen task: a tooth-friendly snack',blurb:'Make it, test it, eat it',col:'#D9667E',mins:6,tasks:[T.make,T.plate]},
+    {id:'closed',title:'Case closed',blurb:'Teach it, and tonight’s mission',col:'#5A4C8A',mins:1,tasks:[T.debrief]}
   ];
 }
 const T={};
 
-/* ===== Case 1, part 1: Meet your teeth ===== */
+/* ===== Part 1: Meet your teeth ===== */
 T.brief=function(F){const M=isM();
   F.say(M?'Before the case, meet your teeth. Learn **three words**.':'Before we reopen the case, a quick briefing on what a tooth is made of.');
   F.pic.appendChild(pic(ART.tooth(),'big'));
@@ -587,33 +587,9 @@ T.build=function(F){const M=isM(),E=easy();
     tray.appendChild(c);});
   F.side.appendChild(tray);
   F.help(['Enamel is on the outside. Pulp is in the very middle.','**Dentine** is between the enamel and the pulp.','Look at the colours: white outside, yellowish layer, pink middle.']);
-  function after(){F.help(null);
-    if(M){F.say('Which part is the **hardest**?');
-      F.side.append(choose({item:'Hardest part of a tooth',concept:'Parts of a tooth',opts:[{t:'Enamel',ok:true},{t:'Pulp',why:'The pulp is soft. It is the middle, with nerves.'}].concat(E?[]:[{t:'Dentine',why:'Dentine is softer than enamel.'}]),then:()=>win('Enamel is the hardest thing in your whole body. But acid can still take minerals out of it.')}));}
-    else{F.say('Which part **can’t grow back** once it’s lost?');
-      F.side.append(choose({item:'Enamel cannot regrow',concept:'Parts of a tooth',opts:[{t:'Enamel',ok:true},{t:'Gum',why:'Gums are living, and can heal.'},{t:'Pulp',why:'The pulp is living tissue. Think about which part has no living cells.'}],then:()=>win('Enamel has no living cells, so a hole in it can’t heal over. That’s why dentists fill holes. But tiny amounts of mineral can go back into the surface, before there is a hole.')}));}}
+  function after(){win(M?'Enamel outside, dentine under it, pulp in the middle. Enamel is the hardest thing in your body, but acid can still take minerals out of it.':'Enamel has no living cells, so a hole in it can’t heal over. That’s why dentists fill holes. But tiny amounts of mineral can go back into the surface before there is a hole.');}
 };
-T.journey=function(F){const M=isM(),E=easy();
-  F.say(M?'How does a hole grow? Put the pictures in order.':'Put the stages of a growing hole in order.');
-  const st=[{t:'A chalky white spot on the enamel',k:1},{t:'A small hole in the enamel',k:2},{t:'The hole reaches the dentine',k:3},{t:'The hole reaches the pulp. Toothache!',k:4}];
-  const use=M?[st[0],st[1],st[3]]:st;
-  const items=use.map(s=>({t:s.t,svg:ART.tooth({hole:s.k})}));
-  const slots=items.map((_,i)=>target(h('div',{class:'slot','data-i':i},h('div',{class:'slot-n'},i===0?'First':(i===items.length-1?'Last':'Next')),h('div',{class:'slot-b'}))));
-  const tray=h('div',{class:'tray center'});let left=items.length;
-  shuffle(items.map((it,i)=>({it,i}))).forEach(({it,i})=>{const q=ask('Hole stage: '+it.t,'How a hole grows','HPE');
-    const c=h('div',{class:'card',style:'flex-direction:column;max-width:170px'},h('div',{class:'artbox',style:'width:110px',svg:it.svg}),h('span',{style:'font-size:.95rem'},it.t));
-    draggable(c,()=>slots,(chip,slot)=>{const j=+slot.getAttribute('data-i');
-      if(j===i){q.done();chip.classList.add('used','placed');slot.classList.add('full');slot.querySelector('.slot-b').appendChild(chip);left--;if(left===0)after();}
-      else{q.miss('slot '+(j+1));toast('hmm',j<i?'That one is bigger. It comes later.':'That one is smaller. It comes earlier.',3800);}});
-    tray.appendChild(c);});
-  F.one();F.pic.append(h('div',{class:'slots across'},slots),tray);
-  F.help(['A hole starts small and grows inward.','It starts as a **white spot** on the outside, and toothache comes last.']);
-  function after(){F.help(null);F.say('Why doesn’t a small hole in enamel hurt?');
-    F.pic.append(h('div',{style:'width:100%'},choose({item:'Enamel has no nerves',concept:'How a hole grows',wide:true,opts:[{t:'Enamel has no nerves',ok:true},{t:'The hole is too small to see',why:'Even small holes can be seen by a dentist. Think about where the nerves are.'}].concat(E?[]:[{t:'Teeth can’t feel anything at all',why:'The pulp can feel. That’s where toothache comes from.'}]),
-      then:()=>win('The nerves are in the pulp, right in the middle. That’s why a hole can grow for a long time before it hurts, and why check-ups at the dentist matter.',null,F.pic)})));}
-};
-
-/* ===== Case 1, part 2: The suspects ===== */
+/* ===== Part 2: The suspects ===== */
 const FILES=[
   {id:'egypt',icon:'egypt',t:'Ancient Egypt',d:'About 4,500 years ago',m:'Egyptian teeth were often worn flat by sand in their bread. But they had **few holes**. Most Egyptians ate very little sugar.',
     g:'Egyptian teeth were often worn flat by sand and grit in their bread. But they had **few holes**. Most people ate very little sugar. Holes became more common later, once honey, dates and white bread were easier to get.'},
@@ -628,7 +604,7 @@ const FILES=[
     g:'A young dentist, Frederick McKay, found many children with **brown stains** on their teeth. Strangely, the stained teeth hardly ever got holes. Keep this one for Case 2.'}
 ];
 T.files=function(F){const M=isM(),E=easy();
-  const use=E?FILES.filter(f=>['babylon','queen','leeuw'].includes(f.id)):FILES;
+  const use=E?FILES.filter(f=>['babylon','queen','leeuw'].includes(f.id)):FILES.filter(f=>f.id!=='mckay');
   F.say(M?'Why do teeth get holes? Open each case file.':'For thousands of years, people asked: why do teeth get holes? Open every file.');F.one();
   let read=0;const grid=h('div',{class:'files'});
   use.forEach(f=>{const b=h('button',{class:'file closed',type:'button'},icon(f.icon),h('div',{class:'ft'},f.t),h('div',{class:'fd'},f.d),h('div',{class:'open-me'},'Tap to open'),
@@ -636,15 +612,6 @@ T.files=function(F){const M=isM(),E=easy();
     b.addEventListener('click',()=>{if(!b.classList.contains('closed'))return;b.classList.remove('closed');b.classList.add('read');read++;if(read===use.length)done();});grid.appendChild(b);});
   F.pic.appendChild(grid);
   function done(){F.pic.append(nextBtn(M?'I’ve read them all →':'Take the case →'));}
-};
-T.timeline=function(F){const E=easy();
-  const use=(E?FILES.filter(f=>['babylon','queen','leeuw'].includes(f.id)):FILES);
-  F.say('Put the files in time order, from **longest ago** to **nearest to now**.');F.one();
-  F.pic.append(orderer({item:'Timeline',concept:'Putting events in time order',area:'HSS',across:true,labels:use.map((_,i)=>i===0?'Longest ago':(i===use.length-1?'Nearest to now':'Then')),
-    items:use.map(f=>({t:f.t,d:f.d,icon:f.icon,big:true})),
-    no:(it,i,j)=>j<i?'Look at the date. That one is nearer to now.':'Look at the date. That one is longer ago.',
-    then:()=>win('Thousands of years of tooth detectives! “Years ago” counts back from today, so 4,500 years ago is longer ago than 2,500 years ago.',null,F.pic)}));
-  F.help(E?['The one that says “years ago” is the oldest.','Then put the years in order: 1598 comes before 1683.','Babylon is first. Leeuwenhoek is last.']:['The ones that say “years ago” are the oldest.','4,500 years ago is longer ago than 2,500 years ago. Then put the years in order: 1598, 1683, 1901.','Egypt is first. Dr McKay is last.']);
 };
 T.match=function(F){const E=easy();
   F.say('What did each one think made holes? Drag the suspect to the file.');
@@ -664,11 +631,9 @@ T.board=function(F){
     {t:'A Babylonian story says a worm lives between tooth and gum',bin:'worm-for',no:'Which explanation does this story back up?'},
     {t:'Nobody looking through a microscope has ever found a tooth worm',bin:'worm-against',no:'Which explanation does this count against?'},
     {t:'Egyptians ate little sugar and had few holes',bin:'sugar-for',no:'Little sugar and few holes go together. Which explanation does that fit?'},
-    {t:'Egyptian holes grew more common once honey and dates were easier to get',bin:'sugar-for',no:'More sweet food, more holes. Which explanation does that support?'},
-    {t:'Hentzner blamed the black teeth on too much sugar',bin:'sugar-for',no:'Who did Hentzner blame?'},
     {t:'Leeuwenhoek saw tiny living things in the white stuff from his teeth',bin:'tiny-for',no:'What did he see in his microscope?'},
     {t:'Tiny living things live in everyone’s mouth, even mouths with no holes',bin:'tiny-against',no:'If everyone has them, can they be the whole answer on their own?'}];
-  F.pic.append(sorter({bins,binsCls:'board',concept:'Weighing evidence for and against an explanation',area:'HSS',items:items.map(it=>Object.assign({item:'Evidence: '+it.t},it)),then:()=>win('Board complete. The worm has one old story for it, and real observations against it. Notice that nothing went in “Sugar: against”.',null,F.pic)}));
+  F.pic.append(sorter({bins,binsCls:'board',concept:'Weighing evidence for and against an explanation',area:'HSS',items:items.map(it=>Object.assign({item:'Evidence: '+it.t},it)),then:()=>win('Board complete. The worm has one old story for it, and a real observation against it. Notice that nothing went in “Sugar: against”.',null,F.pic)}));
   F.help(['Ask of each clue: does it make this explanation more likely, or less?','A clue can be **for** one explanation. Find the one it fits best.','The last clue is tricky: tiny living things are everywhere, so they can’t be the whole story by themselves.']);
 };
 T.verdict=function(F){
@@ -678,115 +643,31 @@ T.verdict=function(F){
     {t:'A tooth worm',why:'There’s an old story, but nobody has ever seen one, even with a microscope.'},
     {t:'Sugar on its own',why:'Sugar matters, but sugar alone can’t make acid. Something has to eat it.'},
     {t:'Tiny living things on its own',why:'They live in everyone’s mouth, yet holes are common only where there’s plenty of sugar.'}],
-    then:()=>{F.say('One more. Which is the **strongest kind** of evidence?');
-      F.side.append(choose({item:'Strongest evidence: observation',concept:'Kinds of evidence',area:'HSS',wide:true,opts:[
-        {t:'Leeuwenhoek looking through a microscope',ok:true},
-        {t:'The Babylonian story',why:'A story tells us what people believed, not what they saw.'},
-        {t:'Hentzner’s opinion about sugar',why:'He saw the black teeth himself, which is useful. But blaming sugar was his opinion.'}],
-        then:()=>win('An observation you can repeat beats a story or an opinion. Hentzner’s note is still useful: it shows what people noticed at the time, and other evidence backs it up.')}));}}));
-};
-T.reveal=function(F){const M=isM(),E=easy();
-  F.say('Here’s what scientists know today. Put the chain in order.');F.one();
-  const chain=M?(E?[{t:'Sugar arrives',icon:'sugar'},{t:'Germs eat it and make acid',icon:'acid'},{t:'Acid makes a hole',icon:'hole'}]
-    :[{t:'You eat something sweet',icon:'sugar'},{t:'Germs in plaque eat the sugar',icon:'germs'},{t:'They make acid',icon:'acid'},{t:'Acid takes minerals out of enamel',icon:'hole'}])
-    :[{t:'Sugar arrives in the mouth',icon:'sugar'},{t:'Bacteria in the plaque eat the sugar',icon:'germs'},{t:'They make acid as waste',icon:'acid'},{t:'Acid takes minerals out of the enamel',icon:'hole'},{t:'If this happens again and again, a hole forms',icon:'hole'}];
-  F.pic.append(orderer({item:'Decay chain',concept:'Bacteria make acid from sugar',area:'SC',items:chain,labels:chain.map((_,i)=>String(i+1)),
-    then:()=>win(M?'Leeuwenhoek’s tiny living things are called **bacteria**. When you eat sugar, they eat it too, and make acid. Case 1 has one more job: test what acid does!':'Leeuwenhoek’s tiny living things are **bacteria**. Sugar feeds them, and they make acid. So the old detectives each had part of it, except the worm. Next: test what acid does to a mineral.',null,F.pic)}));
-  F.help(['Start with the food going into your mouth.','Something has to eat the sugar before there is any acid.']);
+    then:()=>win('That’s what scientists say today. Bacteria in the plaque eat sugar and make acid, and acid takes minerals out of the enamel. Notice which evidence did the work: Leeuwenhoek’s observation beats an old story.')}));
 };
 
-/* ===== Case 1, part 3: Kitchen task: the acid test ===== */
-T.kit=function(F){const M=isM();
-  F.say('**Kitchen task!** Can acid take a mineral apart? Let’s test it.');
-  F.pic.appendChild(pic(ART.glasses(false),'wide'));
-  F.side.append(h('div',{class:'safety'},P('**First, ask a grown-up:** “May we use an eggshell and some vinegar for a science test?”')),
-    h('h3',{class:'sub'},'Find these. Tick each one.'),
-    checklist([{t:'2 clear glasses or jars'},{t:'White vinegar'},{t:'Water'},{t:'An empty eggshell (or ask to crack an egg into a bowl for cooking later)'},{t:'A spoon'}].concat(M?[]:[{t:'Your sister, if she’s ready to do it with you'}]),()=>{go.disabled=false;}));
-  const go=h('button',{class:'btn',type:'button',disabled:true,on:{click:()=>{S.noKit=false;save();advance();}}},'We have everything →');
-  const no=h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.noKit=true;save();advance();}}},'We can’t do it today');
-  F.side.append(h('div',{class:'next-row'},no,go),P('If you can’t do it today, you can watch it on screen instead.','note'));
-};
-T.setup=function(F){const M=isM();
-  if(S.noKit){F.say('Here is how the test is set up.');}else F.say('Set up the test. Tick each step when it’s done.');
-  F.pic.appendChild(pic(ART.glasses(false),'wide'));
-  const steps=[{t:'Break the eggshell into **2 pieces about the same size**.'},{t:'Pour **vinegar** into one glass, about as deep as your finger.'},{t:'Pour the **same amount of water** into the other glass.'}];
-  const pq=h('div',{hidden:!S.noKit});
-  F.side.append(S.noKit?h('div',{class:'facts'},steps.map(s=>P(s.t))):checklist(steps,()=>{pq.hidden=false;pq.scrollIntoView({behavior:'smooth',block:'nearest'});}),pq);
-  pq.append(h('h3',{class:'sub'},'Predict before you drop them in'),P(M?'What will happen?':'When you drop a piece of shell into each glass, what do you predict?'),
-    pickOne([{t:'Bubbles in the vinegar only',k:'vin'},{t:'Bubbles in the water only',k:'wat'},{t:'Bubbles in both',k:'both'},{t:'Nothing in either',k:'none'}],op=>{S.pred=op.k;save();
-      if(!M){const ta=h('textarea',{rows:2,maxlength:300,placeholder:'I think this because…','aria-label':'Why I predict this'});ta.value=S.writing.pred||'';
-        ta.addEventListener('input',()=>{S.writing.pred=ta.value;save();G.write({game:GAME,part:'The acid test',area:'SC',prompt:'Acid test prediction: why',text:op.t+'. '+ta.value});});
-        pq.append(ta);G.write({game:GAME,part:'The acid test',area:'SC',prompt:'Acid test prediction: why',text:op.t});}
-      pq.append(nextBtn());}));
-};
-T.watch=function(F){const M=isM();
-  F.say(S.noKit?'Watch the two glasses closely.':'Drop one piece into each glass **at the same time**. Watch closely for 2 minutes.');
-  const art=pic(ART.glasses(!!S.noKit),'wide');F.pic.appendChild(art);
-  const tv=h('div',{class:'tv'},'2:00');let left=120,tmr=null;
-  const start=h('button',{class:'btn plum',type:'button',on:{click:()=>{if(tmr)return;start.disabled=true;
-    tmr=setInterval(()=>{left--;tv.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');if(left<=0){clearInterval(tmr);tv.textContent='Done!';showQ();}},1000);}}},'Start the 2 minutes');
-  const skip=h('button',{class:'btn ghost',type:'button',on:{click:()=>{clearInterval(tmr);showQ();}}},'We’ve seen enough');
-  if(!S.noKit)F.side.append(P('Look very closely at the shells. Get your eyes down level with the glass.'),h('div',{class:'timer'},tv,start),h('div',{class:'row'},skip));
-  let shown=false;
-  function showQ(){if(shown)return;shown=true;F.say('What did you see? Choose **all** that are true.');
-    F.side.append(chooseMany({item:'Observed: vinegar fizzes on eggshell',concept:'Acid breaks down minerals',area:'SC',wide:true,opts:[
-      {t:'Tiny bubbles on the shell in the vinegar',ok:true},{t:'Hardly anything happened in the water',ok:true},
-      {t:'Lots of bubbles in the water',why:'Look again at the water glass. The bubbles are in the vinegar.'},{t:'The vinegar turned blue',why:'The vinegar stays the same colour. Look for bubbles.'}],
-      then:()=>{const pr={vin:'bubbles in the vinegar only',wat:'bubbles in the water only',both:'bubbles in both',none:'nothing in either'}[S.pred];
-        win('The vinegar fizzed. The water didn’t.'+(pr?' You predicted '+pr+(S.pred==='vin'?'. Spot on!':'. Scientists often predict wrong. That’s why we test.'):''));}}));}
-  if(S.noKit)setTimeout(showQ,2600);
-};
-T.result=function(F){const M=isM();
-  F.say('So what happened?');F.pic.appendChild(pic(ART.glasses(true),'wide'));
-  F.side.append(h('div',{class:'facts'},M?[P('Eggshell is made of a **mineral**, a bit like rock.'),P('**Acid** pulls the mineral apart. A gas bubbles out.')]
-    :[P('Eggshell is made of a mineral called **calcium carbonate**.'),P('Acid pulls it apart, and a gas, **carbon dioxide**, bubbles out.')]));
-  F.side.append(choose({item:'Acid breaks down minerals',concept:'Acid breaks down minerals',area:'SC',wide:true,opts:[{t:'Acid can break down minerals',ok:true},{t:'Acid makes minerals grow',why:'The shell got bubbly, not bigger. The acid was taking it apart.'},{t:'Water is stronger than acid',why:'Nothing much happened in the water.'}],
-    then:()=>win(M?'Acid can take minerals apart. Your enamel is made of minerals too.':'Acid can take a mineral apart. Enamel is mostly mineral too.')}));
-};
-T.whyWater=function(F){
-  F.say('Why did we put a shell in **water** too?');F.pic.appendChild(pic(ART.glasses(true),'wide'));
-  F.side.append(choose({item:'Why compare with water',concept:'Fair test',area:'SC',wide:true,opts:[{t:'To see the difference the acid makes',ok:true},{t:'Because shells like water',why:'The water glass is there to compare with.'},{t:'To make more bubbles',why:'The water didn’t make bubbles. It shows what happens with no acid.'}],
-    then:()=>{F.say('Is your tooth enamel just like eggshell?');
-      F.side.append(choose({item:'Eggshell is a model',concept:'Models are not the real thing',area:'SC',wide:true,opts:[{t:'No. It’s a different mineral, but acid takes minerals out of it too',ok:true},{t:'Yes, exactly the same',why:'Enamel is a different mineral. It doesn’t fizz.'}],
-        then:()=>win('Enamel doesn’t fizz, but acid still takes minerals out of it, a little at a time. The eggshell is a **model**: it helps us see what acid does.')}));}}));
-};
-T.fair=function(F){
-  F.say('Was it a fair test? What did we keep **the same**? Choose all.');F.pic.appendChild(pic(ART.glasses(true),'wide'));
-  F.side.append(chooseMany({item:'Fair test: kept the same',concept:'Fair test',area:'SC',wide:true,opts:[{t:'The size of the shell pieces',ok:true},{t:'The amount of liquid',ok:true},{t:'How long we watched',ok:true},{t:'The kind of liquid',why:'That’s the one thing we changed on purpose: vinegar or water.'}],
-    then:()=>{F.say('Does this test **prove** that sugar makes holes in teeth?');
-      F.side.append(choose({item:'Eggshell is a model',concept:'Models are not the real thing',area:'SC',wide:true,opts:[
-        {t:'No. It shows acid can take a mineral apart. Teeth are a different mineral, and mouths have saliva',ok:true},
-        {t:'Yes, teeth and eggshells are the same',why:'Enamel is a different mineral (it doesn’t fizz), and a real mouth has saliva fighting back.'},
-        {t:'No, because vinegar isn’t an acid',why:'Vinegar is an acid. The question is how far a shell in a glass is like a tooth in a mouth.'}],
-        then:()=>{const ta=h('textarea',{rows:2,maxlength:400,placeholder:'If you could test one more thing, what would it be?','aria-label':'What I would test next'});ta.value=S.writing.next||'';
-          ta.addEventListener('input',()=>{S.writing.next=ta.value;save();G.write({game:GAME,part:'The acid test',area:'SC',prompt:'What I would test next',text:ta.value});});
-          win('Right. Our test is a **model**. It shows one step (acid taking mineral away), not the whole story in a mouth.',h('div',null,P('If you like, write what you’d test next.','note'),ta));}}));}}));
-};
-T.tonight=function(F){
-  F.say('Tidy up, then here’s your mission for tonight.');F.pic.appendChild(pic(ART.ICON.brush,'mid'));
-  F.side.append(h('h3',{class:'sub'},'Tidy up'),checklist([{t:'Pour the vinegar and water down the sink.'},{t:'Put the shells in the bin or compost.'},{t:'Rinse the glasses.'}],()=>{m.hidden=false;m.scrollIntoView({behavior:'smooth',block:'nearest'});}));
-  const m=h('div',{hidden:true},h('div',{class:'guide'},h('b',null,'Tonight’s secret mission'),P('Brush with your toothpaste for about two minutes.'),P('**Spit out** the foam. **Don’t rinse** with water.'),P('Why? You’ll find out in Case 2.')),
-    P('That’s the end of Case 1. Stop here. Case 2 is for next time.','note'),nextBtn('Close Case 1 →'));
-  F.side.append(m);
+T.reveal=function(F){const E=easy();
+  const chain=E?[{t:'Sugar arrives',icon:'sugar'},{t:'Germs eat it and make acid',icon:'acid'},{t:'Acid makes a hole',icon:'hole'}]
+    :[{t:'You eat something sweet',icon:'sugar'},{t:'Germs in plaque eat the sugar',icon:'germs'},{t:'They make acid',icon:'acid'},{t:'Acid takes minerals out of enamel',icon:'hole'}];
+  F.say('Here’s what scientists know today. Leeuwenhoek’s tiny living things are called **bacteria**, or germs.');F.one();
+  const strip=h('div',{class:'row center'},chain.map((c,i)=>h('div',{class:'teachcard'},h('span',{class:'slot-n'},String(i+1)),icon(c.icon,'lg'),h('span',null,c.t))));
+  F.pic.append(strip,nextBtn('I’ve got it. Now let me try →',()=>{F.pic.textContent='';F.say('Now you put the chain in order.');
+    F.pic.append(orderer({item:'Decay chain',concept:'Bacteria make acid from sugar',area:'SC',items:chain,labels:chain.map((_,i)=>String(i+1)),
+      then:()=>win('So the worm was wrong. Sugar was part of it, and so were Leeuwenhoek’s tiny living things. Together they make the acid.',null,F.pic)}));
+    F.help(['Start with the food going into your mouth.','Something has to eat the sugar before there is any acid.']);}));
 };
 
-/* ===== Case 2, part 4: The acid clock ===== */
-T.checkin=function(F){const M=isM();
-  F.say('Welcome back, detective! First: your secret mission.');F.pic.appendChild(pic(ART.ICON.brush,'mid'));
-  const box=h('div');
-  F.side.append(P('Last time you brushed, did you spit and not rinse?'),pickOne([{t:'Yes, I spat and didn’t rinse'},{t:'I forgot'},{t:'I rinsed'}],op=>{S.checkin=op.t;save();
-    G.write({game:GAME,part:'The acid clock',area:'HPE',prompt:'Spit, don’t rinse check-in',text:op.t});
-    box.append(P(op.t.startsWith('Yes')?'Good work. You’ll soon know why it matters.':'That’s fine. You’ll soon find out why it matters.'),nextBtn('Quick memory check →',()=>recall()));}),box);
-  function recall(){F.side.textContent='';F.pic.textContent='';F.pic.appendChild(pic(ART.tooth(),'mid'));
-    const Qs=M?[
-      {q:'What is the hard white outside of a tooth called?',item:'Recall: enamel',concept:'Parts of a tooth',opts:[{t:'Enamel',ok:true},{t:'Pulp',why:'The pulp is the soft middle.'},{t:'Plaque',why:'Plaque is the sticky film on top.'}]},
-      {q:'What do germs make when they eat sugar?',item:'Recall: germs make acid',concept:'Bacteria make acid from sugar',area:'SC',opts:[{t:'Acid',ok:true},{t:'Toothpaste',why:'Think of the chain: sugar, germs, then…'},{t:'Worms',why:'Nobody has ever found a tooth worm!'}]},
-      {q:'In our test, which glass fizzed?',item:'Recall: vinegar fizzed',concept:'Acid breaks down minerals',area:'SC',opts:[{t:'The vinegar',ok:true},{t:'The water',why:'The water stayed quiet. Acid is the one that takes minerals apart.'}]}]
-    :[
-      {q:'Which explanation fitted all the evidence?',item:'Recall: germs and sugar',concept:'Weighing evidence for and against an explanation',area:'HSS',opts:[{t:'Bacteria and sugar together',ok:true},{t:'A tooth worm',why:'Never seen, even with a microscope.'},{t:'Bacteria alone',why:'They live in every mouth. Sugar is what feeds them.'}]},
-      {q:'Why was the eggshell only a model of a tooth?',item:'Recall: eggshell is a model',concept:'Models are not the real thing',area:'SC',opts:[{t:'It’s a different mineral, and a glass has no saliva',ok:true},{t:'Eggshells are softer than vinegar',why:'Think about how a shell in a glass is different from a tooth in a mouth.'}]},
-      {q:'Which part of a tooth can’t grow back?',item:'Recall: enamel cannot regrow',concept:'Parts of a tooth',opts:[{t:'Enamel',ok:true},{t:'Gum',why:'Gums are living and can heal.'},{t:'Pulp',why:'The pulp is living tissue.'}]}];
-    F.side.append(quiz(Qs,()=>win('Memory check done. Now: the acid clock.')));}
+
+/* ===== Part 3: The acid clock ===== */
+T.clockTeach=function(F){const M=isM();
+  F.say(M?'This is the **acid clock**. Watch what one lolly does.':'This is the **acid clock**, a model of the acid around your teeth over a day.');F.one();
+  const C=clockChart('One lolly at 10am',!M);F.pic.append(h('div',{class:'clock'},C.el));C.run([{t:tm('10:00'),s:1,n:1}]);
+  F.pic.append(h('div',{class:'facts'},(M?[
+    'Eat something sweet, and the germs make **acid**. The line drops into the **danger zone**.',
+    'Then **saliva** (spit) washes the acid away. The line climbs back up.']:[
+    'Eat something sweet, and the bacteria make acid. The line drops below **pH 5.5**, where enamel loses minerals.',
+    '**Saliva** then washes the sugar away and calms the acid, so minerals can go back in. It takes about half an hour.',
+    'This is a **model**. Real mouths vary, but the pattern is the same.']).map(f=>P(f))),nextBtn('I’ve got it →'));
 };
 T.clockM=function(F){const E=easy();
   F.say('Five lollies. All at once, or one at a time through the day? Which gives teeth **more danger time**?');F.one();
@@ -822,14 +703,7 @@ T.clockWhy=function(F){const E=easy();
         {t:'Much more likely, but not certain',ok:true},{t:'Certain',why:'Not certain: saliva, fluoride and brushing fight back. But it is much more likely.'},{t:'Impossible',why:'It’s very possible. Lots of acid attacks wear enamel down.'}],
         then:()=>win('**Saliva** washes sugar away and calms the acid, so minerals can go back in. More acid attacks make a hole **more likely**. Not certain, because your defenders fight back.')}));}}));
 };
-T.clockG=function(F){
-  F.say('Predict: five lollies all at once, or spread through the day. Which gives teeth **more danger time**?');F.one();
-  const pred=h('div');F.pic.append(pred);
-  pred.append(pickOne([{t:'All at once'},{t:'Spread through the day'},{t:'Both the same'}],op=>{S.pred2=op.t;save();setTimeout(()=>{pred.remove();demo();},500);}));
-  function demo(){const A=clockChart('All 5 at 10am',true),B=clockChart('One every two hours from 8am',true);
-    F.pic.append(h('div',{class:'clock'},A.el,B.el));A.run([{t:tm('10:00'),s:1,n:5}]);B.run([8,10,12,14,16].map(x=>({t:(x-7)*60,s:1,n:1})));
-    F.say('Every dip is a new acid attack. Below **pH 5.5**, enamel loses minerals.');
-    F.pic.append(nextBtn('Now your challenge →',challenge));}
+T.clockG=function(F){F.one();challenge();
   function challenge(){F.pic.textContent='';
     F.say('Plan Ari’s day. Ari has three meals and three sweet things. Place the sweet things to give the **least danger time**.');
     const meals=['8:00','12:30','18:00'].map(tm);
@@ -861,87 +735,43 @@ T.lemonade=function(F){
   F.side.append(choose({item:'Sugar-free drinks can still erode enamel',concept:'Decay and erosion',wide:true,opts:[
     {t:'Not true. The drink is acidic itself',ok:true},{t:'True. No sugar means no harm',why:'No sugar means the germs can’t make acid from it. But what if the drink is acid already?'},
     {t:'Not true. It has hidden sugar',why:'Sugar-free really means no sugar. Think about how lemons taste.'}],
-    then:()=>win('Lemonade tastes sour because it is **acidic**. Acid straight from food or drink softens and wears enamel, with no germs needed. That’s called **erosion**. Holes made by germs and sugar are called **decay**.')}));
+    then:()=>win('Lemonade tastes sour because it is **acidic**. Acid straight from food or drink softens and wears enamel, with no germs needed. That’s called **erosion**. Holes made by germs and sugar are called **decay**. After a sour or fizzy drink, wait about 30 minutes before brushing, because the enamel is soft for a while.')}));
 };
-T.erosion=function(F){
-  F.say('Sort them: **decay** (germs and sugar), **erosion** (acid in the food or drink), or **both**?');F.one();
-  F.pic.append(sorter({bins:[{id:'decay',t:'Decay',icon:'germs'},{id:'erosion',t:'Erosion',icon:'lemon'},{id:'both',t:'Both',icon:'juice'}],concept:'Decay and erosion',
-    items:[{t:'Germs eat sugar and make acid',bin:'decay',no:'Germs are doing the work here.'},{t:'Sticky lollies stuck in the grooves',bin:'decay',no:'Lollies are sugar. Who makes the acid?'},
-      {t:'Sipping lemon water all morning',bin:'erosion',no:'Lemon water has no sugar to speak of, but it is sour.'},{t:'Diet soft drink',bin:'erosion',no:'Diet means no sugar. Is it still acidic?'},
-      {t:'Fruit juice',bin:'both',no:'Juice is sweet and sour at once.'},{t:'Regular soft drink',bin:'both',no:'Lots of sugar, and acid too.'}],
-    then:()=>win('One more tip: after a sour or fizzy drink, enamel is soft for a while. Wait about **30 minutes** before brushing, and have a drink of water instead.',null,F.pic)}));
-  F.help(['Ask two questions: is there sugar? Is it sour?','Sugar only means decay. Sour only means erosion. Both means both.']);
-};
-
-/* ===== Case 2, part 5: The defenders ===== */
-T.mckay=function(F){const M=isM(),E=easy();
-  F.say(M?'Back to Dr McKay. Two towns, 5 miles apart. What was different?':'Dr McKay’s case. Brown stains in Bauxite, Arkansas, but not in a town 5 miles away.');F.one();
-  F.pic.appendChild(pic(ART.towns(),'wide'));const box=h('div',{style:'width:100%'});F.pic.append(box);
-  const end='In 1931 the water was tested. It had lots of **fluoride**, a natural mineral. Too much fluoride stains teeth. But a small amount helps enamel stand up to acid. Scientists found that about 1 part in a million was safe, and in 1945 a city in America became the first to add it to their water. Today we brush with **fluoride toothpaste**.';
-  if(M)box.append(choose({item:'McKay: the water was different',concept:'Fluoride protects enamel',wide:true,opts:[{t:'The water from their taps',icon:'water',ok:true},{t:'The weather',why:'The towns were only 5 miles apart, so the weather was the same.'}].concat(E?[]:[{t:'The shops',why:'Both towns could buy the same food. Look for something that came from the place itself.'}]),
-    then:()=>win(end,null,box)}));
-  else box.append(choose({item:'McKay: test the water',concept:'Fluoride protects enamel',wide:true,opts:[{t:'Test the drinking water in each town',ok:true},{t:'Compare the weather',why:'Five miles apart, the weather was the same.'},{t:'Count how many lollies each town sold',why:'That wouldn’t explain brown stains. Look for something only one town had.'}],
-    then:()=>{box.append(choose({item:'What fluoride does',concept:'Fluoride protects enamel',wide:true,opts:[{t:'It helps minerals go back into enamel, and makes it tougher against acid',ok:true},{t:'It kills every germ in the mouth',why:'Germs are still there. Fluoride works on the enamel.'},{t:'It fills holes',why:'Only a dentist can fill a hole.'}],then:()=>win(end,null,box)}));}}));
+/* ===== Part 4: The defenders ===== */
+T.defTeach=function(F){const M=isM(),E=easy();
+  F.say('Meet your **defenders**.');F.one();
+  const d=[['saliva','Saliva','Washes sugar away and calms acid.'],['paste','Fluoride toothpaste','Helps minerals go back into enamel, and makes it tougher.'],['brush','Brushing','Clears away plaque, the germs’ sticky home.'],['clock','Time between snacks','Gives saliva time to repair.']];
+  F.pic.append(h('div',{class:'files'},(E?d.slice(0,3):d).map(([ic,t,b])=>h('div',{class:'file read'},icon(ic),h('div',{class:'ft'},t),P(b)))),
+    h('div',{class:'guide'},h('b',null,'Spit, don’t rinse'),P('After brushing, spit out the foam but don’t rinse with water. That leaves fluoride on your teeth to keep working.')),
+    M?null:h('div',{class:'guide'},h('b',null,'How sure are scientists?'),P('Fluoride toothpaste has been tested in more than 50 studies of children. They’re very sure it helps.'),P('Flossing has only small, short studies, mostly with adults. It may help gums a little, and none of the studies checked for holes.')),
+    nextBtn('I’ve got it →'));
 };
 T.defend=function(F){const E=easy();
   F.say('Meet your defenders. Drag each one to its job.');F.one();
   const d=[{id:'saliva',t:'Saliva',icon:'saliva',job:'Washes sugar away and calms acid'},{id:'paste',t:'Fluoride toothpaste',icon:'paste',job:'Helps minerals go back into enamel'},{id:'brush',t:'Brushing',icon:'brush',job:'Clears away plaque, the germs’ sticky home'},{id:'clock',t:'Time between snacks',icon:'clock',job:'Gives saliva time to repair'}];
   const use=E?d.slice(0,3):d;
   F.pic.append(sorter({bins:use.map(x=>({id:x.id,t:x.job})),concept:'Ways to protect teeth',items:use.map(x=>({t:x.t,icon:x.icon,bin:x.id,item:'Defender: '+x.t,no:'Think about what '+x.t.toLowerCase()+' actually does.'})),
-    then:()=>win('Four defenders working together. None of them is a magic shield on its own.',null,F.pic)}));
+    then:()=>{F.say('Why do we spit and **not rinse**?');
+      F.pic.append(h('div',{style:'width:100%'},choose({item:'Spit, don’t rinse: leave the fluoride',concept:'Brushing routine',wide:true,opts:[{t:'To leave the fluoride on our teeth',ok:true},{t:'Because water is bad for teeth',why:'Water is the best drink for teeth! Think about what’s in the toothpaste.'},{t:'To save water',why:'Good thought, but there’s a tooth reason. What helps minerals go back in?'}],
+        then:()=>win('Rinsing washes the fluoride away. Spitting leaves a little on your teeth to keep working. Four defenders working together.',null,F.pic)})));}}));
   F.help(['Saliva is the one in your mouth all the time.','Brushing takes away the sticky film where germs live.']);
-};
-T.chanceLine=function(F){const E=easy();
-  F.say('How likely? Put each card on the **chance line**.');F.one();
-  const items=[{t:'A worm will eat my tooth',bin:'impossible',no:'Tooth worms aren’t real!'},{t:'If I eat lollies all day, every day, I’ll get a hole',bin:'likely',no:'It could still not happen, because defenders fight back. But it’s very possible.'},
-    {t:'If I brush with fluoride toothpaste twice a day, I’ll get a hole',bin:'unlikely',no:'Brushing with fluoride makes holes much less likely. Could it still happen?'},{t:'Tonight I will have teeth in my mouth',bin:'certain',no:'Can this not happen tonight?'}];
-  const use=E?items.filter(i=>i.bin!=='unlikely'):items;
-  F.pic.append(sorter({bins:[{id:'impossible',t:'Impossible'},{id:'unlikely',t:'Unlikely'},{id:'likely',t:'Likely'},{id:'certain',t:'Certain'}],binsCls:'line',concept:'Chance words: impossible to certain',area:'MA',items:use,
-    then:()=>win('For every “certain”, ask: could it **not** happen? Lollies all day make a hole likely, not certain.',null,F.pic)}));
-  F.help(['Ask of each card: could it not happen?','Only one card is certain. Only one is impossible.']);
 };
 T.howSure=function(F){
   F.say('Scientists test claims. Sort each claim by **how sure** they are.');F.one();
   F.pic.append(sorter({bins:[{id:'true',t:'Very sure it’s true',cls:'for'},{id:'some',t:'Some evidence, not sure yet'},{id:'untested',t:'Not properly tested yet'},{id:'false',t:'Very sure it’s false',cls:'against'}],binsCls:'line',concept:'How sure the evidence is',area:'SC',
     items:[{t:'Fluoride toothpaste helps prevent holes in children’s teeth',bin:'true',no:'More than 50 studies agree on this one.'},
-      {t:'Eating sugar often makes holes more likely',bin:'true',no:'Scientists agree tooth decay is driven by sugar.'},
       {t:'Flossing helps keep gums healthy',bin:'some',no:'Small, short studies, mostly with adults, suggest it may help gums a little.'},
       {t:'Flossing helps prevent holes',bin:'untested',no:'In the big review of flossing studies, not one study checked for holes.'},
       {t:'A worm causes toothache',bin:'false',no:'Never found, even with a microscope.'}],
     then:()=>win('“Not sure yet” doesn’t mean “doesn’t work”. It means the studies haven’t settled it. Dentists still say to clean between your teeth.',null,F.pic)}));
   F.help(['Fluoride toothpaste has been tested in more than 50 studies.','The flossing studies were small and short, and none of them counted holes.']);
 };
-T.routine=function(F){const M=isM(),E=easy();
-  F.say('The bedtime routine. Put the steps in order.');F.one();
-  const st=[{t:'A pea-sized blob of fluoride toothpaste',icon:'paste'},{t:'Brush every tooth, along the gums, for about two minutes',icon:'brush'},{t:'Spit out the foam',icon:'saliva'},{t:'Don’t rinse with water',icon:'water'}];
-  if(!M)st.push({t:'Nothing more to eat or drink, except water',icon:'clock'});
-  F.pic.append(orderer({item:'Bedtime brushing',concept:'Brushing routine',items:E?st.slice(0,3):st,then:()=>{
-    F.say('So, the secret mission: why **don’t** we rinse?');
-    F.pic.append(h('div',{style:'width:100%'},choose({item:'Spit, don’t rinse: leave the fluoride',concept:'Brushing routine',wide:true,opts:[{t:'To leave the fluoride on our teeth',ok:true},{t:'Because water is bad for teeth',why:'Water is the best drink for teeth! Think about what’s in the toothpaste.'},{t:'To save water',why:'Good thought, but there’s a tooth reason. What helps minerals go back in?'}],
-      then:()=>{if(M)return win('Rinsing washes the fluoride away. Spitting leaves a little on your teeth to keep working.',null,F.pic);
-        F.say('Why does brushing **before bed** matter most?');
-        F.pic.append(h('div',{style:'width:100%'},choose({item:'Saliva slows at night',concept:'Saliva protects teeth',wide:true,opts:[{t:'Saliva slows down while you sleep, so acid lasts longer',ok:true},{t:'Germs only come out at night',why:'Germs are there all day. Which defender goes quiet at night?'},{t:'Toothpaste works better in the dark',why:'Light doesn’t matter. Think about saliva.'}],
-          then:()=>win('Saliva slows down while you sleep. So sugar left on your teeth at night has a long time to do harm.',null,F.pic)})));}})));}}));
-  F.help(['Toothpaste goes on before you brush.','Spit first. Then, don’t rinse.']);
-};
-
-/* ===== Case 2, part 6: Kitchen task: a tooth-friendly snack ===== */
-T.sortFood=function(F){const M=isM(),E=easy();
-  F.say('Plan your snack. Sort the foods: **great for teeth**, or **keep for mealtimes**?');F.one();
-  const great='great',meal='meal';
-  const mItems=[{k:'carrot',b:great},{k:'cheese',b:great},{k:'apple',b:great},{k:'water',b:great},{k:'sultanas',b:meal},{k:'lolly',b:meal},{k:'juice',b:meal}];
-  const gItems=[{k:'cucumber',b:great},{k:'cheese',b:great},{k:'yoghurt',b:great},{k:'popcorn',b:great},{k:'milk',b:great},{k:'apricot',b:meal},{k:'muesli',b:meal},{k:'juice',b:meal},{k:'diet',b:meal}];
-  const use=M?(E?mItems.filter(x=>['carrot','cheese','water','lolly','sultanas'].includes(x.k)):mItems):gItems;
-  F.pic.append(sorter({bins:[{id:great,t:'Great for teeth',cls:'for'},{id:meal,t:'Keep for mealtimes',cls:'against'}],concept:'Tooth-friendly snacks',
-    items:use.map(x=>{const f=FOODS[x.k];return {t:f.t,icon:x.k,bin:x.b,item:'Snack sort: '+f.t,yes:x.b===meal?f.note:null,no:x.b===meal?(f.note||'This one is better at mealtimes.'):'This one is kind to teeth. No sugar for the germs, or only a little.'};}),
-    then:()=>win('Fresh food, cheese and plain dairy, crunchy vegetables, and water or plain milk. Sweet, sticky or sour things are best kept for mealtimes.',null,F.pic)}));
-  F.help(['Is it sweet? Is it sticky? Is it sour? If yes, keep it for mealtimes.','Dried fruit is sweet and sticky. Juice is sweet and sour, even with no added sugar.']);
-};
+/* ===== Part 5: Kitchen task: a tooth-friendly snack ===== */
 T.make=function(F){const M=isM();
   F.say('**Kitchen task!** Make a tooth-friendly snack plate together.');
   F.pic.appendChild(h('div',{class:'row center'},icon('carrot','lg'),icon('cheese','lg'),icon('apple','lg'),icon('water','lg')));
   F.side.append(h('div',{class:'safety'},P('**First, ask a grown-up:** “May we make a snack?”'),P('Wash your hands. Use a **butter knife only**. No stove, no oven.')),
-    h('div',{class:'guide'},h('b',null,'The rules'),P('Something **crunchy** (like carrot, cucumber or celery).'),P('**Cheese** or **plain yoghurt**.'),P('**Fresh** fruit if you like, not dried.'),P('A drink of **water** or **plain milk**.'),P('Any packet must pass the **label test**.')));
+    h('div',{class:'guide'},h('b',null,'The rules'),P('Something **crunchy** (like carrot, cucumber or celery).'),P('**Cheese** or **plain yoghurt**.'),P('**Fresh** fruit if you like, not dried.'),P('A drink of **water** or **plain milk**.'),P('Any packet must pass the **label test**.'),P('**Keep for mealtimes:** sweet, sticky or sour things, like lollies, dried fruit, muesli bars and juice.')));
   const role=h('div',{class:'labelrow'});F.side.append(role);
   if(M){role.append(h('b',null,'Your job: the builder'),P('You choose and set out the food. If you’re doing it with Maggie, she checks the labels.'),
       P('**Label test:** find the word “Ingredients” on the packet. Is **sugar** one of the first three words?'),
@@ -990,50 +820,29 @@ T.plate=function(F){const M=isM();
     out.append(h('div',{class:'guide'},h('b',null,'Our plate'),P(msg),tips.length?P(tips.join(' ')):null),
       P(M?'Should you eat it all at once, or nibble it all morning?':'Why eat it in one go, rather than nibbling all morning?'),
       (()=>{const box=h('div',{class:'opts wide'});[{t:M?'All at once, then water':'One acid attack is better than many',ok:true},{t:M?'Nibble it all morning':'Nibbling gives saliva more to do',why:'Nibbling means one acid attack after another. Saliva never gets a break.'}].forEach(op=>{
-        const b=h('button',{class:'opt',type:'button'},op.t);b.addEventListener('click',()=>{if(b.disabled)return;if(op.ok){q.done();box.querySelectorAll('.opt').forEach(x=>x.disabled=true);b.classList.add('right');out.append(nextBtn('Time to eat →'));}else{q.miss(op.t);b.disabled=true;b.classList.add('no');toast('hmm',op.why,4600);}});box.appendChild(b);});return box;})());
+        const b=h('button',{class:'opt',type:'button'},op.t);b.addEventListener('click',()=>{if(b.disabled)return;if(op.ok){q.done();box.querySelectorAll('.opt').forEach(x=>x.disabled=true);b.classList.add('right');win('Now eat it together, in one go, and finish with a drink of water. Then wipe the bench and put things away.',null,out);}else{q.miss(op.t);b.disabled=true;b.classList.add('no');toast('hmm',op.why,4600);}});box.appendChild(b);});return box;})());
     out.scrollIntoView({behavior:'smooth',block:'start'});}
 };
-T.eat=function(F){
-  F.say('Eat your snack **in one go**, together. Then tick off the last jobs.');F.pic.appendChild(pic(ART.ICON.cheese,'mid'));
-  F.side.append(checklist([{t:'We ate our snack in one go'},{t:'We finished with a drink of water (or a bite of cheese)'},{t:'We wiped the bench and put everything away'}],()=>{F.side.append(nextBtn('Last stop: Case closed →'));}));
-};
-
-/* ===== Case 2, part 7: Case closed ===== */
-T.recall=function(F){const M=isM();F.one();
-  const Qs=M?[
-    {q:'Which part of a tooth has the nerves?',item:'Recall: pulp has nerves',concept:'Parts of a tooth',opts:[{t:'The pulp',ok:true},{t:'The enamel',why:'Enamel has no nerves. That’s why small holes don’t hurt.'},{t:'The plaque',why:'Plaque is the sticky film on top, not part of the tooth.'}]},
-    {q:'Five lollies. Which is kinder to teeth?',item:'Recall: all at once is kinder',concept:'How often you eat sugar matters',opts:[{t:'All at once',ok:true},{t:'One every hour',why:'Every time sugar arrives, a new acid attack starts.'}]},
-    {q:'After brushing at night, you should…',item:'Recall: spit, don’t rinse',concept:'Brushing routine',opts:[{t:'Spit, and not rinse',ok:true},{t:'Rinse well with water',why:'Rinsing washes the fluoride away.'},{t:'Have a little juice',why:'Nothing but water after brushing at night.'}]},
-    {q:'Which is a tooth-friendly snack?',item:'Recall: tooth-friendly snack',concept:'Tooth-friendly snacks',opts:[{t:'Cheese and carrot sticks',ok:true},{t:'Sultanas',why:'Dried fruit is sweet and sticky.'},{t:'Juice',why:'Juice has sugar and acid.'}]}]
-  :[
-    {q:'Which is erosion, not decay?',item:'Recall: erosion',concept:'Decay and erosion',opts:[{t:'Enamel worn by sipping a diet soft drink',ok:true},{t:'A hole from germs eating lollies',why:'Germs and sugar make decay.'},{t:'Plaque building up',why:'Plaque is where germs live. That leads to decay.'}]},
-    {q:'How sure are scientists that fluoride toothpaste helps prevent holes in children’s teeth?',item:'Recall: fluoride toothpaste evidence',concept:'How sure the evidence is',area:'SC',opts:[{t:'Very sure',ok:true},{t:'Not tested yet',why:'That was flossing and holes. Fluoride toothpaste has been tested in more than 50 studies.'},{t:'Very sure it doesn’t',why:'The evidence points the other way.'}]},
-    {q:'Ari moved the sweet things to mealtimes. Why did the danger time drop?',item:'Recall: fewer acid attacks',concept:'How often you eat sugar matters',opts:[{t:'Fewer separate acid attacks',ok:true},{t:'Less sugar',why:'Ari ate the same sweet things. Only the times changed.'}]},
-    {q:'What did Dr McKay’s brown stains lead to?',item:'Recall: McKay and fluoride',concept:'Fluoride protects enamel',opts:[{t:'Discovering that fluoride protects teeth',ok:true},{t:'Discovering the tooth worm',why:'Nobody has ever found one.'},{t:'Discovering sugar',why:'People knew about sugar long before.'}]}];
-  F.pic.append(quiz(Qs,()=>win('Memory check done. Now close the case.',null,F.pic)));
-};
+/* ===== Part 6: Case closed ===== */
 T.debrief=function(F){const M=isM();
   F.say('Case closed!');F.one();
-  F.pic.append(pic(ART.tooth(),'small'),h('div',{class:'solved'},
+  F.pic.append(h('div',{class:'solved'},
     h('div',{class:'sv'},h('b',null,'The worm? '),'Never existed.'),
     h('div',{class:'sv'},h('b',null,'The real culprits: '),'bacteria in plaque, fed by sugar, making acid.'),
-    h('div',{class:'sv'},h('b',null,'The defenders: '),'saliva, fluoride toothpaste, brushing, and time between snacks.')));
+    h('div',{class:'sv'},h('b',null,'The defenders: '),'saliva, fluoride toothpaste, brushing, and time between snacks.')),
+    h('div',{class:'guide'},h('b',null,'Tonight’s mission'),P('Brush for about two minutes. **Spit** out the foam. **Don’t rinse.**')));
   const side=h('div',{style:'width:100%;display:grid;gap:10px'});F.pic.append(side);
-  if(M){side.append(h('h3',{class:'sub'},'Teach Maggie'),P('Tell Maggie how a hole gets into a tooth: **first**, **next**, **last**. Use the word **because**.'),
-      P('If you like, type one sentence.','note'));
+  if(M){side.append(h('h3',{class:'sub'},'Teach Maggie'),P('Tell Maggie how a hole gets into a tooth: **first**, **next**, **last**. Use the word **because**.'),P('If you like, type one sentence.','note'));
     const ta=h('textarea',{rows:2,maxlength:300,placeholder:'A hole gets into a tooth because…','aria-label':'How a hole gets into a tooth'});ta.value=S.writing.tell||'';
     ta.addEventListener('input',()=>{S.writing.tell=ta.value;save();G.write({game:GAME,part:'Case closed',area:'EN',prompt:'How a hole gets into a tooth',text:ta.value});});side.append(ta);}
-  else{side.append(h('h3',{class:'sub'},'A letter to the Queen’s doctor, 1598'),
-      P('Write to Queen Elizabeth’s royal physician. Explain what really blackened her teeth, give **two pieces of evidence**, and say what she should do. Use **because**.'),
-      P('You might start: “Dear Royal Physician, Her Majesty’s teeth are black because…”','note'));
-    const ta=h('textarea',{rows:8,maxlength:3000,placeholder:'Dear Royal Physician,','aria-label':'Letter to the Queen’s physician'});ta.value=S.writing.letter||'';
-    ta.addEventListener('input',()=>{S.writing.letter=ta.value;save();G.write({game:GAME,part:'Case closed',area:'EN',prompt:'Letter to the Queen’s physician',text:ta.value});});side.append(ta,
+  else{side.append(h('h3',{class:'sub'},'A note to the Queen’s doctor, 1598'),
+      P('In two or three sentences, tell Queen Elizabeth’s doctor what really blackened her teeth, and what she should do. Use **because**.'));
+    const ta=h('textarea',{rows:4,maxlength:1200,placeholder:'Dear Royal Physician, Her Majesty’s teeth are black because…','aria-label':'Note to the Queen’s physician'});ta.value=S.writing.letter||'';
+    ta.addEventListener('input',()=>{S.writing.letter=ta.value;save();G.write({game:GAME,part:'Case closed',area:'EN',prompt:'Note to the Queen’s physician',text:ta.value});});side.append(ta,
       P('Then listen while Maeve teaches you how a hole gets into a tooth. Ask her “why?”','note'));}
-  const qa=h('textarea',{rows:2,maxlength:400,placeholder:'A question I still have about teeth','aria-label':'A question I still have'});qa.value=S.writing.question||'';
-  qa.addEventListener('input',()=>{S.writing.question=qa.value;save();G.write({game:GAME,part:'Case closed',area:'HPE',prompt:'A question I still have about teeth',text:qa.value});});
-  side.append(h('h3',{class:'sub'},'A question for another day'),qa,h('div',{class:'next-row'},
-    h('button',{class:'btn ghost',type:'button',on:{click:cabinet}},'Curiosity cabinet'),h('button',{class:'btn',type:'button',on:{click:finishGame}},'Finish')));
+  side.append(h('div',{class:'next-row'},h('button',{class:'btn ghost',type:'button',on:{click:cabinet}},'Curiosity cabinet'),h('button',{class:'btn',type:'button',on:{click:finishGame}},'Finish')));
 };
+
 function finishGame(){const ps=parts(),p=ps[S.part];if(p&&!S.done[p.id]){S.done[p.id]=true;G.partDone(p.title);}
   if(!S.finished){S.finished=true;G.finish();}S.part=null;save();render();}
 
@@ -1068,21 +877,18 @@ function unlocked(i){const ps=parts();return i===0||S.done[ps[i-1].id]||S.done[p
 function home(){app.textContent='';const ps=parts();
   const tile=(p,i)=>{const open=unlocked(i),done=!!S.done[p.id];
     const b=h('button',{class:'stop'+(done?' done':'')+(open?'':' locked'),type:'button',disabled:!open,style:`--c:${p.col}`},
-      h('span',{class:'num'},done?'✓':String(i+1)),h('span',{class:'st'},h('b',null,p.title),h('small',null,p.blurb)),p.kit?h('span',{class:'kit'},'Kitchen'):null);
+      h('span',{class:'num'},done?'✓':String(i+1)),h('span',{class:'st'},h('b',null,p.title),h('small',null,p.blurb+' · about '+p.mins+' min')),p.kit?h('span',{class:'kit'},'Kitchen'):null);
     if(open)b.addEventListener('click',()=>{S.part=i;S.task=0;save();G.start(GAME);G.part(p.title);render();});return b;};
-  const c1=ps.map((p,i)=>[p,i]).filter(([p])=>p.kase===1),c2=ps.map((p,i)=>[p,i]).filter(([p])=>p.kase===2);
-  const case1done=c1.every(([p])=>S.done[p.id]);
   app.append(whoBar(),h('div',{class:'panel'},h('div',{class:'intro'},pic(ART.tooth(),'mid'),h('div',null,
-    h('h2',null,'Why do teeth get holes?'),P(S.finished?'Case closed. You found the real culprits, and the defenders. Well done, detective!':'For thousands of years, people blamed a worm. Reopen the case, test it in the kitchen, and find out what really happens.'),
-    h('div',{class:'casehead'},'Case 1',h('small',null,'about 25 minutes')),h('div',{class:'stops'},c1.map(([p,i])=>tile(p,i))),
-    h('div',{class:'casehead'},'Case 2',h('small',null,case1done&&!S.done[c2[0][0].id]?'for next time':'about 30 minutes')),h('div',{class:'stops'},c2.map(([p,i])=>tile(p,i))),
+    h('h2',null,'Why do teeth get holes?'),P(S.finished?'Case closed. You found the real culprits, and the defenders. Well done, detective!':'For thousands of years, people blamed a worm. Reopen the case, find the real culprits, then make a snack your teeth will thank you for.'),
+    h('div',{class:'casehead'},'The case',h('small',null,'about 20 minutes, plus time to eat your snack')),h('div',{class:'stops'},ps.map((p,i)=>tile(p,i))),
     P(Object.keys(S.done).length&&!S.finished?'Everything is saved. You can stop and come back any time.':'','note'),
     S.finished?h('div',{class:'row'},h('button',{class:'btn ghost',type:'button',on:{click:cabinet}},'Curiosity cabinet')):null))));}
 function advance(){const ps=parts(),p=ps[S.part];S.task++;
   if(S.task>=p.tasks.length){if(!S.done[p.id]){S.done[p.id]=true;G.partDone(p.title);}save();return partEnd();}
   save();render();}
 function partEnd(){const ps=parts(),i=S.part,p=ps[i],last=i===ps.length-1;app.textContent='';
-  const endCase1=p.kase===1&&ps[i+1]&&ps[i+1].kase===2;
+  const endCase1=false;
   app.append(whoBar(),h('div',{class:'panel center'},h('div',{class:'big-tick',style:`--c:${p.col}`},'✓'),h('h2',null,endCase1?'Case 1: closed!':p.title+': done!'),
     P(endCase1?'Great detective work. Remember tonight’s secret mission. Case 2 is for next time.':'You can stop here. Everything is saved.','note'),
     h('div',{class:'row center'},h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.part=null;save();render();}}},'Case file'),
