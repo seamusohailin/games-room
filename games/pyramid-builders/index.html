@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>The Pyramid Builders</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fraunces:opsz,wght@9..144,700&display=swap">
+<style>
+/* Old Kingdom building site at dusk. Pictures first, one short line of text, hands-on moves. */
+:root{
+  --bg:#2a1c12; --bg-deep:#1a110a; --glow:#f0c062; --parch:#fbf2dc; --parch-2:#ecdcb4; --parch-3:#d8c08c;
+  --ink:#2b2117; --muted:#6f5b40; --nile:#2f7fa8; --sand:#e8cd92; --brick:#9a5b33; --stone:#d9b77a;
+  --ok:#2f7d4f; --ok-bg:#e1f1e2; --hmm-bg:#fbecd2; --clue-bg:#fff4d6; --on-dark:#f6ecd8;
+  --act:#16A08F; --act-deep:#0c6b5f;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:dark;
+}
+body.maggie{--act:#C8476A;--act-deep:#8f2c48}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:radial-gradient(ellipse at 85% -10%,rgba(240,192,98,.25),transparent 55%),radial-gradient(ellipse at 0% 110%,rgba(47,127,168,.18),transparent 50%);
+  color:var(--on-dark);font-family:var(--body);font-size:1.15rem;line-height:1.4;min-height:100vh;-webkit-text-size-adjust:100%}
+.wrap{max-width:940px;margin:0 auto;padding:max(12px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(90px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
+svg text{font-family:var(--body)}
+.top{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding-bottom:10px;margin-bottom:12px;border-bottom:2px dashed rgba(240,192,98,.35)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:46px;height:40px}
+.brand h1{color:var(--glow);font-size:clamp(1.5rem,5vw,2.2rem);line-height:1.05}
+.who{display:flex;gap:8px;flex-wrap:wrap}
+.chip-t{background:var(--bg-deep);border:2px solid var(--parch-3);border-radius:999px;padding:6px 14px;min-height:44px;font-size:.95rem;display:inline-flex;align-items:center;cursor:default}
+button.chip-t{cursor:pointer}
+button.chip-t[aria-pressed="true"]{border-color:var(--act);background:var(--act);color:#fff}
+.panel{background:var(--parch);color:var(--ink);border-radius:14px;padding:14px 16px 18px;box-shadow:0 6px 0 var(--bg-deep)}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.phead h2{color:var(--brick);font-size:clamp(1.3rem,4vw,1.7rem)}
+.back{background:none;border:2px solid var(--parch-3);border-radius:999px;padding:4px 14px;min-height:44px;cursor:pointer;color:var(--ink)}
+.dots{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.dots li{width:16px;height:16px;border-radius:50%;border:2px solid var(--parch-3);background:#fff}
+.dots li.on{background:var(--act);border-color:var(--act)}
+.bubble{display:flex;gap:10px;align-items:center;margin:10px 0 0;min-height:52px}
+.bubble .face{flex:none;width:52px;height:52px;border-radius:50%;background:var(--sand);display:grid;place-items:center;border:2px solid var(--brick)}
+.bubble .face svg{width:42px;height:42px}
+.bubble p{flex:1;margin:0;font-size:1.28rem;line-height:1.35;font-weight:700;background:#fff;border-radius:14px;padding:8px 14px;border:2px solid var(--parch-2)}
+.qbtn{flex:none;width:48px;height:48px;border-radius:50%;border:2px solid #E3BE5C;background:var(--clue-bg);font-weight:700;font-size:1.3rem;cursor:pointer;color:var(--ink)}
+.qbtn[disabled]{opacity:.35;cursor:default}
+.clue{margin:8px 0 0 62px;background:var(--clue-bg);border-radius:12px;padding:8px 12px;font-size:1.1rem}
+.stage{position:relative;margin-top:12px}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:min(92vw,720px);padding:10px 18px;border-radius:18px;font-weight:700;font-size:1.15rem;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.25);z-index:50;color:var(--ink)}
+.toast.yes{background:var(--ok-bg);color:var(--ok);border:3px solid var(--ok)}
+.toast.hmm{background:var(--hmm-bg);color:#7a4a12;border:3px solid #E3BE5C}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;margin-top:14px}
+.btn{font-family:var(--body);font-weight:700;font-size:1.22rem;background:var(--act);color:#fff;border:0;border-radius:999px;padding:.5em 1.5em;min-height:58px;cursor:pointer;box-shadow:0 4px 0 var(--act-deep)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--act-deep)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink),0 4px 0 var(--parch-3)}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.ghost[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--act),0 4px 0 var(--act-deep)}
+.note{color:var(--muted);font-size:1rem;text-align:center;margin:10px 0 0}
+/* ordering */
+.slots{display:grid;gap:10px;grid-template-columns:repeat(var(--n),1fr)}
+.slot{min-height:150px;border:3px dashed var(--parch-3);border-radius:14px;background:#fff9ea;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:4px;position:relative}
+.slot .lab{font-size:.9rem;color:var(--muted);font-weight:700;margin-bottom:2px}
+.slot.cando{border-color:var(--glow);background:#fff2cf}
+.slot.over{border-color:var(--act);background:#e9f7f5}
+.slot.right{border-style:solid;border-color:var(--ok);background:var(--ok-bg)}
+.arrow{grid-column:1/-1;height:18px;position:relative;margin-top:-4px}
+.arrow::before{content:"";position:absolute;left:4%;right:6%;top:8px;border-top:4px solid var(--parch-3)}
+.arrow::after{content:"";position:absolute;right:3%;top:1px;border:9px solid transparent;border-left:14px solid var(--parch-3)}
+.tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px;min-height:120px;padding:8px;border-radius:14px;background:rgba(216,192,140,.25)}
+.card{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;border:3px solid var(--act);border-radius:14px;padding:6px 8px;width:150px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:grab;box-shadow:0 4px 0 var(--parch-3)}
+.slot .card{width:100%;border-width:2px;box-shadow:none}
+.card svg{width:100%;height:auto;max-height:90px}
+.card b{font-size:.98rem;text-align:center;line-height:1.2}
+.card.sel{box-shadow:0 0 0 4px var(--glow)}
+.card.lift{position:fixed;z-index:60;pointer-events:none;box-shadow:0 12px 20px rgba(0,0,0,.35);width:150px}
+.card.ghosted{opacity:.3}
+.card.shake{animation:shake .45s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+/* tiles */
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:12px}
+.tile{background:#fff;border:3px solid var(--parch-2);border-radius:16px;padding:10px 12px;cursor:pointer;box-shadow:0 4px 0 var(--parch-2);display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700;font-size:1.1rem;text-align:center;color:var(--ink)}
+.tile svg{width:120px;height:80px}
+.tile.picked{border-color:var(--act);box-shadow:0 0 0 3px var(--act)}
+.tile.yes{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
+.tile.no{opacity:.4;box-shadow:none}
+/* scenes */
+.scene{border-radius:14px;overflow:hidden;background:#0f1d2a;box-shadow:inset 0 0 0 2px rgba(154,91,51,.5)}
+.scene svg{display:block;width:100%;height:auto;touch-action:manipulation}
+.slide{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--parch-2);border-radius:999px;padding:6px 16px;margin-top:12px}
+.slide span{font-weight:700;min-width:5.2em;text-align:center}
+.slide input{flex:1;height:48px;accent-color:var(--act)}
+.fact{background:#fffaf0;border:3px double var(--brick);border-radius:14px;padding:12px 16px;margin-top:12px;position:relative}
+.fact .rib{position:absolute;top:-13px;left:14px;background:var(--brick);color:#fff;font-weight:700;font-size:.85rem;padding:2px 12px;border-radius:999px}
+.fact p{margin:6px 0 0;font-size:1.12rem}
+textarea{width:100%;min-height:110px;font:inherit;font-size:1.15rem;border:2px solid var(--parch-3);border-radius:12px;padding:10px;background:#fff;color:var(--ink);margin-top:10px}
+.hot{cursor:pointer}
+/* home */
+.intro{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}
+.intro svg{width:100%;height:auto}
+@media (max-width:640px){.intro{grid-template-columns:1fr}.intro>div:first-child{max-width:220px;margin:0 auto}.card{width:120px}.slot{min-height:130px}}
+.stops{display:grid;gap:10px;margin-top:12px}
+.stop{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:10px 12px;cursor:pointer;color:var(--ink);min-height:64px}
+.stop .num{flex:none;width:40px;height:40px;border-radius:50%;background:var(--act);color:#fff;display:grid;place-items:center;font-weight:700}
+.stop.done .num{background:var(--ok)}
+.stop.locked{opacity:.45;cursor:default}
+.stop.locked .num{background:var(--parch-3)}
+.stop small{display:block;color:var(--muted);font-size:.95rem}
+.big-tick{width:84px;height:84px;margin:6px auto 10px;border-radius:50%;background:var(--ok);color:#fff;font-size:3rem;display:grid;place-items:center}
+.center{text-align:center}
+.checks{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px}
+.checks button{width:100%;display:flex;gap:12px;align-items:flex-start;text-align:left;background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);font-size:1.1rem}
+.checks .bx{flex:none;width:28px;height:28px;border:3px solid var(--act);border-radius:7px;display:grid;place-items:center;font-weight:700;color:#fff}
+.checks button[aria-pressed="true"] .bx{background:var(--act)}
+.checks small{display:block;color:var(--muted);font-size:.95rem}
+.listen{display:flex;gap:12px;align-items:center;background:#eef5fa;border:2px solid var(--nile);border-radius:14px;padding:12px;margin-top:14px;color:var(--ink);text-decoration:none}
+.listen svg{flex:none;width:44px;height:44px}
+.listen b{display:block}
+</style>
+</head>
+<body>
+<main class="wrap" id="app" aria-live="polite"></main>
+<script>
+'use strict';
+const GAME='pyramid-builders', SAVE='pyramid-builders-v1';
+const G=window.GR||{player:()=> 'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask:()=>({miss(){},hint(){},done(){},giveUp(){},missed:()=>0}),write(){},testing:()=>false};
+let PLAYER=G.player(), KEY=G.key(SAVE), S=load();
+const app=document.getElementById('app');
+function fresh(){return {done:{},part:null,task:0,easy:false,finished:false,writing:{},ticks:{}};}
+function load(){try{return Object.assign(fresh(),JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){return fresh();}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+const isM=()=>PLAYER==='maeve';
+const easy=()=>isM()&&!!S.easy;
+const AREA='HSS';
+
+/* ---------- tiny DOM helper (our own SVG strings only go in via svg:) ---------- */
+function h(tag,a,...kids){const el=document.createElement(tag);
+  if(a)for(const k in a){const v=a[k];if(v==null||v===false)continue;
+    if(k==='on'){for(const e in v)el.addEventListener(e,v[e]);}
+    else if(k==='svg'){el.innerHTML=v;}
+    else if(k==='class'){el.className=v;}
+    else if(k==='style'){el.setAttribute('style',v);}
+    else el.setAttribute(k,v===true?'':v);}
+  for(const c of kids.flat()){if(c==null||c===false)continue;el.append(c.nodeType?c:document.createTextNode(String(c)));}
+  return el;}
+const P=(t,c)=>h('p',{class:c||null},t);
+let toastT=null;
+function clearToast(){document.querySelectorAll('.toast').forEach(t=>t.remove());clearTimeout(toastT);}
+function toast(msg,kind){document.querySelectorAll('.toast').forEach(t=>t.remove());clearTimeout(toastT);
+  const t=h('div',{class:'toast '+(kind||'hmm'),role:'status'},msg);document.body.append(t);toastT=setTimeout(()=>t.remove(),kind==='yes'?2200:4200);}
+function shuffleNot(arr,avoid){let a=arr.slice();for(let n=0;n<20;n++){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  if(!avoid||a.map(x=>x.id).join()!==avoid.join())break;}return a;}
+
+/* ---------- art ---------- */
+const ART={
+  ground:(w,y)=>`<rect x="0" y="${y}" width="${w}" height="40" fill="#e8cd92"/><path d="M0 ${y}H${w}" stroke="#7a5a33" stroke-width="3"/>`,
+  mastaba(){return `<svg viewBox="0 0 160 110"><rect x="0" y="62" width="160" height="48" fill="#e8cd92"/><path d="M0 62H160" stroke="#7a5a33" stroke-width="3"/>
+    <path d="M32 62L40 34H120L128 62Z" fill="#9a5b33" stroke="#4a2c18" stroke-width="3"/>
+    <path d="M38 48H122M36 55H124M42 41H118" stroke="#6e3f22" stroke-width="2"/>
+    <rect x="76" y="62" width="8" height="26" fill="#c9a96a" stroke="#4a2c18" stroke-width="2"/>
+    <rect x="62" y="86" width="36" height="16" fill="#fff6e0" stroke="#4a2c18" stroke-width="3"/><rect x="70" y="91" width="20" height="6" fill="#4a2c18"/></svg>`;},
+  step(){let s='';const w=[120,100,80,60,42,26];w.forEach((ww,i)=>{s+=`<rect x="${80-ww/2}" y="${86-(i+1)*12}" width="${ww}" height="12" fill="${i%2?'#e3c58a':'#d9b77a'}" stroke="#5a4020" stroke-width="2.5"/>`;});
+    return `<svg viewBox="0 0 160 110"><rect x="0" y="86" width="160" height="24" fill="#e8cd92"/><path d="M0 86H160" stroke="#7a5a33" stroke-width="3"/>${s}</svg>`;},
+  bent(){return `<svg viewBox="0 0 160 110"><rect x="0" y="92" width="160" height="18" fill="#e8cd92"/><path d="M0 92H160" stroke="#7a5a33" stroke-width="3"/>
+    <path d="M14 92L38 58L80 18L122 58L146 92Z" fill="#dcc08a" stroke="#5a4020" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M38 58H122" stroke="#5a4020" stroke-width="1.5" stroke-dasharray="4 4"/></svg>`;},
+  smooth(){return `<svg viewBox="0 0 160 110"><rect x="0" y="92" width="160" height="18" fill="#e8cd92"/><path d="M0 92H160" stroke="#7a5a33" stroke-width="3"/>
+    <path d="M22 92L80 12L138 92Z" fill="#f4ecd8" stroke="#5a4020" stroke-width="3" stroke-linejoin="round"/><path d="M80 12L138 92H96Z" fill="#e2d5b6"/></svg>`;},
+  logo(){return `<svg viewBox="0 0 46 40"><path d="M3 36L23 4L43 36Z" fill="#f0c062" stroke="#1a110a" stroke-width="2"/><path d="M23 4L43 36H30Z" fill="#c99a3f"/></svg>`;},
+  face(){return `<svg viewBox="0 0 42 42"><circle cx="21" cy="23" r="13" fill="#b07a4e"/><path d="M7 21C7 9 35 9 35 21L35 30H31V19H11V30H7Z" fill="#1f1610"/><circle cx="16" cy="23" r="1.8" fill="#1f1610"/><circle cx="26" cy="23" r="1.8" fill="#1f1610"/><path d="M16 29Q21 32 26 29" stroke="#1f1610" stroke-width="2" fill="none"/><path d="M8 34Q21 44 34 34" fill="#f4ecd8"/></svg>`;},
+  // journey pictures
+  quarry(){return `<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#f3e6c4"/><path d="M0 100V30L40 20L60 34L100 16L160 30V100Z" fill="#efe6d2" stroke="#5a4020" stroke-width="3"/><rect x="58" y="56" width="44" height="28" fill="#fffaf0" stroke="#5a4020" stroke-width="3"/><path d="M110 40L128 58M124 40L132 48" stroke="#5a4020" stroke-width="5" stroke-linecap="round"/></svg>`;},
+  boat(){return `<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#dcecf5"/><path d="M0 70Q40 64 80 70T160 70V100H0Z" fill="#2f7fa8"/><path d="M22 62H138L124 80H36Z" fill="#9a5b33" stroke="#4a2c18" stroke-width="3"/><rect x="62" y="44" width="36" height="18" fill="#fffaf0" stroke="#5a4020" stroke-width="3"/><path d="M110 62V18M110 18L130 50H110" stroke="#4a2c18" stroke-width="3" fill="#f4ecd8"/></svg>`;},
+  flood(){return `<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#dcecf5"/><path d="M0 52Q40 46 80 52T160 52V100H0Z" fill="#2f7fa8"/><path d="M0 60Q40 54 80 60T160 60" stroke="#bfe0f0" stroke-width="3" fill="none"/><path d="M98 52L120 20L142 52Z" fill="#f4ecd8" stroke="#5a4020" stroke-width="3"/><path d="M14 46H62L54 56H22Z" fill="#9a5b33" stroke="#4a2c18" stroke-width="2"/><path d="M70 49H90M84 44L92 49L84 54" stroke="#4a2c18" stroke-width="3" fill="none"/></svg>`;},
+  sledge(){return `<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#f3e6c4"/><rect y="72" width="160" height="28" fill="#e8cd92"/><path d="M40 72H120L128 64" stroke="#6e3f22" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="50" y="40" width="56" height="30" fill="#fffaf0" stroke="#5a4020" stroke-width="3"/><path d="M128 64L158 48" stroke="#8a6a3a" stroke-width="3"/></svg>`;},
+  wet(){return `<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#f3e6c4"/><rect y="72" width="160" height="28" fill="#e8cd92"/><rect x="88" y="72" width="72" height="28" fill="#b89a62"/><path d="M60 72H112" stroke="#6e3f22" stroke-width="6" stroke-linecap="round"/><rect x="62" y="46" width="44" height="24" fill="#fffaf0" stroke="#5a4020" stroke-width="3"/><path d="M128 30Q120 30 122 40L128 44L138 34Q136 28 128 30Z" fill="#9a5b33" stroke="#4a2c18" stroke-width="2"/><path d="M126 46Q124 56 120 66M130 48Q130 58 128 68" stroke="#2f7fa8" stroke-width="3" fill="none"/></svg>`;},
+  ramp(){return `<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#f3e6c4"/><rect y="84" width="160" height="16" fill="#e8cd92"/><path d="M92 84L108 34H130L146 84Z" fill="#f4ecd8" stroke="#5a4020" stroke-width="3"/><path d="M6 84L108 34V84Z" fill="#c9a96a" stroke="#5a4020" stroke-width="3"/><rect x="56" y="46" width="22" height="14" fill="#fffaf0" stroke="#5a4020" stroke-width="2" transform="rotate(-26 67 53)"/></svg>`;}
+};
+function hut(){return `<svg viewBox="0 0 42 42"><path d="M4 38L21 6L38 38Z" fill="#f0c062" stroke="#1a110a" stroke-width="2"/></svg>`;}
+
+/* ---------- frame ---------- */
+function whoBar(){const w=h('div',{class:'top'},h('div',{class:'brand',svg:ART.logo()}),h('div',{class:'who'}));
+  w.firstChild.append(h('h1',null,'The Pyramid Builders'));
+  if(PLAYER!=='unknown'){const who=w.lastChild;who.append(h('span',{class:'chip-t'},'Playing: '+(isM()?'Maeve':'Maggie')));
+    if(isM()){const b=h('button',{class:'chip-t',type:'button','aria-pressed':String(!!S.easy)},S.easy?'Easier version: on':'Easier version: off');
+      b.addEventListener('click',()=>{S.easy=!S.easy;save();render();});who.append(b);}}
+  return w;}
+let HINTQ=null;
+function frame(p,say,hints){const parts=allParts();const ti=S.task;
+  const dots=h('ul',{class:'dots'},p.tasks.map((_,i)=>h('li',{class:i<=ti?'on':null})));
+  const clue=h('div',{class:'clue',hidden:true});let lvl=0;
+  const qb=h('button',{class:'qbtn',type:'button','aria-label':'Help'},'?');
+  if(!hints||!hints.length)qb.disabled=true;
+  qb.addEventListener('click',()=>{if(!hints||lvl>=hints.length)return;const hnt=hints[lvl++];if(HINTQ)HINTQ.hint();
+    if(typeof hnt==='function'){hnt();clue.hidden=true;}else{clue.hidden=false;clue.textContent=hnt;}
+    if(lvl>=hints.length)qb.disabled=true;});
+  const stage=h('div',{class:'stage'});
+  app.textContent='';
+  app.append(whoBar(),h('div',{class:'panel'},
+    h('div',{class:'phead'},h('button',{class:'back',type:'button',on:{click:()=>{S.part=null;save();render();}}},'← All parts'),h('h2',null,p.title),dots),
+    h('div',{class:'bubble'},h('span',{class:'face',svg:ART.face()}),h('p',null,say),qb),clue,stage));
+  return stage;}
+function nextBtn(stage,label){const b=h('button',{class:'btn',type:'button',on:{click:advance}},label||'Next →');stage.append(h('div',{class:'row'},b));b.focus({preventScroll:true});}
+function fact(stage,title,lines,then){const f=h('div',{class:'fact'},h('span',{class:'rib'},'True story'),h('h3',null,title),lines.map(l=>P(l)));stage.append(f);
+  if(then!==false)nextBtn(stage,then||'Next →');f.scrollIntoView({behavior:'smooth',block:'nearest'});}
+
+/* ---------- widget: put things in order ---------- */
+function orderTask(stage,o){const q=G.ask({item:o.item,concept:o.concept,area:AREA});HINTQ=q;
+  const n=o.correct.length;const items=o.items.filter(i=>o.correct.includes(i.id));
+  const slots=h('div',{class:'slots',style:'--n:'+n});const tray=h('div',{class:'tray'});
+  const place=Array(n).fill(null);let sel=null;const cards={};
+  const slotEls=o.correct.map((_,i)=>{const s=h('div',{class:'slot','data-i':i},h('span',{class:'lab'},o.labels[i]||''));
+    s.addEventListener('click',()=>{if(sel){put(sel,i);}});slots.append(s);return s;});
+  slots.append(h('div',{class:'arrow','aria-hidden':'true'}));
+  function mk(it){const c=h('div',{class:'card',role:'button',tabindex:'0','aria-label':it.label},h('div',{svg:it.art}),h('b',null,it.label));cards[it.id]=c;c.dataset.id=it.id;drag(c);
+    c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tap(it.id);}});return c;}
+  shuffleNot(items,o.correct).forEach(it=>tray.append(mk(it)));
+  function where(id){return place.indexOf(id);}
+  function tap(id){const at=where(id);if(at>=0){place[at]=null;tray.append(cards[id]);sel=null;mark();return;}
+    sel=sel===id?null:id;mark();}
+  function put(id,i){const from=where(id);if(from>=0)place[from]=null;
+    if(place[i]){const other=place[i];if(from>=0){place[from]=other;slotEls[from].append(cards[other]);}else tray.append(cards[other]);}
+    place[i]=id;slotEls[i].append(cards[id]);sel=null;mark();}
+  function mark(){Object.values(cards).forEach(c=>c.classList.toggle('sel',c.dataset.id===sel));
+    slotEls.forEach(s=>s.classList.toggle('cando',!!sel));chk.disabled=place.some(x=>!x);}
+  function drag(c){let sx,sy,moving=false,ghost=null,over=null;
+    c.addEventListener('pointerdown',e=>{if(done)return;sx=e.clientX;sy=e.clientY;moving=false;c.setPointerCapture(e.pointerId);});
+    c.addEventListener('pointermove',e=>{if(sx==null||done)return;if(!moving&&Math.hypot(e.clientX-sx,e.clientY-sy)>8){moving=true;ghost=c.cloneNode(true);ghost.classList.add('lift');document.body.append(ghost);c.classList.add('ghosted');}
+      if(moving){ghost.style.left=(e.clientX-75)+'px';ghost.style.top=(e.clientY-50)+'px';const el=document.elementFromPoint(e.clientX,e.clientY);const s=el&&el.closest?el.closest('.slot'):null;
+        if(over&&over!==s)over.classList.remove('over');over=s;if(s)s.classList.add('over');}});
+    const end=e=>{if(sx==null)return;if(moving){ghost.remove();c.classList.remove('ghosted');if(over){over.classList.remove('over');put(c.dataset.id,+over.dataset.i);}
+        else if(e.type==='pointerup'){const at=where(c.dataset.id);if(at>=0){place[at]=null;tray.append(c);mark();}}}
+      else if(e.type==='pointerup')tap(c.dataset.id);sx=null;moving=false;over=null;};
+    c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);}
+  let done=false;
+  const chk=h('button',{class:'btn',type:'button',disabled:true},'Check');
+  chk.addEventListener('click',()=>{const wrong=[];place.forEach((id,i)=>{if(id!==o.correct[i])wrong.push(i);});
+    if(!wrong.length){done=true;q.done();slotEls.forEach(s=>s.classList.add('right'));chk.remove();toast(o.yes||'Yes! That’s the right order.','yes');o.then(stage);return;}
+    q.miss(place.join(' > '));const msg=o.why(place);
+    wrong.forEach(i=>{const id=place[i];place[i]=null;const c=cards[id];tray.append(c);c.classList.add('shake');setTimeout(()=>c.classList.remove('shake'),500);});
+    place.forEach((id,i)=>{if(id)slotEls[i].classList.add('right');});mark();toast(msg,'hmm');});
+  o.example=()=>{const id=o.correct[0];put(id,0);slotEls[0].classList.add('right');toast(o.exampleMsg,'yes');};
+  stage.append(slots,tray,h('div',{class:'row'},chk));mark();return o;}
+
+/* ---------- widget: tap a tile ---------- */
+function tilesTask(stage,o){const q=o.record===false?null:G.ask({item:o.item,concept:o.concept,area:AREA});HINTQ=q;
+  const box=h('div',{class:'tiles'});const pick=o.pick||1;let chosen=[];let fin=false;
+  const tiles=o.options.map((op,i)=>{const t=h('button',{class:'tile',type:'button'},op.art?h('span',{svg:op.art}):null,op.t);
+    t.addEventListener('click',()=>{if(fin||t.classList.contains('no'))return;
+      if(pick===1){if(o.predict){fin=true;t.classList.add('picked');tiles.forEach(x=>x.disabled=true);o.then(stage,op);return;}
+        if(op.ok){fin=true;if(q)q.done();t.classList.add('yes');tiles.forEach(x=>{if(x!==t)x.classList.add('no');});toast(op.why||'Yes!','yes');o.then(stage,op);}
+        else{if(q)q.miss(op.t);t.classList.add('no');toast(op.why,'hmm');}}
+      else{if(chosen.includes(i))chosen=chosen.filter(x=>x!==i);else if(chosen.length<pick)chosen.push(i);
+        tiles.forEach((x,j)=>x.classList.toggle('picked',chosen.includes(j)));chk.disabled=chosen.length!==pick;}});
+    box.append(t);return t;});
+  stage.append(box);
+  let chk=null;
+  if(pick>1){chk=h('button',{class:'btn',type:'button',disabled:true},'Check');stage.append(h('div',{class:'row'},chk));
+    chk.addEventListener('click',()=>{const bad=chosen.filter(i=>!o.options[i].ok);
+      if(!bad.length){fin=true;if(q)q.done();chosen.forEach(i=>tiles[i].classList.add('yes'));tiles.forEach((x,j)=>{if(!chosen.includes(j))x.classList.add('no');});chk.remove();toast('Yes! Those are the two ideas experts suggest.','yes');o.then(stage);}
+      else{if(q)q.miss(bad.map(i=>o.options[i].t).join(' + '));bad.forEach(i=>tiles[i].classList.add('no'));chosen=chosen.filter(i=>!bad.includes(i));tiles.forEach((x,j)=>x.classList.toggle('picked',chosen.includes(j)));chk.disabled=true;toast(o.options[bad[0]].why,'hmm');}});}
+  return {tiles};}
+
+/* ---------- part 1: bench to mountain ---------- */
+const TOMBS=[
+  {id:'mastaba',label:'Mud bricks, flat like a bench',art:ART.mastaba()},
+  {id:'step',label:'The first giant stone tomb, with steps',art:ART.step()},
+  {id:'bent',label:'The slope changes halfway up',art:ART.bent()},
+  {id:'smooth',label:'Smooth all the way to the top',art:ART.smooth()}];
+function p1order(){const order=easy()?['mastaba','smooth']:['mastaba','step','bent','smooth'];
+  const st=frame(PART1,'Egypt’s kings needed safe tombs. Put them in order, oldest first.',[
+    'Read the words on each picture.','Which is easier to make: mud bricks or cut stone? The easier one came first.',()=>o.example()]);
+  const o=orderTask(st,{item:'Royal tombs in order, oldest first',concept:'tomb-sequence',items:TOMBS,correct:order,labels:easy()?['Oldest','Newest']:['Oldest','','','Newest'],
+    exampleMsg:'Mud bricks came first: the bench tomb. Now you do the rest.',
+    why(pl){if(pl[0]!=='mastaba')return 'Mud bricks came before stone. Which tomb is made of mud bricks?';
+      const i=pl.indexOf('step'),j=pl.indexOf('bent'),k=pl.indexOf('smooth');
+      if(i>j||i>k)return 'Steps came before smooth sides. Stepping stones are easier to stack.';
+      return 'The bent one is where the builders were still learning to make smooth sides.';},
+    then(stage){fact(stage,'From a bench to a mountain',[easy()?'First, kings were buried under a mud-brick bench. Hundreds of years later came the giant smooth pyramids.':
+      'Mastaba means “bench”. King Djoser’s Step Pyramid, about 4,650 years ago, was the first giant stone building. About 100 years later, King Khufu’s Great Pyramid was finished.']);}});}
+function p1why(){const M=isM();
+  const st=frame(PART1,M?'What changed from the bench to the steps?':'Why does the bent pyramid belong between the steps and the smooth one?',
+    M?['Look at the first two pictures. What are they made of?']:['Think about what the builders were trying to do with the sides.']);
+  const opts=M?[
+    {t:'They built with stone instead of mud bricks',ok:true,why:'Yes! Stone lasts far longer than mud bricks.'},
+    {t:'They built with wood instead of stone',ok:false,why:'Look again: the bench is mud bricks, the steps are stone.'},
+    {t:'They stopped burying kings',ok:false,why:'Both are tombs for kings. What are they made of?'}]:[
+    {t:'The builders were still learning how to make smooth sides',ok:true,why:'Yes. It’s halfway between steps and a true smooth pyramid.'},
+    {t:'It was built by people from another country',ok:false,why:'No. The same Egyptian king, Sneferu, built the bent pyramid and then a smooth one.'},
+    {t:'It is the smallest pyramid',ok:false,why:'It’s huge, over 100 metres tall. Size isn’t what puts it in the middle.'}];
+  tilesTask(st,{item:M?'Bench to steps: what changed':'Why the bent pyramid comes between',concept:M?'mud-brick-to-stone':'learning-smooth-sides',options:opts,then:s=>nextBtn(s)});}
+const PART1={id:'p1',title:'Bench to mountain',blurb:'Put the royal tombs in order',get tasks(){return easy()?[p1order]:[p1order,p1why];}};
+
+/* ---------- part 2: the pyramid with a bend ---------- */
+function pyrSvg(angle,ghost,bend,h2){const W=600,H=300,base=250,hb=170;const r=Math.PI/180;
+  let pts;if(bend){const h1=hb*0.36*Math.tan(54*r);const x1=hb-h1/Math.tan(54*r);const top=h1+x1*Math.tan(43*r);
+    pts=`${300-hb},${base} ${300-x1},${base-h1} 300,${base-top} ${300+x1},${base-h1} ${300+hb},${base}`;}
+  else{const top=Math.min(hb*Math.tan(angle*r),235);const half=top/Math.tan(angle*r);pts=`${300-half},${base} 300,${base-top} ${300+half},${base}`;}
+  let g='';if(ghost){const gt=hb*0.36*Math.tan(54*r);const gx=gt/Math.tan(54*r);g=`<path d="M${300-hb} ${base}L${300-hb+gx} ${base-gt}M${300+hb} ${base}L${300+hb-gx} ${base-gt}" stroke="#f0c062" stroke-width="5" stroke-dasharray="10 8"/>`;}
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="A pyramid seen from the side"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6b25a"/><stop offset="1" stop-color="#fbe1a6"/></linearGradient></defs>
+  <rect width="${W}" height="${H}" fill="url(#sky)"/><circle cx="520" cy="70" r="30" fill="#fff3c8"/>${ART.ground(W,base)}
+  <polygon points="${pts}" fill="#dcc08a" stroke="#5a4020" stroke-width="4" stroke-linejoin="round"/>${g}${h2||''}</svg>`;}
+function p2slope(){const M=isM();
+  const st=frame(PART2,'King Sneferu’s builders began with very steep sides. Slide to make the sides steep, up to the yellow lines.',['Slide the button to the right to make it steeper.','Make the sides match the yellow dashed lines.']);
+  const q=G.ask({item:'Set the steep starting slope',concept:'bent-pyramid-slope',area:AREA});HINTQ=q;
+  const sc=h('div',{class:'scene',svg:pyrSvg(35,true)});const rd=h('span',null,'gentle');
+  const inp=h('input',{type:'range',min:30,max:66,value:35,'aria-label':'How steep the sides are'});
+  let ok=false;
+  inp.addEventListener('input',()=>{const a=+inp.value;sc.innerHTML=pyrSvg(a,true);rd.textContent=a<42?'gentle':a<50?'in between':'steep';
+    if(!ok&&Math.abs(a-54)<=3){ok=true;q.done();toast('That’s it! Steep, like Sneferu’s builders.','yes');inp.disabled=true;build();}});
+  st.append(sc,h('div',{class:'slide'},h('span',null,'gentle'),inp,rd));
+  function build(){const b=h('button',{class:'btn',type:'button'},'Keep building ↑');st.append(h('div',{class:'row'},b));
+    b.addEventListener('click',()=>{b.parentNode.remove();sc.innerHTML=pyrSvg(54,false,true);st.querySelector('.slide').remove();
+      if(M||easy()){st.append(P('Halfway up, the builders changed something. What did they change?','note'));
+        tilesTask(st,{item:'What changed halfway up the Bent Pyramid',concept:'bent-pyramid-slope',options:[
+          {t:'They made the sides gentler',ok:true,why:'Yes! Steep at the bottom, gentler at the top.'},
+          {t:'They made the sides steeper',ok:false,why:'Look at the top part. Is it steeper or flatter than the bottom?'},
+          {t:'They stopped building',ok:false,why:'Look: it still goes all the way up to a point.'}],then:s=>reveal(s)});}
+      else{st.append(P('Halfway up, they made the sides gentler. Why might they have done that? Pick the two ideas experts suggest.','note'));
+        tilesTask(st,{item:'Why the Bent Pyramid changes slope (pick two)',concept:'bent-pyramid-reasons',pick:2,options:[
+          {t:'They worried the steep sides weren’t safe',ok:true},
+          {t:'The king wanted a funny shape',ok:false,why:'No record says that, and Sneferu’s next pyramid wasn’t bent at all.'},
+          {t:'A gentler top needs less stone, so it’s quicker to finish',ok:true},
+          {t:'They ran out of sand',ok:false,why:'Egypt has plenty of sand, and pyramids are built of stone.'}],then:s=>reveal(s)});}});}
+  function reveal(s){fact(s,'Nobody knows for sure',[M?'Experts think the builders may have worried that the steep sides weren’t safe. So they finished more gently.':
+    'Experts still argue. Many think the builders worried the steep sides weren’t safe, perhaps after cracks or trouble at another pyramid. Others say a gentler top was quicker to finish. No proof has been found either way.']);}}
+function p2next(){const M=isM();
+  const st=frame(PART2,'Sneferu built one more pyramid after the bent one. If you were his builder, which would you choose?');
+  st.append(h('div',{class:'scene',svg:pyrSvg(54,false,true)}));
+  tilesTask(st,{item:'Predict the slope of the next pyramid',concept:'red-pyramid',record:false,predict:true,options:[
+    {t:'Steep sides',art:`<svg viewBox="0 0 120 80"><path d="M30 76L60 6L90 76Z" fill="#dcc08a" stroke="#5a4020" stroke-width="3"/></svg>`,pick:'steep'},
+    {t:'Gentle sides',art:`<svg viewBox="0 0 120 80"><path d="M8 76L60 30L112 76Z" fill="#dcc08a" stroke="#5a4020" stroke-width="3"/></svg>`,pick:'gentle'}],
+    then:(s,op)=>{toast(op.pick==='gentle'?'You think like his builders!':'Brave! Let’s see what his builders chose.','yes');
+      fact(s,'The Red Pyramid',['Sneferu’s builders made his next pyramid gentle all the way up. It’s called the Red Pyramid, and it was the first true smooth pyramid.'],M?'Next →':false);
+      if(!M){s.append(P('Later, Khufu’s builders went back to steeper sides for the Great Pyramid. What does that tell us?','note'));
+        tilesTask(s,{item:'Why Khufu’s builders went steep again',concept:'red-pyramid',options:[
+          {t:'They had learnt how to build steep sides safely',ok:true,why:'Yes. Each pyramid taught the builders something.'},
+          {t:'They forgot about the bent pyramid',ok:false,why:'Builders passed on what they learnt. Going steep again shows confidence, not forgetting.'},
+          {t:'Steeper pyramids need less stone',ok:false,why:'On the same base, steeper means taller, so it needs more stone, not less.'}],then:x=>nextBtn(x)});}}});}
+const PART2={id:'p2',title:'The pyramid with a bend',blurb:'Why did the builders change their minds?',tasks:[p2slope,p2next]};
+
+/* ---------- part 3: Merer's boat ---------- */
+const STEPS=[
+  {id:'quarry',label:'Cut at the quarry',art:ART.quarry()},
+  {id:'boat',label:'Loaded onto Merer’s boat',art:ART.boat()},
+  {id:'flood',label:'Sailed on the flood to Giza',art:ART.flood()},
+  {id:'sledge',label:'Tied onto a sledge',art:ART.sledge()},
+  {id:'wet',label:'Pulled over wet sand',art:ART.wet()},
+  {id:'ramp',label:'Hauled up the ramp',art:ART.ramp()}];
+function p3journey(){const M=isM();
+  const order=easy()?['quarry','boat','ramp']:M?['quarry','boat','sledge','ramp']:['quarry','boat','flood','sledge','wet','ramp'];
+  const st=frame(PART3,M?'Merer’s crew carried white stone for the Great Pyramid. Put one block’s journey in order.':
+    'About 4,500 years ago, an inspector named Merer kept a diary of his crew carrying white stone to the Great Pyramid. Put one block’s journey in order.',
+    ['Where does a block of stone start?','The quarry is by the river, and the pyramid is far from the water.',()=>o.example()]);
+  const labels=order.map((_,i)=>i===0?'First':i===order.length-1?'Last':'');
+  const o=orderTask(st,{item:'A block’s journey from quarry to pyramid',concept:'stone-journey',items:STEPS,correct:order,labels,
+    exampleMsg:'Every block starts at the quarry, where it’s cut. Now you do the rest.',
+    why(pl){if(pl[0]!=='quarry')return 'A block has to be cut out of the rock before it can go anywhere.';
+      if(pl.indexOf('boat')>pl.indexOf('sledge')&&pl.indexOf('sledge')>=0)return 'The quarry is across the river. How does the block cross the water first?';
+      if(pl[pl.length-1]!=='ramp')return 'The ramp takes the block up the pyramid. That has to be the end of the trip.';
+      return 'Think: the boat brings it to Giza, then it’s dragged over the sand to the ramp.';},
+    then(stage){fact(stage,'Merer’s diary',[M?'Merer’s diary was found in 2013. It is the oldest writing on papyrus ever found!':
+      'Merer’s diary was found in 2013 at an old harbour by the Red Sea. It is the oldest papyrus with writing ever found. His crew of about 40 made two or three trips every ten days, about 30 blocks at a time.']);}});}
+function sandSvg(wet,n,moved){let men='';for(let i=0;i<n;i++){const x=330+i*26;men+=`<g transform="translate(${x} ${moved?-0:0})"><circle cx="0" cy="168" r="8" fill="#7a4e2e"/><path d="M0 176V200M0 184L-12 178M0 200L-8 220M0 200L8 220" stroke="#7a4e2e" stroke-width="5" stroke-linecap="round"/></g>`;}
+  const off=moved?120:0;
+  return `<svg viewBox="0 0 640 260" role="img" aria-label="A sledge with a stone block and a team pulling it"><rect width="640" height="260" fill="#fbe1a6"/>
+  <rect y="200" width="640" height="60" fill="${'#e8cd92'}"/>${wet?'<rect x="40" y="200" width="600" height="60" fill="#b89a62"/>':''}
+  <g transform="translate(${off} 0)"><path d="M60 200H210L222 190" stroke="#6e3f22" stroke-width="9" stroke-linecap="round" fill="none"/>
+  <rect x="78" y="140" width="116" height="58" fill="#fffaf0" stroke="#5a4020" stroke-width="4"/><path d="M222 190L${320} 180" stroke="#8a6a3a" stroke-width="4"/></g>
+  <g transform="translate(${off} 0)">${men}</g></svg>`;}
+function p3sand(){const M=isM();
+  const st=frame(PART3,'Some workers poured water on the sand in front of the sledge. Will that make pulling easier or harder?',['Try dry sand, then wet sand. Count the pullers each time.']);
+  tilesTask(st,{item:'Predict: water on the sand',concept:'wet-sand-sledge',record:false,predict:true,options:[{t:'Easier'},{t:'Harder'},{t:'No difference'}],then:(s)=>test(s)});
+  function test(s){
+    let wet=false;const tried={dry:false,wet:false};
+    const sc=h('div',{class:'scene',svg:sandSvg(false,0,false)});
+    const tDry=h('button',{class:'btn ghost',type:'button','aria-pressed':'true'},'Dry sand');const tWet=h('button',{class:'btn ghost',type:'button','aria-pressed':'false'},'Pour water');
+    const pull=h('button',{class:'btn',type:'button'},'Pull!');const out=P('','note');
+    tDry.addEventListener('click',()=>{wet=false;tDry.setAttribute('aria-pressed','true');tWet.setAttribute('aria-pressed','false');sc.innerHTML=sandSvg(false,0,false);out.textContent='';});
+    tWet.addEventListener('click',()=>{wet=true;tWet.setAttribute('aria-pressed','true');tDry.setAttribute('aria-pressed','false');sc.innerHTML=sandSvg(true,0,false);out.textContent='';});
+    pull.addEventListener('click',()=>{const n=wet?4:8;tried[wet?'wet':'dry']=true;sc.innerHTML=sandSvg(wet,n,false);
+      setTimeout(()=>{sc.innerHTML=sandSvg(wet,n,true);out.textContent=(wet?'Wet sand: ':'Dry sand: ')+n+' pullers moved it.';
+        if(tried.dry&&tried.wet&&!asked){asked=true;askNow();}},500);});
+    let asked=false;
+    s.append(sc,h('div',{class:'row'},tDry,tWet,pull),out);
+    function askNow(){s.append(P('Which sand needed fewer pullers?','note'));
+      tilesTask(s,{item:'Which sand needs fewer pullers',concept:'wet-sand-sledge',options:[
+        {t:'Wet sand',ok:true,why:'Yes! About half as many.'},{t:'Dry sand',ok:false,why:'Count again: 8 on dry sand, 4 on wet sand.'}],
+        then:x=>{fact(x,'A painting and a test',[M?'An old Egyptian painting shows a man pouring water in front of a sledge. Scientists tested it in 2014. Damp sand made pulling about half as hard!':
+          'A painting in an Egyptian tomb shows a man pouring water in front of a huge sledge. In 2014, scientists tested it: sand that was damp, but not muddy, made a sledge about half as hard to pull.'],M?'Next →':false);
+          if(!M)flood(x);}});}
+  }
+  function flood(x){x.append(P('Merer’s diary covers July to November. Why might his boats work then?','note'));
+    tilesTask(x,{item:'Why Merer’s boats worked July to November',concept:'nile-flood-transport',options:[
+      {t:'The Nile flooded, so boats could get close to Giza',ok:true,why:'Yes. High water let boats reach close to the building site.'},
+      {t:'It was winter there, so it was cooler',ok:false,why:'Egypt is in the north, so July is summer there. Think about the river.'},
+      {t:'The quarries were closed the rest of the year',ok:false,why:'Nothing tells us that. What happens to the Nile each year?'}],then:y=>nextBtn(y)});}}
+const PART3={id:'p3',title:'Merer’s boat',blurb:'Follow a block from the quarry to the top',get tasks(){return easy()?[p3journey]:[p3journey,p3sand];}};
+
+/* ---------- part 4: who built it? ---------- */
+function townSvg(found){const mark=(id,x,y)=>found[id]?`<circle cx="${x}" cy="${y}" r="20" fill="#2f7d4f"/><path d="M${x-9} ${y}l6 7l12-14" stroke="#fff" stroke-width="5" fill="none"/>`:
+  `<g class="hot" data-hot="${id}" tabindex="0" role="button" aria-label="Look closer"><circle cx="${x}" cy="${y}" r="26" fill="#f0c062" stroke="#1a110a" stroke-width="3"/><text x="${x}" y="${y+9}" text-anchor="middle" font-size="28" font-weight="700" fill="#1a110a">?</text></g>`;
+  return `<svg viewBox="0 0 640 320" role="img" aria-label="The builders’ town beside the Great Pyramid"><rect width="640" height="320" fill="#fbe1a6"/>
+  <path d="M330 230L470 40L610 230Z" fill="#f4ecd8" stroke="#5a4020" stroke-width="4"/><path d="M470 40L610 230H520Z" fill="#e2d5b6"/>
+  <rect y="230" width="640" height="90" fill="#e8cd92"/><path d="M0 230H640" stroke="#7a5a33" stroke-width="3"/>
+  <g fill="#c9965f" stroke="#5a3a20" stroke-width="3"><rect x="30" y="180" width="70" height="50"/><rect x="110" y="190" width="60" height="40"/><rect x="40" y="250" width="80" height="44"/></g>
+  <path d="M190 230Q230 170 270 230Z" fill="#9a5b33" stroke="#4a2c18" stroke-width="3"/><path d="M216 230Q230 210 244 230" fill="#3a2414"/><ellipse cx="300" cy="226" rx="14" ry="6" fill="#d39b52" stroke="#5a3a20" stroke-width="2"/>
+  <g fill="#c9a96a" stroke="#5a4020" stroke-width="2.5"><path d="M300 290L306 270H340L346 290Z"/><path d="M360 296L365 278H392L397 296Z"/><path d="M410 292L415 274H446L451 292Z"/></g>
+  <g stroke="#fffaf0" stroke-width="7" stroke-linecap="round"><path d="M520 276L590 276"/></g><path d="M540 266V286M556 266V286M572 266V286" stroke="#9a5b33" stroke-width="5"/>
+  ${mark('bakery',230,150)}${mark('tombs',375,252)}${mark('splint',555,250)}</svg>`;}
+const CLUES={bakery:['Bakeries','Archaeologists found bakeries big enough to feed a crowd of workers, and bones of the cattle, sheep and goats they ate.'],
+  tombs:['Workers’ tombs','The workers had their own tombs, built close to the king’s pyramid.'],
+  splint:['Mended bones','Some workers’ broken arms had been held straight with wooden splints. Someone looked after them when they were hurt.']};
+function p4clues(){const M=isM();
+  const st=frame(PART4,'Who built the Great Pyramid? Tap the three yellow clues in the builders’ town.',['Tap a yellow circle with a question mark.']);
+  const found={};const sc=h('div',{class:'scene'});const card=h('div');
+  function draw(){sc.innerHTML=townSvg(found);sc.querySelectorAll('.hot').forEach(g=>{const go=()=>open(g.getAttribute('data-hot'));g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')go();});});}
+  function open(id){found[id]=true;draw();const [t,b]=CLUES[id];card.textContent='';card.append(h('div',{class:'fact'},h('span',{class:'rib'},'Clue'),h('h3',null,t),P(b)));
+    if(Object.keys(found).length===3)decide();}
+  draw();st.append(sc,card);
+  let decided=false;
+  function decide(){if(decided)return;decided=true;st.append(P('Old books said slaves with whips built the pyramids. What do the clues show?','note'));
+    tilesTask(st,{item:'Who built the Great Pyramid',concept:'pyramid-workers',options:[
+      {t:'Teams of Egyptian workers, fed and looked after',ok:true,why:'Yes! That’s what the clues show.'},
+      {t:'Slaves with whips',ok:false,why:'That’s the old idea. Would slaves get their own tombs beside the king’s pyramid?'},
+      {t:'Soldiers from another country',ok:false,why:'The workers’ tombs show they were Egyptians.'}],
+      then:s=>fact(s,'A tax paid in work',[M?'Every Egyptian owed the king some work. Teams came to build for a while, then went home to their families.':
+        'Archaeologists think every Egyptian owed the king some work, a kind of tax paid in labour. Teams came for a while and went home, alongside skilled builders who worked all year. Many had little choice, but they were fed, housed and cared for.'])});}}
+function p4write(){const M=isM();
+  const st=frame(PART4,M?'Tell a grown-up: who built the pyramid, and which clue shows it?':'Write one sentence for the Pharaoh’s record: who built the Great Pyramid, and how do we know? Use “because”.');
+  if(M){st.append(P('You can type it too, if you like.','note'));}
+  const ta=h('textarea',{'aria-label':'Your sentence',placeholder:M?'(optional)':'The Great Pyramid was built by … because …'});ta.value=S.writing.who||'';
+  const go=h('button',{class:'btn',type:'button'},'Done →');
+  const upd=()=>{go.disabled=!M&&ta.value.trim().length<10;};
+  ta.addEventListener('input',()=>{S.writing.who=ta.value;save();upd();G.write({game:GAME,part:PART4.title,area:'EN',prompt:'Who built the Great Pyramid, and how do we know?',text:ta.value});});
+  go.addEventListener('click',()=>{if(!M&&!/because/i.test(ta.value)){toast('Add “because” and a clue that shows it.','hmm');return;}advance();});
+  st.append(ta,h('div',{class:'row'},go));upd();}
+const PART4={id:'p4',title:'Who built it?',blurb:'Find the clues in the builders’ town',tasks:[p4clues,p4write]};
+
+/* ---------- parts, flow ---------- */
+function allParts(){return [PART1,PART2,PART3,PART4];}
+function unlocked(i){const ps=allParts();return i===0||S.done[ps[i-1].id]||S.done[ps[i].id];}
+function advance(){HINTQ=null;const ps=allParts(),p=ps[S.part];S.task++;
+  if(S.task>=p.tasks.length){if(!S.done[p.id]){S.done[p.id]=true;G.partDone(p.title);}
+    if(ps.every(x=>S.done[x.id])&&!S.finished){S.finished=true;G.finish();}save();return partEnd();}
+  save();render();}
+function partEnd(){clearToast();const ps=allParts(),i=S.part,p=ps[i],last=i===ps.length-1;app.textContent='';
+  app.append(whoBar(),h('div',{class:'panel center'},h('div',{class:'big-tick'},'✓'),h('h2',null,p.title+': done!'),
+    P(last?'You’ve finished! Now build it in Minecraft.':'You can stop here. Everything is saved.','note'),
+    h('div',{class:'row'},h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.part=null;save();render();}}},'All parts'),
+      last?h('button',{class:'btn',type:'button',on:{click:()=>{S.part=null;save();challenge();}}},'The Minecraft challenge →'):
+      h('button',{class:'btn',type:'button',on:{click:()=>{S.part=i+1;S.task=0;save();G.part(ps[i+1].title);render();}}},'Next: '+ps[i+1].title+' →'))));}
+function challenge(){clearToast();window.scrollTo(0,0);app.textContent='';const M=isM();
+  const items=[
+    ['tombs','The four tombs in a row, oldest first, with a sign on each','Maeve leads'],
+    ['bent','A pyramid with a bend, and the smooth Great Pyramid with one side white, the way it looked when new','Together'],
+    ['merer','Merer’s boat bringing a block up the Nile, and a ramp to the top of the pyramid','Maggie leads'],
+    ['tour','Give a grown-up the tour: tell the story first, next, last, and say who built it and how you know','Both of you talk']];
+  const list=h('ul',{class:'checks'},items.map(([id,t,who])=>{const b=h('button',{type:'button','aria-pressed':String(!!S.ticks[id])},h('span',{class:'bx'},S.ticks[id]?'✓':''),h('span',null,t,h('small',null,who)));
+    b.addEventListener('click',()=>{S.ticks[id]=!S.ticks[id];save();b.setAttribute('aria-pressed',String(S.ticks[id]));b.firstChild.textContent=S.ticks[id]?'✓':'';});return h('li',null,b);}));
+  const pod=h('a',{class:'listen',href:'https://podcastnetwork.funkidslive.com/mysteries-of-science/inside-the-pyramids/',target:'_blank',rel:'noopener'},
+    h('span',{svg:'<svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="20" fill="#2f7fa8"/><path d="M12 24v-3a10 10 0 0 1 20 0v3" stroke="#fff" stroke-width="3" fill="none"/><rect x="9" y="23" width="6" height="10" rx="2" fill="#fff"/><rect x="29" y="23" width="6" height="10" rx="2" fill="#fff"/></svg>'}),
+    h('span',null,h('b',null,'Want to hear more? Listen: “Inside the Pyramids”'),'Mysteries of Science, from Fun Kids. Egyptologists talk about the pyramids and a mystery space hidden inside the Great Pyramid.'));
+  app.append(whoBar(),h('div',{class:'panel'},h('div',{class:'phead'},h('button',{class:'back',type:'button',on:{click:()=>render()}},'← All parts'),h('h2',null,'The Minecraft challenge')),
+    P('Build the Pharaoh’s building site together, so it teaches the story. Agree a stop time with a grown-up before you start.'),
+    list,
+    P('Handy blocks: mud bricks for the bench tomb, sandstone for pyramids, stairs and slabs for smooth slopes, and quartz for the white outside.','note'),
+    pod));}
+function home(){app.textContent='';const ps=allParts();
+  const list=h('div',{class:'stops'},ps.map((p,i)=>{const open=unlocked(i),done=!!S.done[p.id];
+    const b=h('button',{class:'stop'+(done?' done':'')+(open?'':' locked'),type:'button',disabled:!open},h('span',{class:'num'},done?'✓':String(i+1)),h('span',null,h('b',null,p.title),h('small',null,p.blurb)));
+    if(open)b.addEventListener('click',()=>{S.part=i;S.task=0;save();G.start(GAME);G.part(p.title);render();});return b;}));
+  const doneN=ps.filter(p=>S.done[p.id]).length;
+  app.append(whoBar(),h('div',{class:'panel'},h('div',{class:'intro'},h('div',{svg:ART.smooth()}),h('div',null,
+    h('h2',null,'How did Egypt build a mountain?'),
+    P(S.finished?'You did it! Now try the Minecraft challenge.':'Kings were once buried under a mud-brick bench. Then came the Great Pyramid. Four parts to find out how.'),
+    list,P(doneN&&!S.finished?'Everything is saved. You can stop and come back any time.':'','note'),
+    S.finished?h('div',{class:'row'},h('button',{class:'btn',type:'button',on:{click:challenge}},'The Minecraft challenge →')):null))));}
+function whoScreen(){app.textContent='';
+  const set=p=>{try{sessionStorage.setItem('gamesroom-player',p);localStorage.setItem('gamesroom-last-player',p);}catch(e){}PLAYER=p;KEY=G.key(SAVE);S=load();render();};
+  app.append(whoBar(),h('div',{class:'panel center'},h('h2',null,'Who is playing?'),h('div',{class:'row'},
+    h('button',{class:'btn',type:'button',style:'background:#E2557A;box-shadow:0 4px 0 #a33a58',on:{click:()=>set('maggie')}},'Maggie'),
+    h('button',{class:'btn',type:'button',style:'background:#16A08F;box-shadow:0 4px 0 #0c6b5f',on:{click:()=>set('maeve')}},'Maeve'))));}
+function playTask(){const ps=allParts();const p=ps[S.part];if(!p){S.part=null;return home();}
+  if(S.task>=p.tasks.length)S.task=0;G.start(GAME);G.part(p.title);p.tasks[S.task]();}
+function render(){window.scrollTo(0,0);clearToast();document.body.classList.toggle('maggie',PLAYER==='maggie');
+  if(PLAYER==='unknown')return whoScreen();if(S.part==null)return home();playTask();}
+window.PB={state:()=>S,go(part,task){S.part=part;S.task=task||0;save();render();},setEasy(v){S.easy=v;save();render();}};
+render();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>

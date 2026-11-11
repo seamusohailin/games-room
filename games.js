@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "pyramid-builders",
+    title: "The Pyramid Builders",
+    blurb: "Find out how Egypt went from a mud-brick bench to the Great Pyramid, then build it in Minecraft.",
+    players: ["maggie", "maeve"],
+    subject: "History",
+    source: "Story of the World, Vol. 1, chapter 4: Egyptian Pyramids (text pp. 32 to 35). Ends with a Minecraft build challenge and an optional podcast",
+    added: "2026-11-11",
+    colour: "#B7792B",
+    href: "games/pyramid-builders/index.html"
+  },
+  {
     id: "peahens-visit",
     title: "The Peahen's Visit",
     blurb: "A peahen came to visit! Find out who she is, and plan our place so she'll want to stay.",
