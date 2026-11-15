@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "midnight-sun",
+    title: "The Land of the Midnight Sun",
+    blurb: "Follow Ingrid over the mountains from Norway to Sweden, and find out why her sun shines at midnight.",
+    players: ["maggie"],
+    subject: "Geography",
+    source: "Exploring Europe (Pleasant Talk of Places), Lesson 2: The Land of the Midnight Sun, Norway and Sweden (ebook pp. 9 to 11). Opens with a refresh of the Miacademy video European Geography Made Easy (two clips, about 2½ minutes; the whole video is optional). About 20 minutes",
+    added: "2026-11-15",
+    colour: "#1F4E6B",
+    href: "games/midnight-sun/index.html"
+  },
+  {
     id: "pole-to-pole",
     title: "The Pole-to-Pole Balloon",
     blurb: "Draw the rings around the world, then fly a balloon from the tropics to the ice.",
