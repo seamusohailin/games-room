@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>The Rainbow Bridge</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
+<style>
+/* An X-ray lightbox: night-blue film, bone white, glowing cyan, coral muscle. Green, amber and red always come with words or icons. */
+:root{
+  --paper:#EEF3F8; --ink:#1B2440; --muted:#5A6378; --line:#D3DDE9;
+  --film:#0E1B33; --film-2:#16284A; --bone:#F4ECDD; --glow:#7FE3F0; --glow-d:#2A9DB0;
+  --coral:#EE7A67; --coral-d:#B94B3A; --ok:#2E9E66; --ok-bg:#E2F4EA; --amber:#E2A12F; --amber-bg:#FFF3D6; --ouch:#D2463D; --ouch-bg:#FBE6E3;
+  --brand:#2B4C9B; --brand-d:#1C3473;
+  --display:"Fredoka","Trebuchet MS",system-ui,sans-serif; --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--ink);font-family:var(--body);font-size:1.15rem;line-height:1.45;background:var(--paper);
+  background-image:radial-gradient(circle at 8% 8%,rgba(127,227,240,.25) 0 140px,transparent 141px),radial-gradient(circle at 96% 30%,rgba(238,122,103,.14) 0 170px,transparent 171px),radial-gradient(circle at 30% 98%,rgba(43,76,155,.10) 0 200px,transparent 201px);background-attachment:fixed}
+#app{max-width:1120px;margin:0 auto;padding:max(12px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(86px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:600;margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0 0 .55em}
+.note{font-size:.98rem;color:var(--muted)}
+.center{text-align:center;justify-content:center}
+
+.top{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:4px 0 10px;margin-bottom:12px;border-bottom:4px solid transparent;border-image:linear-gradient(90deg,#E8553F,#F1A43A,#F4D23C,#4FB477,#3A9AD9,#6C5BC7) 1}
+.brand{display:flex;gap:10px;align-items:center}
+.bface svg{width:50px;height:50px;display:block}
+.brand h1{font-size:clamp(1.5rem,4.2vw,2.2rem);color:var(--brand)}
+.who{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:1rem}
+.chip-t{background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 14px;min-height:44px;display:inline-flex;align-items:center}
+.chip-t[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+
+.panel{background:#fff;border:2px solid var(--line);border-radius:20px;box-shadow:0 5px 0 var(--line);padding:14px 16px 20px}
+.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.head h2{font-size:clamp(1.3rem,3.8vw,1.85rem);color:var(--brand)}
+.back{background:#fff;border:2px solid var(--brand);color:var(--brand);border-radius:999px;padding:6px 16px;min-height:46px;font-size:1rem;font-weight:700}
+.dots{display:flex;gap:7px;margin-left:auto}
+.dots i{width:16px;height:16px;border-radius:50%;background:#E8EEF5;border:2px solid var(--line)}
+.dots i.on{background:var(--ok);border-color:var(--ok)}
+.dots i.now{background:var(--glow);border-color:var(--glow-d)}
+
+.bubble{display:flex;gap:10px;align-items:center;min-height:58px}
+.bubble .face{flex:none;width:60px;height:60px}
+.bubble .face svg{width:60px;height:60px;display:block}
+.bubble p{flex:1;margin:0;font-size:1.28rem;line-height:1.32;font-weight:700;background:#EAF7FA;border-radius:16px;padding:9px 15px;border:2px solid #BFE6EE}
+.bubble p b{color:var(--brand)}
+.qbtn{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid #B98419;background:var(--amber-bg);font-weight:700;font-size:1.4rem}
+.qbtn[disabled]{opacity:.3;cursor:default}
+.clue{margin:8px 0 0 70px;background:var(--amber-bg);border-radius:12px;padding:8px 14px;font-size:1.08rem;border:2px solid #EFD27F}
+
+.stage{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start;margin-top:14px}
+.stage.one{grid-template-columns:1fr}
+@media (max-width:860px){.stage{grid-template-columns:1fr}}
+.pic{position:relative;display:grid;gap:10px;justify-items:center;min-width:0}
+.side{min-width:0;display:grid;gap:12px;align-content:start}
+.film{width:100%;background:radial-gradient(ellipse at 50% 35%,var(--film-2),var(--film) 75%);border-radius:18px;border:3px solid #263C66;box-shadow:inset 0 0 40px rgba(127,227,240,.12),0 5px 0 #0A1426;padding:8px;position:relative}
+.film svg{width:100%;height:auto;display:block}
+.film .tag{position:absolute;top:8px;left:12px;font-family:var(--display);font-size:.9rem;color:var(--glow);letter-spacing:.08em;opacity:.8}
+
+.toast{position:absolute;left:50%;top:10px;transform:translateX(-50%);max-width:94%;width:max-content;padding:10px 18px;border-radius:16px;font-weight:700;font-size:1.15rem;text-align:center;box-shadow:0 5px 0 rgba(0,0,0,.18);z-index:20;pointer-events:none}
+.toast.yes{background:var(--ok-bg);color:#1D6B44;border:3px solid var(--ok)}
+.toast.hmm{background:var(--amber-bg);color:#6d4410;border:3px solid var(--amber)}
+.toast.ouch{background:var(--ouch-bg);color:#8E2A23;border:3px solid var(--ouch)}
+
+.btn{font-family:var(--body);font-weight:700;font-size:1.15rem;background:var(--brand);color:#fff;border:0;border-radius:999px;padding:.45em 1.35em;min-height:54px;box-shadow:0 4px 0 var(--brand-d);transition:transform .08s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--brand-d)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.big{font-size:1.6rem;min-width:200px;min-height:80px;box-shadow:0 5px 0 rgba(0,0,0,.25)}
+.btn.red{background:#E0332B;box-shadow:0 4px 0 #8F1D17}
+.btn[disabled]{opacity:.4;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+.next-row{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+textarea,input[type=text],input[type=number]{border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-size:1.15rem;background:#FCFDFF}
+textarea{width:100%;line-height:1.5;resize:vertical}
+input[type=number]{width:120px;min-height:54px;font-size:1.4rem;font-weight:700;text-align:center}
+
+/* home */
+.intro{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:20px;align-items:start}
+@media (max-width:760px){.intro{grid-template-columns:1fr}}
+.intro h2{font-size:clamp(1.6rem,4.5vw,2.3rem);color:var(--brand);margin-bottom:8px}
+.casehead{display:flex;align-items:center;gap:10px;margin:14px 0 4px;font-family:var(--display);font-size:1.3rem;color:var(--brand)}
+.casehead small{font-family:var(--body);font-size:.95rem;color:var(--muted)}
+.stops{display:grid;gap:10px;margin:6px 0}
+.stop{display:flex;gap:14px;align-items:center;text-align:left;background:#fff;border:3px solid var(--c);border-radius:18px;padding:10px 14px;min-height:64px;box-shadow:0 4px 0 color-mix(in srgb,var(--c) 45%,white)}
+.stop .num{flex:none;width:44px;height:44px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:700;font-size:1.3rem}
+.stop .st{display:grid}.stop small{color:var(--muted);font-size:.98rem}
+.stop.done{background:color-mix(in srgb,var(--c) 10%,white)}
+.stop.locked{opacity:.45;cursor:default;box-shadow:none}
+.stop.vid{border-style:dashed}
+.big-tick{width:92px;height:92px;border-radius:50%;background:var(--c);color:#fff;font-size:3rem;display:grid;place-items:center;margin:10px auto}
+
+/* chips and targets */
+.chip{user-select:none;-webkit-user-select:none;touch-action:none;background:#fff;border:3px solid var(--brand);border-radius:14px;padding:8px 14px;font-weight:700;min-height:52px;display:inline-flex;gap:8px;align-items:center;box-shadow:0 3px 0 #AFC0DE}
+.chip.sel{background:#FFF6D8;border-color:#C69212}
+.chip.used{opacity:.25;pointer-events:none}
+.chip.lifted{opacity:.35}
+.chip.card{flex-direction:column;text-align:center;padding:8px;width:150px;font-size:1rem;line-height:1.2}
+.chip.card svg{width:96px;height:72px}
+.dragghost{position:fixed;z-index:9999;pointer-events:none;transform:translate(-50%,-60%) rotate(-3deg);opacity:.95;box-shadow:0 10px 24px rgba(0,0,0,.25)!important}
+.target.glow{filter:drop-shadow(0 0 6px #F2C14E)}
+.target.over{filter:drop-shadow(0 0 9px #7FE3F0)}
+.tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+/* spine labelling */
+.spinewrap{position:relative;width:100%;max-width:440px;margin:0 auto}
+.lslot{position:absolute;left:52%;width:46%;transform:translateY(-50%);min-height:54px;border:3px dashed var(--glow);border-radius:14px;background:rgba(127,227,240,.10);display:flex;align-items:center;justify-content:center;color:var(--glow);font-weight:700;font-size:.95rem;padding:4px;text-align:center}
+.lslot.full{border-style:solid;background:#fff;color:var(--ink);border-color:var(--ok)}
+.lslot .lab{display:grid;line-height:1.15}
+.lslot .lab small{font-weight:400;color:var(--muted);font-size:.85rem}
+.ztap{position:absolute;left:4%;width:44%;transform:translateY(-50%);border-radius:16px;border:3px dashed transparent;background:transparent}
+.ztap:hover,.ztap:focus-visible{border-color:var(--glow)}
+
+/* bins and slots */
+.bins{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.bin{border:3px dashed;border-radius:16px;min-height:130px;padding:8px;display:grid;align-content:start;gap:8px}
+.bin.go{background:var(--ok-bg);border-color:#8FCCAA}
+.bin.stopb{background:var(--ouch-bg);border-color:#E6A7A1}
+.bin-h{display:flex;gap:6px;align-items:center;justify-content:center;font-weight:700;font-size:1.08rem;text-align:center}
+.bin-h svg{width:34px;height:34px}
+.bin-body{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.bin-body .chip.card{width:120px}
+.bin-body .chip.card svg{width:64px;height:48px}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%}
+.slot{display:flex;flex-direction:column;align-items:center;gap:6px;background:#F2F6FB;border:3px dashed #A9BCD8;border-radius:14px;padding:6px;min-height:170px}
+.slot-n{font-family:var(--display);font-weight:600;color:var(--brand);font-size:1.1rem}
+.slot.full{border-style:solid;border-color:var(--ok);background:var(--ok-bg)}
+
+/* choices */
+.choices{display:grid;gap:10px}
+.choices.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.choice{background:#fff;border:3px solid var(--line);border-radius:16px;padding:10px 14px;min-height:56px;text-align:left;font-weight:700;display:flex;gap:10px;align-items:center}
+.choice svg{flex:none;width:90px;height:70px}
+.choice.pictop{flex-direction:column;text-align:center}
+.choice.pictop svg{width:100%;max-width:220px;height:auto}
+.choice.right{border-color:var(--ok);background:var(--ok-bg)}
+.choice.wrong{border-color:#E3B6B1;background:#FDF3F2;opacity:.75}
+.choice.on{border-color:var(--brand);background:#EAF0FB}
+
+/* sliders */
+.sliders{display:grid;gap:12px}
+.sl{display:grid;grid-template-columns:62px 1fr;gap:4px 10px;align-items:center;background:#F4F8FC;border:2px solid var(--line);border-radius:14px;padding:8px 12px}
+.sl>span{grid-row:span 2}
+.sl svg{width:58px;height:58px;display:block}
+.sl label{font-weight:700}
+.sl input{width:100%}
+input[type=range]{-webkit-appearance:none;appearance:none;height:34px;background:transparent}
+input[type=range]::-webkit-slider-runnable-track{height:14px;border-radius:7px;background:linear-gradient(90deg,#CFE1F2,#7FE3F0)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:#fff;border:4px solid var(--brand);margin-top:-11px;box-shadow:0 2px 0 var(--brand-d)}
+input[type=range]::-moz-range-track{height:14px;border-radius:7px;background:linear-gradient(90deg,#CFE1F2,#7FE3F0)}
+input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:#fff;border:4px solid var(--brand)}
+.meter{display:flex;gap:10px;align-items:center;border-radius:14px;padding:8px 12px;font-weight:700;border:3px solid}
+.meter svg{flex:none;width:44px;height:44px}
+.meter.red{background:var(--ouch-bg);border-color:var(--ouch);color:#8E2A23}
+.meter.amber{background:var(--amber-bg);border-color:var(--amber);color:#6d4410}
+.meter.green{background:var(--ok-bg);border-color:var(--ok);color:#1D6B44}
+
+/* stretch zones */
+.zones{display:grid;grid-template-columns:55fr 25fr 20fr;border-radius:12px;overflow:hidden;border:2px solid var(--line);font-weight:700;font-size:.95rem;text-align:center}
+.zones div{padding:6px 4px}
+.zones .z1{background:#EEF2F7;color:var(--muted)}
+.zones .z2{background:var(--ok-bg);color:#1D6B44;background-image:repeating-linear-gradient(45deg,transparent 0 8px,rgba(46,158,102,.12) 8px 12px)}
+.zones .z3{background:var(--ouch-bg);color:#8E2A23;background-image:repeating-linear-gradient(-45deg,transparent 0 5px,rgba(210,70,61,.15) 5px 9px)}
+.breath{width:86px;height:86px;border-radius:50%;margin:4px auto;display:grid;place-items:center;font-weight:700;font-size:.95rem;color:#1D6B44;background:var(--ok-bg);border:4px solid var(--ok)}
+.breath.go{animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(.85)}50%{transform:scale(1.12)}}
+.holdbar{height:16px;border-radius:8px;background:#E8EEF5;overflow:hidden}
+.holdbar i{display:block;height:100%;width:0;background:var(--ok);transition:width .2s}
+
+/* stack */
+.joint{cursor:pointer}
+.counter{font-family:var(--display);font-size:1.3rem;color:var(--brand);text-align:center}
+
+/* won, rules, finish */
+.won{display:flex;gap:12px;align-items:flex-start;background:var(--ok-bg);border:3px solid var(--ok);border-radius:16px;padding:12px 14px;font-size:1.12rem}
+.won .tick{flex:none;width:40px;height:40px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center}
+.won .tick svg{width:26px;height:26px}
+.won p{margin:0 0 .4em}
+.teach{background:#F3F7FC;border:2px solid var(--line);border-radius:16px;padding:12px 14px;font-size:1.12rem}
+.teach b{color:var(--brand)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%}
+.pair figure{margin:0;display:grid;gap:6px;text-align:center;font-weight:700}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.rule{display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border:3px solid var(--line);border-radius:16px;padding:10px 12px;font-weight:700;min-height:74px}
+.rule svg{flex:none;width:52px;height:52px}
+.rule.on{border-color:var(--brand);background:#EAF0FB;box-shadow:0 0 0 3px #BFD0F0}
+.promise{background:#F6FBFF;border:3px solid var(--glow-d);border-radius:18px;padding:12px 16px}
+.promise h3{color:var(--brand);margin-bottom:6px}
+.promise ul{margin:0;padding-left:1.2em;display:grid;gap:4px}
+.coach{display:flex;gap:12px;align-items:center;background:#FFF8E1;border:3px solid #E8C14C;border-radius:16px;padding:10px 14px;font-weight:700}
+.coach svg{flex:none;width:56px;height:56px}
+.vidcard{display:grid;gap:10px;justify-items:center;text-align:center;background:var(--film);color:#fff;border-radius:20px;padding:18px;border:3px solid #263C66}
+.vidcard h3{color:var(--glow);font-size:1.5rem}
+.vidcard p{margin:0;max-width:560px}
+</style>
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<script>
+/* ---------- drawings ---------- */
+const ART=(()=>{
+  const S=(vb,inner,label)=>`<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label||''}">${inner}</svg>`;
+  const T=(x,y,txt,o)=>{o=o||{};return `<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-family="Andika,sans-serif" font-weight="700" font-size="${o.s||16}" fill="${o.f||'#F4ECDD'}">${txt}</text>`;};
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+  // Bonnie, a friendly X-ray skeleton
+  const guide=S('0 0 64 64',`<circle cx="32" cy="32" r="31" fill="#16284A"/><circle cx="32" cy="32" r="29" fill="none" stroke="#7FE3F0" stroke-width="2" opacity=".7"/>
+<path d="M14 30c0-11 8-19 18-19s18 8 18 19c0 6-3 9-6 11v6c0 2-2 3-4 3H24c-2 0-4-1-4-3v-6c-3-2-6-5-6-11z" fill="#F4ECDD"/>
+<ellipse cx="24.5" cy="30" rx="5.5" ry="6.5" fill="#16284A"/><ellipse cx="39.5" cy="30" rx="5.5" ry="6.5" fill="#16284A"/>
+<circle cx="26" cy="28" r="2" fill="#7FE3F0"/><circle cx="41" cy="28" r="2" fill="#7FE3F0"/>
+<path d="M32 35l-2.6 4h5.2z" fill="#16284A"/><path d="M24 43q8 5 16 0" stroke="#16284A" stroke-width="2" fill="none" stroke-linecap="round"/>
+<path d="M28 43.8v3M32 44.6v3M36 43.8v3" stroke="#16284A" stroke-width="1.6"/>`,'Bonnie the X-ray skeleton');
+
+  // ---- the spine, side view (front of the body on the left) ----
+  function spineGeom(){
+    const vs=[];
+    const xAt=y=>{ // centreline with the three natural curves
+      if(y<135)return 150-12*Math.sin(Math.PI*(y-35)/100);
+      if(y<335)return 150+20*Math.sin(Math.PI*(y-135)/200);
+      return 150-16*Math.sin(Math.PI*(y-335)/100);};
+    let y=42;
+    for(let i=0;i<7;i++){vs.push({r:'neck',x:xAt(y+6),y,w:34,hh:11});y+=13.5;}
+    y+=2;for(let i=0;i<12;i++){vs.push({r:'upper',x:xAt(y+7),y,w:42,hh:13});y+=16.6;}
+    y+=2;for(let i=0;i<5;i++){vs.push({r:'lower',x:xAt(y+8),y,w:56,hh:16});y+=19.5;}
+    return {vs,xAt,end:y};
+  }
+  function spine(o){o=o||{};const g=spineGeom();let out='';
+    // faint body outline for orientation
+    out+=`<path d="M150 6 a34 34 0 1 1 -1 0" fill="none" stroke="#7FE3F0" stroke-width="2" opacity=".25"/>`;
+    out+=`<path d="M90 120 C70 220 70 330 92 440 M222 120 C238 220 236 330 214 440" fill="none" stroke="#7FE3F0" stroke-width="2" opacity=".18"/>`;
+    const fill=r=>o.dim&&o.dim!==r?'#5D6E8C':'#F4ECDD';
+    const hi=r=>o.hi===r;
+    g.vs.forEach(v=>{
+      if(v.r==='upper'){ // ribs sweep forward and down from the back
+        out+=`<path d="M${v.x-8} ${v.y+7} q-46 6 -64 30" fill="none" stroke="${o.dim&&o.dim!=='upper'?'#3E5070':'#CFC6B6'}" stroke-width="3" stroke-linecap="round" opacity=".85"/>`;}
+      out+=`<rect x="${v.x-v.w/2}" y="${v.y}" width="${v.w}" height="${v.hh}" rx="4" fill="${fill(v.r)}" ${hi(v.r)?'stroke="#7FE3F0" stroke-width="3"':''}/>`;
+      out+=`<path d="M${v.x+v.w/2-2} ${v.y+v.hh/2} l12 4" stroke="${fill(v.r)}" stroke-width="5" stroke-linecap="round"/>`;
+    });
+    const e=g.end+4,sx=g.xAt(e);
+    out+=`<path d="M${sx-26} ${e} L${sx+26} ${e} L${sx+6} ${e+50} L${sx-2} ${e+50}Z" fill="${o.dim?'#5D6E8C':'#E6DCCB'}"/>`;
+    out+=`<path d="M${sx+2} ${e+52} q4 10 -2 18" stroke="${o.dim?'#5D6E8C':'#E6DCCB'}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+    if(o.leaders){[['neck',88],['upper',238],['lower',388]].forEach(([r,yy])=>{const v=g.vs.find(q=>q.r===r);out+=`<path d="M${200} ${yy} H232" stroke="#7FE3F0" stroke-width="2" stroke-dasharray="4 4"/>`;});}
+    if(o.zones){ // brackets
+      [['neck',40,138],['upper',140,340],['lower',342,440]].forEach(([r,a,b])=>{out+=`<path d="M206 ${a+2} h8 V${b-2} h-8" stroke="#7FE3F0" stroke-width="3" fill="none" opacity=".8"/>`;});}
+    return S('0 0 440 540',out,'X-ray of the spine from the side');
+  }
+
+  // ---- a stack of blocks that bends one joint at a time ----
+  function stack(n,unlocked,deg){
+    let out=`<line x1="20" y1="372" x2="380" y2="372" stroke="#7FE3F0" stroke-width="2" opacity=".4"/>`;
+    // ghost of the straight stack
+    out+=`<rect x="165" y="${372-n*30}" width="70" height="${n*30}" rx="6" fill="none" stroke="#7FE3F0" stroke-dasharray="5 6" opacity=".35"/>`;
+    let x=200,y=372,a=-90;const joints=[];
+    for(let i=0;i<n;i++){
+      if(i>0&&unlocked[i-1])a+=deg; // backward bend tips the stack to the right of the picture
+      const r=a*Math.PI/180,cx=x+Math.cos(r)*13,cy=y+Math.sin(r)*13;
+      out+=`<g transform="translate(${cx} ${cy}) rotate(${a+90})"><rect x="-35" y="-12" width="70" height="24" rx="6" fill="#F4ECDD"/><path d="M33 0 h12" stroke="#F4ECDD" stroke-width="6" stroke-linecap="round"/></g>`;
+      x+=Math.cos(r)*30;y+=Math.sin(r)*30;
+      if(i<n-1)joints.push({x:x,y:y,i});
+    }
+    joints.forEach(j=>{const on=unlocked[j.i];
+      out+=`<g class="joint" data-j="${j.i}" role="button" tabindex="0" aria-label="Joint ${j.i+1}"><circle cx="${j.x}" cy="${j.y}" r="17" fill="transparent"/><circle cx="${j.x}" cy="${j.y}" r="${on?8:9}" fill="${on?'#7FE3F0':'#16284A'}" stroke="#7FE3F0" stroke-width="3"/></g>`;});
+    const total=unlocked.filter(Boolean).length*deg;
+    return S('0 0 400 390',out,'A stack of bones that bends a little at each joint');
+  }
+
+  // ---- the bridge: s = shoulders, t = upper back, h = hips, each 0 to 1 ----
+  function lumbar(s,t,h){return clamp(1-(s+t+h)/3*0.78,0.22,1);}
+  function zone(L){return L>0.66?'red':(L>0.5?'amber':'green');}
+  function bridge(s,t,h,o){o=o||{};
+    const F={x:432,y:300},Hd={x:112,y:300};
+    const H={x:372-10*h,y:300-(105+45*h)};
+    const L1=84,L2=88;const dx=F.x-H.x,dy=F.y-H.y;const d=Math.min(Math.hypot(dx,dy),L1+L2-2);
+    const base=Math.atan2(dy,dx),off=Math.acos(clamp((L1*L1+d*d-L2*L2)/(2*L1*d),-1,1));
+    const k1={x:H.x+L1*Math.cos(base-off),y:H.y+L1*Math.sin(base-off)},k2={x:H.x+L1*Math.cos(base+off),y:H.y+L1*Math.sin(base+off)};
+    const K=k1.x>k2.x?k1:k2;
+    const Sh={x:132+62*(1-s),y:300-(100+50*s+14*t)};
+    const L=lumbar(s,t,h),z=zone(L),k=clamp((L-0.42)/0.5,0,1);
+    const peakY=Math.min(Sh.y,H.y)-50-40*t;
+    const Wr={x:Sh.x+(H.x-Sh.x)*0.72,y:peakY+18},Wh={x:H.x-28,y:H.y-95};
+    const W={x:Wr.x+(Wh.x-Wr.x)*k,y:Wr.y+(Wh.y-Wr.y)*k};
+    const Cb={x:(Sh.x+W.x)/2-10,y:Math.min(Sh.y,W.y)-(10+55*t)*(1-k*0.6)};
+    const smooth={x:2*W.x-Cb.x,y:2*W.y-Cb.y},straight={x:(H.x+W.x)/2,y:(H.y+W.y)/2};
+    const Ca={x:Math.min(H.x+4,smooth.x+(straight.x-smooth.x)*k),y:smooth.y+(straight.y-smooth.y)*k};
+    const q=(p0,c,p1,tt)=>({x:(1-tt)*(1-tt)*p0.x+2*(1-tt)*tt*c.x+tt*tt*p1.x,y:(1-tt)*(1-tt)*p0.y+2*(1-tt)*tt*c.y+tt*tt*p1.y});
+    // sample the spine (the underside of the arch) and the front of the body (chest and belly, the top of the arch)
+    const pts=[];for(let i=0;i<=12;i++)pts.push(q(Sh,Cb,W,i/12));for(let i=1;i<=8;i++)pts.push(q(W,Ca,H,i/8));
+    const C={x:(Sh.x+H.x)/2,y:330};
+    const front=pts.map((p,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)];let nx=-(b.y-a.y),ny=b.x-a.x;const n=Math.hypot(nx,ny)||1;nx/=n;ny/=n;
+      if((p.x-C.x)*nx+(p.y-C.y)*ny<0){nx=-nx;ny=-ny;}const th=i<13?30:24;return {x:p.x+nx*th,y:p.y+ny*th};});
+    const zc={red:'#FF6A5E',amber:'#F2B544',green:'#5CD08F'}[z];
+    const head={x:Sh.x-2,y:Sh.y+42};
+    const pl=a=>a.map(p=>p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' L');
+    let out=o.bg===false?'':`<rect width="520" height="330" rx="16" fill="#0E1B33"/>`;
+    out+=`<line x1="20" y1="${F.y+4}" x2="500" y2="${F.y+4}" stroke="#7FE3F0" stroke-width="3" opacity=".5"/>`;
+    // soft body: torso between the spine and the front line, plus arms and legs
+    out+=`<path d="M${pl(pts)} L${pl(front.slice().reverse())}Z" fill="#7FE3F0" fill-opacity=".16" stroke="#7FE3F0" stroke-opacity=".35" stroke-width="2"/>`;
+    const limb=(a,b,w)=>`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#7FE3F0" stroke-opacity=".16" stroke-width="${w}" stroke-linecap="round"/>`;
+    out+=limb(Hd,Sh,26)+limb(H,K,32)+limb(K,F,26);
+    out+=`<line x1="${Sh.x}" y1="${Sh.y}" x2="${head.x}" y2="${head.y}" stroke="#7FE3F0" stroke-opacity=".16" stroke-width="18"/><circle cx="${head.x}" cy="${head.y}" r="25" fill="#7FE3F0" fill-opacity=".16"/>`;
+    // bones of the limbs
+    const bone=(a,b,w)=>`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#F4ECDD" stroke-width="${w||8}" stroke-linecap="round"/>`;
+    out+=bone(Hd,Sh,8)+bone(H,K,10)+bone(K,F,9);
+    out+=`<path d="M${F.x-4} ${F.y} h26" stroke="#F4ECDD" stroke-width="8" stroke-linecap="round"/><path d="M${Hd.x-2} ${Hd.y} h24" stroke="#F4ECDD" stroke-width="7" stroke-linecap="round"/>`;
+    // neck and skull, hanging between the arms
+    out+=`<line x1="${Sh.x+4}" y1="${Sh.y+6}" x2="${head.x}" y2="${head.y-12}" stroke="#F4ECDD" stroke-width="6"/>`;
+    out+=`<circle cx="${head.x}" cy="${head.y}" r="16" fill="#F4ECDD"/><circle cx="${head.x-7}" cy="${head.y+4}" r="3.6" fill="#16284A"/><path d="M${head.x-12} ${head.y+10} q4 3 8 1" stroke="#16284A" stroke-width="2" fill="none"/>`;
+    // ribs rise from the upper back towards the chest
+    for(let i=2;i<=10;i+=2){const a=pts[i],b=front[i];out+=`<path d="M${a.x} ${a.y} Q${(a.x+b.x)/2-8} ${(a.y+b.y)/2} ${b.x} ${b.y}" stroke="#CFC6B6" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/>`;}
+    // pelvis
+    out+=`<ellipse cx="${H.x+2}" cy="${H.y-6}" rx="16" ry="12" fill="#E6DCCB"/>`;
+    // upper-back vertebrae
+    for(let i=0;i<=12;i+=1.5){const p=q(Sh,Cb,W,i/12);out+=`<circle cx="${p.x}" cy="${p.y}" r="5.5" fill="#F4ECDD"/>`;}
+    // lower-back vertebrae, coloured by how hard they work
+    for(let i=1;i<=5;i++){const p=q(W,Ca,H,i/5.8);out+=`<rect x="${p.x-8}" y="${p.y-6}" width="16" height="12" rx="3" fill="${zc}" ${z==='red'?'stroke="#fff" stroke-width="1.5"':''}/>`;}
+    if(z==='red'){out+=`<g transform="translate(${W.x+30} ${W.y-14})"><path d="M0 -14 L13 10 H-13Z" fill="#FF6A5E" stroke="#fff" stroke-width="2"/>${T(0,7,'!',{s:16,f:'#fff'})}</g>`;}
+    if(o.labels){
+      const lab=(x,y,txt,a)=>T(x,y,txt,{s:15,f:'#7FE3F0',a:a||'middle'});
+      const top=front[6];
+      out+=lab(Sh.x-16,Sh.y-10,'shoulders','end')+lab(top.x,top.y-12,'upper back')+lab(W.x+34,W.y+20,'lower back','start')+lab(H.x+22,H.y-22,'hips','start');}
+    return {svg:S('0 0 520 330',out,'X-ray of a bridge'),L,z};
+  }
+
+  // small icons
+  const ic={
+    shoulder:S('0 0 60 60',`<circle cx="30" cy="30" r="28" fill="#E8F1FB"/><circle cx="24" cy="40" r="8" fill="#2B4C9B"/><path d="M24 40 L36 14" stroke="#2B4C9B" stroke-width="7" stroke-linecap="round"/><path d="M40 10 a10 10 0 0 1 8 12" stroke="#2A9DB0" stroke-width="3" fill="none"/><path d="M48 22 l-1 -6 -5 3" stroke="#2A9DB0" stroke-width="3" fill="none"/>`),
+    upper:S('0 0 60 60',`<circle cx="30" cy="30" r="28" fill="#E8F1FB"/><path d="M14 40 Q30 14 46 40" stroke="#2B4C9B" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M22 30 q-2 8 2 12 M30 25 q0 9 0 13 M38 30 q2 8 -2 12" stroke="#2A9DB0" stroke-width="3" fill="none"/>`),
+    hips:S('0 0 60 60',`<circle cx="30" cy="30" r="28" fill="#E8F1FB"/><ellipse cx="30" cy="26" rx="14" ry="9" fill="#2B4C9B"/><path d="M24 32 L18 50 M36 32 L42 50" stroke="#2B4C9B" stroke-width="6" stroke-linecap="round"/><path d="M12 16 v-6 M48 16 v-6" stroke="#2A9DB0" stroke-width="3" stroke-linecap="round"/><path d="M9 13 l3 -4 3 4 M45 13 l3 -4 3 4" stroke="#2A9DB0" stroke-width="3" fill="none"/>`),
+    sad:S('0 0 44 44',`<circle cx="22" cy="22" r="20" fill="#fff" stroke="#D2463D" stroke-width="3"/><circle cx="15" cy="18" r="2.5" fill="#D2463D"/><circle cx="29" cy="18" r="2.5" fill="#D2463D"/><path d="M13 31 q9 -7 18 0" stroke="#D2463D" stroke-width="3" fill="none" stroke-linecap="round"/>`),
+    meh:S('0 0 44 44',`<circle cx="22" cy="22" r="20" fill="#fff" stroke="#B98419" stroke-width="3"/><circle cx="15" cy="18" r="2.5" fill="#B98419"/><circle cx="29" cy="18" r="2.5" fill="#B98419"/><path d="M14 29 h16" stroke="#B98419" stroke-width="3" stroke-linecap="round"/>`),
+    happy:S('0 0 44 44',`<circle cx="22" cy="22" r="20" fill="#fff" stroke="#2E9E66" stroke-width="3"/><circle cx="15" cy="18" r="2.5" fill="#2E9E66"/><circle cx="29" cy="18" r="2.5" fill="#2E9E66"/><path d="M13 26 q9 8 18 0" stroke="#2E9E66" stroke-width="3" fill="none" stroke-linecap="round"/>`),
+    go:S('0 0 40 40',`<circle cx="20" cy="20" r="18" fill="#2E9E66"/><path d="M11 21 l6 6 12 -13" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
+    stop:S('0 0 40 40',`<path d="M13 3 h14 l10 10 v14 l-10 10 h-14 l-10 -10 v-14z" fill="#D2463D"/><rect x="10" y="17" width="20" height="6" rx="2" fill="#fff"/>`),
+    play:S('0 0 40 40',`<circle cx="20" cy="20" r="18" fill="#E0332B"/><path d="M16 12 L29 20 L16 28Z" fill="#fff"/>`),
+    breathe:S('0 0 56 56',`<circle cx="28" cy="28" r="26" fill="#E2F4EA"/><path d="M14 22 q8 -6 16 0 t14 0 M14 30 q8 -6 16 0 t14 0 M18 38 q6 -5 12 0 t10 0" stroke="#2E9E66" stroke-width="3.2" fill="none" stroke-linecap="round"/>`),
+    gentle:S('0 0 56 56',`<circle cx="28" cy="28" r="26" fill="#E8F1FB"/><path d="M10 36 q9 -16 18 0 t18 0" stroke="#2B4C9B" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M15 18 h26" stroke="#2A9DB0" stroke-width="3" stroke-dasharray="3 4"/>`),
+    rainbow:S('0 0 56 56',`<circle cx="28" cy="28" r="26" fill="#FFF8E1"/><path d="M10 40 a18 18 0 0 1 36 0" stroke="#E8553F" stroke-width="4" fill="none"/><path d="M15 40 a13 13 0 0 1 26 0" stroke="#F4D23C" stroke-width="4" fill="none"/><path d="M20 40 a8 8 0 0 1 16 0" stroke="#3A9AD9" stroke-width="4" fill="none"/>`),
+    warm:S('0 0 56 56',`<circle cx="28" cy="28" r="26" fill="#FDEDE6"/><circle cx="28" cy="13" r="5" fill="#B94B3A"/><path d="M28 18 v16 M28 34 l-9 12 M28 34 l9 12 M28 22 l-12 -8 M28 22 l12 -8" stroke="#B94B3A" stroke-width="4" stroke-linecap="round"/>`),
+    whistle:S('0 0 56 56',`<circle cx="28" cy="28" r="26" fill="#FFF3D6"/><path d="M12 26 h20 a10 10 0 1 1 -10 10 h-10z" fill="#B98419"/><circle cx="32" cy="36" r="4" fill="#FFF3D6"/><path d="M36 14 l5 -5 M41 20 l7 -2 M30 12 l1 -6" stroke="#B98419" stroke-width="3" stroke-linecap="round"/>`)
+  };
+
+  // cards for the signal sort
+  const sig={
+    pull:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#F2F6FB"/><path d="M14 46 q23 -18 46 0 t46 0" stroke="#EE7A67" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M30 24 l-10 0 M90 24 l10 0" stroke="#2E9E66" stroke-width="4" stroke-linecap="round"/><path d="M24 20 l-6 4 6 4 M96 20 l6 4 -6 4" stroke="#2E9E66" stroke-width="4" fill="none"/>`),
+    tired:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#F2F6FB"/><path d="M30 60 q10 -26 30 -26 q20 0 30 26" stroke="#F4ECDD" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M30 60 q10 -26 30 -26 q20 0 30 26" stroke="#2B4C9B" stroke-width="3" fill="none"/><path d="M18 38 q4 -4 0 -8 M102 38 q-4 -4 0 -8 M26 28 q4 -4 0 -8 M94 28 q-4 -4 0 -8" stroke="#2A9DB0" stroke-width="3" fill="none" stroke-linecap="round"/>`),
+    sharp:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#F2F6FB"/><path d="M60 12 L68 36 L94 36 L73 52 L81 78 L60 62 L39 78 L47 52 L26 36 L52 36Z" fill="#D2463D"/><path d="M52 40 l16 14 M68 40 l-16 14" stroke="#fff" stroke-width="5" stroke-linecap="round"/>`),
+    tingle:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#F2F6FB"/><path d="M40 78 V40 q0 -10 8 -10 q8 0 8 10 V30 q0 -8 8 -8 q8 0 8 8 v48" fill="#F4ECDD" stroke="#2B4C9B" stroke-width="3"/><g fill="#D2463D"><circle cx="30" cy="22" r="3"/><circle cx="86" cy="18" r="3"/><circle cx="92" cy="40" r="3"/><circle cx="24" cy="44" r="3"/><circle cx="60" cy="12" r="3"/></g><path d="M22 30 l6 -3 M94 28 l6 -4 M98 52 l7 2" stroke="#D2463D" stroke-width="3" stroke-linecap="round"/>`),
+    nextday:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#F2F6FB"/><circle cx="30" cy="28" r="12" fill="#F2B544"/><path d="M30 10 v-4 M30 50 v-4 M12 28 h-4 M52 28 h-4" stroke="#F2B544" stroke-width="3"/><path d="M66 74 q-6 -24 6 -44" stroke="#2B4C9B" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M80 50 l10 -6 M82 60 l12 0 M80 40 l8 -10" stroke="#D2463D" stroke-width="4" stroke-linecap="round"/>`),
+    dizzy:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#F2F6FB"/><circle cx="60" cy="50" r="24" fill="#F4ECDD" stroke="#2B4C9B" stroke-width="3"/><path d="M46 46 a5 5 0 1 1 6 4 M68 46 a5 5 0 1 1 6 4" stroke="#2B4C9B" stroke-width="3" fill="none"/><path d="M52 62 q8 4 16 0" stroke="#2B4C9B" stroke-width="3" fill="none"/><path d="M30 18 q30 -14 60 0" stroke="#D2463D" stroke-width="3" fill="none" stroke-dasharray="6 5"/><path d="M84 12 l6 6 -8 2" stroke="#D2463D" stroke-width="3" fill="none"/>`)
+  };
+
+  // cards for the routine
+  const step={
+    warm:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#FDEDE6"/><circle cx="60" cy="20" r="8" fill="#B94B3A"/><path d="M60 28 v24 M60 52 l-14 22 M60 52 l14 22 M60 34 l-20 -14 M60 34 l20 -14" stroke="#B94B3A" stroke-width="6" stroke-linecap="round"/><path d="M22 70 q6 -8 12 0 M86 70 q6 -8 12 0" stroke="#E2A12F" stroke-width="3" fill="none"/>`),
+    stretch:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#E8F1FB"/><circle cx="34" cy="40" r="8" fill="#2B4C9B"/><path d="M40 46 L70 62 L96 62 M70 62 L58 76 M42 50 L64 36" stroke="#2B4C9B" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M18 76 h88" stroke="#7FA6D8" stroke-width="3"/>`),
+    bridge:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#EAF7FA"/><path d="M24 74 L34 46 Q60 14 86 46 L96 74" stroke="#2A9DB0" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="38" cy="62" r="7" fill="#2A9DB0"/><path d="M14 76 h92" stroke="#7FA6D8" stroke-width="3"/>`),
+    cool:S('0 0 120 90',`<rect x="4" y="4" width="112" height="82" rx="12" fill="#EFEAF8"/><path d="M16 66 h70" stroke="#6C5BC7" stroke-width="8" stroke-linecap="round"/><circle cx="94" cy="62" r="9" fill="#6C5BC7"/><path d="M60 30 q8 -6 14 0 M78 22 q6 -5 12 0" stroke="#6C5BC7" stroke-width="3" fill="none"/>${T(30,36,'z',{s:16,f:'#6C5BC7'})}${T(42,26,'z',{s:13,f:'#6C5BC7'})}`)
+  };
+  return {S,T,guide,spine,spineGeom,stack,bridge,lumbar,zone,ic,sig,step};
+})();
+
+/* ---------- The Rainbow Bridge ---------- */
+const GAME='rainbow-bridge', SAVE='rainbow-bridge-v1', VIDEO='https://www.youtube.com/watch?v=dVhfW_PqzrQ';
+const G=window.GR||{player:()=> 'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask:()=>({miss(){},hint(){},done(){},giveUp(){}}),write(){},testing:()=>false};
+let PLAYER=G.player(); let KEY=G.key(SAVE); let S=load();
+const app=document.getElementById('app');
+const isM=()=>PLAYER==='maeve';
+const easy=()=>isM()&&S.easy;
+const SIS=()=>isM()?'Maggie':'Maeve';
+
+function defaults(){return {easy:false,done:{},part:null,task:0,writing:{},coach:null,finished:false};}
+function load(){try{return Object.assign(defaults(),JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){return defaults();}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function sisterSave(){try{const other=isM()?'maggie':'maeve';const k=KEY.replace(/::(test-)?(maeve|maggie)$/,(m,t)=>'::'+(t||'')+other);return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+
+/* tiny DOM helpers: text always goes in as text nodes; innerHTML only for the SVG strings drawn above */
+function h(tag,a,...kids){const e=document.createElement(tag);if(a)for(const k in a){const v=a[k];if(v==null||v===false)continue;
+  if(k==='class')e.className=v;else if(k==='on')for(const ev in v)e.addEventListener(ev,v[ev]);else if(k==='svg')e.innerHTML=v;else if(k==='style')e.style.cssText=v;else e.setAttribute(k,v===true?'':v);}
+  kids.flat().forEach(c=>{if(c==null||c===false)return;e.appendChild(typeof c==='string'||typeof c==='number'?document.createTextNode(String(c)):c);});return e;}
+function rich(s){const f=document.createDocumentFragment();String(s).split(/(\*\*[^*]+\*\*)/).forEach(p=>{if(!p)return;if(p.startsWith('**')&&p.endsWith('**'))f.appendChild(h('b',null,p.slice(2,-2)));else f.appendChild(document.createTextNode(p));});return f;}
+function P(s,cls){const p=h('p',{class:cls||null});p.appendChild(rich(s));return p;}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function film(svg,tag){const f=h('div',{class:'film'});f.innerHTML=svg;if(tag)f.appendChild(h('span',{class:'tag'},tag));return f;}
+function nextBtn(label,fn){return h('div',{class:'next-row'},h('button',{class:'btn',type:'button',on:{click:fn||advance}},label||'Next →'));}
+
+/* ---------- the frame every task sits in ---------- */
+let F=null, ASKS=[], HELP=null, SEL=null, TIMERS=[];
+function ask(item,concept,area){const q=G.ask({item,concept,area:area||'HPE'});ASKS.push(q);return q;}
+function later(fn,ms){const t=setTimeout(fn,ms);TIMERS.push(t);return t;}
+function every(fn,ms){const t=setInterval(fn,ms);TIMERS.push(t);return t;}
+function clearTimers(){TIMERS.forEach(t=>{clearTimeout(t);clearInterval(t);});TIMERS=[];}
+function frame(){
+  clearTimers();app.textContent='';ASKS=[];HELP=null;SEL=null;
+  const ps=parts(),p=ps[S.part],ts=p.tasks;
+  const dots=h('div',{class:'dots','aria-label':'Step '+(S.task+1)+' of '+ts.length},ts.map((_,i)=>h('i',{class:i<S.task?'on':(i===S.task?'now':'')})));
+  const head=h('div',{class:'head'},h('button',{class:'back',type:'button',on:{click:()=>{clearTimers();S.part=null;save();render();}}},'← Map'),h('h2',null,p.title),dots);
+  const sayEl=h('p');
+  const qb=h('button',{class:'qbtn',type:'button','aria-label':'Help, please',title:'Help, please',disabled:true,on:{click:showHelp}},'?');
+  const bubble=h('div',{class:'bubble'},h('div',{class:'face',svg:ART.guide}),sayEl,qb);
+  const clue=h('div',{class:'clue',hidden:true});
+  const picEl=h('div',{class:'pic'});const side=h('div',{class:'side'});
+  const stage=h('div',{class:'stage'},picEl,side);
+  app.append(whoBar(),h('div',{class:'panel'},head,bubble,clue,stage));
+  F={pic:picEl,side,stage,clue,qb,
+    say(t){sayEl.textContent='';sayEl.appendChild(rich(t));},
+    help(hints){HELP=hints&&hints.length?{hints,n:0}:null;clue.hidden=true;qb.disabled=!HELP;},
+    one(){stage.classList.add('one');}};
+  return F;
+}
+function showHelp(){if(!HELP)return;const lab=['Remember','Hint','Look'];const i=Math.min(HELP.n,HELP.hints.length-1);
+  F.clue.textContent='';F.clue.append(h('b',null,lab[Math.min(i,2)]+': '),rich(HELP.hints[i]));F.clue.hidden=false;
+  ASKS.forEach(q=>q.hint());HELP.n++;if(HELP.n>=HELP.hints.length)F.qb.disabled=true;}
+function toast(kind,text,ms){const host=F.pic;let el=host.querySelector('.toast');if(!el){el=h('div',{class:'toast',role:'status'});host.appendChild(el);}
+  el.className='toast '+kind;el.textContent='';el.appendChild(rich(text));el.hidden=false;clearTimeout(el._t);el._t=setTimeout(()=>{el.hidden=true;},ms||3200);}
+function win(text,extra,host){F.help(null);SEL=null;
+  const card=h('div',{class:'won',role:'status'},h('div',{class:'tick',svg:'<svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" stroke="currentColor" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'}),h('div',null,P(text),extra||null));
+  (host||F.side).append(card,nextBtn());
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});}
+
+/* ---------- drag, or tap then tap ---------- */
+function clearSel(){if(SEL){SEL.chip.classList.remove('sel');document.querySelectorAll('.target.glow').forEach(t=>t.classList.remove('glow'));}SEL=null;}
+function hitTest(targets,x,y){const ok=t=>t&&targets.includes(t)&&!t.classList.contains('full');
+  let el=document.elementFromPoint(x,y);while(el&&el!==document.body){if(el.classList&&el.classList.contains('target')){if(ok(el))return el;break;}el=el.parentNode;}
+  let best=null,ba=Infinity;for(const t of targets){if(!ok(t))continue;const r=t.getBoundingClientRect();if(x>=r.left-6&&x<=r.right+6&&y>=r.top-6&&y<=r.bottom+6){const a=r.width*r.height;if(a<ba){ba=a;best=t;}}}return best;}
+function draggable(chip,targets,drop){chip.classList.add('chip');chip.setAttribute('role','button');chip.tabIndex=0;
+  chip.addEventListener('pointerdown',e=>{if(chip.classList.contains('used'))return;e.preventDefault();
+    const sx=e.clientX,sy=e.clientY;let ghost=null,moved=false;try{chip.setPointerCapture(e.pointerId);}catch(_){}
+    const move=ev=>{if(!moved&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>9){moved=true;clearSel();ghost=chip.cloneNode(true);ghost.classList.add('dragghost');document.body.appendChild(ghost);chip.classList.add('lifted');}
+      if(moved){ghost.style.left=ev.clientX+'px';ghost.style.top=ev.clientY+'px';const t=hitTest(targets(),ev.clientX,ev.clientY);targets().forEach(x=>x.classList.toggle('over',x===t));}};
+    const up=ev=>{chip.removeEventListener('pointermove',move);chip.removeEventListener('pointerup',up);chip.removeEventListener('pointercancel',up);
+      if(moved){ghost.remove();chip.classList.remove('lifted');targets().forEach(x=>x.classList.remove('over'));if(ev.type==='pointerup'){const t=hitTest(targets(),ev.clientX,ev.clientY);if(t)drop(chip,t);}}
+      else if(ev.type==='pointerup'){const was=SEL&&SEL.chip===chip;clearSel();if(!was){SEL={chip,drop,targets};chip.classList.add('sel');targets().forEach(t=>{if(!t.classList.contains('full'))t.classList.add('glow');});}}};
+    chip.addEventListener('pointermove',move);chip.addEventListener('pointerup',up);chip.addEventListener('pointercancel',up);});
+  chip.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();clearSel();SEL={chip,drop,targets};chip.classList.add('sel');}});}
+function target(el){el.classList.add('target');el.addEventListener('click',()=>{if(SEL&&SEL.targets().includes(el)){const s=SEL;clearSel();s.drop(s.chip,el);}});return el;}
+
+/* A one-answer question. opts: [{t, ok, why, svg}] */
+function choose(host,opts,q,onRight,o){o=o||{};
+  const box=h('div',{class:'choices'+(o.two?' two':'')});
+  shuffle(opts).forEach(op=>{const b=h('button',{class:'choice'+(op.svg&&o.pictop?' pictop':''),type:'button'});
+    if(op.svg)b.appendChild(h('span',{svg:op.svg}));b.appendChild(h('span',null,op.t));
+    b.addEventListener('click',()=>{if(box.dataset.done)return;
+      if(op.ok){box.dataset.done=1;b.classList.add('right');q.done();onRight(op);}
+      else{b.classList.add('wrong');b.disabled=true;q.miss(op.t);toast('hmm',op.why||'Not quite. Have another look.',3800);}});
+    box.appendChild(b);});
+  host.appendChild(box);return box;}
+
+/* ---------- PART 1: the stack of bones ---------- */
+function labelSpine(f){
+  f.say(easy()?'Your backbone is a **stack of little bones**. Drag each name to its place.':'Your backbone isn’t one bone. It’s a **stack of little bones** called **vertebrae** (VER-tuh-bray). Drag each name to its part.');
+  f.help(['The neck is at the top. The lower back is just above your bottom.','Look for the **ribs**. They join on to the upper back.','Top: neck (7 bones). Middle, with ribs: upper back (12 bones). Bottom, biggest bones: lower back (5 bones).']);
+  const q=ask('Label the three parts of the spine','spine-regions','SC');
+  const wrap=h('div',{class:'spinewrap'});const fl=film(ART.spine({zones:true}),'X-RAY · SIDE VIEW');wrap.appendChild(fl);
+  const names={neck:['Neck','7 bones','cervical'],upper:['Upper back','12 bones, with ribs','thoracic'],lower:['Lower back','5 big bones','lumbar']};
+  const pos={neck:16.5,upper:44,lower:72.5};
+  const slots={};
+  const fillSlot=(r,slot)=>{slot.classList.add('full');slot.textContent='';const n=names[r];
+    slot.appendChild(h('span',{class:'lab'},h('span',null,n[0]+(isM()?'':' · '+n[2])),h('small',null,n[1])));};
+  Object.keys(pos).forEach(r=>{const s=target(h('div',{class:'lslot',style:`top:${pos[r]}%`},'?'));s.dataset.r=r;slots[r]=s;fl.appendChild(s);});
+  f.pic.appendChild(wrap);
+  const tray=h('div',{class:'tray'});let left=0;
+  const order=easy()?['upper','lower']:['neck','upper','lower'];
+  if(easy())fillSlot('neck',slots.neck);
+  shuffle(order).forEach(r=>{left++;const c=h('div',null,h('span',null,names[r][0]+(isM()?'':' · '+names[r][2])));
+    draggable(c,()=>Object.values(slots),(chip,t)=>{
+      if(t.dataset.r===r){fillSlot(r,t);chip.classList.add('used');left--;if(left===0)finishLabel();}
+      else{q.miss(names[r][0]+' on '+t.dataset.r);t.classList.add('shake');later(()=>t.classList.remove('shake'),500);
+        toast('hmm',r==='upper'?'Look for the ribs. They join the **upper back**.':(r==='neck'?'The neck holds up your head, right at the **top**.':'The lower back has the **biggest** bones, near the bottom.'));}});
+    tray.appendChild(c);});
+  f.side.append(P(isM()?'Drag, or tap a name and then tap its place.':'Drag each name to its part of the spine. The everyday name comes first, then the scientific one.','note'),tray);
+  function finishLabel(){q.done();
+    if(isM()){win('Brilliant. **Neck**, **upper back** and **lower back**. The ribs join the upper back like a cage, keeping your heart and lungs safe.');return;}
+    f.side.appendChild(P('**One more:** the lower back has the **biggest** bones. Why do you think that is?'));
+    const q2=ask('Why the lumbar vertebrae are the biggest','spine-regions','SC');
+    choose(f.side,[
+      {t:'They carry the weight of everything above them',ok:true},
+      {t:'They need room for the ribs',why:'The ribs join the **upper** back, not the lower back. Think about what the bottom of a stack has to hold up.'},
+      {t:'They are the oldest bones',why:'All your vertebrae grew at the same time. Think about what the bottom of a stack has to hold up.'}],q2,
+      ()=>win('Yes! The lower back holds up your head, arms and chest, so its bones are the biggest and strongest. The ribs join the upper back like a cage that guards your heart and lungs.'));}
+}
+
+function manyJoints(f){
+  const N=10,DEG=4;const un=new Array(N-1).fill(false);
+  f.say('Each joint between two vertebrae can only tilt **a little**. Tap the glowing dots to unlock the joints.');
+  f.help(['Tap each dark dot between the bones.','Every joint you unlock adds a small tilt. Keep going until they are all unlocked.']);
+  const q=ask('A big bend is many small bends','spine-many-joints','SC');
+  const fl=h('div',{class:'film'});f.pic.appendChild(fl);
+  const counter=h('div',{class:'counter'});f.pic.appendChild(counter);
+  let predicted=isM(), qp=null;
+  const draw=()=>{fl.innerHTML=ART.stack(N,un,DEG);fl.querySelectorAll('.joint').forEach(g=>{const go=()=>tap(+g.dataset.j);g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});});
+    const n=un.filter(Boolean).length;counter.textContent='Joints unlocked: '+n+' of '+(N-1)+(isM()?'':'  ·  whole bend: '+(n*DEG)+'°');};
+  function tap(j){if(un[j])return;if(!predicted&&un.some(Boolean)){toast('hmm','First, make your prediction →');return;}
+    un[j]=true;draw();const n=un.filter(Boolean).length;
+    if(!isM()&&n===1&&!predicted)askPredict();
+    if(n===N-1)done();}
+  draw();
+  f.side.append(P(isM()?'Watch the stack. Does one joint make a big bend, or a small one?':'Unlock one joint first and watch how far the stack tilts.','note'));
+  function askPredict(){
+    qp=ask('Predict: 9 joints at 4 degrees each','spine-many-joints','MA');
+    f.side.textContent='';
+    f.side.append(P('One joint tilted the stack **4°**. If all **9** joints tilt 4° each, how big will the whole bend be?'));
+    const inp=h('input',{type:'number',inputmode:'numeric','aria-label':'Your prediction in degrees'});
+    const go=h('button',{class:'btn',type:'button'},'Check');
+    const tryIt=()=>{const v=parseInt(inp.value,10);if(isNaN(v))return;
+      if(v===36){qp.done();predicted=true;f.side.textContent='';f.side.append(P('**36°.** Now unlock the rest and see if you were right.','note'));toast('yes','9 × 4 = 36. Let’s test it!');}
+      else{qp.miss(String(v));toast('hmm',v===40?'Careful: there are **9** joints between 10 bones.':'Try 9 lots of 4. You could count in fours.');}};
+    go.addEventListener('click',tryIt);inp.addEventListener('keydown',e=>{if(e.key==='Enter')tryIt();});
+    f.side.append(h('div',{class:'row'},inp,h('span',{style:'font-size:1.6rem;font-weight:700'},'°'),go));
+    F.help(['Each joint adds 4°. How many joints are there?','There are 9 joints. 9 lots of 4 is…','9 × 4 = 36']);
+  }
+  function done(){
+    f.side.textContent='';
+    f.side.append(P(isM()?'All unlocked! So a big back bend is made of…':'You were right: 36°. So what makes a big back bend?'));
+    choose(f.side,[
+      {t:'Lots of little bends, added together',ok:true},
+      {t:'One giant bend in one place',why:'Look at the stack. Did one joint bend a lot, or did each joint bend a little?'}],q,
+      ()=>win(isM()?'Yes! Each joint bends **a little**, and all the little bends **add up** to a big curve.':'Yes. Each joint only tilts a few degrees, but together they make a big curve. If one joint had to do all the bending, it would be squashed.'),{two:true});
+  }
+}
+
+/* ---------- PART 2: rainbow or hinge? ---------- */
+function rainbowOrHinge(f){
+  f.say(easy()?'A safe bridge is curved like a **rainbow**. A sore one folds like a **hinge**.':'Your ribs make your upper back stiff. Your lower back bends easily, so it likes to do **all** the work. That makes a **hinge**.');
+  f.help(['Look for the bridge where the curve is smooth all the way along.','The hinge has a sharp fold just above the hips. The rainbow is smooth.']);
+  const q=ask('Spot the rainbow bridge','share-the-bend');
+  const R=ART.bridge(1,1,1).svg,Hn=ART.bridge(0,0,0).svg;
+  f.one();
+  f.pic.append(h('div',{class:'teach'},P(easy()?'In a **rainbow**, lots of joints share the bend. In a **hinge**, the lower back does all the work and gets squashed.':'In a **hinge**, the little joints at the back of the lower spine get squashed together. In a **rainbow**, the shoulders, upper back and hips **share the bend**, so no joint does too much.')));
+  f.pic.append(P('**Tap the rainbow bridge.**'));
+  choose(f.pic,[
+    {t:'Bridge A',svg:R,ok:true},
+    {t:'Bridge B',svg:Hn,why:'Look at the sharp fold just above the hips, and the red bones. That’s a **hinge**: the lower back is doing all the work.'}],q,
+    ()=>win('That’s it. In the rainbow, the shoulders reach right over the hands, the upper back curves, and the hips lift. The lower back only does its share.',null,f.pic),{two:true,pictop:true});
+}
+
+function bridgeBuilder(f){
+  const ez=easy();const v={s:0,t:ez?0.6:0,h:0};
+  f.say(ez?'Slide the helpers to share the bend. Turn the lower back **green**!':'Build a rainbow. Slide the helpers until the **lower back** stops doing all the work.');
+  f.help(['Move every slider, not just one.','The lower back turns green when the **shoulders**, **upper back** and **hips** all help.','Slide all the helpers most of the way across.']);
+  const q=ask('Build a bridge that shares the bend','share-the-bend');
+  const fl=h('div',{class:'film'});f.pic.appendChild(fl);
+  const meter=h('div',{class:'meter'});f.pic.appendChild(meter);
+  let won=false, wasRed=true, held=null;
+  const draw=()=>{const b=ART.bridge(v.s,v.t,v.h,{labels:true});fl.innerHTML=b.svg;
+    meter.className='meter '+b.z;meter.textContent='';
+    meter.appendChild(h('span',{svg:b.z==='red'?ART.ic.sad:(b.z==='amber'?ART.ic.meh:ART.ic.happy)}));
+    meter.appendChild(h('span',null,b.z==='red'?'Lower back: doing ALL the work. Hinge!':(b.z==='amber'?'Lower back: still working hard. Keep sharing.':'Lower back: just its share. Rainbow!')));
+    clearTimeout(held);
+    if(b.z==='green'&&!won){held=later(()=>{if(won)return;won=true;q.done();finish();},700);}};
+  const sl=(k,label,icon,sub)=>{const inp=h('input',{type:'range',min:0,max:100,value:Math.round(v[k]*100),'aria-label':label});
+    inp.addEventListener('input',()=>{v[k]=inp.value/100;draw();});
+    return h('div',{class:'sl'},h('span',{svg:icon}),h('label',null,label),h('div',null,inp,sub?h('div',{class:'note'},sub):null));};
+  const box=h('div',{class:'sliders'});
+  box.append(sl('s','Shoulders reach back',ART.ic.shoulder,isM()?null:'arms up past your ears'));
+  if(!ez)box.append(sl('t','Upper back curves',ART.ic.upper,isM()?null:'the part with ribs'));
+  box.append(sl('h','Hips lift high',ART.ic.hips,isM()?null:'strong legs push, the front of the hips stretches'));
+  if(!isM()){
+    // Magnolia predicts first
+    const qp=ask('Predict which part takes over when the helpers are stiff','lower-back-hinge');
+    f.side.append(P('**Predict first:** if the shoulders, upper back and hips are all stiff, which part ends up doing all the bending?'));
+    choose(f.side,[
+      {t:'The lower back',ok:true},
+      {t:'The neck',why:'The neck isn’t part of the arch in a bridge. Which part bends most easily?'},
+      {t:'The knees',why:'Knees only bend one way, and that isn’t backwards. Which part of the spine bends most easily?'}],qp,
+      ()=>{f.side.textContent='';f.side.append(P('Right. The lower back takes over. Now fix it: slide the helpers.','note'),box);});
+  } else f.side.append(box);
+  draw();
+  function finish(){
+    win(isM()?'A rainbow! The shoulders, upper back and hips all help. Strong arms and legs hold the bridge up, so your lower back stays safe.':
+      'A rainbow. When the shoulders, upper back and hips all share the bend, the lower back only does its share. Notice it takes **strength** too: arms and legs push the bridge up and hold it.');}
+}
+
+/* ---------- PART 3: your body's guards ---------- */
+function stretchGuard(f){
+  f.say('Inside your muscles are tiny **stretch sensors**. If a muscle is stretched **too fast**, they make it squeeze tight to protect it.');
+  f.help(['Move the slider **slowly**, a little at a time.','Stop in the green **stretch zone**. Don’t go into the red.','Slide slowly to about three quarters of the way, then hold still and breathe.']);
+  const qFast=ask('Stretch slowly so the stretch sensors stay calm','stretch-reflex');
+  const qZone=ask('Stop at a gentle stretch, not pain','stretch-vs-pain');
+  let fastMisses=0,ouchMisses=0;
+  const fl=h('div',{class:'film'});f.pic.appendChild(fl);
+  const zones=h('div',{class:'zones','aria-hidden':'true'},h('div',{class:'z1'},'Not yet'),h('div',{class:'z2'},'Stretch zone ✓'),h('div',{class:'z3'},'Ouch zone ✋'));
+  const inp=h('input',{type:'range',min:0,max:100,value:0,'aria-label':'How far to stretch'});
+  f.pic.append(h('div',{style:'width:100%;display:grid;gap:4px'},zones,inp));
+  const breath=h('div',{class:'breath'},'breathe');const bar=h('div',{class:'holdbar'},h('i'));
+  f.side.append(P(isM()?'Slide **slowly** into the green stretch zone. Then hold still and breathe.':'This is the muscle at the front of the hip, the one that stretches in a bridge. Slide **slowly** into the green stretch zone and hold it while you breathe.'),breath,bar,P('Hold in the green for 3 seconds.','note'));
+  let guard=false,last=[{v:0,t:performance.now()}],hold=0,won=false;
+  const muscle=(x,alarm)=>{const len=150+x*1.9;const x0=60,x1=x0+len;const w=Math.max(10,30-x*0.14);
+    let o=`<line x1="20" y1="170" x2="520" y2="170" stroke="#7FE3F0" stroke-width="2" opacity=".2"/>`;
+    o+=`<rect x="${x0-40}" y="95" width="44" height="70" rx="14" fill="#F4ECDD"/><rect x="${x1-4}" y="95" width="44" height="70" rx="14" fill="#F4ECDD"/>`;
+    o+=`<path d="M${x0} 130 Q${(x0+x1)/2} ${130-w} ${x1} 130 Q${(x0+x1)/2} ${130+w} ${x0} 130Z" fill="${alarm?'#FF8A73':'#EE7A67'}" stroke="#B94B3A" stroke-width="2"/>`;
+    for(let i=1;i<8;i++){const xx=x0+len*i/8;o+=`<path d="M${xx} ${130-w*0.7} v${w*1.4}" stroke="#B94B3A" stroke-width="1.5" opacity=".55"/>`;}
+    const gx=(x0+x1)/2;
+    o+=`<g transform="translate(${gx} 130)"><ellipse rx="22" ry="11" fill="${alarm?'#FFF3D6':'#16284A'}" stroke="${alarm?'#E2A12F':'#7FE3F0'}" stroke-width="3"/>`+
+      (alarm?`<circle cx="-7" cy="-1" r="3" fill="#B94B3A"/><circle cx="7" cy="-1" r="3" fill="#B94B3A"/><path d="M-5 6 h10" stroke="#B94B3A" stroke-width="2"/>`:`<circle cx="-7" cy="0" r="2.5" fill="#7FE3F0"/><circle cx="7" cy="0" r="2.5" fill="#7FE3F0"/><path d="M-5 4 q5 3 10 0" stroke="#7FE3F0" stroke-width="2" fill="none"/>`)+`</g>`;
+    o+=ART.T(gx,96,alarm?'Whoa! Too fast!':'stretch sensor',{s:16,f:alarm?'#FFD27F':'#7FE3F0'});
+    o+=ART.T(x0-18,190,'hip bone',{s:14,f:'#C9D6EA'})+ART.T(x1+18,190,'thigh bone',{s:14,f:'#C9D6EA'});
+    return ART.S('0 0 560 210',o,'A muscle being stretched between two bones');};
+  const draw=()=>{fl.innerHTML=muscle(+inp.value,guard);};
+  draw();
+  inp.addEventListener('input',()=>{if(won)return;const now=performance.now(),val=+inp.value;
+    if(guard){inp.value=last[last.length-1].v;return;}
+    last.push({v:val,t:now});last=last.filter(p=>now-p.t<400);
+    const rate=(val-last[0].v)/Math.max(80,now-last[0].t)*1000; // units per second
+    if(rate>(easy()?150:110)&&val>15){guard=true;fastMisses++;qFast.miss('too fast');const back=Math.max(0,val-30);inp.value=back;draw();
+      toast('hmm','Too fast! The stretch sensors made the muscle **squeeze tight**. Go slowly.',3600);
+      later(()=>{guard=false;last=[{v:back,t:performance.now()}];draw();},1300);return;}
+    if(val>80){if(!inp._ouch){inp._ouch=true;ouchMisses++;qZone.miss('went into the ouch zone');toast('ouch','Ouch zone! A stretch should feel like **gentle pulling**, never pain. Ease back.',3600);}}
+    else inp._ouch=false;
+    draw();});
+  every(()=>{if(won)return;const val=+inp.value,inGreen=val>=55&&val<=80&&!guard;
+    breath.classList.toggle('go',inGreen);hold=inGreen?hold+0.25:0;bar.firstChild.style.width=Math.min(100,hold/3*100)+'%';
+    if(hold>=3){won=true;qFast.done();qZone.done();
+      win(isM()?'You did it! **Slowly**, into a **gentle pull**, then **breathe**. That’s how your muscles relax into a stretch.':
+        'Exactly. Go slowly so the stretch sensors stay calm, stop at a gentle pull, and breathe. Bouncing or forcing makes muscles fight back.');}},250);
+}
+
+function signalSort(f){
+  f.say('Your body sends **signals** when you stretch. Which ones mean “keep going gently”, and which mean “stop”?');
+  f.help(['A stretch should feel like a gentle pull. Anything that **hurts** or feels strange means stop.','Pain, tingling, dizziness, or a sore back the next day: stop, and tell a grown-up.']);
+  const all=[
+    {k:'pull',t:'A gentle pulling feeling',go:true,why:'A gentle pull is exactly what a stretch should feel like.'},
+    {k:'tired',t:'Arms and legs tired from holding a bridge',go:true,why:'Tired, shaky muscles just need a rest. Come down, rest, and try again later.'},
+    {k:'sharp',t:'A sharp pain',go:false,why:'Pain is a stop signal. Come out of the stretch and tell a grown-up.'},
+    {k:'tingle',t:'Tingling or pins and needles',go:false,why:'Tingling can mean a nerve is being squeezed or stretched. Stop and tell a grown-up.'},
+    {k:'nextday',t:'My back still hurts the next day',go:false,why:'A sore back that lasts is a stop signal. Always tell a grown-up, and rest it.'},
+    {k:'dizzy',t:'Feeling dizzy, upside down',go:false,why:'Come down slowly, sit and breathe. Tell a grown-up if it doesn’t pass.'}];
+  const pick=easy()?['pull','sharp','nextday']:(isM()?['pull','tired','sharp','tingle','nextday']:['pull','tired','sharp','tingle','nextday','dizzy']);
+  const cards=shuffle(all.filter(c=>pick.includes(c.k)));
+  const qs={};cards.forEach(c=>qs[c.k]=ask('Signal: '+c.t,'stretch-vs-pain'));
+  F.one();
+  const binGo=target(h('div',{class:'bin go'},h('div',{class:'bin-h',svg:ART.ic.go}),h('div',{class:'bin-body'})));
+  binGo.firstChild.appendChild(h('span',null,'OK: keep going gently'));binGo.dataset.go='1';
+  const binStop=target(h('div',{class:'bin stopb'},h('div',{class:'bin-h',svg:ART.ic.stop}),h('div',{class:'bin-body'})));
+  binStop.firstChild.appendChild(h('span',null,'Stop, and tell a grown-up'));binStop.dataset.go='0';
+  const tray=h('div',{class:'tray'});let left=cards.length;
+  cards.forEach(c=>{const chip=h('div',{class:'card'},h('span',{svg:ART.sig[c.k]}),h('span',null,c.t));chip.classList.add('card');
+    draggable(chip,()=>[binGo,binStop],(ch,bin)=>{const ok=(bin.dataset.go==='1')===c.go;
+      if(ok){qs[c.k].done();ch.classList.add('used');const copy=h('div',{class:'chip card'},h('span',{svg:ART.sig[c.k]}),h('span',null,c.t));bin.lastChild.appendChild(copy);
+        toast('yes',c.why,3400);left--;if(left===0)later(()=>win(isM()?'Super sorting. **Gentle pull: OK. Pain: stop and tell.**':'All sorted. A gentle pull or tired muscles are fine. Pain, tingling, dizziness or a sore back that lasts mean **stop, and tell a grown-up**.',null,F.side),600);}
+      else{qs[c.k].miss(bin.dataset.go==='1'?'put in OK':'put in stop');bin.classList.add('shake');later(()=>bin.classList.remove('shake'),500);
+        toast('hmm',c.go?'Is that really a stop signal? Think about how a stretch should feel.':'Hmm. Would that feel like a gentle pull?',3200);}});
+    tray.appendChild(chip);});
+  f.pic.append(tray,h('div',{class:'bins'},binGo,binStop));
+}
+
+function getBendier(f){
+  if(isM()){
+    f.say('How do bodies get **bendier**?');
+    f.help(['Think about what the stretch sensors do if you force a stretch.']);
+    const q=ask('How flexibility grows: gently and often','stretch-tolerance');
+    f.pic.appendChild(film(ART.bridge(.75,.7,.75).svg,'GETTING BENDIER'));
+    choose(f.side,[
+      {t:'Gentle stretches, most days, for weeks',svg:ART.ic.gentle,ok:true},
+      {t:'Push really hard once, even if it hurts',svg:ART.sig.sharp,why:'Forcing it hurts, and the stretch sensors make the muscle fight back. Bodies get bendy slowly.'}],q,
+      ()=>win('Yes! A little bit, gently, most days. Every body is different, so compare yourself with **you**, not your sister.'));
+    return;}
+  f.say('Scientists tested people before and after **weeks** of stretching. What do you think they found?');
+  f.help(['Their muscles were measured with ultrasound, a kind of picture of the inside of the body.','The muscle fibres were the same length. Something else changed.']);
+  const q=ask('What changes after weeks of stretching','stretch-tolerance');
+  f.pic.appendChild(film(ART.bridge(.75,.7,.75).svg,'GETTING BENDIER'));
+  f.pic.appendChild(h('div',{class:'teach'},P('In 2025, a team of scientists put together the results of **65** experiments. They looked at what changes inside the body when people stretch for weeks.')));
+  choose(f.side,[
+    {t:'The muscle fibres stayed the same length. The brain got more comfortable with the stretch, and the muscles got a little less stiff.',ok:true},
+    {t:'The muscle fibres grew much longer.',why:'That’s what most people guess! But when they measured, the fibres were the **same length**. Something else changed.'},
+    {t:'Nothing changed at all.',why:'People did get bendier. The question is what changed inside them.'}],q,
+    ()=>win('Yes. Scientists are still studying this, but it looks as if the **nervous system** learns that the stretch is safe, and the muscles get a bit less stiff. That’s why gentle, regular practice works better than forcing it. Every body is different, so compare yourself with **you**.'));
+}
+
+/* ---------- PART 4: the safe stretcher ---------- */
+function routine(f){
+  f.say('Put a safe stretching session **in order**.');
+  f.help(['What gets your body ready to move?','Warm muscles stretch more easily. Gentle stretches come before a bridge.','Warm up → gentle stretches → bridge → cool down.']);
+  const q=ask('Order a safe stretching session','warm-up-first');
+  const items=[
+    {k:'warm',t:'Warm up: jog, star jumps',n:1},
+    {k:'stretch',t:'Gentle stretches',n:2},
+    {k:'bridge',t:'Bridge, with a grown-up nearby',n:3},
+    {k:'cool',t:'Cool down, and say how it felt',n:4}].filter(i=>!easy()||i.k!=='cool');
+  F.one();
+  const slots=h('div',{class:'slots'});const sl=items.map((_,i)=>{const s=target(h('div',{class:'slot'},h('span',{class:'slot-n'},String(i+1))));s.dataset.n=i+1;slots.appendChild(s);return s;});
+  const tray=h('div',{class:'tray'});let left=items.length;
+  shuffle(items).forEach(it=>{const chip=h('div',{class:'card'},h('span',{svg:ART.step[it.k]}),h('span',null,it.t));chip.classList.add('card');
+    draggable(chip,()=>sl,(ch,s)=>{if(+s.dataset.n===it.n){s.classList.add('full');s.appendChild(h('div',{class:'chip card'},h('span',{svg:ART.step[it.k]}),h('span',null,it.t)));ch.classList.add('used');left--;
+        if(left===0){q.done();later(()=>win(isM()?'Perfect. **Warm up first**: warm muscles stretch more easily.':'Perfect. Warm up first, because warm muscles stretch more easily. Before running and jumping, bouncy moving warm-ups work better than long still stretches. Save long holds for afterwards.',null,F.side),300);}}
+      else{q.miss(it.t+' in place '+s.dataset.n);s.classList.add('shake');later(()=>s.classList.remove('shake'),500);
+        toast('hmm',it.k==='warm'?'Warming up gets your body ready. When should that happen?':(it.k==='cool'?'Cooling down is how you finish.':'Think: what should come before a bridge?'));}});
+    tray.appendChild(chip);});
+  f.pic.append(slots,tray);
+}
+
+function remember(f){
+  // recall with the answers hidden
+  const step=S._rem||0;
+  if(step===0){
+    f.say('No peeking! **Tap the part of the spine** that likes to do too much work in a back bend.');
+    f.help(['It bends backwards very easily.','It has the five biggest bones, just above your bottom.']);
+    const q=ask('Recall: which part takes over in a hinge','lower-back-hinge');
+    const wrap=h('div',{class:'spinewrap'});const fl=film(ART.spine({}),'X-RAY · SIDE VIEW');wrap.appendChild(fl);
+    const zone=(r,top,hgt)=>{const b=h('button',{class:'ztap',type:'button',style:`top:${top}%;height:${hgt}%`,'aria-label':'This part'});
+      b.addEventListener('click',()=>{if(fl.dataset.done)return;
+        if(r==='lower'){fl.dataset.done=1;q.done();fl.innerHTML=ART.spine({hi:'lower',dim:'lower'});F.help(null);
+          const card=h('div',{class:'won',role:'status'},h('div',{class:'tick',svg:'<svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" stroke="currentColor" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'}),
+            h('div',null,P(isM()?'Yes, the **lower back**. It bends easily, so it needs helpers.':'Yes, the **lower back** (lumbar). It bends easily, so it tends to take over unless the shoulders, upper back and hips help.')));
+          f.side.append(card,nextBtn('Next →',()=>{S._rem=1;save();render();}));}
+        else{q.miss(r);toast('hmm',r==='upper'?'That’s the upper back. The ribs make it **stiff**, so it doesn’t take over.':'That’s the neck. Look lower down.');}});
+      fl.appendChild(b);};
+    zone('neck',16.5,19);zone('upper',44,36);zone('lower',72.5,19);
+    f.pic.appendChild(wrap);
+    f.side.append(P(isM()?'Tap a part of the X-ray.':'The labels are hidden this time. Tap the right part of the X-ray.','note'));
+    return;}
+  // second recall: who are the helpers?
+  f.say('Which **three helpers** share the bend? Tap all three.');
+  f.help(['One is at the top of your arms.','Shoulders, upper back and… the part that lifts high in a bridge.']);
+  const q=ask('Recall: the three helpers that share the bend','share-the-bend');
+  const opts=[['Shoulders',true,ART.ic.shoulder],['Upper back',true,ART.ic.upper],['Hips',true,ART.ic.hips],['Ears',false,null],['Elbows',false,null]].filter(o=>!easy()||o[0]!=='Elbows');
+  const chosen=new Set();const box=h('div',{class:'choices two'});
+  shuffle(opts).forEach(([t,ok,svg])=>{const b=h('button',{class:'choice',type:'button','aria-pressed':'false'});if(svg)b.appendChild(h('span',{svg}));b.appendChild(h('span',null,t));
+    b.addEventListener('click',()=>{if(box.dataset.done)return;
+      if(!ok){b.classList.add('wrong');b.disabled=true;q.miss(t);toast('hmm',t==='Ears'?'Ears don’t bend! Think about the parts that make the arch.':'Elbows stay straight and strong in a bridge.');return;}
+      chosen.add(t);b.classList.add('right');b.disabled=true;if(chosen.size===3){box.dataset.done=1;q.done();
+        if(isM())win('Yes! **Shoulders, upper back and hips.** Remember them when you stretch.');else growth();}});
+    box.appendChild(b);});
+  f.pic.appendChild(film(ART.bridge(1,1,1).svg.replace(/#5CD08F/g,'#F4ECDD'),'WHO HELPS?'));
+  f.side.append(box);
+  function growth(){
+    f.side.textContent='';
+    const q2=ask('Why flexibility can drop in a growth spurt','growth-flexibility');
+    f.side.append(P('**One last thing.** When you have a growth spurt, you might feel **stiffer** for a while. Why?'));
+    choose(f.side,[
+      {t:'Bones grow first, and muscles take a while to catch up',ok:true},
+      {t:'Muscles shrink when you grow',why:'Muscles don’t shrink. Think about which grows faster, the bones or the muscles attached to them.'},
+      {t:'Stretching stops working after age 10',why:'Stretching still works. Think about which grows faster, the bones or the muscles attached to them.'}],q2,
+      ()=>win('Yes. Bones can grow faster than the muscles and tendons attached to them, so you can feel tighter for a while. It’s normal and it passes. Be gentle with yourself and don’t force it.'));}
+}
+
+function coachJob(f){
+  f.say(isM()?'Last job! Help a friend, then choose your **coaching job** for the video.':'Last job: coach a friend, then choose your **coaching job** for the video.');
+  f.help(isM()?['Which helpers could do more of the work?','Reach the arms further back, and push the hips up with strong legs.']:['What is doing too much? Which helpers could do more?','Mention the shoulders, the upper back or the hips, and say why.']);
+  f.pic.appendChild(film(ART.bridge(0.05,0.05,0.1,{labels:true}).svg,'A FRIEND’S BRIDGE'));
+  const rules=[
+    {k:'slow',t:'Slow, and breathe',svg:ART.ic.breathe},
+    {k:'gentle',t:'A stretch, never pain',svg:ART.ic.gentle},
+    {k:'share',t:'Share the bend',svg:ART.ic.rainbow},
+    {k:'warm',t:'Warm up first',svg:ART.ic.warm}];
+  const showRules=()=>{f.side.textContent='';
+    f.side.append(P('**Your coaching job:** pick one rule. During the video, you’ll remind everyone about it, including your sister and your grown-up!'));
+    const box=h('div',{class:'rules'});
+    rules.forEach(r=>{const b=h('button',{class:'rule'+(S.coach===r.k?' on':''),type:'button'},h('span',{svg:r.svg}),h('span',null,r.t));
+      b.addEventListener('click',()=>{S.coach=r.k;save();box.querySelectorAll('.rule').forEach(x=>x.classList.remove('on'));b.classList.add('on');go.disabled=false;});box.appendChild(b);});
+    const go=h('button',{class:'btn',type:'button',disabled:!S.coach},'Ready to stretch →');go.addEventListener('click',advance);
+    f.side.append(box,h('div',{class:'next-row'},go));};
+  if(isM()){
+    const q=ask('Fresh case: advice for a hinge bridge','share-the-bend');
+    f.side.append(P('Your friend’s bridge is a **hinge**. What should she try?'));
+    choose(f.side,[
+      {t:'Reach her arms back and push her hips up with strong legs',ok:true},
+      {t:'Push harder with her lower back',why:'Her lower back is already doing all the work! The helpers need to do more.'}],q,
+      ()=>{toast('yes','Great coaching!');later(()=>{
+        const box=h('div',{class:'teach'},P('**Tell your grown-up:** what is your spine made of, and how do you keep your lower back safe?'),
+          P('You can type one sentence too, if you like.','note'));
+        const ta=h('textarea',{rows:2,'aria-label':'One sentence, if you like'});ta.value=S.writing.tell||'';
+        ta.addEventListener('input',()=>{S.writing.tell=ta.value;save();if(ta.value.trim())G.write({prompt:'Tell-back: what is your spine made of, and how do you keep your lower back safe?',text:ta.value,game:GAME,part:'The safe stretcher',area:'HPE'});});
+        f.side.textContent='';f.side.append(box,ta,nextBtn('Choose my coaching job →',showRules));},900);});
+    return;}
+  // Magnolia writes her advice
+  const q=ask('Fresh case: written advice for a hinge bridge','share-the-bend');
+  f.side.append(P('Your friend’s bridge folds like a **hinge**. Write her two or three sentences of advice. Say **what** to change and **why**.'));
+  const ta=h('textarea',{rows:5,'aria-label':'Your advice'});ta.value=S.writing.advice||'';
+  const btn=h('button',{class:'btn',type:'button',disabled:ta.value.trim().split(/\s+/).length<8},'Send my advice →');
+  ta.addEventListener('input',()=>{S.writing.advice=ta.value;save();btn.disabled=ta.value.trim().split(/\s+/).filter(Boolean).length<8;
+    G.write({prompt:'Advice for a friend whose bridge folds like a hinge (what to change and why)',text:ta.value,game:GAME,part:'The safe stretcher',area:'HPE'});});
+  btn.addEventListener('click',()=>{const t=ta.value.toLowerCase();
+    const named=/shoulder|upper back|hip|leg|arm|thoracic/.test(t),why=/because|so that|so her|so the|so your|which|that way|otherwise/.test(t);
+    tries++;
+    if(tries<3&&!named){q.miss('no helper named');toast('hmm','Try naming at least one helper: shoulders, upper back or hips.',3600);return;}
+    if(tries<3&&!why){q.miss('no reason given');toast('hmm','Good! Now add a **because**: why will that help her lower back?',3600);return;}
+    if(named&&why)q.done();else q.giveUp();
+    toast('yes',named&&why?'Clear, kind coaching!':'Thanks, coach. Tell your grown-up the “because” out loud.');later(showRules,1200);});
+  let tries=0;
+  f.side.append(ta,h('div',{class:'next-row'},btn));
+}
+
+/* ---------- the parts ---------- */
+function parts(){return [
+  {id:'stack',title:'The stack of bones',blurb:'What is your backbone made of?',mins:2.5,col:'#3A9AD9',tasks:[labelSpine,manyJoints]},
+  {id:'rainbow',title:'Rainbow or hinge?',blurb:'Build a safe bridge',mins:2.5,col:'#E8553F',tasks:[rainbowOrHinge,bridgeBuilder]},
+  {id:'guards',title:'Your body’s guards',blurb:'How muscles stretch, and when to stop',mins:3,col:'#2E9E66',tasks:[stretchGuard,signalSort,getBendier]},
+  {id:'safe',title:'The safe stretcher',blurb:'Warm up, remember, and coach',mins:2,col:'#6C5BC7',tasks:[routine,remember,coachJob]}];}
+
+/* ---------- screens ---------- */
+function whoBar(){const w=h('div',{class:'top'},h('div',{class:'brand'}),h('div',{class:'who'}));
+  const brand=w.firstChild;brand.appendChild(h('span',{class:'bface',svg:ART.guide}));brand.appendChild(h('h1',null,'The Rainbow Bridge'));
+  if(PLAYER!=='unknown'){const who=w.lastChild;who.appendChild(h('span',{class:'chip-t'},'Playing: '+(PLAYER==='maeve'?'Maeve':'Maggie')));
+    if(isM()){const b=h('button',{class:'chip-t',type:'button','aria-pressed':String(!!S.easy)},S.easy?'Easier version: on':'Easier version: off');
+      b.addEventListener('click',()=>{S.easy=!S.easy;save();render();});who.appendChild(b);}}
+  return w;}
+function whoScreen(){app.textContent='';
+  const set=p=>{try{sessionStorage.setItem('gamesroom-player',p);localStorage.setItem('gamesroom-last-player',p);}catch(e){}PLAYER=p;KEY=G.key(SAVE);S=load();render();};
+  app.append(whoBar(),h('div',{class:'panel center'},h('h2',null,'Who is playing?'),h('div',{class:'row center'},
+    h('button',{class:'btn big',type:'button',style:'background:#E2557A',on:{click:()=>set('maggie')}},'Maggie'),
+    h('button',{class:'btn big',type:'button',style:'background:#16A08F',on:{click:()=>set('maeve')}},'Maeve'))));}
+function unlocked(i){const ps=parts();return i===0||S.done[ps[i-1].id]||S.done[ps[i].id];}
+function home(){clearTimers();app.textContent='';const ps=parts();
+  const tile=(p,i)=>{const open=unlocked(i),done=!!S.done[p.id];
+    const b=h('button',{class:'stop'+(done?' done':'')+(open?'':' locked'),type:'button',disabled:!open,style:`--c:${p.col}`},
+      h('span',{class:'num'},done?'✓':String(i+1)),h('span',{class:'st'},h('b',null,p.title),h('small',null,p.blurb)));
+    if(open)b.addEventListener('click',()=>{S.part=i;S.task=0;S._rem=0;save();G.start(GAME);G.part(p.title);render();});return b;};
+  const allDone=ps.every(p=>S.done[p.id]);
+  const vid=h('button',{class:'stop vid'+(allDone?'':' locked'),type:'button',disabled:!allDone,style:'--c:#E0332B'},h('span',{class:'num',svg:ART.ic.play}),h('span',{class:'st'},h('b',null,'Stretch time!'),h('small',null,'Do the stretching video together')));
+  if(allDone)vid.addEventListener('click',finishScreen);
+  app.append(whoBar(),h('div',{class:'panel'},h('div',{class:'intro'},film(ART.bridge(1,1,1,{labels:true}).svg,'X-RAY'),h('div',null,
+    h('h2',null,'What really bends in a back bend?'),P(S.finished?'You know how to bend safely. Time to stretch!':'Put on your X-ray eyes. Look inside a back bend, find out what does the bending, and learn to stretch without getting hurt.'),
+    h('div',{class:'casehead'},'Your path',h('small',null,'about 10 minutes, then a stretching video')),h('div',{class:'stops'},ps.map((p,i)=>tile(p,i)),vid),
+    P(Object.keys(S.done).length&&!allDone?'Everything is saved. You can stop and come back any time.':'','note')))));}
+function advance(){clearTimers();const ps=parts(),p=ps[S.part];S.task++;S._rem=0;
+  if(S.task>=p.tasks.length){if(!S.done[p.id]){S.done[p.id]=true;G.partDone(p.title);}save();return partEnd();}
+  save();render();}
+function partEnd(){const ps=parts(),i=S.part,p=ps[i],last=i===ps.length-1;app.textContent='';
+  if(last)return finishScreen();
+  app.append(whoBar(),h('div',{class:'panel center'},h('div',{class:'big-tick',style:`--c:${p.col}`},'✓'),h('h2',null,p.title+': done!'),
+    P('You can stop here. Everything is saved.','note'),
+    h('div',{class:'row center'},h('button',{class:'btn ghost',type:'button',on:{click:()=>{S.part=null;save();render();}}},'Map'),
+      h('button',{class:'btn',type:'button',on:{click:()=>{S.part=i+1;S.task=0;S._rem=0;save();G.part(ps[i+1].title);render();}}},'Next: '+ps[i+1].title+' →'))));}
+function finishScreen(){clearTimers();app.textContent='';
+  if(!S.finished){S.finished=true;save();G.finish();}
+  S.part=null;save();
+  const rules={slow:['Slow, and breathe',ART.ic.breathe],gentle:['A stretch, never pain',ART.ic.gentle],share:['Share the bend',ART.ic.rainbow],warm:['Warm up first',ART.ic.warm]};
+  const me=rules[S.coach]||null;const sis=sisterSave();const sr=sis&&rules[sis.coach];
+  const coach=h('div',{class:'coach'},h('span',{svg:ART.ic.whistle}),h('div',null,
+    h('div',null,me?'Coach '+(isM()?'Maeve':'Maggie')+': “'+me[0]+'”':'Choose a rule to coach during the video.'),
+    sr?h('div',{class:'note'},'Coach '+SIS()+': “'+sr[0]+'”'):h('div',{class:'note'},SIS()+' can choose a coaching job too.')));
+  const promise=isM()?h('div',{class:'promise'},h('h3',null,'My safe stretching promise'),h('ul',null,
+    h('li',null,'I warm up first.'),
+    h('li',null,'I go slowly, and breathe.'),
+    h('li',null,'Gentle pull: OK. Pain: stop, and tell a grown-up.'),
+    h('li',null,'A grown-up is with me for bridges.'))):h('div',{class:'promise'},h('h3',null,'My safe stretching promise'),h('ul',null,
+    h('li',null,'I warm up first.'),
+    h('li',null,'I move slowly and keep breathing.'),
+    h('li',null,'I stop at a gentle pull. Pain means stop, and tell a grown-up.'),
+    h('li',null,'I share the bend: shoulders, upper back and hips all help.'),
+    h('li',null,'I skip any move that feels too hard. A grown-up is with me for bridges.'),
+    h('li',null,'I compare myself with me, not with anyone else.')));
+  const link=h('a',{class:'btn red big',href:VIDEO,target:'_blank',rel:'noopener noreferrer'},h('span',{svg:'<svg viewBox="0 0 24 24" width="30" height="30"><path d="M8 5l12 7-12 7z" fill="#fff"/></svg>'}),'Open the stretching video');
+  const vid=h('div',{class:'vidcard'},h('h3',null,'Stretch time!'),
+    P('Warm up first with 2 minutes of jogging on the spot and star jumps. Then do the stretches in this video together, on the TV or the iPad.'),
+    P('The video says “fast”, but bodies get bendy **slowly**. Go gently, only as far as a gentle pull. If a move looks too hard, do an easier one or rest.'),
+    link,h('p',{class:'note',style:'color:#C9D6EA'},'Ask a grown-up to put it on the TV, or tap the button.'));
+  const wonder=h('div',{class:'teach'},P('**Something to notice:** do the same stretches gently a few times this week. Does your bridge feel any different by next Thursday? Which helper is getting better?'));
+  app.append(whoBar(),h('div',{class:'panel'},h('div',{class:'intro'},film(ART.bridge(1,1,1).svg,'RAINBOW'),h('div',{style:'display:grid;gap:12px'},
+    h('h2',null,'You’re a safe stretcher!'),
+    P(isM()?'Your backbone is a stack of little bones. Lots of little bends add up to a rainbow. Go slowly, and stop if it hurts.':'Your spine is a stack of vertebrae. A rainbow shares the bend between the shoulders, upper back and hips, so the lower back isn’t squashed. Slow, gentle and regular beats forcing it.'),
+    coach,promise))),
+    h('div',{style:'height:14px'}),vid,h('div',{style:'height:14px'}),wonder,
+    h('div',{class:'row center',style:'margin-top:12px'},h('button',{class:'btn ghost',type:'button',on:{click:()=>render()}},'Back to the map')));
+}
+function playTask(){const ps=parts();const p=ps[S.part];if(!p){S.part=null;return home();}
+  if(S.task>=p.tasks.length)S.task=0;G.start(GAME);G.part(p.title);const f=frame();p.tasks[S.task](f);}
+function render(){window.scrollTo(0,0);if(PLAYER==='unknown')return whoScreen();if(S.part==null)return home();playTask();}
+window.RB={state:()=>S,go(part,task){S.part=part;S.task=task||0;S._rem=0;save();render();},setEasy(v){S.easy=v;save();render();},parts};
+render();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>

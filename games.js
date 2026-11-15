@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "rainbow-bridge",
+    title: "The Rainbow Bridge",
+    blurb: "Look inside a back bend with X-ray eyes, learn to bend safely, then do a stretching video together.",
+    players: ["maggie", "maeve"],
+    subject: "Health and PE",
+    source: "Health and PE: back flexibility and safe stretching (the spine's regions, many small joints, sharing the bend in a bridge, stretch sensors, stretch versus pain, warming up, growth spurts). About 10 minutes, then a follow-along stretching video. For the Thursday Games Room health slot",
+    added: "2026-11-15",
+    colour: "#2B4C9B",
+    href: "games/rainbow-bridge/index.html"
+  },
+  {
     id: "tooth-worm-inquiry",
     title: "The Tooth Worm Inquiry",
     blurb: "People once blamed a worm for holes in teeth. Reopen the case, then make a snack your teeth will thank you for.",
