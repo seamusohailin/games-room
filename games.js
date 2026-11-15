@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "pole-to-pole",
+    title: "The Pole-to-Pole Balloon",
+    blurb: "Draw the rings around the world, then fly a balloon from the tropics to the ice.",
+    players: ["maeve"],
+    subject: "Geography",
+    source: "Earth is Our Home and My Earth Notebook, Lesson 10: Tropics and Poles (Earth pp. 27 to 28). About 15 minutes in five short parts, then it sends her to My Earth Notebook p. 15 and to show Mum",
+    added: "2026-11-15",
+    colour: "#D9822B",
+    href: "games/pole-to-pole/index.html"
+  },
+  {
     id: "rainbow-bridge",
     title: "The Rainbow Bridge",
     blurb: "Look inside a back bend with X-ray eyes, learn to bend safely, then do a stretching video together.",

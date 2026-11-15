@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>The Pole-to-Pole Balloon</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fraunces:opsz,wght@9..144,700&display=swap">
+<style>
+/* Mistress Wren's balloon, from the tropics to the ice. Pictures first, one short line of text, hands-on moves. Maeve's teal for every action. */
+:root{
+  --bg:#10263a; --bg-deep:#091726; --glow:#f2c75c; --parch:#f8efdc; --parch-2:#e8d9b6; --parch-3:#d6c193;
+  --ink:#2a2118; --muted:#6d5c44; --teal:#16A08F; --teal-deep:#0c6b5f; --wax:#a5302a; --rope:#b0864f;
+  --ok:#2f7d4f; --ok-bg:#e1f1e2; --hmm-bg:#fbecd2; --clue-bg:#fff4d6; --on-dark:#f4ead6;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background-color:var(--bg);background-image:radial-gradient(ellipse at 90% -5%,rgba(242,199,92,.22),transparent 55%),radial-gradient(ellipse at 0% 100%,rgba(22,160,143,.14),transparent 50%);
+  color:var(--on-dark);font-family:var(--body);font-size:1.15rem;line-height:1.4;min-height:100vh;-webkit-text-size-adjust:100%}
+.wrap{max-width:960px;margin:0 auto;padding:max(12px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(90px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
+svg text{font-family:var(--body)}
+
+.top{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding-bottom:10px;margin-bottom:12px;border-bottom:2px dashed rgba(242,199,92,.35)}
+.brand h1{color:var(--glow);font-size:clamp(1.6rem,5vw,2.3rem);line-height:1.05}
+.status{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.pips{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.pips li{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem;border:2px solid var(--parch-3);color:var(--parch-3)}
+.pips li.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.pips li.now{background:var(--glow);border-color:var(--glow);color:var(--ink)}
+.toggle{display:inline-flex;align-items:center;gap:8px;background:var(--bg-deep);border:2px solid var(--parch-3);border-radius:999px;padding:6px 14px;min-height:46px;cursor:pointer;font-size:.95rem}
+.toggle .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--parch-3);display:grid;place-items:center}
+.toggle[aria-pressed="true"]{border-color:var(--teal)}
+.toggle[aria-pressed="true"] .box{background:var(--teal);border-color:var(--teal)}
+.toggle[aria-pressed="true"] .box::after{content:"";width:10px;height:6px;border:solid #fff;border-width:0 0 3px 3px;transform:rotate(-45deg) translate(1px,-1px)}
+
+.panel{background:var(--parch);color:var(--ink);border-radius:14px;padding:14px 16px 16px;box-shadow:0 6px 0 var(--bg-deep)}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.phead h2{color:var(--wax);font-size:clamp(1.3rem,4vw,1.7rem)}
+.dots{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.dots li{width:16px;height:16px;border-radius:50%;border:2px solid var(--parch-3);background:#fff}
+.dots li.on{background:var(--teal);border-color:var(--teal)}
+.bubble{display:flex;gap:10px;align-items:center;margin:10px 0 0;min-height:52px}
+.bubble .who{flex:none;width:50px;height:50px;border-radius:50%;background:var(--bg);display:grid;place-items:center;border:2px solid var(--rope)}
+.bubble .who svg{width:38px;height:38px}
+.bubble p{flex:1;margin:0;font-size:1.3rem;line-height:1.35;font-weight:700;background:#fff;border-radius:14px;padding:8px 14px;border:2px solid var(--parch-2)}
+.qbtn{flex:none;width:48px;height:48px;border-radius:50%;border:2px solid #E3BE5C;background:var(--clue-bg);font-weight:700;font-size:1.3rem;cursor:pointer;color:var(--ink)}
+.qbtn[disabled]{opacity:.35;cursor:default}
+.clue{margin:8px 0 0 60px;background:var(--clue-bg);border-radius:12px;padding:8px 12px;font-size:1.1rem}
+
+.sw{position:relative;margin-top:10px;border-radius:14px;background:#0b1c2c;padding:5px;box-shadow:inset 0 0 0 2px rgba(176,134,79,.45)}
+.sw>svg{display:block;width:100%;height:auto;border-radius:10px;touch-action:manipulation}
+.ov{position:absolute;inset:5px;pointer-events:none}
+.ov>*{pointer-events:auto}
+.toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:88%;padding:8px 18px;border-radius:999px;font-weight:700;font-size:1.2rem;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.25);z-index:5;pointer-events:none}
+.toast.yes{background:var(--ok-bg);color:var(--ok);border:3px solid var(--ok)}
+.toast.hmm{background:var(--hmm-bg);color:#7a4a12;border:3px solid #E3BE5C}
+.toast.info{background:#fff;color:var(--ink);border:3px solid var(--rope)}
+.tray{margin-top:12px;min-height:60px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center}
+.btn{font-family:var(--body);font-weight:700;font-size:1.25rem;background:var(--teal);color:#fff;border:0;border-radius:999px;padding:.5em 1.5em;min-height:58px;cursor:pointer;box-shadow:0 4px 0 var(--teal-deep)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--teal-deep)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink),0 4px 0 var(--parch-3)}
+.btn[disabled]{opacity:.5}
+
+/* picture tiles */
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.tile{background:#fff;border:3px solid var(--parch-2);border-radius:16px;padding:8px 8px 10px;cursor:pointer;box-shadow:0 4px 0 var(--parch-2);display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;font-size:1.15rem;color:var(--ink)}
+.tile svg{width:96px;height:72px}
+.tile.yes{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
+.tile.no{opacity:.35;box-shadow:none}
+
+/* things to drag */
+.chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.chip{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;border:3px solid var(--teal);border-radius:16px;padding:6px 14px;min-height:58px;display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:1.2rem;color:var(--ink);cursor:grab;box-shadow:0 4px 0 var(--teal-deep);position:relative}
+.chip svg{width:40px;height:40px;flex:none}
+.chip.lift{z-index:60;cursor:grabbing;box-shadow:0 10px 18px rgba(0,0,0,.3)}
+.chip.sel{background:#e9f7f5;box-shadow:0 0 0 4px var(--glow),0 4px 0 var(--teal-deep)}
+.chip.used{visibility:hidden}
+.chip.shake{animation:shake .45s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.chip.float{position:absolute;border-color:#1f5fa8;box-shadow:0 4px 0 #154a86;background:#e9f2fb;padding:4px 8px;min-height:52px}
+.chip.float svg{width:52px;height:52px}
+svg .drop{cursor:pointer}
+svg .drop.cando{fill:rgba(242,199,92,.25);stroke:#f2c75c;stroke-width:3;stroke-dasharray:8 6}
+svg .drop.over{fill:rgba(22,160,143,.35);stroke:#16A08F;stroke-width:4}
+#ara path.drop.cando{fill:#efe3bd;stroke:#f2c75c;stroke-width:4}
+#ara path.drop.over{fill:#cdeee8;stroke:#16A08F;stroke-width:5}
+
+/* slider */
+.slide{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--parch-2);border-radius:999px;padding:6px 16px}
+.slide svg{width:44px;height:44px;flex:none}
+.slide input{flex:1;height:48px;accent-color:var(--teal)}
+.monthbox{display:flex;align-items:center;gap:12px;justify-content:center;margin:0 0 8px}
+.monthbox b{font-family:var(--display);font-size:1.8rem;color:var(--wax);min-width:6.5em;text-align:center}
+.monthbox span{width:52px;height:52px;display:inline-block}
+.monthbox svg{width:52px;height:52px}
+
+/* poem */
+.poem{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;background:#fffaf0;border:2px solid var(--parch-2);border-radius:12px;padding:10px 14px;margin-top:10px}
+.poem p{margin:0;font-size:1.15rem;line-height:1.6;transition:opacity .5s}
+.poem p.dim{opacity:.2}
+.poem .cite{grid-column:1/-1;font-size:.85rem;color:var(--muted)}
+.gap{display:inline-block;min-width:96px;border-bottom:3px dashed var(--teal);text-align:center;color:var(--teal-deep);font-weight:700;padding:0 4px;border-radius:6px;cursor:pointer}
+.gap.cando{background:#fff4d6}
+.gap.over{background:#d9f1ed}
+.gap.filled{border-bottom-style:solid;border-color:var(--ok);color:var(--ok)}
+@media (max-width:640px){.poem{grid-template-columns:1fr}}
+
+/* chance line */
+.chance{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chance .drop{background:#fff;border:3px solid var(--parch-2);border-radius:14px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;text-align:center;color:var(--ink);cursor:pointer}
+.chance .drop svg{width:34px;height:34px}
+.chance .drop.cando{border-color:var(--glow);border-style:dashed}
+.chance .drop.over{border-color:var(--teal);background:#e9f7f5}
+.chance .drop.filled{border-color:var(--ok);background:var(--ok-bg)}
+
+/* sorting cards */
+.sorts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sorts .drop{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:6px;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.sorts .drop svg{width:100%;height:auto;max-height:110px}
+.sorts .drop b{font-size:1.05rem;min-height:1.4em;color:var(--ok)}
+.sorts .drop.cando{border-color:var(--glow);border-style:dashed}
+.sorts .drop.over{border-color:var(--teal);background:#e9f7f5}
+.sorts .drop.filled{border-color:var(--ok);background:var(--ok-bg)}
+
+/* true-story card over the picture */
+.card{position:absolute;inset:5px;background:rgba(9,23,38,.72);border-radius:10px;display:flex;align-items:center;justify-content:center;padding:12px;z-index:8}
+.card .in{background:#fffaf0;border:3px double var(--rope);border-radius:14px;padding:14px 16px;max-width:560px;width:100%;position:relative}
+.card .ribbon{position:absolute;top:-14px;left:14px;background:var(--wax);color:#fff;font-weight:700;font-size:.9rem;padding:3px 12px;border-radius:999px}
+.card h3{color:var(--wax);font-size:1.25rem;margin:4px 0 6px}
+.card svg{width:100%;height:auto;display:block;margin:4px 0 8px}
+.card p{margin:0 0 4px;font-size:1.2rem;font-weight:700}
+.card .row{margin-top:8px}
+
+/* end of a part */
+.donebox{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;background:#fff;border:3px solid var(--ok);border-radius:16px;padding:10px 14px}
+.donebox .stamp{width:56px;height:56px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:1.8rem;font-weight:700;flex:none}
+.donebox p{margin:0;font-size:1.2rem;font-weight:700;flex:1;min-width:200px}
+
+/* contents */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:center}
+@media (max-width:700px){.hero{grid-template-columns:1fr}}
+.hero p{font-size:1.25rem;margin:0 0 8px}
+.hero .note{font-size:.9rem;color:var(--muted)}
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:14px}
+.part{text-align:center;border:0;cursor:pointer;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;box-shadow:0 4px 0 var(--parch-3)}
+.part svg{width:100%;max-width:150px;height:auto}
+.part[disabled]{opacity:.45;cursor:default}
+.part h3{font-size:1.05rem;color:var(--ink)}
+.part .tag{font-size:.85rem;font-weight:700;color:var(--muted)}
+.part.next{box-shadow:0 0 0 4px var(--glow),0 4px 0 var(--parch-3)}
+.part.next .tag{color:var(--teal-deep)}
+
+/* the end */
+.endgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.endgrid div{background:#fffaf0;border:2px solid var(--parch-2);border-radius:12px;padding:8px;text-align:center;font-size:1rem;font-weight:700}
+.endgrid svg{width:70px;height:56px;display:block;margin:0 auto 4px}
+.tell{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:10px 14px;margin-top:10px}
+.tell h3{color:var(--wax);font-size:1.15rem;margin-bottom:4px}
+.tell ul{margin:0;padding-left:1.2em}
+textarea{width:100%;min-height:64px;font:inherit;font-size:1.15rem;border:2px solid var(--parch-3);border-radius:12px;padding:10px;background:#fff;color:var(--ink);margin-top:6px}
+
+
+/* ---- Pole to pole: globe, map and scenes ---- */
+svg .tz{cursor:pointer}
+svg .tz.tappable{fill:rgba(242,199,92,.22);stroke:#f2c75c;stroke-width:3;stroke-dasharray:8 6}
+svg .tz.no{fill:rgba(20,20,20,.28);stroke:none}
+svg .tz.ring{stroke:#16A08F;stroke-width:6;stroke-dasharray:none}
+svg .tz.yes{fill:rgba(22,160,143,.3);stroke:#16A08F;stroke-width:4;stroke-dasharray:none}
+svg .drop{fill:transparent}
+#gl .eqline,#gl .eqlbl,#gl .rings,#gl .trop,#gl .zlbl{opacity:0;transition:opacity .6s}
+#gl.eq-on .eqline,#gl.eq-on .eqlbl{opacity:1}
+#gl.rings-on .rings{opacity:1}
+#gl.trop-on .trop{opacity:1}
+#gl .zone{opacity:0;transition:opacity .6s}
+#gl .zone.on{opacity:.62}
+#gl .zone.on[data-t="tr"]{opacity:.72}
+.sw>svg{max-height:64vh}
+#gl .zlbl.on{opacity:1}
+.bal{cursor:pointer}
+.bal .hit{fill:transparent}
+.bal.tappable .hit{stroke:#f2c75c;stroke-width:4;stroke-dasharray:6 5;fill:rgba(242,199,92,.18)}
+.bal.no{opacity:.4}
+.bal.yes .hit{stroke:#16A08F;stroke-width:5;fill:rgba(22,160,143,.22)}
+.bob{animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+.pin .glow{fill:none;stroke:#f2c75c;stroke-width:4;opacity:0}
+.pin.pick{cursor:pointer}
+.pin.pick .glow{opacity:1;animation:pulse2 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse2{50%{transform:scale(1.35);opacity:.35}}
+.pin .tickm{opacity:0;transition:opacity .4s}
+.pin.been .tickm{opacity:1}
+#mp .aus,#mp .gsd{opacity:0;transition:opacity .5s}
+#mp.aus-on .aus{opacity:1}
+#mp.aus-on .pin{pointer-events:none}
+#mp.gsd-on .gsd{opacity:1}
+.rainfall{animation:rainfall .7s linear infinite}
+@keyframes rainfall{from{transform:translateY(-16px)}to{transform:translateY(16px)}}
+.flash{animation:flash 3s ease-in-out infinite}
+@keyframes flash{0%,82%,100%{opacity:0}85%,90%{opacity:1}}
+.shimmer{animation:shimmer 2s ease-in-out infinite}
+@keyframes shimmer{50%{transform:translateX(6px);opacity:.4}}
+.smoke{animation:smoke 3s ease-out infinite}
+@keyframes smoke{0%{transform:translate(0,0);opacity:.8}100%{transform:translate(10px,-26px);opacity:0}}
+.half{cursor:pointer}
+.half.tappable{fill:rgba(242,199,92,.25);stroke:#f2c75c;stroke-width:3;stroke-dasharray:8 6}
+.half.no{fill:rgba(20,20,20,.3)}
+.half.yes{fill:rgba(22,160,143,.35);stroke:#16A08F;stroke-width:4}
+.readout{display:flex;align-items:center;gap:16px;justify-content:center;margin-top:10px;background:#fff;border:2px solid var(--parch-2);border-radius:14px;padding:8px 14px;color:var(--ink)}
+.readout svg{width:34px;height:90px;flex:none}
+.readout b{font-family:var(--display);font-size:2.3rem;color:var(--wax);display:block;line-height:1.05}
+.readout span{font-weight:700;font-size:1.2rem}
+.slide .end{font-weight:700;font-size:1rem;color:var(--muted);min-width:3.2em;text-align:center}
+.chip.big{padding:6px 10px}
+.chip.big svg{width:84px;height:62px}
+.chip.badge svg{width:46px;height:46px}
+.sorts.four{grid-template-columns:repeat(4,1fr)}
+@media (max-width:640px){.sorts.four{grid-template-columns:repeat(2,1fr)}}
+.clockbox{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 8px}
+.clockbox b{font-family:var(--display);font-size:1.8rem;color:var(--wax);min-width:6.5em;text-align:center}
+.clockbox svg{width:52px;height:52px}
+.todo{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px}
+.todo li button{width:100%;display:flex;align-items:center;gap:14px;background:#fff;border:3px solid var(--parch-2);border-radius:16px;padding:8px 12px;cursor:pointer;text-align:left;font-weight:700;font-size:1.25rem;color:var(--ink);min-height:76px;box-shadow:0 4px 0 var(--parch-2)}
+.todo li button svg.pic{width:78px;height:60px;flex:none}
+.todo li button small{display:block;font-weight:400;font-size:1rem;color:var(--muted)}
+.todo .box2{width:38px;height:38px;border-radius:10px;border:3px solid var(--parch-3);flex:none;display:grid;place-items:center;margin-left:auto}
+.todo button[aria-pressed="true"]{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
+.todo button[aria-pressed="true"] .box2{background:var(--ok);border-color:var(--ok)}
+.todo button[aria-pressed="true"] .box2::after{content:"";width:14px;height:8px;border:solid #fff;border-width:0 0 4px 4px;transform:rotate(-45deg) translate(1px,-2px)}
+.todo li.mum button{border-color:var(--teal);box-shadow:0 4px 0 var(--teal-deep)}
+.bigq{font-family:var(--display);color:var(--wax);font-size:clamp(1.4rem,4.4vw,1.9rem);margin:14px 0 2px;text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.grown{margin-top:24px;padding-top:12px;border-top:2px dashed rgba(244,234,214,.25);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;opacity:.85}
+.grown button{background:transparent;border:2px solid rgba(244,234,214,.5);border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:.95rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>The Pole-to-Pole Balloon</h1></div>
+    <div class="status">
+      <ol class="pips" id="pips" aria-label="Parts"></ol>
+      <button class="toggle" id="easy" aria-pressed="false"><span class="box"></span>Calm skies (easier)</button>
+    </div>
+  </header>
+  <main id="main"></main>
+  <footer class="grown">
+    <span>Your place is saved after each part. You can stop any time.</span>
+    <button id="home">Contents</button>
+    <button id="reset">Start again</button>
+  </footer>
+</div>
+<script>
+'use strict';
+const G=window.GR||{player:()=>'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask(){return {miss(){},hint(){},done(){},giveUp(){},missed:()=>0};},write(){}};
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const GAME='pole-to-pole';
+const RM=(()=>{try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}})();
+const main=$('#main');
+let runId=0;
+const sleep=ms=>{const r=runId;return new Promise(res=>setTimeout(()=>{if(r===runId)res();},ms));};
+function toTop(){try{window.scrollTo({top:0,behavior:'auto'});}catch(e){window.scrollTo(0,0);}}
+
+/* ---------- saved progress, separate for each girl ---------- */
+const KEY=G.key('pole-to-pole-v1');
+function blank(){return {done:[],easy:false,ticks:[]};}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.done))return Object.assign(blank(),v);}catch(e){}return blank();}
+let S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ================= geography (rough coastlines, longitude and latitude in degrees) ================= */
+const LAND=[
+ {p:[[0,35.8],[10,37],[10.5,34],[15,32.5],[19,30.5],[20,32.5],[23,32.6],[25,31.7],[29.5,31],[32,31.3],[34.5,31.6],[35.5,33.5],[36,35.5],[36.2,36.6],[32,36.2],[30,36.3],[28,36.8],[27,38],[26.3,40],[60,40],[121.5,40],[121,37],[122.5,37],[120,35],[120.5,32],[122,30],[120,26],[117,23.5],[113.5,22.3],[110,21.3],[108,21.5],[106,20],[106.5,18],[108.8,15.5],[109.3,12],[107,10.5],[105,8.6],[104.8,10.5],[103,11.5],[101,12.8],[100,13.5],[99.3,10.5],[100.3,7],[101,6.8],[103,5.5],[103.5,1.5],[101.3,2.8],[100.3,4.5],[98.3,8],[98.5,10],[98,14],[97.5,16.5],[94.3,16],[94,19],[92.3,21],[91.5,22.6],[90,21.8],[87,21.5],[86,20],[84,18],[82.3,16.5],[80.3,15.5],[80.2,13],[79.8,10.3],[78.2,8.5],[77.5,8],[76.5,9.5],[75,12.5],[73.5,16],[72.8,19],[72.6,21.3],[70,22.5],[68.5,23.5],[66.5,25.4],[62,25.2],[57.5,25.7],[56.4,27],[54,26.8],[51.5,27.9],[50,30],[48,30],[47.5,29.5],[48.5,28],[50,26.5],[51,24.5],[51.6,24],[54,24.2],[56,26],[56.4,24.8],[57.8,23.7],[59.8,22.4],[58.5,20.5],[57,18.8],[55,17],[52,15.5],[49,14],[45,12.8],[43.5,12.7],[42.8,15],[41,19],[39,21.5],[38,24],[35.5,28],[34.8,29.5],[34.2,27.8],[32.6,29.9],[33,28],[34.5,26],[35.5,24],[37.3,21],[38.5,18],[39.5,15.5],[41.5,13.5],[43.3,11.5],[44.5,10.4],[51.2,11.8],[51,10.4],[49.5,6],[47.5,3.5],[44,0],[41.5,-2],[40,-4],[39.3,-6.5],[39.5,-10],[40.5,-14.5],[40,-16],[36.8,-18],[35,-20.5],[35.5,-24],[32.8,-26],[32.5,-28.5],[31,-30],[28,-33],[25.5,-34],[22,-34],[20,-34.8],[18.5,-34.2],[18,-32],[17,-29],[15.5,-26.5],[14.5,-22.5],[13,-19],[11.8,-16.5],[12.3,-13],[13.5,-11],[13,-8],[12.2,-6],[11.8,-4.5],[9.5,-2],[9,0],[9.6,3.5],[8.5,4.5],[6,4.4],[4.5,6.3],[2,6.3],[0,5.6]]},
+ {p:[[26,39.5],[26,41],[29,41.2],[33,42],[36,41.7],[41,41.5],[41.5,43],[38,44.8],[37,46],[33,45.8],[30,46.5],[29,50],[28,60],[30,70],[40,67.5],[44,68.5],[52,68.5],[60,69.8],[70,73],[80,73.6],[90,75.6],[100,77.5],[110,76.5],[120,73],[130,71.8],[140,72.6],[150,71.4],[160,69.8],[170,70],[180,69],[180,65],[178,62.5],[170,60],[163.5,58.5],[162,56],[157,51],[156,57.5],[152,59.2],[143,59.3],[137.5,54],[141,52.5],[140,48.5],[135.5,43.5],[132,43],[129.7,41],[129.8,39.5]]},
+ {p:[[15.6,40],[15.7,38],[16.1,37.9],[16.6,38.5],[17.1,39],[18.5,40.1]]},
+ {p:[[12.4,38.1],[15.6,38.3],[15.1,36.7],[12.5,37.6]]},
+ {p:[[20.5,40],[21,38.4],[21.6,36.8],[22.9,36.4],[23.2,38],[24,38.2],[23,39.3],[23.8,40]]},
+ {p:[[23.5,35.3],[26.3,35.3],[26,35],[24,35.1]]},
+ {p:[[32.3,35],[34,35.5],[34,34.6],[32.6,34.6]]},
+ {p:[[8.2,41],[9.8,41],[9.6,39],[8.4,39]]},
+ {p:[[44,-25],[47,-25.2],[48.5,-20],[50.3,-15.5],[49.3,-12],[47,-14],[44.3,-16.2],[43.5,-22]]},
+ {p:[[79.8,6],[81.8,7],[81,9.7],[79.9,9.3]]},
+ {p:[[95.3,5.6],[97.5,5.2],[100.3,2.3],[104,-1],[106,-3],[105.8,-5.8],[104.5,-5.9],[102,-3.8],[100.5,-1],[98.7,1.7]]},
+ {p:[[105.3,-6.8],[108,-6.2],[111,-6.5],[114.5,-7.7],[114.4,-8.7],[111,-8.3],[108,-7.8]]},
+ {p:[[109,1.5],[109.6,-1],[111,-3],[114.5,-4],[116.5,-3],[118,1],[119,5],[117,7],[115.5,5],[113,3.2],[111,1.8]]},
+ {p:[[119.5,-5.5],[120.5,-2.5],[119.6,0.5],[121,1.3],[125,1.5],[123,-0.8],[121.3,-1.5],[122.5,-4.5],[121,-5.5]]},
+ {p:[[124,-9.3],[127,-8.4],[127.2,-8.7],[124.2,-10.2]]},
+ {p:[[120,18.5],[122.3,18.5],[122,14],[124,12.5],[126.3,9],[126,6.5],[125,6],[124,7.5],[122,7],[123,10],[121.6,13.5],[120.6,14.5]]},
+ {p:[[120.1,23],[121,25.2],[121.9,25],[120.8,22]]},
+ {p:[[110,20],[111,19.6],[109.5,18.2],[108.6,19.2]]},
+ {p:[[130.5,31.3],[131.5,33.5],[133,34],[135.2,33.5],[137,34.6],[139.8,35],[140.9,36.8],[141.5,38.5],[141.9,40],[141.5,42],[143,42.5],[145.5,43.3],[141.8,45.4],[140,43],[140,40],[139.8,38.5],[137,37],[135,35.6],[132.5,35.3],[130.9,34],[129.6,33.2]]},
+ {p:[[124.5,40],[125,38.5],[126.5,37.5],[126.3,34.5],[127.5,34.6],[129.4,35.4],[129.5,37],[128.5,38.5],[129.8,40]]},
+ {p:[[131,-1],[134,-0.8],[138,-1.6],[141,-2.6],[145.7,-5],[147.5,-6],[150.5,-10.6],[148,-10.3],[146,-8],[143.5,-9.2],[142.5,-9.3],[141,-9.1],[138.5,-8.4],[137.8,-5.2],[135,-4.4],[133,-4],[132,-2.8]]},
+ {p:[[114,-22],[113.5,-24.5],[114.2,-26.3],[115,-29.5],[115,-33.5],[115.6,-34.4],[118,-35],[120.5,-33.9],[123.5,-33.9],[126,-32.3],[129,-31.6],[131.2,-31.5],[134,-32.8],[135.6,-34.8],[137.5,-33],[137.8,-35.6],[139.5,-36],[140.5,-38],[143.5,-38.8],[145,-38.5],[146.3,-39.1],[148,-37.8],[150,-37.4],[150.2,-35.7],[151.3,-33.8],[153,-31],[153.6,-28.2],[153,-25.2],[150.8,-22.6],[149,-20.5],[146.3,-18.8],[145.3,-15],[143.6,-14],[142.5,-10.7],[141.6,-12.5],[141.5,-15.5],[140.5,-17.5],[139,-17],[137,-15.8],[135.5,-15],[136.8,-12.2],[135.8,-11.9],[133,-11.4],[131,-12],[130,-13],[129.5,-14.9],[128,-15],[126.5,-13.9],[125,-15.5],[123.5,-16.5],[122.2,-17.8],[121.5,-19],[119,-20],[116.7,-20.6]]},
+ {p:[[144.6,-40.7],[148.3,-40.9],[148,-42.5],[147,-43.6],[145.5,-42.9]]},
+ {p:[[172.7,-34.4],[174.5,-36],[175.5,-37.5],[178.5,-37.7],[177,-39.3],[176,-41.5],[174.6,-41.3],[175,-39.5],[173.8,-39.2],[174.5,-37]]},
+ {p:[[172.7,-40.5],[174.2,-41.7],[173,-43.8],[171.2,-44.5],[169,-46.6],[166.5,-46],[168.5,-44],[170.6,-42.8]]},
+ {ice:1,p:[[0,-70],[10,-70],[20,-70],[30,-69.5],[40,-68.5],[50,-67],[55,-66.5],[63,-67.5],[68,-67.8],[70,-69.5],[73,-69.6],[78,-68.5],[88,-66.5],[100,-65.5],[110.5,-66.2],[120,-66.8],[135,-66.2],[145,-67],[155,-69],[162,-70.5],[166,-73],[170,-71.5],[170.5,-74],[168,-78],[180,-78],[180,-90],[0,-90]]}
+];
+const TROPIC=23.44, POLAR=66.56;
+const D2R=Math.PI/180;
+const LANDC='#d8c79a', LANDS='#8a7a62', SEA='#3f7fae', ICE='#eef4f8';
+
+/* the map: equirectangular, longitude 0 to 180, latitude 40 N to 75 S */
+const MK=600/180;
+const MX=lon=>lon*MK, MY=lat=>(40-lat)*MK;
+const mpath=p=>'M'+p.map(([a,b])=>MX(a).toFixed(1)+' '+MY(b).toFixed(1)).join('L')+'Z';
+
+/* the globe: seen from above the Equator, centred on 115 E */
+const GC={x:300,y:165,R:145,lon0:115};
+const GY=lat=>GC.y-GC.R*Math.sin(lat*D2R);
+const GW=lat=>GC.R*Math.cos(lat*D2R);
+function gpt(lon,lat){let d=lon-GC.lon0;if(d<-90)d=-90;if(d>90)d=90;return [GC.x+GC.R*Math.cos(lat*D2R)*Math.sin(d*D2R),GY(lat)];}
+const gpath=p=>'M'+p.map(([a,b])=>gpt(a,b).map(v=>v.toFixed(1)).join(' ')).join('L')+'Z';
+function latTxt(lat){const a=Math.round(Math.abs(lat));return a===0?'0°':a+'° '+(lat>0?'N':'S');}
+function latWords(lat){const a=Math.round(Math.abs(lat));return a===0?'0°, on the Equator':a+'° '+(lat>0?'north':'south');}
+
+/* ================= pictures ================= */
+const NUTMEG='<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 15L9 3l9 8zM33 15L31 3l-9 8z" fill="#e08a3c"/><path d="M10 13l1-6 4 4zM30 13l-1-6-4 4z" fill="#f6c7a0"/><circle cx="20" cy="22" r="14" fill="#e08a3c"/><path d="M14 12q2 3 0 6M20 10v6M26 12q-2 3 0 6" stroke="#b35f1d" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="14.5" cy="22" rx="2.2" ry="3" fill="#1d1a14"/><ellipse cx="25.5" cy="22" rx="2.2" ry="3" fill="#1d1a14"/><circle cx="15.2" cy="21" r=".8" fill="#fff"/><circle cx="26.2" cy="21" r=".8" fill="#fff"/><path d="M18.6 27h2.8l-1.4 1.8z" fill="#d6577a"/><path d="M20 28.8v1.2M20 30q-2.2 1.8-4 .2M20 30q2.2 1.8 4 .2" stroke="#1d1a14" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M4 25l8 1M4 29l8-1M36 25l-8 1M36 29l-8-1" stroke="#fff" stroke-width="1" stroke-linecap="round"/></svg>';
+function marker(id,col){return `<marker id="${id}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto"><path d="M0 0L10 5L0 10z" fill="${col}"/></marker>`;}
+const BALLOON='<g class="bob"><path d="M0-62c-15 0-24 11-24 24 0 12 12 22 18 29h12c6-7 18-17 18-29 0-13-9-24-24-24z" fill="#16A08F" stroke="#0c6b5f" stroke-width="1.5"/><path d="M0-62c-6 0-10 11-10 24 0 12 4 22 6 29h8c2-7 6-17 6-29 0-13-4-24-10-24z" fill="#f2c75c"/><path d="M-6-9l-3 9M6-9l3 9" stroke="#3e2a16" stroke-width="1.4"/><rect x="-8" y="-1" width="16" height="9" rx="2" fill="#b0864f" stroke="#6b4a2b" stroke-width="1.2"/><path d="M-5-1l-2-4 3 2zM5-1l2-4-3 2z" fill="#e08a3c"/></g>';
+const I={
+  hot:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="10" fill="#f6a430"/><g stroke="#f6a430" stroke-width="3.5" stroke-linecap="round"><path d="M24 3v7M24 38v7M3 24h7M38 24h7M9 9l5 5M34 34l5 5M39 9l-5 5M14 34l-5 5"/></g></svg>',
+  mild:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 44V26" stroke="#7a5a3a" stroke-width="4"/><path d="M24 6a14 14 0 0 0 0 28z" fill="#5d9a4e"/><path d="M24 6a14 14 0 0 1 0 28z" fill="#e0893a"/><path d="M24 8v24" stroke="#fff" stroke-width="1.5"/></svg>',
+  cold:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#3d86c6" stroke-width="3.5" stroke-linecap="round"><path d="M24 4v40M7 14l34 20M7 34l34-20M19 6l5 5 5-5M19 42l5-5 5 5M6 21l7 1-3 6M42 27l-7-1 3-6M6 27l7-1-3-6M42 21l-7 1 3 6"/></g></svg>',
+  rain:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 26h26a9 9 0 0 0 0-18a13 13 0 0 0-24-1a9 9 0 0 0-2 19z" fill="#cfd8e3" stroke="#6b7c90" stroke-width="2"/><g stroke="#1f5fa8" stroke-width="3" stroke-linecap="round"><path d="M14 32l-3 9M24 32l-3 9M34 32l-3 9"/></g></svg>',
+  dry:'<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="18" r="9" fill="#f6c430"/><g stroke="#f6c430" stroke-width="3" stroke-linecap="round"><path d="M24 2v5M8 18H3M45 18h-5M12 6l3 3M36 6l-3 3"/></g><path d="M4 44l8-10 4 6 6-12 6 10 6-8 10 14z" fill="#d9b45a"/></svg>',
+  rails:'<svg viewBox="0 0 96 72" aria-hidden="true"><g stroke="#8a6a44" stroke-width="5"><path d="M14 18v44M30 18v44M46 18v44M62 18v44M78 18v44" opacity=".7"/></g><g stroke="#4d5d70" stroke-width="5" stroke-linecap="round"><path d="M6 26h84M6 54h84"/></g></svg>',
+  cross:'<svg viewBox="0 0 96 72" aria-hidden="true"><g stroke="#4d5d70" stroke-width="5" stroke-linecap="round"><path d="M10 14L86 58M10 58L86 14"/></g><circle cx="48" cy="36" r="6" fill="#a5302a"/></svg>',
+  meet:'<svg viewBox="0 0 96 72" aria-hidden="true"><g stroke="#4d5d70" stroke-width="5" stroke-linecap="round"><path d="M8 14L86 36M8 58L86 36"/></g><circle cx="86" cy="36" r="6" fill="#a5302a"/></svg>',
+  dune:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#f9e3b0"/><circle cx="74" cy="18" r="9" fill="#fff3c4"/><path d="M0 52q24-22 48-6t48-4v30H0z" fill="#e0a458"/><path d="M0 62q30-14 60-2t36-2v14H0z" fill="#c9843d"/></svg>',
+  jungle:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#7f97ad"/><g stroke="#3a5f8a" stroke-width="2.5" stroke-linecap="round"><path d="M20 10l-3 8M40 8l-3 8M60 10l-3 8M80 8l-3 8"/></g><path d="M0 56q48-14 96 0v16H0z" fill="#2f7d3f"/><path d="M30 60V30" stroke="#6b4a2b" stroke-width="4"/><g stroke="#3f9a4a" stroke-width="5" fill="none" stroke-linecap="round"><path d="M30 30q-14-2-20 8M30 30q14-2 20 8M30 30q-6-12-18-12M30 30q6-12 18-12"/></g><path d="M66 62V36" stroke="#6b4a2b" stroke-width="4"/><g stroke="#3f9a4a" stroke-width="5" fill="none" stroke-linecap="round"><path d="M66 36q-12-2-18 6M66 36q12-2 18 6M66 36q-4-10-14-10M66 36q4-10 14-10"/></g></svg>',
+  sunUp:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#f7d7a8"/><circle cx="62" cy="34" r="10" fill="#f6a430"/><path d="M0 46h96v26H0z" fill="#f4f8fb"/><path d="M0 46h96" stroke="#9fb3c8" stroke-width="2"/><g fill="#1d1a14"><ellipse cx="22" cy="56" rx="4" ry="7"/><ellipse cx="34" cy="58" rx="4" ry="7"/></g><g fill="#fff"><ellipse cx="22" cy="58" rx="2.4" ry="4.5"/><ellipse cx="34" cy="60" rx="2.4" ry="4.5"/></g></svg>',
+  dark:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#14243a"/><g fill="#fff"><circle cx="16" cy="14" r="1.6"/><circle cx="40" cy="22" r="1.4"/><circle cx="62" cy="10" r="1.8"/><circle cx="84" cy="24" r="1.3"/><circle cx="28" cy="34" r="1.2"/></g><path d="M74 16a8 8 0 1 0 6 12a7 7 0 1 1-6-12z" fill="#f4ead6"/><path d="M0 46h96v26H0z" fill="#9fb0c4"/><g fill="#1d1a14"><ellipse cx="22" cy="56" rx="4" ry="7"/><ellipse cx="34" cy="58" rx="4" ry="7"/></g></svg>',
+  springaut:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#e3f0f8"/><path d="M28 62V40" stroke="#7a5a3a" stroke-width="4"/><g fill="#f2a6c0"><circle cx="22" cy="34" r="8"/><circle cx="34" cy="32" r="8"/><circle cx="28" cy="24" r="7"/></g><path d="M68 62V40" stroke="#7a5a3a" stroke-width="4"/><g fill="#e0893a"><circle cx="62" cy="34" r="8"/><circle cx="74" cy="32" r="8"/><circle cx="68" cy="24" r="7"/></g><path d="M0 62h96v10H0z" fill="#8fbf6a"/></svg>',
+  summer:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#bfe3f7"/><circle cx="70" cy="20" r="11" fill="#f6c430"/><path d="M36 62V38" stroke="#7a5a3a" stroke-width="5"/><g fill="#4f8f45"><circle cx="28" cy="32" r="11"/><circle cx="44" cy="30" r="11"/><circle cx="36" cy="20" r="10"/></g><path d="M0 62h96v10H0z" fill="#d9c25a"/></svg>',
+  winter:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#c9d4de"/><path d="M48 62V36M48 44l-12-12M48 40l12-12M42 38l-4-10M54 34l4-10" stroke="#6b4a2b" stroke-width="4" stroke-linecap="round" fill="none"/><g stroke="#3a5f8a" stroke-width="2.5" stroke-linecap="round"><path d="M16 10l-3 8M76 12l-3 8M84 30l-3 8M12 30l-3 8"/></g><path d="M0 62h96v10H0z" fill="#7d9a6a"/></svg>',
+  book:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><path d="M8 10h28q3 0 3 3v40q0-3-3-3H8z" fill="#fffaf0" stroke="#16A08F" stroke-width="3"/><path d="M70 10H42q-3 0-3 3v40q0-3 3-3h28z" fill="#fffaf0" stroke="#16A08F" stroke-width="3"/><text x="55" y="38" text-anchor="middle" font-size="16" font-weight="700" fill="#a5302a">15</text><g stroke="#b0a58c" stroke-width="2"><path d="M14 20h18M14 28h18M14 36h14"/></g></svg>',
+  pencil:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><path d="M8 48h46" stroke="#b0a58c" stroke-width="2" stroke-dasharray="4 3"/><text x="10" y="40" font-size="15" font-weight="700" fill="#2a2118">warm</text><g transform="rotate(-35 58 30)"><rect x="44" y="24" width="30" height="10" rx="2" fill="#f2c75c" stroke="#8a6a20" stroke-width="1.5"/><path d="M44 24l-8 5 8 5z" fill="#e8d2a6" stroke="#8a6a20" stroke-width="1.5"/><path d="M38 28l-2 1 2 1z" fill="#2a2118"/></g></svg>',
+  read:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><path d="M10 42h58" stroke="#6d5c44" stroke-width="3"/><circle cx="26" cy="20" r="10" fill="#e8c9a6"/><path d="M38 14q8-6 14 0M38 22q10-8 18 2M38 30q12-10 22 4" stroke="#16A08F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M16 42h24l-2-10H18z" fill="#fffaf0" stroke="#16A08F" stroke-width="2.5"/></svg>',
+  finish:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><text x="6" y="26" font-size="11" font-weight="700" fill="#2a2118">In the poles it</text><text x="6" y="40" font-size="11" font-weight="700" fill="#2a2118">is cold but…</text><path d="M44 48h30" stroke="#16A08F" stroke-width="3" stroke-dasharray="5 3"/></svg>',
+  colour:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><circle cx="30" cy="30" r="22" fill="#fff" stroke="#2a2118" stroke-width="2.5"/><path d="M8 30h44" stroke="#a5302a" stroke-width="5"/><path d="M14 18h32M14 42h32" stroke="#b0a58c" stroke-width="1.5"/><g transform="rotate(30 64 24)"><rect x="60" y="6" width="9" height="32" rx="2" fill="#a5302a"/><path d="M60 38l4.5 8 4.5-8z" fill="#a5302a"/></g></svg>',
+  mum:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><circle cx="24" cy="16" r="9" fill="#e8c9a6"/><path d="M15 14q2-12 18-6q-2-6-9-6t-9 12z" fill="#6b4a2b"/><path d="M10 56q0-26 14-26t14 26z" fill="#2453A3"/><circle cx="54" cy="22" r="7" fill="#e8c9a6"/><path d="M47 20q0-10 14-4" stroke="#b5651d" stroke-width="5" fill="none"/><path d="M44 56q0-22 10-22t10 22z" fill="#16A08F"/><rect x="34" y="34" width="16" height="12" rx="2" fill="#fffaf0" stroke="#a5302a" stroke-width="2"/><text x="42" y="44" text-anchor="middle" font-size="8" font-weight="700" fill="#a5302a">15</text></svg>'
+};
+
+/* ----- the globe ----- */
+function globeSVG(cls){
+  const {x:cx,y:cy,R}=GC;
+  const land=LAND.map(l=>`<path d="${gpath(l.p)}" fill="${l.ice?ICE:LANDC}"/>`).join('');
+  const band=(t,a,b,extra)=>{const y1=GY(a),y2=GY(b);return `<rect ${extra||''} data-t="${t}" x="${cx-R}" y="${y1.toFixed(1)}" width="${2*R}" height="${(y2-y1).toFixed(1)}"/>`;};
+  const zones=[['pn',90,POLAR,'#ffffff'],['tn',POLAR,TROPIC,'#8fc46a'],['tr',TROPIC,-TROPIC,'#ffa94a'],['ts',-TROPIC,-POLAR,'#8fc46a'],['ps',-POLAR,-90,'#ffffff']];
+  const rings=[10,20,30,40,50,60,70,80].map(l=>[l,-l]).flat().map(l=>`<path d="M${(cx-GW(l)).toFixed(1)} ${GY(l).toFixed(1)}H${(cx+GW(l)).toFixed(1)}"/>`).join('');
+  const zl=(t,lat,txt,col)=>`<text class="zlbl" data-z="${t}" x="${cx}" y="${(GY(lat)+6).toFixed(1)}" text-anchor="middle" font-size="17" font-weight="700" fill="${col}" stroke="#fff" stroke-width="4" paint-order="stroke">${txt}</text>`;
+  return `<svg id="gl" class="${cls||''}" viewBox="0 0 600 330" role="img" aria-label="Mistress Wren's globe">
+  <defs><clipPath id="gclip"><circle cx="${cx}" cy="${cy}" r="${R}"/></clipPath><radialGradient id="gshade" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></radialGradient></defs>
+  <rect width="600" height="330" fill="#0f2438"/>
+  <g fill="#fff" opacity=".7"><circle cx="40" cy="40" r="1.5"/><circle cx="90" cy="280" r="1.2"/><circle cx="530" cy="60" r="1.6"/><circle cx="560" cy="250" r="1.2"/><circle cx="120" cy="150" r="1"/><circle cx="480" cy="300" r="1.3"/></g>
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="${SEA}"/>
+  <g clip-path="url(#gclip)">${land}
+    <rect x="${cx-R}" y="${cy-R}" width="${2*R}" height="${(GY(80)-(cy-R)).toFixed(1)}" fill="${ICE}"/>
+    <rect x="${cx-R}" y="${GY(-78).toFixed(1)}" width="${2*R}" height="40" fill="${ICE}"/>
+    <g class="zonesg">${zones.map(([t,a,b,c])=>band(t,a,b,`class="zone" fill="${c}"`)).join('')}</g>
+    <g class="rings" stroke="rgba(255,255,255,.55)" stroke-width="1.5">${rings}</g>
+  </g>
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#gshade)" pointer-events="none"/>
+  <path class="eqline" d="M${cx-R} ${cy}H${cx+R}" stroke="#fff" stroke-width="3.5" stroke-dasharray="9 6" pointer-events="none"/>
+  <text class="eqlbl" x="${cx+R+8}" y="${cy+6}" font-size="17" font-weight="700" fill="#f4ead6">Equator 0°</text>
+  <g class="trop" stroke="#f2c75c" stroke-width="3.5" stroke-dasharray="9 6" pointer-events="none"><path d="M${(cx-GW(TROPIC)).toFixed(1)} ${GY(TROPIC).toFixed(1)}H${(cx+GW(TROPIC)).toFixed(1)}"/><path d="M${(cx-GW(TROPIC)).toFixed(1)} ${GY(-TROPIC).toFixed(1)}H${(cx+GW(TROPIC)).toFixed(1)}"/></g>
+  ${zl('pn',76,'polar','#3d86c6')}${zl('tn',45,'in between','#2f6f2a')}${zl('tr',11,'the tropics','#a5561a')}${zl('ts',-45,'in between','#2f6f2a')}${zl('ps',-76,'polar','#3d86c6')}
+  <text x="${cx}" y="${cy-R-6}" text-anchor="middle" font-size="15" fill="#f4ead6">North Pole</text>
+  <text x="${cx}" y="${cy+R+18}" text-anchor="middle" font-size="15" fill="#f4ead6">South Pole</text>
+  <g id="gx"></g>
+</svg>`;
+}
+function gBand(t,a,b,cls){const {x:cx,R}=GC;const y1=GY(a),y2=GY(b);return `<rect class="${cls||'tz'}" data-t="${t}" x="${cx-R}" y="${y1.toFixed(1)}" width="${2*R}" height="${(y2-y1).toFixed(1)}" fill="transparent" clip-path="url(#gclip)"/>`;}
+function gBalloon(x,lat,id,label){const y=GY(lat);return `<g ${id?`id="${id}"`:''} class="balg" transform="translate(${x.toFixed(1)} ${(y-8).toFixed(1)}) scale(.62)">${BALLOON}</g>${label?`<text x="${(x+18).toFixed(1)}" y="${(y-22).toFixed(1)}" font-size="17" font-weight="700" fill="#fff" stroke="#0f2438" stroke-width="4" paint-order="stroke">${label}</text>`:''}`;}
+
+/* ----- the map ----- */
+const PLACES={
+  home:{lon:145.9,lat:-38.2,name:'Home',full:'Home in Victoria',lx:10,ly:6},
+  darwin:{lon:130.8,lat:-12.46,name:'Darwin',full:'Darwin',lx:-58,ly:-10},
+  sahara:{lon:14,lat:21,name:'Sahara Desert',full:'the Sahara Desert',lx:12,ly:-12},
+  davis:{lon:78,lat:-68.6,name:'Davis station',full:'Davis station, Antarctica',lx:12,ly:-8}
+};
+function mapSVG(){
+  const lines=[30,20,10,0,-10,-20,-30,-40,-50,-60,-70].map(l=>`<path d="M0 ${MY(l).toFixed(1)}H600"/>`).join('');
+  const lbls=[30,20,10,-10,-20,-30,-40,-50,-60,-70].map(l=>`<text x="4" y="${(MY(l)-3).toFixed(1)}">${Math.abs(l)}°${l>0?'N':'S'}</text>`).join('');
+  const pins=Object.keys(PLACES).map(k=>{const p=PLACES[k],x=MX(p.lon),y=MY(p.lat);
+    return `<g class="pin" id="pin-${k}"><circle class="glow" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="13"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" fill="#a5302a" stroke="#fff" stroke-width="2.5"/><path class="tickm" d="M${(x-5).toFixed(1)} ${y.toFixed(1)}l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2.6" fill="none"/><text x="${(x+p.lx).toFixed(1)}" y="${(y+p.ly).toFixed(1)}" font-size="15" font-weight="700" fill="#2a2118" stroke="#fffaf0" stroke-width="4" paint-order="stroke">${p.name}</text><circle class="drop" data-t="${k}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="26" fill="transparent"/></g>`;}).join('');
+  const ay=MY(-TROPIC);
+  return `<svg id="mp" viewBox="0 0 600 384" role="img" aria-label="A map from Africa to Australia and Antarctica">
+  <rect width="600" height="384" fill="${SEA}"/>
+  <g stroke="rgba(255,255,255,.28)" stroke-width="1.2">${lines}</g>
+  ${LAND.map(l=>`<path d="${mpath(l.p)}" fill="${l.ice?ICE:LANDC}" stroke="${LANDS}" stroke-width="1.2"/>`).join('')}
+  <g fill="#f4ead6" font-size="12" font-weight="700" stroke="#2c5f86" stroke-width="3" paint-order="stroke">${lbls}</g>
+  <g fill="#6d5c44" font-size="15" font-weight="700" text-anchor="middle" opacity=".85"><text x="90" y="120">Africa</text><text x="290" y="40">Asia</text><text x="440" y="235">Australia</text><text x="160" y="378">Antarctica</text></g>
+  <g fill="rgba(244,234,214,.75)" font-size="14" font-style="italic" text-anchor="middle"><text x="250" y="200">Indian Ocean</text></g>
+  <path d="M0 ${MY(0).toFixed(1)}H600" stroke="#fff" stroke-width="2.5" stroke-dasharray="9 6"/>
+  <g stroke="#f2c75c" stroke-width="2.5" stroke-dasharray="9 6"><path d="M0 ${MY(TROPIC).toFixed(1)}H600"/><path d="M0 ${ay.toFixed(1)}H600"/></g>
+  <g font-size="13" font-weight="700" text-anchor="end" stroke="${SEA}" stroke-width="4" paint-order="stroke"><text x="596" y="${(MY(0)-5).toFixed(1)}" fill="#fff">Equator 0°</text><text x="596" y="${(MY(TROPIC)-5).toFixed(1)}" fill="#f2c75c">Tropic of Cancer</text><text x="596" y="${(ay-5).toFixed(1)}" fill="#f2c75c">Tropic of Capricorn</text></g>
+  <g class="aus"><rect class="tz" data-t="in" x="${MX(112).toFixed(1)}" y="${MY(-10.5).toFixed(1)}" width="${(MX(154)-MX(112)).toFixed(1)}" height="${(ay-MY(-10.5)).toFixed(1)}" fill="transparent"/><rect class="tz" data-t="out" x="${MX(112).toFixed(1)}" y="${ay.toFixed(1)}" width="${(MX(154)-MX(112)).toFixed(1)}" height="${(MY(-39.5)-ay).toFixed(1)}" fill="transparent"/></g>
+  <g class="gsd" pointer-events="none"><path d="M${MX(121).toFixed(1)} ${MY(-19).toFixed(1)}q14-8 30 0q8 8-6 14q-18 4-24-14z" fill="#e0a458" opacity=".9"/><text x="${MX(124).toFixed(1)}" y="${(MY(-19)-10).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="700" fill="#2a2118" stroke="#fffaf0" stroke-width="4" paint-order="stroke">Great Sandy Desert</text></g>
+  ${pins}
+  <g id="mbal" pointer-events="none"><g transform="translate(0 -16)">${BALLOON}</g><g id="mread" transform="translate(22 -58)"><rect width="70" height="28" rx="8" fill="#fffaf0" stroke="#2a2118" stroke-width="2"/><text x="35" y="20" text-anchor="middle" font-size="17" font-weight="700" fill="#a5302a">0°</text></g></g>
+</svg>`;
+}
+
+/* ----- scenes for each stop ----- */
+const PALM=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0Q-6-40 4-80" stroke="#7a5a3a" stroke-width="8" fill="none" stroke-linecap="round"/><g stroke="#3f9a4a" stroke-width="7" fill="none" stroke-linecap="round"><path d="M4-80q-30-6-44 14M4-80q30-6 44 14M4-80q-16-20-38-16M4-80q16-20 38-16M4-80q-4 18-14 34"/></g></g>`;
+const DARWIN=`<svg id="dw" viewBox="0 0 600 320" role="img" aria-label="Darwin in a tropical storm">
+  <defs><linearGradient id="dwsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e4b5c"/><stop offset="1" stop-color="#8fa3b5"/></linearGradient></defs>
+  <rect width="600" height="320" fill="url(#dwsky)"/>
+  <path class="flash" d="M430 60l-20 44h15l-13 40 34-54h-17l13-30z" fill="#ffe680"/>
+  <g fill="#2f3a48"><ellipse cx="120" cy="50" rx="110" ry="34"/><ellipse cx="300" cy="36" rx="130" ry="36"/><ellipse cx="500" cy="46" rx="120" ry="34"/></g>
+  <g fill="#435064"><ellipse cx="200" cy="70" rx="90" ry="24"/><ellipse cx="420" cy="72" rx="100" ry="24"/></g>
+  <g class="rainfall" stroke="#c6d6e6" stroke-width="2.5" stroke-linecap="round" opacity=".85"><path d="M40 100l-8 22M90 120l-8 22M140 96l-8 22M190 130l-8 22M240 104l-8 22M290 124l-8 22M340 98l-8 22M390 132l-8 22M450 110l-8 22M500 128l-8 22M550 100l-8 22M70 170l-8 22M170 180l-8 22M270 166l-8 22M370 184l-8 22M470 170l-8 22M570 176l-8 22"/></g>
+  <path d="M0 236Q150 222 300 236T600 232V320H0Z" fill="#3f8f4a"/>
+  <g fill="#5f85a8" opacity=".8"><ellipse cx="150" cy="282" rx="46" ry="7"/><ellipse cx="460" cy="296" rx="60" ry="8"/></g>
+  ${PALM(70,250,1)}${PALM(540,248,1.1)}${PALM(120,256,.7)}
+  <g transform="translate(250 150)"><g stroke="#5b4630" stroke-width="5"><path d="M10 50v50M60 50v50M110 50v50M150 50v50"/></g>
+    <rect x="0" y="20" width="160" height="34" fill="#f8efdc" stroke="#6d5c44" stroke-width="2"/>
+    <g stroke="#9c8a6a" stroke-width="2"><path d="M14 26h26M14 32h26M14 38h26M14 44h26M120 26h26M120 32h26M120 38h26M120 44h26"/></g>
+    <rect x="66" y="28" width="26" height="26" fill="#6b4a2b"/>
+    <path d="M-16 22L80-14L176 22Z" fill="#8c3b2c"/><path d="M-6 54h172" stroke="#6d5c44" stroke-width="3"/>
+    <g stroke="#6d5c44" stroke-width="2"><path d="M-6 54v-8M20 54v-8M46 54v-8M114 54v-8M140 54v-8M166 54v-8"/></g></g>
+  <text x="300" y="312" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" stroke="#2f3a48" stroke-width="4" paint-order="stroke">Darwin, about 12° south</text>
+</svg>`;
+const SEASON2=`<svg id="s2" viewBox="0 0 600 300" role="img" aria-label="Two seasons">
+  <rect x="4" y="4" width="290" height="292" rx="14" fill="#5b6b80"/>
+  <g fill="#3a4656"><ellipse cx="110" cy="70" rx="80" ry="30"/><ellipse cx="200" cy="60" rx="80" ry="28"/></g>
+  <g class="rainfall" stroke="#c6d6e6" stroke-width="3" stroke-linecap="round"><path d="M60 110l-8 22M110 124l-8 22M160 108l-8 22M210 126l-8 22M250 110l-8 22M80 160l-8 22M180 166l-8 22"/></g>
+  <path d="M4 220Q150 200 294 220V282q0 14-14 14H18q-14 0-14-14Z" fill="#2f8f3f"/>
+  <ellipse cx="150" cy="252" rx="70" ry="14" fill="#5f8fbf"/><g fill="#3f9a4a"><ellipse cx="130" cy="250" rx="10" ry="5"/><ellipse cx="170" cy="254" rx="9" ry="4"/></g><circle cx="150" cy="248" r="5" fill="#f2a6c0"/>
+  <g stroke="#3f9a4a" stroke-width="4" stroke-linecap="round"><path d="M30 230v-36M40 230v-44M50 230v-30M250 228v-40M262 228v-30M272 228v-42"/></g>
+  <rect x="306" y="4" width="290" height="292" rx="14" fill="#a9daf3"/>
+  <circle cx="500" cy="70" r="30" fill="#f6c430"/><g stroke="#f6c430" stroke-width="5" stroke-linecap="round"><path d="M500 20v12M500 108v12M450 70h12M538 70h12M465 35l8 8M527 97l8 8M535 35l-8 8M473 97l-8 8"/></g>
+  <path d="M306 214Q450 200 596 214V282q0 14-14 14H320q-14 0-14-14Z" fill="#d9b45a"/>
+  <g stroke="#b08a3a" stroke-width="2"><path d="M350 250l20 6 10-8 24 8M440 262l18-6 16 8M520 248l14 10 20-6"/></g>
+  <path d="M400 214v-50M400 180l-16-14M400 172l14-16" stroke="#7a5a3a" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <g stroke="#c9a24a" stroke-width="3" stroke-linecap="round"><path d="M330 214l-4-20M340 214l4-18M560 214l-4-22M572 214l4-16"/></g>
+  <rect class="drop" data-t="wet" x="4" y="4" width="290" height="292" rx="14" fill="transparent"/>
+  <rect class="drop" data-t="dry" x="306" y="4" width="290" height="292" rx="14" fill="transparent"/>
+  <text id="lab-wet" x="150" y="190" text-anchor="middle" font-size="24" font-weight="700" fill="#fff" stroke="#2f3a48" stroke-width="5" paint-order="stroke" pointer-events="none"></text>
+  <text id="lab-dry" x="450" y="190" text-anchor="middle" font-size="24" font-weight="700" fill="#2a2118" stroke="#fffaf0" stroke-width="5" paint-order="stroke" pointer-events="none"></text>
+</svg>`;
+const SAHARA=`<svg id="sh" viewBox="0 0 600 320" role="img" aria-label="The Sahara Desert">
+  <defs><linearGradient id="shsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3b25a"/><stop offset="1" stop-color="#fae3b4"/></linearGradient></defs>
+  <rect width="600" height="320" fill="url(#shsky)"/>
+  <circle cx="300" cy="56" r="34" fill="#fff6d0"/><circle cx="300" cy="56" r="48" fill="#fff6d0" opacity=".35"/>
+  <path d="M0 196Q120 140 250 190T600 170V320H0Z" fill="#e8b46a"/>
+  <path d="M0 236Q180 196 330 232T600 222V320H0Z" fill="#d99a4e"/>
+  <path d="M0 276Q160 250 300 272T600 266V320H0Z" fill="#c4813a"/>
+  <g class="shimmer" stroke="#fff3d0" stroke-width="2.5" stroke-linecap="round" opacity=".7" fill="none"><path d="M90 170q10-4 20 0t20 0M420 160q10-4 20 0t20 0M260 214q10-4 20 0t20 0"/></g>
+  <g transform="translate(420 206)" fill="#5a3b22"><path d="M0 0q6-26 26-24q8-16 20-4q10-2 16 10q14-8 18 4l-6 4q-6-6-10 0v40h-6V0q-6 4-14 0q-10 6-22 2v28h-6V4Q8 6 6 30H0z"/><path d="M78-14q6-12 12-8l-2 6z"/></g>
+  <text x="300" y="312" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" stroke="#8a5a20" stroke-width="4" paint-order="stroke">The Sahara Desert, about 21° north</text>
+</svg>`;
+const PENG=(x,y)=>`<g transform="translate(${x} ${y})"><ellipse cx="0" cy="0" rx="8" ry="14" fill="#1d1a14"/><ellipse cx="1.5" cy="2" rx="5" ry="10" fill="#fff"/><circle cx="0" cy="-12" r="6" fill="#1d1a14"/><circle cx="2" cy="-13" r="1.6" fill="#fff"/><path d="M5-12l5 1-5 2z" fill="#e08a3c"/><path d="M-4 14h4M2 14h4" stroke="#e08a3c" stroke-width="2"/></g>`;
+const DAVIS=`<svg id="dv" viewBox="0 0 600 320" role="img" aria-label="Davis station in Antarctica">
+  <rect id="dvsky" width="600" height="320" fill="#bfe0f5"/>
+  <g id="dvsun"><circle r="22" fill="#f6c430"/><circle r="32" fill="#f6c430" opacity=".25"/></g>
+  <rect y="196" width="600" height="40" fill="#2d5f86"/>
+  <path d="M60 200l20-30h40l16 30z" fill="#f4f8fb"/><path d="M80 170l8 30h-28z" fill="#cfe1ee"/>
+  <path d="M470 204l14-18h36l10 18z" fill="#f4f8fb"/>
+  <path d="M0 226Q150 214 300 228T600 222V320H0Z" fill="#f4f8fb"/>
+  <path d="M0 260Q200 250 400 262T600 258" stroke="#cfe1ee" stroke-width="4" fill="none"/>
+  <g transform="translate(330 196)"><rect x="0" y="0" width="70" height="34" fill="#c0392b" stroke="#7a1f16" stroke-width="2"/><rect x="76" y="10" width="54" height="24" fill="#2f7d4f" stroke="#1b4d30" stroke-width="2"/><rect x="136" y="4" width="46" height="30" fill="#2a6fb0" stroke="#174570" stroke-width="2"/><rect x="190" y="14" width="34" height="20" fill="#f2c75c" stroke="#8a6a20" stroke-width="2"/><g fill="#fff"><rect x="10" y="10" width="10" height="8"/><rect x="30" y="10" width="10" height="8"/><rect x="50" y="10" width="10" height="8"/><rect x="90" y="16" width="8" height="7"/><rect x="150" y="12" width="8" height="7"/></g><path d="M30 0v-20M30-20h14l-4 5 4 5H30" stroke="#2a2118" stroke-width="2" fill="#2453A3"/></g>
+  ${PENG(120,262)}${PENG(146,270)}${PENG(170,258)}${PENG(220,274)}
+  <text x="300" y="312" text-anchor="middle" font-size="16" font-weight="700" fill="#2a2118" stroke="#f4f8fb" stroke-width="4" paint-order="stroke">Davis station, Antarctica, about 69° south</text>
+</svg>`;
+const COW=(x,y,f)=>`<g transform="translate(${x} ${y}) scale(${f?-1:1} 1)"><rect x="-16" y="-10" width="32" height="16" rx="6" fill="#fff" stroke="#2a2118" stroke-width="1.5"/><path d="M-6-10q4 8 10 0" fill="#2a2118"/><circle cx="8" cy="-2" r="4" fill="#2a2118"/><rect x="16" y="-14" width="10" height="10" rx="3" fill="#fff" stroke="#2a2118" stroke-width="1.5"/><path d="M-12 6v8M-6 6v8M8 6v8M12 6v8" stroke="#2a2118" stroke-width="2.5"/></g>`;
+const HOME=`<svg id="hm" viewBox="0 0 600 320" role="img" aria-label="Green hills at home">
+  <rect width="600" height="320" fill="#cfe6f5"/>
+  <circle cx="90" cy="60" r="24" fill="#f6c430"/>
+  <g fill="#fff"><ellipse cx="400" cy="56" rx="50" ry="14"/><ellipse cx="380" cy="46" rx="24" ry="12"/><ellipse cx="210" cy="80" rx="36" ry="10"/></g>
+  <path d="M0 170Q100 120 220 150T440 130T600 150V320H0Z" fill="#7aa0b8"/>
+  <path d="M0 200Q150 160 300 196T600 180V320H0Z" fill="#6fae4f"/>
+  <path d="M0 250Q200 220 380 248T600 240V320H0Z" fill="#5b9a40"/>
+  <g stroke="#8a6a44" stroke-width="2"><path d="M0 286h600"/><path d="M20 276v20M80 276v20M140 276v20M200 276v20M260 276v20M320 276v20M380 276v20M440 276v20M500 276v20M560 276v20"/></g>
+  <g transform="translate(360 170)"><path class="smoke" d="M128 -8q6-6 0-12q-6-6 0-12" stroke="#d6dde4" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="120" y="-6" width="14" height="30" fill="#8c3b2c"/><rect x="0" y="20" width="150" height="54" fill="#f8efdc" stroke="#6d5c44" stroke-width="2"/><path d="M-10 22L75-16L160 22Z" fill="#5d6d7c"/><path d="M-14 46h178" stroke="#6d5c44" stroke-width="3"/><g stroke="#6d5c44" stroke-width="2.5"><path d="M-10 46v28M20 46v28M130 46v28M160 46v28"/></g><rect x="62" y="44" width="24" height="30" fill="#6b4a2b"/><rect x="24" y="48" width="22" height="16" fill="#9fc5e0" stroke="#6d5c44"/><rect x="104" y="48" width="22" height="16" fill="#9fc5e0" stroke="#6d5c44"/></g>
+  ${COW(120,240)}${COW(200,256,1)}${COW(280,238)}
+  <g transform="translate(560 230)"><path d="M0 40V0" stroke="#7a5a3a" stroke-width="7"/><g fill="#4f8f45"><circle cx="-12" cy="-6" r="16"/><circle cx="12" cy="-10" r="16"/><circle cx="0" cy="-24" r="14"/></g></g>
+  <text x="300" y="312" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" stroke="#2f5a26" stroke-width="4" paint-order="stroke">Home in Victoria, about 38° south</text>
+</svg>`;
+/* seasons pictures for the home stop */
+const TREE=s=>{const c={spring:['#e3f0f8','#f2a6c0','#8fbf6a'],summer:['#bfe3f7','#4f8f45','#d9c25a'],autumn:['#f3e2c8','#e0893a','#9fae5a'],winter:['#c9d4de','none','#7d9a6a']}[s];
+  return `<svg viewBox="0 0 120 100" aria-hidden="true"><rect width="120" height="100" rx="10" fill="${c[0]}"/>${s==='summer'?'<circle cx="96" cy="22" r="11" fill="#f6c430"/>':''}${s==='winter'?'<g stroke="#3a5f8a" stroke-width="2.5" stroke-linecap="round"><path d="M18 12l-3 8M98 14l-3 8M106 34l-3 8M12 36l-3 8"/></g>':''}<path d="M0 84h120v16H0z" fill="${c[2]}"/><path d="M60 86V50M60 62l-16-14M60 56l16-14M52 52l-6-12M68 48l6-12" stroke="#6b4a2b" stroke-width="4.5" stroke-linecap="round" fill="none"/>${c[1]!=='none'?`<g fill="${c[1]}"><circle cx="48" cy="44" r="14"/><circle cx="72" cy="42" r="14"/><circle cx="60" cy="28" r="13"/>${s==='spring'?'':''}</g>`:''}${s==='autumn'?'<g fill="#e0893a"><circle cx="30" cy="70" r="3"/><circle cx="88" cy="76" r="3"/><circle cx="96" cy="60" r="2.5"/></g>':''}${s==='spring'?'<g fill="#fff"><circle cx="50" cy="40" r="2"/><circle cx="66" cy="34" r="2"/><circle cx="74" cy="46" r="2"/></g>':''}</svg>`;};
+/* houses and places for the last match */
+const HOUSE={
+  stilts:'<svg viewBox="0 0 110 80" aria-hidden="true"><g stroke="#5b4630" stroke-width="4"><path d="M18 46v30M50 46v30M86 46v30"/></g><rect x="10" y="26" width="90" height="22" fill="#f8efdc" stroke="#6d5c44" stroke-width="2"/><g stroke="#9c8a6a" stroke-width="1.6"><path d="M16 30h20M16 35h20M16 40h20M74 30h20M74 35h20M74 40h20"/></g><path d="M0 28L55 4L110 28Z" fill="#8c3b2c"/><g stroke="#6aa6d6" stroke-width="2.5" fill="none" stroke-linecap="round"><path d="M2 32h8M0 38h10M2 44h8"/></g></svg>',
+  verandah:'<svg viewBox="0 0 110 80" aria-hidden="true"><rect x="80" y="10" width="10" height="22" fill="#8c3b2c"/><path class="smoke" d="M85 6q4-4 0-8" stroke="#bfc8d0" stroke-width="3" fill="none"/><rect x="14" y="34" width="82" height="38" fill="#f8efdc" stroke="#6d5c44" stroke-width="2"/><path d="M6 36L55 10L104 36Z" fill="#5d6d7c"/><path d="M4 50h102" stroke="#6d5c44" stroke-width="2.5"/><g stroke="#6d5c44" stroke-width="2"><path d="M6 50v22M104 50v22"/></g><rect x="46" y="50" width="16" height="22" fill="#6b4a2b"/><rect x="22" y="52" width="14" height="10" fill="#9fc5e0"/><rect x="72" y="52" width="14" height="10" fill="#9fc5e0"/></svg>',
+  snug:'<svg viewBox="0 0 110 80" aria-hidden="true"><rect x="0" y="66" width="110" height="14" fill="#f4f8fb"/><rect x="12" y="22" width="86" height="46" rx="6" fill="#c0392b" stroke="#7a1f16" stroke-width="5"/><rect x="24" y="36" width="10" height="8" fill="#fff4d6" stroke="#7a1f16" stroke-width="2"/><rect x="76" y="36" width="10" height="8" fill="#fff4d6" stroke="#7a1f16" stroke-width="2"/><rect x="47" y="42" width="16" height="26" fill="#7a1f16"/><path d="M12 22h86" stroke="#f4f8fb" stroke-width="6"/></svg>'
+};
+const PLACEPIC={
+  darwin:'<svg viewBox="0 0 120 90" aria-hidden="true"><rect width="120" height="90" rx="10" fill="#7f97ad"/><g class="rainfall" stroke="#c6d6e6" stroke-width="2.5" stroke-linecap="round"><path d="M20 10l-3 8M50 14l-3 8M80 8l-3 8M104 16l-3 8"/></g><path d="M0 70q60-12 120 0v20H0z" fill="#3f8f4a"/>'+PALM(40,78,.55)+PALM(92,80,.45)+'<text x="60" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Darwin</text></svg>',
+  home:'<svg viewBox="0 0 120 90" aria-hidden="true"><rect width="120" height="90" rx="10" fill="#cfe6f5"/><path d="M0 54q30-20 60-6t60-4v46H0z" fill="#6fae4f"/><path d="M0 70q40-12 80 0t40-2v22H0z" fill="#5b9a40"/>'+COW(40,66)+'<text x="60" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Home</text></svg>',
+  davis:'<svg viewBox="0 0 120 90" aria-hidden="true"><rect width="120" height="90" rx="10" fill="#d7eaf5"/><rect y="50" width="120" height="14" fill="#2d5f86"/><path d="M0 62q60-6 120 0v28H0z" fill="#f4f8fb"/>'+PENG(22,72)+PENG(38,76)+'<text x="74" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#2a2118">Davis</text></svg>'
+};
+/* the Earth leaning its southern half to the Sun */
+function tiltSVG(){
+  const cx=380,cy=155,R=105;
+  return `<svg id="tl" viewBox="0 0 600 310" role="img" aria-label="The Sun and the tilted Earth">
+  <rect width="600" height="310" fill="#0f2438"/>
+  <g fill="#fff" opacity=".7"><circle cx="560" cy="30" r="1.5"/><circle cx="520" cy="280" r="1.2"/><circle cx="250" cy="290" r="1.3"/></g>
+  <circle cx="60" cy="155" r="44" fill="#f6c430"/><circle cx="60" cy="155" r="60" fill="#f6c430" opacity=".2"/>
+  <g stroke="#f6c430" stroke-width="3" stroke-dasharray="7 6" opacity=".9"><path d="M120 95H285M120 155H270M120 215H285"/></g>
+  <g transform="rotate(23 ${cx} ${cy})">
+    <clipPath id="tclip"><circle cx="${cx}" cy="${cy}" r="${R}"/></clipPath>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="${SEA}"/>
+    <g clip-path="url(#tclip)" fill="${LANDC}"><path d="M330 90q30-20 60 0t40 30q-30 10-60 0t-40-30z"/><path d="M370 190q30-8 50 10t-10 30q-30 0-40-40z"/><rect x="${cx-R}" y="${cy+R-14}" width="${2*R}" height="20" fill="${ICE}"/><rect x="${cx-R}" y="${cy-R-6}" width="${2*R}" height="20" fill="${ICE}"/></g>
+    <rect class="half" data-t="n" x="${cx-R}" y="${cy-R}" width="${2*R}" height="${R}" fill="transparent" clip-path="url(#tclip)"/>
+    <rect class="half" data-t="s" x="${cx-R}" y="${cy}" width="${2*R}" height="${R}" fill="transparent" clip-path="url(#tclip)"/>
+    <path d="M${cx-R} ${cy}H${cx+R}" stroke="#fff" stroke-width="3" stroke-dasharray="8 6" pointer-events="none"/>
+    <path d="M${cx} ${cy-R-28}V${cy+R+28}" stroke="#f4ead6" stroke-width="3" pointer-events="none"/>
+    <text x="${cx+8}" y="${cy-R-12}" font-size="16" font-weight="700" fill="#f4ead6">N</text>
+    <text x="${cx+8}" y="${cy+R+26}" font-size="16" font-weight="700" fill="#f4ead6">S</text>
+  </g>
+  <text x="${cx}" y="300" text-anchor="middle" font-size="15" fill="#f4ead6">The Earth leans as it travels round the Sun</text>
+</svg>`;
+}
+/* a small labelled globe for the lesson card */
+const TROPCARD=(()=>{const cx=150,cy=95,R=80;const y=l=>cy-R*Math.sin(l*D2R),w=l=>R*Math.cos(l*D2R);
+  return `<svg viewBox="0 0 320 190" style="max-height:210px" aria-hidden="true"><circle cx="${cx}" cy="${cy}" r="${R}" fill="${SEA}"/><path d="M${cx-R} ${cy}H${cx+R}" stroke="#fff" stroke-width="2.5" stroke-dasharray="7 5"/><rect x="${cx-w(TROPIC)}" y="${y(TROPIC)}" width="${2*w(TROPIC)}" height="${y(-TROPIC)-y(TROPIC)}" fill="#f39b3f" opacity=".45"/><g stroke="#c98a12" stroke-width="3" stroke-dasharray="7 5"><path d="M${cx-w(TROPIC)} ${y(TROPIC)}H${cx+w(TROPIC)}"/><path d="M${cx-w(TROPIC)} ${y(-TROPIC)}H${cx+w(TROPIC)}"/></g><path d="M${cx+20} ${y(-12)}q16-10 34-2q6 12-4 22q-18 4-30-20z" fill="${LANDC}"/><g font-size="14" font-weight="700" fill="#2a2118"><text x="${cx+w(TROPIC)+6}" y="${y(TROPIC)+5}">Tropic of Cancer</text><text x="${cx+R+6}" y="${cy+5}" fill="#6d5c44">Equator</text><text x="${cx+w(TROPIC)+6}" y="${y(-TROPIC)+5}">Tropic of Capricorn</text></g><text x="${cx+38}" y="${y(-12)+34}" font-size="11" fill="#6d5c44" text-anchor="middle">Australia</text></svg>`;})();
+
+const TILEPIC={
+  rings:`<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="10" fill="#0f2438"/><circle cx="75" cy="50" r="40" fill="${SEA}"/><path d="M35 50h80" stroke="#fff" stroke-width="3" stroke-dasharray="6 4"/><g stroke="rgba(255,255,255,.55)" stroke-width="1.5"><path d="M41 30h68M41 70h68M52 16h46M52 84h46"/></g></svg>`,
+  tropics:`<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="10" fill="#0f2438"/><circle cx="75" cy="50" r="40" fill="${SEA}"/><rect x="38" y="34" width="74" height="32" fill="#f39b3f" opacity=".7"/><path d="M42 18h66M42 82h66" stroke="#fff" stroke-width="7" opacity=".85"/><g stroke="#f2c75c" stroke-width="3" stroke-dasharray="6 4"><path d="M38 34h74M38 66h74"/></g></svg>`,
+  trip:`<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="10" fill="#f3b25a"/><path d="M0 70q40-22 80-6t70-6v42H0z" fill="#d99a4e"/>${PALM(40,90,.5)}<g transform="translate(108 58) scale(.75)">${BALLOON}</g></svg>`,
+  ice:`<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="10" fill="#d7eaf5"/><circle cx="110" cy="44" r="12" fill="#f6c430"/><rect y="58" width="150" height="14" fill="#2d5f86"/><path d="M0 70q75-8 150 0v30H0z" fill="#f4f8fb"/>${PENG(40,82)}${PENG(60,86)}<rect x="88" y="66" width="30" height="16" fill="#c0392b"/></svg>`,
+  globe:`<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="10" fill="#0f2438"/><circle cx="75" cy="50" r="40" fill="${SEA}"/><rect x="38" y="35" width="74" height="30" fill="#f39b3f" opacity=".6"/><rect x="42" y="20" width="66" height="15" fill="#8fc46a" opacity=".6"/><rect x="42" y="65" width="66" height="15" fill="#8fc46a" opacity=".6"/><path d="M35 50h80" stroke="#fff" stroke-width="3" stroke-dasharray="6 4"/><g stroke="#f2c75c" stroke-width="2.5" stroke-dasharray="5 4"><path d="M38 35h74M38 65h74"/></g></svg>`
+};
+
+/* ================= the stage: one picture, one short line, one thing to do ================= */
+let STEP={n:0,of:0};
+let HELP=null,HELPN=0,HELPQ=[],HELPX=null;
+function stage(o){
+  toTop();untoast();
+  main.innerHTML=`<section class="panel"><div class="phead"><h2>${o.title}</h2><ol class="dots" id="dots" aria-label="Steps"></ol></div>
+    <div class="bubble"><span class="who">${NUTMEG}</span><p id="say"></p><button class="qbtn" id="help" aria-label="Help, please" disabled>?</button></div>
+    <p class="clue" id="clue" hidden></p>
+    <div class="sw" id="sw" ${o.scene?'':'hidden'}>${o.scene||'<svg></svg>'}<div class="ov" id="ov"></div><div class="toast" id="toast" hidden></div></div>
+    <div class="tray" id="tray"></div></section>`;
+  STEP={n:0,of:o.steps||0};dots();if(o.say)say(o.say);
+  $('#help').onclick=()=>{if(!HELP||HELPN>=HELP.length)return;HELPQ.forEach(q=>q&&q.hint());clue(`<b>${['Remember','Hint','Look'][Math.min(HELPN,2)]}:</b> ${HELP[HELPN]}`);if(HELPX)HELPX(HELPN);HELPN++;if(HELPN>=HELP.length)$('#help').disabled=true;};
+}
+function setScene(svg){const sw=$('#sw');const old=sw.querySelector(':scope>svg');const tmp=document.createElement('div');tmp.innerHTML=svg;old.replaceWith(tmp.firstElementChild);$('#ov').innerHTML='';}
+function dots(){const d=$('#dots');if(d)d.innerHTML=Array.from({length:STEP.of},(_,i)=>`<li class="${i<STEP.n?'on':''}"></li>`).join('');}
+function stepDone(){STEP.n++;dots();}
+function say(t){const s=$('#say');if(s)s.innerHTML=t;}
+function clue(t){const c=$('#clue');if(!c)return;if(!t){c.hidden=true;c.innerHTML='';return;}c.hidden=false;c.innerHTML=t;}
+let toastT=null;
+function toast(kind,t,ms){const el=$('#toast');if(!el)return;clearTimeout(toastT);el.className='toast '+kind;el.innerHTML=t;el.hidden=false;if(ms)toastT=setTimeout(()=>{el.hidden=true;},ms);}
+function untoast(){clearTimeout(toastT);const el=$('#toast');if(el)el.hidden=true;}
+function setHelp(levels,qs,extra){HELP=levels||null;HELPN=0;HELPQ=[].concat(qs||[]);HELPX=extra||null;clue(null);const b=$('#help');if(!b)return;b.disabled=!levels;if(S.easy&&levels&&levels.length>1){clue(`<b>Tip:</b> ${levels[0]}`);HELPN=1;}}
+async function yes(t,ms){toast('yes',t);await sleep(ms||1500);untoast();}
+function ask(o,suffix){return G.ask({item:o.item+(suffix||'')+(S.easy?'-calm':''),concept:o.concept,area:o.area||'SC'});}
+function tray(html){const t=$('#tray');if(t)t.innerHTML=html||'';}
+function press(label){tray(`<div class="row"><button class="btn" id="pr">${label}</button></div>`);return new Promise(res=>{$('#pr').onclick=()=>res();});}
+
+/* pick a picture */
+function pics(o){
+  return new Promise(res=>{
+    let opts=o.options.slice();
+    if(S.easy&&opts.length>2){const r=opts.find(x=>x.v===o.answer);const w=opts.filter(x=>x.v!==o.answer);opts=[r,w.find(x=>x.v===o.easyWrong)||w[0]];}
+    if(!o.keep)opts=shuffle(opts);
+    if(o.say)say(o.say);untoast();
+    tray(`<div class="tiles">${opts.map((op,i)=>`<button class="tile" data-i="${i}">${op.pic||''}<span>${op.label}</span></button>`).join('')}</div>`);
+    const q=ask(o);setHelp(o.help,q);
+    let locked=false;
+    $$('#tray .tile').forEach(b=>b.onclick=async()=>{
+      if(locked||b.disabled)return;const op=opts[+b.dataset.i];
+      if(op.v===o.answer){locked=true;q.done();b.classList.add('yes');$$('#tray .tile').forEach(x=>x.disabled=true);setHelp(null);if(o.onRight)o.onRight();await yes(o.yes,o.ms);stepDone();res();}
+      else{q.miss(op.label.replace(/<[^>]+>/g,''));b.classList.add('no');b.disabled=true;toast('hmm',o.miss?o.miss(op.v):'Not that one. Try again.');}
+    });
+  });
+}
+/* tap the right place on the picture */
+function tapScene(o){
+  return new Promise(res=>{
+    if(o.say)say(o.say);untoast();tray(o.tray||'');
+    const q=ask(o);setHelp(o.help,q,o.helpExtra);
+    let locked=false;const tried={};const els=$$(o.sel);
+    els.forEach(el=>{el.classList.add('tappable');el.addEventListener('click',async()=>{
+      if(locked)return;const k=el.dataset.t;
+      if(k===o.answer){locked=true;q.done();els.forEach(e=>e.classList.remove('tappable'));el.classList.add('yes');setHelp(null);if(o.onRight)await o.onRight(el);await yes(o.yes,o.ms);stepDone();res();}
+      else if(!tried[k]){tried[k]=1;q.miss(o.names?o.names[k]:k);el.classList.add('no');if(o.onMiss)o.onMiss(k);toast('hmm',o.miss(k));}
+    });});
+  });
+}
+/* drag things onto the picture. Tapping a thing and then a place works too. */
+function drag(o){
+  return new Promise(res=>{
+    if(o.say)say(o.say);untoast();
+    let chips=o.chips.slice();
+    if(S.easy&&o.easyDrop)chips=chips.filter(c=>!o.easyDrop.includes(c.v));
+    if(!o.keep)chips=shuffle(chips);
+    const inTray=chips.filter(c=>c.x==null),floats=chips.filter(c=>c.x!=null);
+    const chipHTML=c=>`<button class="chip ${c.cls||''} ${c.x!=null?'float':''}" data-v="${c.v}" ${c.x!=null?`style="left:${c.x}%;top:${c.y}%;translate:-50% -50%"`:''} aria-label="${c.aria||c.label||'drag me'}">${c.pic||''}${c.label?`<span>${c.label}</span>`:''}</button>`;
+    tray((o.trayHead||'')+(inTray.length?`<div class="chips">${inTray.map(chipHTML).join('')}</div>`:'<p style="text-align:center;margin:4px 0;font-weight:700;color:#6d5c44">Drag it on the picture.</p>'));
+    if(floats.length)$('#ov').insertAdjacentHTML('beforeend',floats.map(chipHTML).join(''));
+    const targets=$$(o.targets);
+    const decoy=t=>(o.decoys||[]).includes(t.dataset.t);
+    const qs={};let firstQ=null;
+    if(o.oneAsk){firstQ=ask(o);targets.forEach(t=>{if(!decoy(t))qs[t.dataset.t]=firstQ;});}
+    else targets.forEach(t=>{if(decoy(t))return;const k=t.dataset.t;qs[k]=ask(o,'-'+k);if(!firstQ)firstQ=qs[k];});
+    const allQ=[...new Set(Object.values(qs))];
+    setHelp(o.help,allQ,o.helpExtra);
+    const need=o.need||targets.filter(t=>!decoy(t)).length;
+    let placed=0,sel=null,finished=false;
+    const open=t=>!t.classList.contains('filled');
+    function targetAt(x,y){const p=o.pad==null?12:o.pad;let best=null;for(const t of targets){if(!open(t))continue;const r=t.getBoundingClientRect();if(x>=r.left-p&&x<=r.right+p&&y>=r.top-p&&y<=r.bottom+p){if(!best||decoy(best))best=t;}}return best;}
+    function mark(on){targets.forEach(t=>t.classList.toggle('cando',on&&open(t)));}
+    async function attempt(chip,t){
+      const v=chip.dataset.v,k=t.dataset.t,q=qs[k]||firstQ;
+      if(!decoy(t)&&o.fits(v,k)){
+        if(q&&!q._d){q.done();q._d=1;}
+        placed++;if(!o.reuse)chip.classList.add('used');if(!o.multi)t.classList.add('filled');
+        if(o.onPlace)o.onPlace(v,k,chip,t);
+        if(placed>=need&&!finished){finished=true;mark(false);setHelp(null);allQ.forEach(x=>{if(x&&!x._d){x.done();x._d=1;}});await yes(o.yes,o.ms);stepDone();res();}
+        else if(o.each)toast('yes',o.each(v,k),1200);
+      }else{
+        if(q)q.miss(o.label?o.label(v):v);chip.classList.remove('shake');void chip.offsetWidth;chip.classList.add('shake');
+        toast('hmm',o.miss(v,k));
+      }
+    }
+    const reset=chip=>{chip.style.transform='';};
+    [...$$('#tray .chip'),...$$('#ov .chip')].forEach(chip=>{
+      let sx=0,sy=0,moved=false,on=false;
+      chip.addEventListener('pointerdown',e=>{if(chip.classList.contains('used')||finished)return;on=true;moved=false;sx=e.clientX;sy=e.clientY;try{chip.setPointerCapture(e.pointerId);}catch(_){}chip.classList.add('lift');e.preventDefault();});
+      chip.addEventListener('pointermove',e=>{if(!on)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.hypot(dx,dy)>8)moved=true;chip.style.transform=`translate(${dx}px,${dy}px)`;const over=targetAt(e.clientX,e.clientY);targets.forEach(t=>t.classList.toggle('over',t===over));});
+      chip.addEventListener('pointerup',e=>{if(!on)return;on=false;chip.classList.remove('lift');reset(chip);targets.forEach(t=>t.classList.remove('over'));
+        if(!moved){sel=sel===chip?null:chip;$$('.chip').forEach(c=>c.classList.toggle('sel',c===sel));mark(!!sel);return;}
+        const t=targetAt(e.clientX,e.clientY);if(t)attempt(chip,t);});
+      chip.addEventListener('pointercancel',()=>{on=false;chip.classList.remove('lift');reset(chip);});
+    });
+    targets.forEach(t=>t.addEventListener('click',()=>{if(!sel||finished||!open(t))return;const c=sel;sel=null;c.classList.remove('sel');mark(false);attempt(c,t);}));
+  });
+}
+/* a card over the picture */
+function card(c){
+  return new Promise(res=>{untoast();const d=document.createElement('div');d.className='card';
+    d.innerHTML=`<div class="in"><span class="ribbon">${c.ribbon||'True fact'}</span><h3>${c.title}</h3>${c.pic||''}${c.ps.map(p=>`<p>${p}</p>`).join('')}<div class="row"><button class="btn" id="cgo">${c.go||'Go on'}</button></div></div>`;
+    $('#sw').appendChild(d);setHelp(null);tray('');$('#cgo').onclick=()=>{d.remove();res();};});
+}
+function sail(ship,path,from,to,ms,flip){
+  return new Promise(res=>{
+    const L=path.getTotalLength();
+    const place=f=>{const p=path.getPointAtLength(L*f);ship.setAttribute('transform',`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})${flip?' scale(-1 1)':''}`);};
+    if(RM||!ms){place(to);res();return;}
+    const r=runId,t0=performance.now();
+    const step=t=>{if(r!==runId)return;const k=Math.min(1,(t-t0)/ms);const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;place(from+(to-from)*e);if(k<1)requestAnimationFrame(step);else res();};
+    requestAnimationFrame(step);
+  });
+}
+
+
+/* ================= parts ================= */
+const PARTS=[
+  {id:'rings',name:'Lines around the world',fn:()=>partRings()},
+  {id:'tropics',name:'The two tropic rings',fn:()=>partTropics()},
+  {id:'trip',name:'Into the tropics',fn:()=>partTrip()},
+  {id:'ice',name:'To the ice and home',fn:()=>partIce()},
+  {id:'globe',name:'Mistress Wren’s globe',fn:()=>partGlobe()}
+];
+const done=id=>S.done.includes(id);
+const unlocked=i=>i===0||done(PARTS[i-1].id);
+function pips(c){$('#pips').innerHTML=PARTS.map((p,i)=>`<li class="${done(p.id)?'done':''} ${i===c?'now':''}" title="${p.name}">${i+1}</li>`).join('');}
+let cur=-1;
+function finishPart(i){const p=PARTS[i];if(!done(p.id))S.done.push(p.id);save();G.partDone(p.name);}
+function afterPart(i,line){
+  pips(-1);setHelp(null);untoast();
+  const next=PARTS.findIndex((p,k)=>!done(p.id)&&unlocked(k));
+  tray(`<div class="donebox"><span class="stamp">✓</span><p>${line}</p><div class="row">${next>=0?`<button class="btn" id="nx">Next part</button>`:''}<button class="btn ghost" id="ct">Contents</button></div></div>`);
+  if(next>=0)$('#nx').onclick=()=>runPart(next);
+  $('#ct').onclick=home;
+  try{$('#tray').scrollIntoView({block:'nearest'});}catch(e){}
+}
+function runPart(i){runId++;cur=i;pips(i);G.start(GAME);G.part(PARTS[i].name);PARTS[i].fn();}
+
+function home(){
+  runId++;cur=-1;pips(-1);toTop();
+  main.innerHTML=`<section class="panel"><div class="hero"><div class="sw" style="margin:0">${globeSVG('eq-on trop-on')}</div><div>
+      <div class="bubble" style="margin:0 0 8px"><span class="who">${NUTMEG}</span><p>Hello! It’s Nutmeg again.</p></div>
+      <p>Mistress Wren has a new globe, and a balloon. Can you tell if a place is hot or cold, just from a map?</p>
+      <p class="note">Mistress Wren and Nutmeg are made up. The places and facts are real.</p></div></div>
+    <div class="parts">${PARTS.map((p,i)=>{const ok=unlocked(i),d=done(p.id),nx=ok&&!d;
+      return `<button class="panel part ${nx?'next':''}" data-i="${i}" ${ok?'':'disabled'}>${TILEPIC[p.id]}<h3>${i+1}. ${p.name}</h3><span class="tag">${d?'Done ✓':ok?'Ready':'Locked'}</span></button>`;}).join('')}</div></section>`;
+  $$('.part').forEach(b=>b.onclick=()=>{if(!b.disabled)runPart(+b.dataset.i);});
+}
+const gx=html=>{const g=$('#gx');if(g)g.innerHTML=html;};
+const glc=(...c)=>{const g=$('#gl');if(g)c.forEach(k=>g.classList.add(k));};
+
+/* ===== Part 1: lines around the world ===== */
+function partRings(){
+  stage({title:'Lines around the world',steps:5,scene:globeSVG(''),say:'Mistress Wren’s new globe has no lines yet!'});
+  (async()=>{
+    await sleep(1200);
+    gx(gBand('n',70,35)+gBand('eq',12,-12)+gBand('s',-35,-70));
+    await tapScene({item:'rings-equator',concept:'The Equator is halfway between the poles',area:'HSS',sel:'#gl .tz',answer:'eq',names:{n:'near the North Pole',eq:'middle',s:'near the South Pole'},
+      say:'Tap the middle of the Earth, halfway between the poles.',
+      help:['The Equator is the middle line.','Find the North Pole and the South Pole. Go halfway between.','Tap the band right across the middle.'],
+      helpExtra:n=>{if(n===2)$('#gl .tz[data-t="eq"]').classList.add('ring');},
+      miss:k=>k==='n'?'That’s close to the North Pole. Try again.':'That’s close to the South Pole. Try again.',
+      onRight:()=>{glc('eq-on');},yes:'The Equator! Its number is 0°.',ms:1800});
+    gx('');
+    await pics({item:'rings-parallel',concept:'Lines of latitude are parallel and never meet',area:'HSS',
+      say:'More lines go round, like railway rails. Which rails never meet?',
+      options:[{v:'par',label:'Side by side',pic:I.rails},{v:'x',label:'Crossing',pic:I.cross},{v:'v',label:'Joining',pic:I.meet}],answer:'par',easyWrong:'x',
+      help:['These lines are called parallel. They stay the same distance apart.','Look for rails that never touch.','The rails side by side never meet.'],
+      miss:()=>'These rails touch. Try again.',onRight:()=>glc('rings-on'),yes:'Yes! The lines never meet. They are parallel.',ms:1800});
+    /* slide the balloon */
+    say('Slide the balloon north. Watch the number grow!');
+    tray(`<div class="slide"><span class="end">south</span><input type="range" id="rng" min="-80" max="80" step="10" value="0" aria-label="Move the balloon north or south"><span class="end">north</span></div>
+      <div class="readout"><svg viewBox="0 0 34 90" aria-hidden="true"><rect x="11" y="4" width="12" height="66" rx="6" fill="#fff" stroke="#2a2118" stroke-width="2"/><rect id="tfill" x="14" y="10" width="6" height="62" fill="#c0392b"/><circle cx="17" cy="76" r="10" fill="#c0392b" stroke="#2a2118" stroke-width="2"/></svg><div><b id="rdeg">0°</b><span id="rword">On the Equator. Hot!</span></div></div>`);
+    setHelp(['Drag the slider to the right, then to the left.']);
+    gx(gBalloon(GC.x,0,'gb'));
+    const word=a=>a<=20?'Hot!':a<=60?'Not too hot, not too cold.':'Freezing!';
+    await new Promise(res=>{let north=false,south=false;const r=$('#rng');r.oninput=()=>{const v=+r.value;const a=Math.abs(v);
+      const b=$('#gb');if(b)b.setAttribute('transform',`translate(${GC.x} ${(GY(v)-8).toFixed(1)}) scale(.62)`);
+      $('#rdeg').textContent=v===0?'0°':a+'° '+(v>0?'north':'south');
+      $('#rword').textContent=(v===0?'On the Equator. ':'')+word(a);
+      const h=62*(1-a/90)+4;const f=$('#tfill');f.setAttribute('y',(72-h).toFixed(1));f.setAttribute('height',h.toFixed(1));f.setAttribute('fill',a<=20?'#c0392b':a<=60?'#e08a3c':'#3d86c6');
+      if(v>=80&&!north){north=true;if(!south)say('Now slide it all the way south.');}
+      if(v<=-80&&!south){south=true;if(!north)say('Now slide it all the way north.');}
+      if(north&&south)res();};});
+    setHelp(null);toast('info','Further from the Equator: a bigger number, and colder!');await sleep(2600);untoast();stepDone();
+    /* which balloon is warmer */
+    const bal=(t,x,lat,lbl)=>`<g class="bal" data-t="${t}">${gBalloon(x,lat,'',lbl)}<circle class="hit" cx="${x}" cy="${(GY(lat)-28).toFixed(1)}" r="30"/></g>`;
+    gx(bal('a',GC.x-75,20,'20°')+bal('b',GC.x+25,60,'60°'));
+    await tapScene({item:'rings-warmer',concept:'Latitude is distance from the Equator',area:'HSS',sel:'#gl .bal',answer:'a',names:{a:'20°',b:'60°'},
+      say:'Which balloon is warmer?',
+      help:['A small number means close to the Equator.','Which balloon is closer to the Equator?','20° is closer to the Equator than 60°.'],
+      miss:()=>'60° is far from the Equator. Brr! Try again.',yes:'Yes! 20° is closer to the Equator, so it’s warmer.',ms:1900});
+    /* north or south */
+    gx(`<g>${gBalloon(GC.x-45,30,'','30°')}<circle class="drop" data-t="north" cx="${GC.x-45}" cy="${(GY(30)-28).toFixed(1)}" r="34" fill="transparent"/><text id="ns-north" x="${GC.x-45}" y="${(GY(30)+22).toFixed(1)}" text-anchor="middle" font-size="18" font-weight="700" fill="#fff" stroke="#0f2438" stroke-width="4" paint-order="stroke"></text></g>
+      <g>${gBalloon(GC.x+45,-30,'','30°')}<circle class="drop" data-t="south" cx="${GC.x+45}" cy="${(GY(-30)-28).toFixed(1)}" r="34" fill="transparent"/><text id="ns-south" x="${GC.x+45}" y="${(GY(-30)+22).toFixed(1)}" text-anchor="middle" font-size="18" font-weight="700" fill="#fff" stroke="#0f2438" stroke-width="4" paint-order="stroke"></text></g>`);
+    await drag({item:'rings-ns',concept:'North and south latitude',area:'HSS',targets:'#gl .drop',
+      say:'Both say 30°! Drag north or south onto each balloon.',
+      chips:[{v:'north',label:'north'},{v:'south',label:'south'}],
+      fits:(v,k)=>v===k,label:v=>v,each:()=>'Yes!',
+      miss:v=>v==='north'?'North is above the Equator.':'South is below the Equator.',
+      help:['North is above the Equator. South is below it.','Australia is south of the Equator, near the bottom.','The top balloon is north. The bottom one is south.'],
+      onPlace:(v)=>{const t=$('#ns-'+v);if(t)t.textContent=v;},yes:'30° north and 30° south: just as far from the Equator.',ms:2000});
+    finishPart(0);
+    afterPart(0,'The Equator is 0°. The numbers grow as you go north or south, and it gets colder.');
+  })();
+}
+
+/* ===== Part 2: the two tropic rings ===== */
+function partTropics(){
+  stage({title:'The two tropic rings',steps:2,scene:globeSVG('eq-on rings-on trop-on'),say:'Two special rings go round the Earth.'});
+  (async()=>{
+    await card({ribbon:'Learn this',title:'The two tropic rings',pic:TROPCARD,ps:['Tropic of Cancer: about 23° north.','Tropic of Capricorn: about 23° south. It crosses Australia!','The lands between them are the tropics.'],go:'Got it'});
+    const strip=(t,lat)=>`<rect class="drop" data-t="${t}" x="${(GC.x-GW(lat)).toFixed(1)}" y="${(GY(lat)-14).toFixed(1)}" width="${(2*GW(lat)).toFixed(1)}" height="28" fill="transparent"/><text id="tl-${t}" x="${(GC.x+GW(lat)+8).toFixed(1)}" y="${(GY(lat)+6).toFixed(1)}" font-size="16" font-weight="700" fill="#f2c75c"></text>`;
+    gx(strip('cancer',TROPIC)+strip('capri',-TROPIC));
+    await drag({item:'trop-name',concept:'The two tropics: Cancer north, Capricorn south',area:'HSS',targets:'#gl .drop',
+      say:'Name the two gold rings. Drag each name on.',
+      chips:[{v:'cancer',label:'Tropic of Cancer'},{v:'capri',label:'Tropic of Capricorn'}],
+      fits:(v,k)=>v===k,label:v=>v==='cancer'?'Cancer':'Capricorn',each:()=>'Yes!',
+      miss:v=>v==='capri'?'Capricorn crosses Australia. Is Australia up there?':'Cancer is the northern ring.',
+      help:['Cancer is north. Capricorn is south.','Capricorn crosses Australia. Is Australia at the top or the bottom?','Cancer goes on the top ring. Capricorn goes on the bottom ring.'],
+      onPlace:(v)=>{const t=$('#tl-'+v);if(t)t.textContent=v==='cancer'?'Cancer':'Capricorn';},yes:'Yes! The two tropic rings.',ms:1600});
+    gx(gBand('pn',90,POLAR,'drop')+gBand('tn',POLAR,TROPIC,'drop')+gBand('tr',TROPIC,-TROPIC,'drop')+gBand('ts',-TROPIC,-POLAR,'drop')+gBand('ps',-POLAR,-90,'drop')+`<text x="${GC.x+GW(TROPIC)+8}" y="${GY(TROPIC)+6}" font-size="16" font-weight="700" fill="#f2c75c">Cancer</text><text x="${GC.x+GW(TROPIC)+8}" y="${GY(-TROPIC)+6}" font-size="16" font-weight="700" fill="#f2c75c">Capricorn</text>`);
+    const zf={hot:['tr'],mild:['tn','ts'],cold:['pn','ps']};
+    await drag({item:'trop-paint',concept:'Hot near the Equator, frozen near the poles',area:'HSS',targets:'#gl .drop',reuse:true,
+      say:'Paint the Earth! Drag each picture onto its lands.',
+      trayHead:'',
+      chips:[{v:'hot',label:'hot all year',pic:I.hot,cls:'badge'},{v:'mild',label:'four seasons',pic:I.mild,cls:'badge'},{v:'cold',label:'frozen',pic:I.cold,cls:'badge'}],keep:true,
+      fits:(v,k)=>zf[v].includes(k),label:v=>v,
+      each:v=>({hot:'The tropics: hot all year!',mild:'In between: four seasons!',cold:'Polar: frozen!'})[v],
+      miss:(v,k)=>({hot:'Hot lands are near the Equator, between the gold rings.',mild:'Four seasons come in between hot and frozen.',cold:'Frozen lands are near the poles.'})[v],
+      help:['The tropics are between the two gold rings.','Hot in the middle. Frozen at the top and bottom.','Sun in the middle. Snowflake at both poles. Leaves in between.'],
+      onPlace:(v,k)=>{const z=$(`#gl .zone[data-t="${k}"]`);if(z)z.classList.add('on');const l=$(`#gl .zlbl[data-z="${k}"]`);if(l)l.classList.add('on');},
+      yes:'You can tell hot or cold just from how far a place is from the Equator!',ms:2400});
+    finishPart(1);
+    afterPart(1,'The tropics sit between the two tropic rings. They are warm all year.');
+  })();
+}
+
+/* ----- the balloon on the map ----- */
+let POS={lon:PLACES.home.lon,lat:PLACES.home.lat};
+function placeBal(lon,lat){const b=$('#mbal');if(!b)return;b.setAttribute('transform',`translate(${MX(lon).toFixed(1)} ${MY(lat).toFixed(1)})`);const t=$('#mread text');if(t)t.textContent=latTxt(lat);
+  const rd=$('#mread');if(rd)rd.setAttribute('transform',MX(lon)>500?'translate(-92 -58)':'translate(22 -58)');}
+function fly(k){const to=PLACES[k],from=Object.assign({},POS);
+  return new Promise(res=>{const ms=RM?0:2400,r=runId,t0=performance.now();
+    const step=t=>{if(r!==runId)return;const q=ms?Math.min(1,(t-t0)/ms):1;const e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
+      placeBal(from.lon+(to.lon-from.lon)*e,from.lat+(to.lat-from.lat)*e);if(q<1)requestAnimationFrame(step);else{POS={lon:to.lon,lat:to.lat};res();}};
+    requestAnimationFrame(step);});}
+function showMap(been){setScene(mapSVG());(been||[]).forEach(k=>{const p=$('#pin-'+k);if(p)p.classList.add('been');});placeBal(POS.lon,POS.lat);}
+function choosePin(keys,line){
+  return new Promise(res=>{say(line);tray('');setHelp(['Tap one of the glowing pins on the map.']);
+    keys.forEach(k=>{const g=$('#pin-'+k);g.classList.add('pick');g.onclick=()=>{keys.forEach(j=>{const h=$('#pin-'+j);h.classList.remove('pick');h.onclick=null;});setHelp(null);res(k);};});});
+}
+const BADGES=[{v:'hot',label:'hot all year',pic:I.hot,cls:'badge'},{v:'mild',label:'four seasons',pic:I.mild,cls:'badge'},{v:'cold',label:'frozen',pic:I.cold,cls:'badge'}];
+function predict(k,answer){
+  const p=PLACES[k],a=Math.round(Math.abs(p.lat));
+  const why={hot:`${a}° is between the Equator and a tropic ring.`,mild:`${a}° is past the tropic ring, but far from the pole.`,cold:`${a}° is very far from the Equator, near the pole.`}[answer];
+  return drag({item:'predict-'+k,concept:'Telling hot or cold from latitude',area:'HSS',targets:`#pin-${k} .drop`,oneAsk:true,keep:true,
+    say:`${p.name}: ${latWords(p.lat)}. Hot, four seasons, or frozen? Drag one onto the pin.`,
+    chips:BADGES,easyDrop:answer==='cold'?['hot']:['cold'],
+    fits:v=>v===answer,label:v=>v,
+    miss:v=>({hot:'Look at the map. Is it between the two gold rings?',mild:'Check the gold rings and the Equator.',cold:'Is it close to the South Pole?'})[v]+' Try again.',
+    help:['Find the pin. Is it between the two gold tropic rings?','The tropic rings are about 23° from the Equator. Polar lands are past about 66°.',why],
+    yes:{hot:'Hot all year! Let’s land.',mild:'Four seasons! Let’s land.',cold:'Frozen! Let’s land.'}[answer],ms:1500});
+}
+
+/* ===== Part 3: into the tropics ===== */
+function partTrip(){
+  POS={lon:PLACES.home.lon,lat:PLACES.home.lat};
+  stage({title:'Into the tropics',steps:0,scene:mapSVG(),say:''});
+  placeBal(POS.lon,POS.lat);
+  (async()=>{
+    const been=[];
+    while(been.length<2){
+      const left=['darwin','sahara'].filter(k=>!been.includes(k));
+      const k=left.length>1?await choosePin(left,'Into the balloon! Where first? Tap a glowing pin.'):await choosePin(left,'Next stop! Tap the glowing pin.');
+      say('Up, up and away…');tray('');
+      await fly(k);
+      await predict(k,'hot');
+      if(k==='darwin')await stopDarwin();else await stopSahara(been);
+      been.push(k);showMap(been);
+    }
+    finishPart(2);
+    afterPart(2,'Darwin and the Sahara are both in the tropics: hot all year. One has a wet season, and one is a desert.');
+  })();
+}
+async function stopDarwin(){
+  setScene(DARWIN);say('Splash! Darwin is in the tropics.');tray('');setHelp(null);
+  await sleep(1800);
+  setScene(SEASON2);
+  await drag({item:'trip-wetdry',concept:'Near the Equator: wet and dry seasons',area:'HSS',targets:'#s2 .drop',
+    say:'Darwin has just two seasons. Drag each name onto its picture.',
+    chips:[{v:'wet',label:'wet season',pic:I.rain},{v:'dry',label:'dry season',pic:I.dry}],
+    fits:(v,k)=>v===k,label:v=>v,each:()=>'Yes!',
+    miss:v=>v==='wet'?'Look for the rain clouds.':'Look for the sunshine and the dry grass.',
+    help:['One season brings lots of rain. One season is dry.','Rain and green plants: wet. Sun and dry grass: dry.','Wet season on the rainy side. Dry season on the sunny side.'],
+    onPlace:(v)=>{const t=$('#lab-'+v);if(t)t.textContent=v==='wet'?'wet season':'dry season';},yes:'Two seasons: wet and dry.',ms:1600});
+  const m=new Date().getMonth();const wet=(m>=9||m<=3);
+  await card({title:'Darwin’s two seasons',pic:'<div class="row" style="gap:20px">'+I.rain.replace('<svg','<svg style="width:70px;height:70px"')+I.dry.replace('<svg','<svg style="width:70px;height:70px"')+'</div>',
+    ps:['Wet season: October to April. Big storms and heavy rain.','Dry season: May to September. Sunny, and hardly any rain.',wet?'Right now, Darwin is in its wet season!':'Right now, Darwin is in its dry season.']});
+}
+async function stopSahara(been){
+  setScene(SAHARA);say('Phew, it’s hot! The Sahara is in the tropics too.');tray('');setHelp(null);
+  await sleep(1600);
+  await pics({item:'trip-desert',concept:'Some tropical places are deserts',area:'HSS',
+    say:'Look around. Is every tropical place wet and green?',
+    options:[{v:'no',label:'No, some are deserts',pic:I.dune},{v:'yes',label:'Yes, always',pic:I.jungle}],answer:'no',
+    help:['Look at the picture. What can you see?','Is there rain? Are there green plants?','The Sahara is hot, but dry sand. So the answer is no.'],
+    miss:()=>'Look around the Sahara. Do you see any rain or jungle?',yes:'Right! The tropics are always warm, but some places are dry deserts.',ms:2000});
+  showMap(been);placeBal(POS.lon,POS.lat);$('#mp').classList.add('aus-on');
+  await tapScene({item:'trip-aus-tropics',concept:'The tropics lie between the two tropic lines',area:'HSS',sel:'#mp .aus .tz',answer:'in',names:{in:'north part',out:'south part'},
+    say:'Australia has a tropical desert too. Tap the part of Australia inside the tropics.',
+    help:['The tropics are between the two gold rings.','Find the Tropic of Capricorn. It crosses Australia.','The part of Australia above the Tropic of Capricorn line.'],
+    miss:()=>'That part is below the Tropic of Capricorn. Try again.',
+    onRight:()=>{$('#mp').classList.add('gsd-on');$('#mp').classList.remove('aus-on');},yes:'Yes! The Great Sandy Desert is up there, in the tropics.',ms:2200});
+}
+
+/* ===== Part 4: to the ice and home ===== */
+function partIce(){
+  POS={lon:PLACES.darwin.lon,lat:PLACES.darwin.lat};
+  stage({title:'To the ice and home',steps:0,scene:mapSVG(),say:''});
+  showMap(['darwin','sahara']);
+  (async()=>{
+    const been=['darwin','sahara'];
+    while(!(been.includes('davis')&&been.includes('home'))){
+      const left=['davis','home'].filter(k=>!been.includes(k));
+      const k=left.length>1?await choosePin(left,'Now fly south. Where first: the ice, or home?'):await choosePin(left,left[0]==='home'?'Time to go home! Tap the glowing pin.':'Now to the ice! Tap the glowing pin.');
+      say('Up, up and away…');tray('');
+      await fly(k);
+      await predict(k,k==='davis'?'cold':'mild');
+      if(k==='davis')await stopDavis();else await stopHome();
+      been.push(k);showMap(been);
+    }
+    stage({title:'To the ice and home',steps:1,scene:'',say:''});
+    $('#sw').hidden=true;
+    await drag({item:'ice-houses',concept:'Houses suit the climate',area:'HSS',targets:'#tray .sorts .drop',
+      say:'Mistress Wren drew a house for each place. Match them!',
+      trayHead:`<div class="sorts"><div class="drop" data-t="darwin">${PLACEPIC.darwin}<b></b></div><div class="drop" data-t="home">${PLACEPIC.home}<b></b></div><div class="drop" data-t="davis">${PLACEPIC.davis}<b></b></div></div><div style="height:10px"></div>`,
+      chips:[{v:'darwin',pic:HOUSE.stilts,label:'up high, open to the breeze',cls:'big'},{v:'home',pic:HOUSE.verandah,label:'verandah and a fireplace',cls:'big'},{v:'davis',pic:HOUSE.snug,label:'thick walls, small windows',cls:'big'}],
+      fits:(v,k)=>v===k,label:v=>v,each:()=>'Yes!',
+      miss:v=>({darwin:'This house lets the breeze in. Where is it hot all year?',home:'This house has shade for summer and a fire for winter.',davis:'This house keeps the cold out. Where is it freezing?'})[v],
+      help:['Hot places need cool houses. Cold places need warm houses.','Four seasons need a house for summer and for winter.','Breezy house: Darwin. Verandah and fire: home. Thick walls: Davis.'],
+      onPlace:(v,k,chip,t)=>{t.querySelector('b').textContent='✓';},yes:'Every house suits its place!',ms:1800});
+    finishPart(3);
+    afterPart(3,'The further from the Equator, the colder it gets. Houses are built to suit.');
+  })();
+}
+async function stopDavis(){
+  setScene(DAVIS);tray('');setHelp(null);
+  const setT=h=>{const x=120+h*30,y=70+Math.pow(h/12,1.4)*112;const s=$('#dvsun');if(s)s.setAttribute('transform',`translate(${x} ${y.toFixed(1)})`);
+    const k=h/12;const c=(a,b)=>Math.round(a+(b-a)*k);const sky=$('#dvsky');if(sky)sky.setAttribute('fill',`rgb(${c(191,246)},${c(224,201)},${c(245,160)})`);
+    const lbl=$('#clk');if(lbl)lbl.textContent=h===0?'12 noon':h===12?'midnight':h+' o’clock';};
+  setT(0);
+  say('It’s summer at Davis. Slide the clock to midnight. Watch the Sun!');
+  tray(`<div class="clockbox"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="22" fill="#fff" stroke="#2a2118" stroke-width="3"/><path d="M26 26V10M26 26l10 6" stroke="#2a2118" stroke-width="3" stroke-linecap="round"/></svg><b id="clk">12 noon</b></div><div class="slide"><span class="end">noon</span><input type="range" id="trng" min="0" max="12" step="1" value="0" aria-label="Time of day"><span class="end">midnight</span></div>`);
+  setHelp(['Drag the slider all the way to the right.']);
+  await new Promise(res=>{const r=$('#trng');r.oninput=()=>{const h=+r.value;setT(h);if(h===12)res();};});
+  setHelp(null);await sleep(900);
+  await pics({item:'ice-midnight',concept:'Polar summer: the Sun stays up',area:'SC',
+    say:'It’s midnight in summer. What did the Sun do?',
+    options:[{v:'up',label:'It stayed up all night',pic:I.sunUp},{v:'set',label:'It set, and got dark',pic:I.dark}],answer:'up',
+    help:['Look at the picture. Where is the Sun now?','Is the Sun still above the ice?','The Sun is low, but it is still up. It never set.'],
+    miss:()=>'Look again. Can you still see the Sun?',yes:'Yes! In polar summer, the Sun stays up, even at midnight.',ms:2000});
+  await pics({item:'ice-winter',concept:'Polar winter: long, dark nights',area:'SC',
+    say:'Now it’s winter at Davis. What is it like?',
+    options:[{v:'dark',label:'Long, dark nights',pic:I.dark},{v:'up',label:'Sunny all night',pic:I.sunUp}],answer:'dark',
+    help:['Winter is the opposite of summer.','In summer the Sun stays up. In winter…?','In polar winter the Sun hardly rises. The nights are long and dark.'],
+    miss:()=>'Winter is the opposite of summer. Try again.',yes:'Yes! Polar winters have long, dark nights.',ms:1800});
+  await card({title:'Sun at midnight',pic:I.sunUp.replace('<svg','<svg style="width:100%;max-height:120px"'),ps:['At Davis, the Sun stays up all night for about two weeks around Christmas.','In midwinter, it stays down for about two weeks.','At the South Pole itself, summer daylight lasts for months!']});
+}
+async function stopHome(){
+  setScene(HOME);say('Home sweet home!');tray('');setHelp(null);
+  await sleep(1400);
+  setScene('<svg viewBox="0 0 10 1"></svg>');$('#sw').hidden=true;
+  await drag({item:'ice-seasons',concept:'The four seasons',area:'SC',targets:'#tray .sorts .drop',
+    say:'Home has four seasons. Drag each name onto its tree.',
+    trayHead:`<div class="sorts four"><div class="drop" data-t="spring">${TREE('spring')}<b></b></div><div class="drop" data-t="summer">${TREE('summer')}<b></b></div><div class="drop" data-t="autumn">${TREE('autumn')}<b></b></div><div class="drop" data-t="winter">${TREE('winter')}<b></b></div></div><div style="height:10px"></div>`,
+    chips:[{v:'spring',label:'spring'},{v:'summer',label:'summer'},{v:'autumn',label:'autumn'},{v:'winter',label:'winter'}],
+    fits:(v,k)=>v===k,label:v=>v,each:()=>'Yes!',
+    miss:v=>({spring:'Spring brings new buds and blossom.',summer:'Summer is hot and sunny.',autumn:'In autumn the leaves turn gold.',winter:'Winter is cold, and some trees are bare.'})[v],
+    help:['Look at the leaves on each tree.','Blossom: spring. Big sun: summer. Orange leaves: autumn. Bare: winter.','Spring, summer, autumn, winter: blossom, green, orange, bare.'],
+    onPlace:(v,k,chip,t)=>{t.querySelector('b').textContent=v;},yes:'Four seasons at home!',ms:1600});
+  $('#sw').hidden=false;
+}
+
+/* ===== Part 5: Mistress Wren's globe ===== */
+function partGlobe(){
+  stage({title:'Mistress Wren’s globe',steps:3,scene:globeSVG(''),say:'Mistress Wren painted her globe. Can you name the rings from memory?'});
+  (async()=>{
+    const lats=S.easy?[['eq',0],['cancer',TROPIC],['capri',-TROPIC]]:[['eq',0],['cancer',TROPIC],['capri',-TROPIC],['decoy',50]];
+    const line=(t,lat)=>`<path d="M${(GC.x-GW(lat)).toFixed(1)} ${GY(lat).toFixed(1)}H${(GC.x+GW(lat)).toFixed(1)}" stroke="#fff" stroke-width="3.5" pointer-events="none"/><rect class="drop" data-t="${t}" x="${(GC.x-GW(lat)).toFixed(1)}" y="${(GY(lat)-14).toFixed(1)}" width="${(2*GW(lat)).toFixed(1)}" height="28" fill="transparent"/><text id="nl-${t}" x="${(GC.x+GW(lat)+8).toFixed(1)}" y="${(GY(lat)+6).toFixed(1)}" font-size="16" font-weight="700" fill="#f4ead6"></text>`;
+    gx(lats.map(([t,l])=>line(t,l)).join(''));
+    await drag({item:'globe-rings',concept:'Naming the Equator and the tropics',area:'HSS',targets:'#gl .drop',decoys:['decoy'],
+      say:'Drag each name onto its ring.',
+      chips:[{v:'eq',label:'Equator'},{v:'cancer',label:'Tropic of Cancer'},{v:'capri',label:'Tropic of Capricorn'}],
+      fits:(v,k)=>v===k,label:v=>({eq:'Equator',cancer:'Cancer',capri:'Capricorn'})[v],each:()=>'Yes!',
+      miss:(v,k)=>k==='decoy'?'That ring is too far from the Equator to be a tropic.':({eq:'The Equator is the middle ring.',cancer:'Cancer is the tropic ring in the north.',capri:'Capricorn is the tropic ring in the south.'})[v],
+      help:['The Equator is in the middle. The tropic rings are close to it.','Cancer is north. Capricorn is south, across Australia.','Middle: Equator. Just above: Cancer. Just below: Capricorn.'],
+      onPlace:(v)=>{const t=$('#nl-'+v);if(t)t.textContent=({eq:'Equator',cancer:'Cancer',capri:'Capricorn'})[v];},yes:'All named, from memory!',ms:1600});
+    setScene(tiltSVG());
+    await tapScene({item:'globe-summer',concept:'The hemispheres have opposite seasons',area:'SC',sel:'#tl .half',answer:'s',names:{n:'northern half',s:'southern half'},
+      say:'The Earth is leaning. Tap the half that has summer now.',
+      help:['Summer comes to the half turned toward the Sun.','Which half leans toward the Sun?','The bottom half, the south, leans toward the Sun.'],
+      miss:()=>'That half leans away from the Sun. It has winter. Try again.',yes:'Yes! The south leans toward the Sun, so it’s summer here in Australia.',ms:2200});
+    await pics({item:'globe-between',concept:'Spring and autumn are in between',area:'SC',
+      say:'When the Sun shines straight on the Equator, and neither pole leans to it, what seasons are they?',
+      options:[{v:'sa',label:'Spring and autumn',pic:I.springaut},{v:'su',label:'Summer',pic:I.summer},{v:'wi',label:'Winter',pic:I.winter}],answer:'sa',easyWrong:'wi',
+      help:['Summer: leaning toward the Sun. Winter: leaning away.','What comes in between summer and winter?','Spring and autumn are the in-between seasons.'],
+      miss:()=>'That season comes when a half leans toward or away from the Sun. Try again.',yes:'Yes! Spring and autumn.',ms:1800});
+    ending();
+  })();
+}
+
+/* ---------- the end: off to the notebook ---------- */
+const TODO=[
+  {k:'open',pic:I.book,t:'Open My Earth Notebook to page 15',s:'Lesson 10: Tropics and Poles'},
+  {k:'copy',pic:I.pencil,t:'Copy the words',s:'warm, tropics'},
+  {k:'read',pic:I.read,t:'Read the page out loud',s:''},
+  {k:'finish',pic:I.finish,t:'Finish the sentence',s:'In the poles it is cold but…'},
+  {k:'colour',pic:I.colour,t:'Colour in the Equator line',s:'in the picture'},
+  {k:'mum',pic:I.mum,t:'Show it to Mum!',s:'And tell her: why is it warm in the tropics?'}
+];
+function ending(){
+  runId++;toTop();
+  finishPart(4);
+  G.finish();
+  pips(-1);
+  main.innerHTML=`<section class="panel"><div class="phead"><h2>Pole to pole!</h2></div>
+    <div class="sw">${globeSVG('eq-on trop-on')}</div>
+    <div class="bubble"><span class="who">${NUTMEG}</span><p>What a trip! Now it’s notebook time.</p></div>
+    <h3 class="bigq">Your notebook jobs</h3>
+    <ol class="todo">${TODO.map(x=>`<li class="${x.k==='mum'?'mum':''}"><button data-k="${x.k}" aria-pressed="${S.ticks.includes(x.k)?'true':'false'}">${x.pic}<span>${x.t}${x.s?`<small>${x.s}</small>`:''}</span><span class="box2"></span></button></li>`).join('')}</ol>
+    <p id="alldone" style="text-align:center;font-weight:700;font-size:1.25rem;margin:12px 0 0" hidden>All done! Purr. Go and find Mum.</p>
+    <div class="row" style="margin-top:12px"><button class="btn ghost" id="go">Back to the contents</button></div></section>`;
+  $$('#gl .zone').forEach(z=>z.classList.add('on'));
+  const upd=()=>{$('#alldone').hidden=!(TODO.every(x=>S.ticks.includes(x.k)));};
+  $$('.todo button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;const i=S.ticks.indexOf(k);if(i<0)S.ticks.push(k);else S.ticks.splice(i,1);save();b.setAttribute('aria-pressed',i<0?'true':'false');upd();});
+  upd();
+  $('#go').onclick=home;
+}
+
+/* ---------- grown-up controls ---------- */
+function setEasy(){$('#easy').setAttribute('aria-pressed',S.easy?'true':'false');}
+$('#easy').onclick=()=>{S.easy=!S.easy;save();setEasy();if(cur>=0)runPart(cur);};
+$('#home').onclick=home;
+let armed=false;
+$('#reset').onclick=()=>{
+  if(!armed){armed=true;$('#reset').textContent='Tap again to start again';setTimeout(()=>{armed=false;$('#reset').textContent='Start again';},4000);return;}
+  armed=false;$('#reset').textContent='Start again';const e=S.easy;S=blank();S.easy=e;save();home();
+};
+setEasy();home();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>
