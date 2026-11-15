@@ -239,6 +239,14 @@ svg .drop{fill:transparent}
 .todo li.mum button{border-color:var(--teal);box-shadow:0 4px 0 var(--teal-deep)}
 .bigq{font-family:var(--display);color:var(--wax);font-size:clamp(1.4rem,4.4vw,1.9rem);margin:14px 0 2px;text-align:center}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+.inst{text-align:center;font-weight:700;font-size:1.1rem;color:var(--muted);margin:0 0 8px}
+.cand{cursor:pointer}
+.cand .vis{stroke:#f2c75c;stroke-width:5;stroke-dasharray:10 6;fill:none}
+.cand .hitp{stroke:transparent;stroke-width:44;fill:none}
+.cand.no .vis{stroke:#8a7a62;opacity:.45}
+.cand.ring .vis{stroke:#16A08F;stroke-width:7}
+.cand.yes .vis{stroke:#16A08F;stroke-dasharray:none;stroke-width:6}
 .grown{margin-top:24px;padding-top:12px;border-top:2px dashed rgba(244,234,214,.25);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;opacity:.85}
 .grown button{background:transparent;border:2px solid rgba(244,234,214,.5);border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:.95rem}
 </style>
@@ -362,9 +370,9 @@ function globeSVG(cls){
   const zones=[['pn',90,POLAR,'#ffffff'],['tn',POLAR,TROPIC,'#8fc46a'],['tr',TROPIC,-TROPIC,'#ffa94a'],['ts',-TROPIC,-POLAR,'#8fc46a'],['ps',-POLAR,-90,'#ffffff']];
   const rings=[10,20,30,40,50,60,70,80].map(l=>[l,-l]).flat().map(l=>`<path d="M${(cx-GW(l)).toFixed(1)} ${GY(l).toFixed(1)}H${(cx+GW(l)).toFixed(1)}"/>`).join('');
   const zl=(t,lat,txt,col)=>`<text class="zlbl" data-z="${t}" x="${cx}" y="${(GY(lat)+6).toFixed(1)}" text-anchor="middle" font-size="17" font-weight="700" fill="${col}" stroke="#fff" stroke-width="4" paint-order="stroke">${txt}</text>`;
-  return `<svg id="gl" class="${cls||''}" viewBox="0 0 600 330" role="img" aria-label="Mistress Wren's globe">
+  return `<svg id="gl" class="${cls||''}" viewBox="0 -46 600 376" role="img" aria-label="Mistress Wren's globe">
   <defs><clipPath id="gclip"><circle cx="${cx}" cy="${cy}" r="${R}"/></clipPath><radialGradient id="gshade" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></radialGradient></defs>
-  <rect width="600" height="330" fill="#0f2438"/>
+  <rect y="-46" width="600" height="376" fill="#0f2438"/>
   <g fill="#fff" opacity=".7"><circle cx="40" cy="40" r="1.5"/><circle cx="90" cy="280" r="1.2"/><circle cx="530" cy="60" r="1.6"/><circle cx="560" cy="250" r="1.2"/><circle cx="120" cy="150" r="1"/><circle cx="480" cy="300" r="1.3"/></g>
   <circle cx="${cx}" cy="${cy}" r="${R}" fill="${SEA}"/>
   <g clip-path="url(#gclip)">${land}
@@ -378,8 +386,8 @@ function globeSVG(cls){
   <text class="eqlbl" x="${cx+R+8}" y="${cy+6}" font-size="17" font-weight="700" fill="#f4ead6">Equator 0°</text>
   <g class="trop" stroke="#f2c75c" stroke-width="3.5" stroke-dasharray="9 6" pointer-events="none"><path d="M${(cx-GW(TROPIC)).toFixed(1)} ${GY(TROPIC).toFixed(1)}H${(cx+GW(TROPIC)).toFixed(1)}"/><path d="M${(cx-GW(TROPIC)).toFixed(1)} ${GY(-TROPIC).toFixed(1)}H${(cx+GW(TROPIC)).toFixed(1)}"/></g>
   ${zl('pn',76,'polar','#3d86c6')}${zl('tn',45,'in between','#2f6f2a')}${zl('tr',11,'the tropics','#a5561a')}${zl('ts',-45,'in between','#2f6f2a')}${zl('ps',-76,'polar','#3d86c6')}
-  <text x="${cx}" y="${cy-R-6}" text-anchor="middle" font-size="15" fill="#f4ead6">North Pole</text>
-  <text x="${cx}" y="${cy+R+18}" text-anchor="middle" font-size="15" fill="#f4ead6">South Pole</text>
+  <text x="${cx+26}" y="${cy-R+2}" font-size="15" fill="#f4ead6">North Pole</text>
+  <text x="${cx+26}" y="${cy+R+14}" font-size="15" fill="#f4ead6">South Pole</text>
   <g id="gx"></g>
 </svg>`;
 }
@@ -507,14 +515,14 @@ const PLACEPIC={
   davis:'<svg viewBox="0 0 120 90" aria-hidden="true"><rect width="120" height="90" rx="10" fill="#d7eaf5"/><rect y="50" width="120" height="14" fill="#2d5f86"/><path d="M0 62q60-6 120 0v28H0z" fill="#f4f8fb"/>'+PENG(22,72)+PENG(38,76)+'<text x="74" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#2a2118">Davis</text></svg>'
 };
 /* the Earth leaning its southern half to the Sun */
-function tiltSVG(){
-  const cx=380,cy=155,R=105;
+function tiltSVG(even){
+  const cx=380,cy=155,R=105,ang=even?0:23;
   return `<svg id="tl" viewBox="0 0 600 310" role="img" aria-label="The Sun and the tilted Earth">
   <rect width="600" height="310" fill="#0f2438"/>
   <g fill="#fff" opacity=".7"><circle cx="560" cy="30" r="1.5"/><circle cx="520" cy="280" r="1.2"/><circle cx="250" cy="290" r="1.3"/></g>
   <circle cx="60" cy="155" r="44" fill="#f6c430"/><circle cx="60" cy="155" r="60" fill="#f6c430" opacity=".2"/>
   <g stroke="#f6c430" stroke-width="3" stroke-dasharray="7 6" opacity=".9"><path d="M120 95H285M120 155H270M120 215H285"/></g>
-  <g transform="rotate(23 ${cx} ${cy})">
+  <g transform="rotate(${ang} ${cx} ${cy})">
     <clipPath id="tclip"><circle cx="${cx}" cy="${cy}" r="${R}"/></clipPath>
     <circle cx="${cx}" cy="${cy}" r="${R}" fill="${SEA}"/>
     <g clip-path="url(#tclip)" fill="${LANDC}"><path d="M330 90q30-20 60 0t40 30q-30 10-60 0t-40-30z"/><path d="M370 190q30-8 50 10t-10 30q-30 0-40-40z"/><rect x="${cx-R}" y="${cy+R-14}" width="${2*R}" height="20" fill="${ICE}"/><rect x="${cx-R}" y="${cy-R-6}" width="${2*R}" height="20" fill="${ICE}"/></g>
@@ -525,7 +533,7 @@ function tiltSVG(){
     <text x="${cx+8}" y="${cy-R-12}" font-size="16" font-weight="700" fill="#f4ead6">N</text>
     <text x="${cx+8}" y="${cy+R+26}" font-size="16" font-weight="700" fill="#f4ead6">S</text>
   </g>
-  <text x="${cx}" y="300" text-anchor="middle" font-size="15" fill="#f4ead6">The Earth leans as it travels round the Sun</text>
+  <text x="${cx}" y="300" text-anchor="middle" font-size="15" fill="#f4ead6">${even?'Neither half leans toward the Sun':'The Earth leans over'}</text>
 </svg>`;
 }
 /* a small labelled globe for the lesson card */
@@ -667,7 +675,7 @@ function sail(ship,path,from,to,ms,flip){
 /* ================= parts ================= */
 const PARTS=[
   {id:'rings',name:'Lines around the world',fn:()=>partRings()},
-  {id:'tropics',name:'The two tropic rings',fn:()=>partTropics()},
+  {id:'tropics',name:'The two tropic lines',fn:()=>partTropics()},
   {id:'trip',name:'Into the tropics',fn:()=>partTrip()},
   {id:'ice',name:'To the ice and home',fn:()=>partIce()},
   {id:'globe',name:'Mistress Wren’s globe',fn:()=>partGlobe()}
@@ -704,86 +712,118 @@ const glc=(...c)=>{const g=$('#gl');if(g)c.forEach(k=>g.classList.add(k));};
 function partRings(){
   stage({title:'Lines around the world',steps:5,scene:globeSVG(''),say:'Mistress Wren’s new globe has no lines yet!'});
   (async()=>{
-    await sleep(1200);
+    await sleep(1400);
     gx(gBand('n',70,35)+gBand('eq',12,-12)+gBand('s',-35,-70));
     await tapScene({item:'rings-equator',concept:'The Equator is halfway between the poles',area:'HSS',sel:'#gl .tz',answer:'eq',names:{n:'near the North Pole',eq:'middle',s:'near the South Pole'},
-      say:'Tap the middle of the Earth, halfway between the poles.',
-      help:['The Equator is the middle line.','Find the North Pole and the South Pole. Go halfway between.','Tap the band right across the middle.'],
+      say:'Tap the middle of the Earth.',
+      help:['The middle is halfway between the North Pole and the South Pole.','Not near the top. Not near the bottom.','Tap the band right across the middle.'],
       helpExtra:n=>{if(n===2)$('#gl .tz[data-t="eq"]').classList.add('ring');},
-      miss:k=>k==='n'?'That’s close to the North Pole. Try again.':'That’s close to the South Pole. Try again.',
-      onRight:()=>{glc('eq-on');},yes:'The Equator! Its number is 0°.',ms:1800});
-    gx('');
-    await pics({item:'rings-parallel',concept:'Lines of latitude are parallel and never meet',area:'HSS',
-      say:'More lines go round, like railway rails. Which rails never meet?',
-      options:[{v:'par',label:'Side by side',pic:I.rails},{v:'x',label:'Crossing',pic:I.cross},{v:'v',label:'Joining',pic:I.meet}],answer:'par',easyWrong:'x',
-      help:['These lines are called parallel. They stay the same distance apart.','Look for rails that never touch.','The rails side by side never meet.'],
-      miss:()=>'These rails touch. Try again.',onRight:()=>glc('rings-on'),yes:'Yes! The lines never meet. They are parallel.',ms:1800});
-    /* slide the balloon */
-    say('Slide the balloon north. Watch the number grow!');
-    tray(`<div class="slide"><span class="end">south</span><input type="range" id="rng" min="-80" max="80" step="10" value="0" aria-label="Move the balloon north or south"><span class="end">north</span></div>
+      miss:k=>k==='n'?'That’s near the North Pole. Try again.':'That’s near the South Pole. Try again.',
+      onRight:()=>{glc('eq-on');},yes:'That’s the Equator! Its number is 0°. We say “zero degrees”.',ms:2800});
+    /* which new line goes the same way as the Equator? */
+    const cand=(t,d)=>`<g class="cand" data-t="${t}"><path class="vis" d="${d}"/><path class="hitp" d="${d}"/></g>`;
+    const {x:cx}=GC;
+    gx(cand('par',`M${(cx-GW(38)).toFixed(1)} ${GY(38).toFixed(1)}H${(cx+GW(38)).toFixed(1)}`)+
+       cand('slant',`M${cx-110} ${GY(-30).toFixed(1)}L${cx-10} ${GY(24).toFixed(1)}`)+
+       cand('up',`M${cx+80} ${GY(24).toFixed(1)}V${GY(-50).toFixed(1)}`));
+    await tapScene({item:'rings-parallel',concept:'Lines of latitude are parallel and never meet',area:'HSS',sel:'#gl .cand',answer:'par',names:{par:'across',slant:'slanting',up:'up and down'},
+      say:'Map makers add more lines. Tap the gold line that goes across, like the Equator.',
+      help:['The Equator goes straight across, from side to side.','Find the gold line that never touches the Equator.','The gold line near the top, going straight across.'],
+      helpExtra:n=>{if(n===2)$('#gl .cand[data-t="par"]').classList.add('ring');},
+      miss:k=>k==='up'?'That line goes up and down. Try again.':'That line crosses the Equator. Try again.',
+      yes:'Yes! It goes across and never touches the Equator.',ms:1800});
+    gx('');glc('rings-on');
+    await card({ribbon:'Look!',title:'Like train tracks',pic:I.rails.replace('<svg','<svg style="max-height:120px"'),ps:['The lines go round the Earth side by side, like train tracks.','They never touch each other.'],go:'Go on'});
+    /* drag the balloon up and down */
+    say('Drag the balloon up to the North Pole. Watch the number!');
+    tray(`<div class="row" style="gap:16px"><button class="btn ghost" id="bdn">▼ South</button><button class="btn ghost" id="bup">▲ North</button></div>
       <div class="readout"><svg viewBox="0 0 34 90" aria-hidden="true"><rect x="11" y="4" width="12" height="66" rx="6" fill="#fff" stroke="#2a2118" stroke-width="2"/><rect id="tfill" x="14" y="10" width="6" height="62" fill="#c0392b"/><circle cx="17" cy="76" r="10" fill="#c0392b" stroke="#2a2118" stroke-width="2"/></svg><div><b id="rdeg">0°</b><span id="rword">On the Equator. Hot!</span></div></div>`);
-    setHelp(['Drag the slider to the right, then to the left.']);
-    gx(gBalloon(GC.x,0,'gb'));
+    setHelp(['Put your finger on the balloon and slide it up. You can use the ▲ and ▼ buttons too.']);
+    gx(gBalloon(GC.x,0,'gb')+`<circle id="gbh" cx="${GC.x}" cy="${(GY(0)-24).toFixed(1)}" r="36" fill="transparent" style="cursor:grab;touch-action:none"/>`);
     const word=a=>a<=20?'Hot!':a<=60?'Not too hot, not too cold.':'Freezing!';
-    await new Promise(res=>{let north=false,south=false;const r=$('#rng');r.oninput=()=>{const v=+r.value;const a=Math.abs(v);
-      const b=$('#gb');if(b)b.setAttribute('transform',`translate(${GC.x} ${(GY(v)-8).toFixed(1)}) scale(.62)`);
-      $('#rdeg').textContent=v===0?'0°':a+'° '+(v>0?'north':'south');
-      $('#rword').textContent=(v===0?'On the Equator. ':'')+word(a);
-      const h=62*(1-a/90)+4;const f=$('#tfill');f.setAttribute('y',(72-h).toFixed(1));f.setAttribute('height',h.toFixed(1));f.setAttribute('fill',a<=20?'#c0392b':a<=60?'#e08a3c':'#3d86c6');
-      if(v>=80&&!north){north=true;if(!south)say('Now slide it all the way south.');}
-      if(v<=-80&&!south){south=true;if(!north)say('Now slide it all the way north.');}
-      if(north&&south)res();};});
-    setHelp(null);toast('info','Further from the Equator: a bigger number, and colder!');await sleep(2600);untoast();stepDone();
+    await new Promise(res=>{
+      let lat=0,north=false,south=false;
+      const setLat=v=>{v=Math.max(-80,Math.min(80,Math.round(v/10)*10));if(v===lat)return;lat=v;const a=Math.abs(v);
+        const y=GY(v);const b=$('#gb');if(b)b.setAttribute('transform',`translate(${GC.x} ${(y-8).toFixed(1)}) scale(.62)`);$('#gbh').setAttribute('cy',(y-24).toFixed(1));
+        $('#rdeg').textContent=v===0?'0°':a+'° '+(v>0?'north':'south');
+        $('#rword').textContent=(v===0?'On the Equator. ':'')+word(a);
+        const h=62*(1-a/90)+4;const f=$('#tfill');f.setAttribute('y',(72-h).toFixed(1));f.setAttribute('height',h.toFixed(1));f.setAttribute('fill',a<=20?'#c0392b':a<=60?'#e08a3c':'#3d86c6');
+        if(v>=80&&!north){north=true;if(!south)say('Now drag it all the way down to the South Pole.');}
+        if(v<=-80&&!south){south=true;if(!north)say('Now drag it all the way up to the North Pole.');}
+        if(north&&south)res();};
+      const h=$('#gbh'),svg=$('#gl');let on=false;
+      const toLat=e=>{const m=svg.getScreenCTM();if(!m)return lat;const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(m.inverse());const s=Math.max(-1,Math.min(1,(GC.y-(q.y+20))/GC.R));return Math.asin(s)/D2R;};
+      h.addEventListener('pointerdown',e=>{on=true;try{h.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();});
+      h.addEventListener('pointermove',e=>{if(on)setLat(toLat(e));});
+      h.addEventListener('pointerup',()=>{on=false;});h.addEventListener('pointercancel',()=>{on=false;});
+      $('#bup').onclick=()=>setLat(lat+10);$('#bdn').onclick=()=>setLat(lat-10);
+    });
+    setHelp(null);toast('info','Further from the middle: a bigger number, and colder!');await sleep(2800);untoast();stepDone();
     /* which balloon is warmer */
     const bal=(t,x,lat,lbl)=>`<g class="bal" data-t="${t}">${gBalloon(x,lat,'',lbl)}<circle class="hit" cx="${x}" cy="${(GY(lat)-28).toFixed(1)}" r="30"/></g>`;
     gx(bal('a',GC.x-75,20,'20°')+bal('b',GC.x+25,60,'60°'));
     await tapScene({item:'rings-warmer',concept:'Latitude is distance from the Equator',area:'HSS',sel:'#gl .bal',answer:'a',names:{a:'20°',b:'60°'},
-      say:'Which balloon is warmer?',
-      help:['A small number means close to the Equator.','Which balloon is closer to the Equator?','20° is closer to the Equator than 60°.'],
-      miss:()=>'60° is far from the Equator. Brr! Try again.',yes:'Yes! 20° is closer to the Equator, so it’s warmer.',ms:1900});
+      say:'One balloon is at 20°. One is at 60°. Tap the warmer one.',
+      help:['The warmer one is closer to the Equator.','A smaller number means closer to the Equator.','20 is smaller than 60. Tap the 20° balloon.'],
+      miss:()=>'60° is a long way from the Equator. Brr! Try again.',yes:'Yes! 20° is closer to the Equator, so it’s warmer.',ms:2000});
     /* north or south */
     gx(`<g>${gBalloon(GC.x-45,30,'','30°')}<circle class="drop" data-t="north" cx="${GC.x-45}" cy="${(GY(30)-28).toFixed(1)}" r="34" fill="transparent"/><text id="ns-north" x="${GC.x-45}" y="${(GY(30)+22).toFixed(1)}" text-anchor="middle" font-size="18" font-weight="700" fill="#fff" stroke="#0f2438" stroke-width="4" paint-order="stroke"></text></g>
       <g>${gBalloon(GC.x+45,-30,'','30°')}<circle class="drop" data-t="south" cx="${GC.x+45}" cy="${(GY(-30)-28).toFixed(1)}" r="34" fill="transparent"/><text id="ns-south" x="${GC.x+45}" y="${(GY(-30)+22).toFixed(1)}" text-anchor="middle" font-size="18" font-weight="700" fill="#fff" stroke="#0f2438" stroke-width="4" paint-order="stroke"></text></g>`);
     await drag({item:'rings-ns',concept:'North and south latitude',area:'HSS',targets:'#gl .drop',
-      say:'Both say 30°! Drag north or south onto each balloon.',
+      say:'Both balloons are at 30°. Which one is north, and which is south?',
+      trayHead:'<p class="inst">Drag each word onto a balloon.</p>',
       chips:[{v:'north',label:'north'},{v:'south',label:'south'}],
       fits:(v,k)=>v===k,label:v=>v,each:()=>'Yes!',
-      miss:v=>v==='north'?'North is above the Equator.':'South is below the Equator.',
-      help:['North is above the Equator. South is below it.','Australia is south of the Equator, near the bottom.','The top balloon is north. The bottom one is south.'],
-      onPlace:(v)=>{const t=$('#ns-'+v);if(t)t.textContent=v;},yes:'30° north and 30° south: just as far from the Equator.',ms:2000});
+      miss:v=>v==='north'?'North is above the Equator. Try again.':'South is below the Equator. Try again.',
+      help:['North is above the Equator. South is below it.','Australia is below the Equator, so Australia is south.','The top balloon is north. The bottom balloon is south.'],
+      onPlace:(v)=>{const t=$('#ns-'+v);if(t)t.textContent=v;},yes:'Yes! Same number, but one is north and one is south.',ms:2200});
     finishPart(0);
-    afterPart(0,'The Equator is 0°. The numbers grow as you go north or south, and it gets colder.');
+    afterPart(0,'The Equator is 0°. The numbers get bigger as you go north or south, and it gets colder.');
   })();
 }
 
-/* ===== Part 2: the two tropic rings ===== */
+/* ===== Part 2: the two tropic lines ===== */
 function partTropics(){
-  stage({title:'The two tropic rings',steps:2,scene:globeSVG('eq-on rings-on trop-on'),say:'Two special rings go round the Earth.'});
+  stage({title:'The two tropic lines',steps:4,scene:globeSVG('eq-on rings-on trop-on'),say:'Look! Two gold lines go round the Earth.'});
   (async()=>{
-    await card({ribbon:'Learn this',title:'The two tropic rings',pic:TROPCARD,ps:['Tropic of Cancer: about 23° north.','Tropic of Capricorn: about 23° south. It crosses Australia!','The lands between them are the tropics.'],go:'Got it'});
+    await card({ribbon:'Learn this',title:'The two tropic lines',pic:TROPCARD,ps:['The top gold line is the Tropic of Cancer.','The bottom gold line is the Tropic of Capricorn. It goes across Australia!','The land between them is called the tropics.'],go:'Got it'});
     const strip=(t,lat)=>`<rect class="drop" data-t="${t}" x="${(GC.x-GW(lat)).toFixed(1)}" y="${(GY(lat)-14).toFixed(1)}" width="${(2*GW(lat)).toFixed(1)}" height="28" fill="transparent"/><text id="tl-${t}" x="${(GC.x+GW(lat)+8).toFixed(1)}" y="${(GY(lat)+6).toFixed(1)}" font-size="16" font-weight="700" fill="#f2c75c"></text>`;
     gx(strip('cancer',TROPIC)+strip('capri',-TROPIC));
     await drag({item:'trop-name',concept:'The two tropics: Cancer north, Capricorn south',area:'HSS',targets:'#gl .drop',
-      say:'Name the two gold rings. Drag each name on.',
+      say:'Put the names on the two gold lines.',
+      trayHead:'<p class="inst">Drag each name onto its gold line.</p>',
       chips:[{v:'cancer',label:'Tropic of Cancer'},{v:'capri',label:'Tropic of Capricorn'}],
       fits:(v,k)=>v===k,label:v=>v==='cancer'?'Cancer':'Capricorn',each:()=>'Yes!',
-      miss:v=>v==='capri'?'Capricorn crosses Australia. Is Australia up there?':'Cancer is the northern ring.',
-      help:['Cancer is north. Capricorn is south.','Capricorn crosses Australia. Is Australia at the top or the bottom?','Cancer goes on the top ring. Capricorn goes on the bottom ring.'],
-      onPlace:(v)=>{const t=$('#tl-'+v);if(t)t.textContent=v==='cancer'?'Cancer':'Capricorn';},yes:'Yes! The two tropic rings.',ms:1600});
-    gx(gBand('pn',90,POLAR,'drop')+gBand('tn',POLAR,TROPIC,'drop')+gBand('tr',TROPIC,-TROPIC,'drop')+gBand('ts',-TROPIC,-POLAR,'drop')+gBand('ps',-POLAR,-90,'drop')+`<text x="${GC.x+GW(TROPIC)+8}" y="${GY(TROPIC)+6}" font-size="16" font-weight="700" fill="#f2c75c">Cancer</text><text x="${GC.x+GW(TROPIC)+8}" y="${GY(-TROPIC)+6}" font-size="16" font-weight="700" fill="#f2c75c">Capricorn</text>`);
-    const zf={hot:['tr'],mild:['tn','ts'],cold:['pn','ps']};
-    await drag({item:'trop-paint',concept:'Hot near the Equator, frozen near the poles',area:'HSS',targets:'#gl .drop',reuse:true,
-      say:'Paint the Earth! Drag each picture onto its lands.',
-      trayHead:'',
-      chips:[{v:'hot',label:'hot all year',pic:I.hot,cls:'badge'},{v:'mild',label:'four seasons',pic:I.mild,cls:'badge'},{v:'cold',label:'frozen',pic:I.cold,cls:'badge'}],keep:true,
-      fits:(v,k)=>zf[v].includes(k),label:v=>v,
-      each:v=>({hot:'The tropics: hot all year!',mild:'In between: four seasons!',cold:'Polar: frozen!'})[v],
-      miss:(v,k)=>({hot:'Hot lands are near the Equator, between the gold rings.',mild:'Four seasons come in between hot and frozen.',cold:'Frozen lands are near the poles.'})[v],
-      help:['The tropics are between the two gold rings.','Hot in the middle. Frozen at the top and bottom.','Sun in the middle. Snowflake at both poles. Leaves in between.'],
-      onPlace:(v,k)=>{const z=$(`#gl .zone[data-t="${k}"]`);if(z)z.classList.add('on');const l=$(`#gl .zlbl[data-z="${k}"]`);if(l)l.classList.add('on');},
-      yes:'You can tell hot or cold just from how far a place is from the Equator!',ms:2400});
+      miss:v=>v==='capri'?'Capricorn goes across Australia. Is Australia up there?':'Cancer is the top line.',
+      help:['Capricorn goes across Australia.','Find Australia. Is it near the top line or the bottom line?','Cancer goes on the top line. Capricorn goes on the bottom line.'],
+      onPlace:(v)=>{const t=$('#tl-'+v);if(t)t.textContent=v==='cancer'?'Cancer':'Capricorn';},yes:'Yes! The two tropic lines.',ms:1600});
+    const {x:cx,y:cy,R}=GC;
+    const capBand=(t,y1,y2)=>`<rect class="drop" data-t="${t}" x="${cx-R}" y="${y1.toFixed(1)}" width="${2*R}" height="${(y2-y1).toFixed(1)}" fill="transparent" clip-path="url(#gclip)"/>`;
+    gx(capBand('pn',cy-R-30,GY(POLAR))+gBand('tn',POLAR,TROPIC,'drop')+gBand('tr',TROPIC,-TROPIC,'drop')+gBand('ts',-TROPIC,-POLAR,'drop')+capBand('ps',GY(-POLAR),cy+R+30)+`<text x="${cx+GW(TROPIC)+8}" y="${GY(TROPIC)+6}" font-size="16" font-weight="700" fill="#f2c75c">Cancer</text><text x="${cx+GW(TROPIC)+8}" y="${GY(-TROPIC)+6}" font-size="16" font-weight="700" fill="#f2c75c">Capricorn</text>`);
+    const paint=(v,k)=>{const z=$(`#gl .zone[data-t="${k}"]`);if(z)z.classList.add('on');const l=$(`#gl .zlbl[data-z="${k}"]`);if(l)l.classList.add('on');};
+    await drag({item:'trop-paint-hot',concept:'Hot near the Equator, frozen near the poles',area:'HSS',targets:'#gl .drop',oneAsk:true,need:1,
+      say:'Where is it hot all year? Drag the sun there.',
+      chips:[{v:'hot',label:'hot all year',pic:I.hot,cls:'badge'}],
+      fits:(v,k)=>k==='tr',label:()=>'hot',
+      miss:()=>'Not there. Look between the two gold lines.',
+      help:['The tropics are hot all year.','The tropics are between the two gold lines.','Drag the sun onto the middle, between the gold lines.'],
+      onPlace:paint,yes:'Hot all year in the tropics!',ms:1400});
+    await drag({item:'trop-paint-cold',concept:'Hot near the Equator, frozen near the poles',area:'HSS',targets:'#gl .drop',oneAsk:true,need:2,reuse:true,
+      say:'Where is it frozen? Drag the snowflake there. There are two places!',
+      chips:[{v:'cold',label:'frozen',pic:I.cold,cls:'badge'}],
+      fits:(v,k)=>k==='pn'||k==='ps',label:()=>'frozen',each:()=>'Yes! Now the other one.',
+      miss:()=>'Not there. Frozen places are by the poles.',
+      help:['Frozen places are by the North Pole and the South Pole.','Right at the very top, and right at the very bottom.','Drag the snowflake to the top of the Earth, then to the bottom.'],
+      onPlace:paint,yes:'Frozen at both poles!',ms:1400});
+    await drag({item:'trop-paint-mild',concept:'Hot near the Equator, frozen near the poles',area:'HSS',targets:'#gl .drop',oneAsk:true,need:2,reuse:true,
+      say:'The two blue parts that are left have four seasons. Drag the tree onto both.',
+      chips:[{v:'mild',label:'four seasons',pic:I.mild,cls:'badge'}],
+      fits:(v,k)=>k==='tn'||k==='ts',label:()=>'four seasons',each:()=>'Yes! Now the other one.',
+      miss:()=>'Not there. Find a blue part with no colour yet.',
+      help:['Look for the two blue parts with no colour yet.','One is above the top gold line. One is below the bottom gold line.','Drag the tree just above Cancer, then just below Capricorn.'],
+      onPlace:paint,yes:'Near the middle: hot. By the poles: frozen. In between: four seasons!',ms:2600});
     finishPart(1);
-    afterPart(1,'The tropics sit between the two tropic rings. They are warm all year.');
+    afterPart(1,'The tropics are between the two tropic lines. They are hot all year.');
   })();
 }
 
@@ -804,13 +844,14 @@ function choosePin(keys,line){
 const BADGES=[{v:'hot',label:'hot all year',pic:I.hot,cls:'badge'},{v:'mild',label:'four seasons',pic:I.mild,cls:'badge'},{v:'cold',label:'frozen',pic:I.cold,cls:'badge'}];
 function predict(k,answer){
   const p=PLACES[k],a=Math.round(Math.abs(p.lat));
-  const why={hot:`${a}° is between the Equator and a tropic ring.`,mild:`${a}° is past the tropic ring, but far from the pole.`,cold:`${a}° is very far from the Equator, near the pole.`}[answer];
+  const why={hot:`${p.name} is between the two gold lines. Hot all year!`,mild:`${p.name} is past the gold line, but a long way from the ice. Four seasons!`,cold:`${p.name} is right down by the South Pole. Frozen!`}[answer];
   return drag({item:'predict-'+k,concept:'Telling hot or cold from latitude',area:'HSS',targets:`#pin-${k} .drop`,oneAsk:true,keep:true,
-    say:`${p.name}: ${latWords(p.lat)}. Hot, four seasons, or frozen? Drag one onto the pin.`,
+    say:`${p.name} is at ${latWords(p.lat)}. Is it hot, frozen, or four seasons?`,
+    trayHead:`<p class="inst">Drag a picture onto the ${p.name} pin.</p>`,
     chips:BADGES,easyDrop:answer==='cold'?['hot']:['cold'],
     fits:v=>v===answer,label:v=>v,
-    miss:v=>({hot:'Look at the map. Is it between the two gold rings?',mild:'Check the gold rings and the Equator.',cold:'Is it close to the South Pole?'})[v]+' Try again.',
-    help:['Find the pin. Is it between the two gold tropic rings?','The tropic rings are about 23° from the Equator. Polar lands are past about 66°.',why],
+    miss:v=>({hot:'Is the pin between the two gold lines? Try again.',mild:'Look at the gold lines again. Try again.',cold:'Is the pin near the South Pole? Try again.'})[v],
+    help:['Find the pin. Is it between the two gold lines?','Between the gold lines: hot. By the poles: frozen. In between: four seasons.',why],
     yes:{hot:'Hot all year! Let’s land.',mild:'Four seasons! Let’s land.',cold:'Frozen! Let’s land.'}[answer],ms:1500});
 }
 
@@ -853,16 +894,16 @@ async function stopSahara(been){
   setScene(SAHARA);say('Phew, it’s hot! The Sahara is in the tropics too.');tray('');setHelp(null);
   await sleep(1600);
   await pics({item:'trip-desert',concept:'Some tropical places are deserts',area:'HSS',
-    say:'Look around. Is every tropical place wet and green?',
+    say:'Look at the Sahara. Is every place in the tropics wet and green?',
     options:[{v:'no',label:'No, some are deserts',pic:I.dune},{v:'yes',label:'Yes, always',pic:I.jungle}],answer:'no',
     help:['Look at the picture. What can you see?','Is there rain? Are there green plants?','The Sahara is hot, but dry sand. So the answer is no.'],
     miss:()=>'Look around the Sahara. Do you see any rain or jungle?',yes:'Right! The tropics are always warm, but some places are dry deserts.',ms:2000});
   showMap(been);placeBal(POS.lon,POS.lat);$('#mp').classList.add('aus-on');
   await tapScene({item:'trip-aus-tropics',concept:'The tropics lie between the two tropic lines',area:'HSS',sel:'#mp .aus .tz',answer:'in',names:{in:'north part',out:'south part'},
-    say:'Australia has a tropical desert too. Tap the part of Australia inside the tropics.',
-    help:['The tropics are between the two gold rings.','Find the Tropic of Capricorn. It crosses Australia.','The part of Australia above the Tropic of Capricorn line.'],
-    miss:()=>'That part is below the Tropic of Capricorn. Try again.',
-    onRight:()=>{$('#mp').classList.add('gsd-on');$('#mp').classList.remove('aus-on');},yes:'Yes! The Great Sandy Desert is up there, in the tropics.',ms:2200});
+    say:'Australia has a desert in the tropics too! Which part of Australia is in the tropics? Tap it.',
+    help:['The tropics are between the two gold lines.','Find the gold line that goes across Australia.','Tap the top part of Australia, above the gold line.'],
+    miss:()=>'That part is below the gold line. Try again.',
+    onRight:()=>{$('#mp').classList.add('gsd-on');$('#mp').classList.remove('aus-on');},yes:'Yes, the top part! The Great Sandy Desert is up there.',ms:2200});
 }
 
 /* ===== Part 4: to the ice and home ===== */
@@ -884,8 +925,8 @@ function partIce(){
     stage({title:'To the ice and home',steps:1,scene:'',say:''});
     $('#sw').hidden=true;
     await drag({item:'ice-houses',concept:'Houses suit the climate',area:'HSS',targets:'#tray .sorts .drop',
-      say:'Mistress Wren drew a house for each place. Match them!',
-      trayHead:`<div class="sorts"><div class="drop" data-t="darwin">${PLACEPIC.darwin}<b></b></div><div class="drop" data-t="home">${PLACEPIC.home}<b></b></div><div class="drop" data-t="davis">${PLACEPIC.davis}<b></b></div></div><div style="height:10px"></div>`,
+      say:'Mistress Wren drew a house for each place. Which house goes where?',
+      trayHead:`<div class="sorts"><div class="drop" data-t="darwin">${PLACEPIC.darwin}<b></b></div><div class="drop" data-t="home">${PLACEPIC.home}<b></b></div><div class="drop" data-t="davis">${PLACEPIC.davis}<b></b></div></div><p class="inst" style="margin-top:10px">Drag each house onto its place.</p>`,
       chips:[{v:'darwin',pic:HOUSE.stilts,label:'up high, open to the breeze',cls:'big'},{v:'home',pic:HOUSE.verandah,label:'verandah and a fireplace',cls:'big'},{v:'davis',pic:HOUSE.snug,label:'thick walls, small windows',cls:'big'}],
       fits:(v,k)=>v===k,label:v=>v,each:()=>'Yes!',
       miss:v=>({darwin:'This house lets the breeze in. Where is it hot all year?',home:'This house has shade for summer and a fire for winter.',davis:'This house keeps the cold out. Where is it freezing?'})[v],
@@ -899,10 +940,10 @@ async function stopDavis(){
   setScene(DAVIS);tray('');setHelp(null);
   const setT=h=>{const x=120+h*30,y=70+Math.pow(h/12,1.4)*112;const s=$('#dvsun');if(s)s.setAttribute('transform',`translate(${x} ${y.toFixed(1)})`);
     const k=h/12;const c=(a,b)=>Math.round(a+(b-a)*k);const sky=$('#dvsky');if(sky)sky.setAttribute('fill',`rgb(${c(191,246)},${c(224,201)},${c(245,160)})`);
-    const lbl=$('#clk');if(lbl)lbl.textContent=h===0?'12 noon':h===12?'midnight':h+' o’clock';};
+    const lbl=$('#clk');if(lbl)lbl.textContent=h===0?'midday':h===12?'midnight':h+' o’clock';};
   setT(0);
-  say('It’s summer at Davis. Slide the clock to midnight. Watch the Sun!');
-  tray(`<div class="clockbox"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="22" fill="#fff" stroke="#2a2118" stroke-width="3"/><path d="M26 26V10M26 26l10 6" stroke="#2a2118" stroke-width="3" stroke-linecap="round"/></svg><b id="clk">12 noon</b></div><div class="slide"><span class="end">noon</span><input type="range" id="trng" min="0" max="12" step="1" value="0" aria-label="Time of day"><span class="end">midnight</span></div>`);
+  say('It’s summer at Davis. Slide the clock to midnight, and watch the Sun!');
+  tray(`<div class="clockbox"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="22" fill="#fff" stroke="#2a2118" stroke-width="3"/><path d="M26 26V10M26 26l10 6" stroke="#2a2118" stroke-width="3" stroke-linecap="round"/></svg><b id="clk">midday</b></div><div class="slide"><span class="end">midday</span><input type="range" id="trng" min="0" max="12" step="1" value="0" aria-label="Time of day"><span class="end">midnight</span></div>`);
   setHelp(['Drag the slider all the way to the right.']);
   await new Promise(res=>{const r=$('#trng');r.oninput=()=>{const h=+r.value;setT(h);if(h===12)res();};});
   setHelp(null);await sleep(900);
@@ -910,13 +951,13 @@ async function stopDavis(){
     say:'It’s midnight in summer. What did the Sun do?',
     options:[{v:'up',label:'It stayed up all night',pic:I.sunUp},{v:'set',label:'It set, and got dark',pic:I.dark}],answer:'up',
     help:['Look at the picture. Where is the Sun now?','Is the Sun still above the ice?','The Sun is low, but it is still up. It never set.'],
-    miss:()=>'Look again. Can you still see the Sun?',yes:'Yes! In polar summer, the Sun stays up, even at midnight.',ms:2000});
+    miss:()=>'Look again. Can you still see the Sun?',yes:'Yes! In summer near the South Pole, the Sun stays up, even at midnight.',ms:2000});
   await pics({item:'ice-winter',concept:'Polar winter: long, dark nights',area:'SC',
     say:'Now it’s winter at Davis. What is it like?',
     options:[{v:'dark',label:'Long, dark nights',pic:I.dark},{v:'up',label:'Sunny all night',pic:I.sunUp}],answer:'dark',
-    help:['Winter is the opposite of summer.','In summer the Sun stays up. In winter…?','In polar winter the Sun hardly rises. The nights are long and dark.'],
-    miss:()=>'Winter is the opposite of summer. Try again.',yes:'Yes! Polar winters have long, dark nights.',ms:1800});
-  await card({title:'Sun at midnight',pic:I.sunUp.replace('<svg','<svg style="width:100%;max-height:120px"'),ps:['At Davis, the Sun stays up all night for about two weeks around Christmas.','In midwinter, it stays down for about two weeks.','At the South Pole itself, summer daylight lasts for months!']});
+    help:['Winter is the opposite of summer.','In summer the Sun stays up all night. In winter, it’s the other way round.','In winter the Sun hardly comes up. The nights are long and dark.'],
+    miss:()=>'Winter is the opposite of summer. Try again.',yes:'Yes! Winter near the South Pole has long, dark nights.',ms:1800});
+  await card({title:'Sun at midnight',pic:I.sunUp.replace('<svg','<svg style="width:100%;max-height:120px"'),ps:['At Davis, the Sun stays up all night for about two weeks around Christmas.','In the middle of winter, it stays down for about two weeks.','At the South Pole itself, summer daylight lasts for months!']});
 }
 async function stopHome(){
   setScene(HOME);say('Home sweet home!');tray('');setHelp(null);
@@ -935,28 +976,30 @@ async function stopHome(){
 
 /* ===== Part 5: Mistress Wren's globe ===== */
 function partGlobe(){
-  stage({title:'Mistress Wren’s globe',steps:3,scene:globeSVG(''),say:'Mistress Wren painted her globe. Can you name the rings from memory?'});
+  stage({title:'Mistress Wren’s globe',steps:3,scene:globeSVG(''),say:'Mistress Wren painted her globe. Can you remember the names of the lines?'});
   (async()=>{
     const lats=S.easy?[['eq',0],['cancer',TROPIC],['capri',-TROPIC]]:[['eq',0],['cancer',TROPIC],['capri',-TROPIC],['decoy',50]];
     const line=(t,lat)=>`<path d="M${(GC.x-GW(lat)).toFixed(1)} ${GY(lat).toFixed(1)}H${(GC.x+GW(lat)).toFixed(1)}" stroke="#fff" stroke-width="3.5" pointer-events="none"/><rect class="drop" data-t="${t}" x="${(GC.x-GW(lat)).toFixed(1)}" y="${(GY(lat)-14).toFixed(1)}" width="${(2*GW(lat)).toFixed(1)}" height="28" fill="transparent"/><text id="nl-${t}" x="${(GC.x+GW(lat)+8).toFixed(1)}" y="${(GY(lat)+6).toFixed(1)}" font-size="16" font-weight="700" fill="#f4ead6"></text>`;
     gx(lats.map(([t,l])=>line(t,l)).join(''));
     await drag({item:'globe-rings',concept:'Naming the Equator and the tropics',area:'HSS',targets:'#gl .drop',decoys:['decoy'],
-      say:'Drag each name onto its ring.',
+      say:'The names have gone! Put them back.',
+      trayHead:'<p class="inst">Drag each name onto its line.</p>',
       chips:[{v:'eq',label:'Equator'},{v:'cancer',label:'Tropic of Cancer'},{v:'capri',label:'Tropic of Capricorn'}],
       fits:(v,k)=>v===k,label:v=>({eq:'Equator',cancer:'Cancer',capri:'Capricorn'})[v],each:()=>'Yes!',
-      miss:(v,k)=>k==='decoy'?'That ring is too far from the Equator to be a tropic.':({eq:'The Equator is the middle ring.',cancer:'Cancer is the tropic ring in the north.',capri:'Capricorn is the tropic ring in the south.'})[v],
-      help:['The Equator is in the middle. The tropic rings are close to it.','Cancer is north. Capricorn is south, across Australia.','Middle: Equator. Just above: Cancer. Just below: Capricorn.'],
+      miss:(v,k)=>k==='decoy'?'That line is too far from the middle. Try again.':({eq:'The Equator is the middle line.',cancer:'Cancer is the line just above the middle.',capri:'Capricorn is the line just below the middle.'})[v],
+      help:['The Equator is the middle line. The tropic lines are close to it.','Cancer is the top tropic line. Capricorn is the bottom one, across Australia.','Middle: Equator. Just above: Cancer. Just below: Capricorn.'],
       onPlace:(v)=>{const t=$('#nl-'+v);if(t)t.textContent=({eq:'Equator',cancer:'Cancer',capri:'Capricorn'})[v];},yes:'All named, from memory!',ms:1600});
     setScene(tiltSVG());
     await tapScene({item:'globe-summer',concept:'The hemispheres have opposite seasons',area:'SC',sel:'#tl .half',answer:'s',names:{n:'northern half',s:'southern half'},
-      say:'The Earth is leaning. Tap the half that has summer now.',
-      help:['Summer comes to the half turned toward the Sun.','Which half leans toward the Sun?','The bottom half, the south, leans toward the Sun.'],
-      miss:()=>'That half leans away from the Sun. It has winter. Try again.',yes:'Yes! The south leans toward the Sun, so it’s summer here in Australia.',ms:2200});
+      say:'Summer goes to the half of the Earth that leans toward the Sun. Tap the half that has summer.',
+      help:['Look at the Sun. Which half is tipped toward it?','The top half leans away. What about the bottom half?','The bottom half, the south, leans toward the Sun.'],
+      miss:()=>'That half leans away from the Sun, so it has winter. Try again.',yes:'Yes! The south leans toward the Sun. It’s summer in Australia!',ms:2200});
+    setScene(tiltSVG(true));
     await pics({item:'globe-between',concept:'Spring and autumn are in between',area:'SC',
-      say:'When the Sun shines straight on the Equator, and neither pole leans to it, what seasons are they?',
+      say:'Now neither half leans toward the Sun. Which seasons are those?',
       options:[{v:'sa',label:'Spring and autumn',pic:I.springaut},{v:'su',label:'Summer',pic:I.summer},{v:'wi',label:'Winter',pic:I.winter}],answer:'sa',easyWrong:'wi',
-      help:['Summer: leaning toward the Sun. Winter: leaning away.','What comes in between summer and winter?','Spring and autumn are the in-between seasons.'],
-      miss:()=>'That season comes when a half leans toward or away from the Sun. Try again.',yes:'Yes! Spring and autumn.',ms:1800});
+      help:['Leaning toward the Sun: summer. Leaning away: winter.','Neither half leans, so it isn’t summer and it isn’t winter.','Spring and autumn are the in-between seasons.'],
+      miss:()=>'Not quite. Neither half leans toward the Sun or away from it. Try again.',yes:'Yes! Spring and autumn, the in-between seasons.',ms:2000});
     ending();
   })();
 }
@@ -979,6 +1022,7 @@ function ending(){
     <div class="sw">${globeSVG('eq-on trop-on')}</div>
     <div class="bubble"><span class="who">${NUTMEG}</span><p>What a trip! Now it’s notebook time.</p></div>
     <h3 class="bigq">Your notebook jobs</h3>
+    <p class="inst">Tap each box when you’ve done it.</p>
     <ol class="todo">${TODO.map(x=>`<li class="${x.k==='mum'?'mum':''}"><button data-k="${x.k}" aria-pressed="${S.ticks.includes(x.k)?'true':'false'}">${x.pic}<span>${x.t}${x.s?`<small>${x.s}</small>`:''}</span><span class="box2"></span></button></li>`).join('')}</ol>
     <p id="alldone" style="text-align:center;font-weight:700;font-size:1.25rem;margin:12px 0 0" hidden>All done! Purr. Go and find Mum.</p>
     <div class="row" style="margin-top:12px"><button class="btn ghost" id="go">Back to the contents</button></div></section>`;
