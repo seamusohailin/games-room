@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "ashcombe-house",
+    title: "The Puzzles of Ashcombe House",
+    blurb: "Why do puddles vanish, windows weep and cold jugs sweat? Solve the housekeeper's puzzles with particles.",
+    players: ["maggie"],
+    subject: "Science",
+    source: "Science Strands Year 5, Lesson 13: Matter in Action (ebook pp. 35 to 37). Opens with the lesson's two videos (Melting Matter read-aloud; States of Matter: Liquids), then four puzzle rooms, then two paragraphs in her science workbook. About 35 minutes in all",
+    added: "2026-11-22",
+    colour: "#5E2A4A",
+    href: "games/ashcombe-house/index.html"
+  },
+  {
     id: "midnight-sun",
     title: "The Land of the Midnight Sun",
     blurb: "Follow Ingrid over the mountains from Norway to Sweden, and find out why her sun shines at midnight.",

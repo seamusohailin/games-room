@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>The Puzzles of Ashcombe House</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* A Regency country-house kitchen: cream paper, plum and copper, with one dark glass box where the particles move. */
+:root{
+  --paper:#F5EFE3; --card:#FFFDF8; --ink:#2B2420; --ink-soft:#655A50; --line:#DDD0B8;
+  --plum:#5E2A4A; --plum-dark:#3D1A30; --copper:#B5652B; --copper-dark:#7F4318; --sage:#6F8A6A; --sage-pale:#E5ECDF;
+  --water:#9CC9E6; --water-edge:#3F7FA6; --glass:#1E2B3A;
+  --ok:#2E7D4F; --okbg:#E6F3EA; --bad:#B4462F; --badbg:#FBEAE4; --tip:#FFF5DA; --tip-edge:#D9A63A;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Lexend","Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+button,select{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--copper);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
+h1{font-size:clamp(2.1rem,6vw,3.3rem);line-height:1.04;color:var(--plum-dark)}
+h2{font-size:clamp(1.35rem,3vw,1.8rem);line-height:1.15;color:var(--plum-dark)}
+h3{font-size:1.1rem;line-height:1.25;color:var(--plum-dark)}
+p{margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 100px max(16px,env(safe-area-inset-left,0px))}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--copper-dark)}
+.muted{color:var(--ink-soft)}
+.note{font-size:.9rem;color:var(--ink-soft)}
+.stack>*+*{margin-top:14px}
+.screen[hidden]{display:none!important}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 0 10px;border-bottom:2px dashed var(--line);margin-bottom:16px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.2rem;color:var(--plum-dark)}
+.pips{display:flex;gap:6px;align-items:center}
+.pip{width:14px;height:14px;border-radius:50%;border:2px solid var(--plum);background:transparent}
+.pip.on{background:var(--plum)}
+.btn{border:0;border-radius:14px;padding:12px 20px;font-weight:600;background:var(--plum);color:#fff;box-shadow:0 4px 0 var(--plum-dark);min-height:50px;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--plum-dark)}
+.btn.copper{background:var(--copper);box-shadow:0 4px 0 var(--copper-dark)}
+.btn.ghost{background:var(--card);color:var(--plum-dark);border:2px solid var(--plum);box-shadow:none}
+.btn.small{min-height:42px;padding:8px 14px;font-size:.92rem}
+.btn[disabled]{opacity:.45;cursor:default}
+.linkish{background:none;border:0;padding:6px 0;color:var(--ink-soft);text-decoration:underline;font-size:.9rem}
+
+/* intro */
+.intro{display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:center;padding-top:20px}
+.letter{background:var(--card);border-left:6px solid var(--copper);border-radius:12px;padding:14px 18px;font-family:var(--display);font-style:italic;font-size:1.12rem;line-height:1.5}
+.bigq{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,3vw,1.8rem);color:var(--plum);line-height:1.18}
+.pic{background:var(--card);border-radius:18px;padding:8px;box-shadow:0 0 0 2px var(--line) inset}
+.pic svg{display:block;width:100%;height:auto;border-radius:12px}
+
+/* hub */
+.rooms{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px}
+.room{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 10px 16px;min-height:190px}
+.room .ico{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;background:var(--sage-pale)}
+.room .ico svg{width:64px;height:64px}
+.room .t{font-weight:700;line-height:1.2}
+.room .s{font-size:.84rem;color:var(--ink-soft);line-height:1.3}
+.room .st{font-size:.8rem;font-weight:700;color:var(--plum)}
+.room.done{border-color:var(--plum)}
+.room.done .ico{background:#EADCE4}
+.room[disabled]{opacity:.5;cursor:default}
+.room .n{position:absolute;top:8px;left:12px;font-family:var(--display);font-weight:700;color:var(--ink-soft)}
+
+/* play */
+.play{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:start}
+.journal{background:var(--card);border-radius:18px;padding:18px;border:2px solid var(--line);position:sticky;top:12px}
+.qcount{font-size:.78rem;font-weight:700;color:var(--ink-soft);letter-spacing:.06em;text-transform:uppercase}
+.prompt{font-size:1.08rem;font-weight:500;margin:6px 0 12px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:center;text-align:left;background:#F7F2E8;border:2px solid var(--line);border-radius:12px;padding:10px 14px;min-height:52px;font-weight:500;line-height:1.35}
+.opt.on{border-color:var(--plum);background:#F1E6EC}
+.opt.wrong{border-color:var(--bad);background:var(--badbg);opacity:.75}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt[disabled]{cursor:default}
+.fb{margin-top:12px;border-radius:12px;padding:12px 14px;font-size:.98rem}
+.fb.bad{background:var(--badbg);border-left:5px solid var(--bad)}
+.fb.ok{background:var(--okbg);border-left:5px solid var(--ok)}
+.fb .h,.helpbox .h{font-weight:700;display:block;margin-bottom:2px}
+.helpbox{margin-top:12px;background:var(--tip);border-left:5px solid var(--tip-edge);border-radius:12px;padding:12px 14px;font-size:.96rem}
+.helpbtn{margin-top:12px;background:none;border:2px dashed var(--tip-edge);color:#7A5410;border-radius:12px;padding:8px 14px;font-weight:600;min-height:44px}
+.helpbtn.nudge{background:#FFEFC2}
+.speech{background:#F7F2E8;border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.speech b{color:var(--plum)}
+.notes{margin-top:14px;background:var(--sage-pale);border-radius:12px;padding:10px 14px}
+.notes summary{font-weight:600;cursor:pointer;color:#3F5A3B}
+.notes ul{margin:8px 0 0;padding-left:20px;font-size:.93rem}
+.notes li+li{margin-top:4px}
+
+/* stage */
+.stagecard{background:var(--card);border-radius:18px;padding:8px;box-shadow:0 0 0 2px var(--line) inset}
+.stagecard svg{display:block;width:100%;height:auto;border-radius:12px}
+.stagefoot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.82rem;color:var(--ink-soft);padding:6px 6px 0}
+svg text{font-family:var(--body)}
+
+/* video */
+.video{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.films{display:grid;gap:8px;margin-top:10px}
+.film{display:flex;gap:12px;align-items:center;text-align:left;background:#F7F2E8;border:2px solid var(--line);border-radius:12px;padding:10px 12px;min-height:56px}
+.film.on{border-color:var(--copper);background:#FBEEE3}
+.film .k{flex:0 0 34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--copper);color:#fff;font-weight:700}
+.film .w{margin-left:auto;font-size:.82rem;font-weight:700;color:var(--ok)}
+.watched{display:flex;align-items:center;gap:10px;margin-top:10px;font-weight:600}
+.watched input{width:26px;height:26px;accent-color:var(--plum)}
+
+/* particle box */
+.box{background:var(--glass);border-radius:14px;padding:10px}
+.box canvas{display:block;width:100%;height:auto;border-radius:8px;touch-action:manipulation}
+.dial{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-top:10px}
+.dial button{min-width:92px}
+.therm{font-family:var(--display);font-weight:700;font-size:1.25rem;color:#fff;text-align:center;margin-top:6px}
+input[type=range]{width:100%;height:44px;accent-color:var(--copper)}
+input[type=range][disabled]{opacity:.4}
+
+/* puzzle tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;background:#F7F2E8;border:2px solid var(--line);border-radius:14px;padding:12px;min-height:96px}
+.tile .tt{font-weight:700}
+.tile .ts{font-size:.85rem;color:var(--ink-soft)}
+.tile.done{border-color:var(--ok);background:var(--okbg)}
+.tests{display:grid;gap:8px}
+
+/* round trip */
+.trip{display:grid;grid-template-columns:1fr;gap:2px;margin:8px 0}
+.slot{min-height:48px;border:2px dashed var(--line);border-radius:12px;background:#FBF8F1;display:grid;place-items:center;text-align:center;font-size:.86rem;padding:6px;font-weight:600}
+.slot.filled{border-style:solid;border-color:var(--plum);background:#F1E6EC}
+.arrow{font-size:1.4rem;color:var(--copper-dark);text-align:center}
+.cards{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.cardbtn{border:2px solid var(--ink);background:#FFFDF6;border-radius:12px;padding:8px 12px;font-weight:600;min-height:48px;box-shadow:2px 2px 0 var(--ink)}
+.cardbtn[disabled]{opacity:.35;box-shadow:none}
+.arrows{display:grid;gap:10px;margin-top:6px}
+.arrows label{display:grid;grid-template-columns:1fr;gap:4px;font-weight:600;font-size:.95rem}
+.arrows select{min-height:46px;border:2px solid var(--line);border-radius:10px;padding:6px 10px;background:#fff}
+.pics3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.picbtn{background:#F7F2E8;border:2px solid var(--line);border-radius:12px;padding:6px}
+.picbtn svg{display:block;width:100%;height:auto}
+.picbtn.wrong{border-color:var(--bad);background:var(--badbg);opacity:.7}
+.picbtn.right{border-color:var(--ok);background:var(--okbg)}
+
+/* workbook */
+.steps{margin:6px 0 0;padding-left:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:10px 12px 10px 52px;background:#F7F2E8;border-radius:12px;margin-top:8px}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:10px;width:30px;height:30px;border-radius:50%;background:var(--plum);color:#fff;display:grid;place-items:center;font-weight:700}
+.extra{margin-top:10px;background:var(--tip);border-radius:12px;padding:10px 14px}
+.extra summary{font-weight:600;cursor:pointer;color:#7A5410}
+.extra ul{margin:8px 0 0;padding-left:20px}
+
+/* end */
+.endgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.talk{background:#FBEEE3;border-radius:18px;padding:16px 18px;border:2px solid #EBCDB2}
+
+/* parent notes (full copy only) */
+.panel{background:var(--card);border-radius:18px;border:2px solid var(--line);padding:20px}
+.parent h3{margin:16px 0 6px}
+.parent dl{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;margin:10px 0}
+.parent dt{font-weight:600}.parent dd{margin:0}
+.parent ul,.parent ol{margin:0 0 10px;padding-left:22px}
+
+@media (max-width:900px){
+  .intro,.play,.endgrid{grid-template-columns:1fr}
+  .journal{position:static}
+  .rooms{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .tiles{grid-template-columns:1fr}
+  .parent dl{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- INTRO -->
+<section class="screen" id="sIntro">
+  <div class="intro">
+    <div class="stack">
+      <p class="eyebrow">Science Strands · Lesson 13: Matter in Action</p>
+      <h1>The Puzzles of Ashcombe House</h1>
+      <p class="letter" id="introLetter"></p>
+      <p class="bigq">Why do puddles vanish, windows weep and cold jugs sweat?</p>
+      <p>There are six parts. Two short films first, then four puzzle rooms, then a writing task in your science workbook. About 35 minutes in all.</p>
+      <p class="note">You can stop whenever you like: each part you finish is saved on this device. Ashcombe House and the people in it are made up. The science is real.</p>
+      <div class="row"><button class="btn copper" id="btnBegin">Open the door</button><span id="parentLink"></span></div>
+    </div>
+    <div class="pic" id="introPic"></div>
+  </div>
+</section>
+
+<!-- HUB -->
+<section class="screen" id="sHub" hidden>
+  <div class="topbar"><span class="brand">The Puzzles of Ashcombe House</span><div class="pips" id="pipsHub"></div></div>
+  <div class="stack">
+    <h2 id="hubTitle">Around the house</h2>
+    <p class="muted" id="hubNote"></p>
+    <div class="rooms" id="rooms"></div>
+    <div id="hubEnd"></div>
+  </div>
+</section>
+
+<!-- PLAY -->
+<section class="screen" id="sPlay" hidden>
+  <div class="topbar"><span class="brand" id="playTitle"></span><div class="row"><div class="pips" id="pipsPlay"></div><button class="btn ghost small" id="btnToHub">Back to the house</button></div></div>
+  <div class="play">
+    <div id="stage"></div>
+    <div class="journal" id="journal" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- END -->
+<section class="screen" id="sEnd" hidden>
+  <div class="topbar"><span class="brand">The Puzzles of Ashcombe House</span><div class="pips" id="pipsEnd"></div></div>
+  <div class="endgrid">
+    <div class="pic" id="endPic"></div>
+    <div class="stack" id="endText"></div>
+  </div>
+</section>
+
+<!-- PARENT -->
+<section class="screen" id="sParent" hidden>
+  <div class="topbar"><span class="brand">For the parent</span><button class="btn ghost small" id="btnParentBack">Back</button></div>
+  <div id="parentBody"></div>
+</section>
+</div>
+
+
+
+<script>
+'use strict';
+/* ===================== Setup ===================== */
+const GAME = 'ashcombe-house';
+const GR = window.GR || {player:()=>'unknown', key:k=>k, testing:()=>false, start(){}, part(){}, partDone(){}, finish(){}, ask(){return {miss(){},hint(){},done(){},giveUp(){}};}, write(){}};
+const SAVE = GR.key('ashcombe-house-v1');
+let S = {done:{}, watched:{}, puzzles:{}, finished:false};
+try { const raw = localStorage.getItem(SAVE); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch(e) {}
+function save(){ try { localStorage.setItem(SAVE, JSON.stringify(S)); } catch(e) {} }
+const NAME = ({maggie:'Maggie', maeve:'Maeve'})[GR.player()] || 'friend';
+const AREA = 'SC';
+const FILMS = [
+  {id:'Jk-m-cDX3es', t:'Melting Matter', s:'A read-aloud (Molly Paxson)'},
+  {id:'EOtzL2Z3FEs', t:'States of Matter: Liquids', s:'Bow Tie Guy and Wife'}
+];
+const PARTS = [
+  {id:'p1', name:'Two films', sub:'Watch both before you begin', icon:'film'},
+  {id:'p2', name:'Mrs Hartley’s briefing', sub:'How matter changes, then two quick checks', icon:'letter'},
+  {id:'p3', name:'The particle box', sub:'Melt, freeze and boil with a heat dial', icon:'box'},
+  {id:'p4', name:'The housekeeper’s notebook', sub:'Four kitchen puzzles to explain', icon:'book'},
+  {id:'p5', name:'Water’s round trip', sub:'Put the changes in order', icon:'cycle'},
+  {id:'p6', name:'Your science workbook', sub:'Dot points, then two paragraphs', icon:'pen'}
+];
+
+/* ===================== Helpers ===================== */
+const $ = id => document.getElementById(id);
+function h(tag, attrs, ...kids){
+  const e = document.createElement(tag);
+  if (attrs) for (const [k,v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (k === 'class') e.className = v;
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const k of kids.flat(3)) { if (k == null || k === false || k === '') continue; e.append(k.nodeType ? k : document.createTextNode(String(k))); }
+  return e;
+}
+/* SVG built from this file's own fixed strings only (never from anything typed). */
+function svgFrom(str){ const t = document.createElement('template'); t.innerHTML = str.trim(); return t.content.firstChild; }
+function show(id){ ['sIntro','sHub','sPlay','sEnd','sParent'].forEach(s => $(s).hidden = (s !== id)); window.scrollTo(0,0); if (id !== 'sPlay') stopBox(); }
+function pips(el){ el.replaceChildren(...PARTS.map(p => h('span',{class:'pip'+(S.done[p.id]?' on':''),title:p.name}))); }
+function shuffle(a){ a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function stage(...kids){ $('stage').replaceChildren(...kids); }
+function stagePic(svg, foot){ stage(h('div',{class:'stagecard'}, svgFrom(svg), foot ? h('div',{class:'stagefoot'}, h('span',null,foot)) : '')); }
+function journal(...kids){ $('journal').replaceChildren(...kids); }
+function notesBox(){
+  return h('details',{class:'notes'}, h('summary',null,'Mrs Hartley’s notes'),
+    h('ul',null,
+      h('li',null,'Heating gives particles more energy, so they move faster. Cooling slows them down. The particles themselves never change.'),
+      h('li',null,'Melting: a solid’s particles break free of their fixed places and slide past one another. Freezing is the reverse.'),
+      h('li',null,'Evaporation: particles at the surface of a liquid escape into the air, even when it’s cool. Boiling: it happens all through the liquid, with bubbles, once it’s hot enough.'),
+      h('li',null,'Condensation: a gas cools, its particles slow down and come together, and it turns back into a liquid.'),
+      h('li',null,'These changes are reversible, because no new substance is made.')));
+}
+
+/* ===================== Question runner =====================
+   q: {item, concept, count, prompt, type:'choice'|'custom', options:[{t, ok, why}], help:[reminder,hint,worked], right, miss, mount}
+   The answer is never shown until she has had a real try: help comes only when she asks. */
+function runQ(box, q, next){
+  box.replaceChildren();
+  const rec = GR.ask({item:q.item, concept:q.concept, area:q.area || AREA});
+  let misses = 0, helpN = 0, solved = false;
+  const body = h('div',{class: q.type === 'custom' ? '' : 'opts'});
+  const fb = h('div');
+  const helpArea = h('div');
+  const helpBtn = h('button',{class:'helpbtn', onclick: giveHelp}, 'I’d like a hint');
+  box.append(
+    q.count ? h('p',{class:'qcount'}, q.count) : '',
+    q.lead || '',
+    h('p',{class:'prompt'}, q.prompt),
+    body, fb, helpArea, q.help && q.help.length ? helpBtn : '',
+    q.notes ? notesBox() : '');
+  function wrong(why, choice){
+    if (solved) return;
+    misses++; rec.miss(String(choice || ''));
+    fb.replaceChildren(h('div',{class:'fb bad'}, h('span',{class:'h'}, 'Not quite.'), why || q.miss || 'Have another look.'));
+    if (misses >= 2 && helpN < (q.help||[]).length) helpBtn.classList.add('nudge');
+  }
+  function right(){
+    if (solved) return; solved = true; rec.done();
+    helpBtn.remove();
+    fb.replaceChildren(h('div',{class:'fb ok'}, h('span',{class:'h'}, q.okHead || 'Yes.'), q.right),
+      next ? h('div',{class:'row',style:'margin-top:12px'}, h('button',{class:'btn', onclick: next}, q.nextLabel || 'Next')) : '');
+    if (q.onRight) q.onRight();
+  }
+  function giveHelp(){
+    if (!q.help || helpN >= q.help.length) return;
+    const t = q.help[helpN]; helpN++; rec.hint();
+    helpArea.append(h('div',{class:'helpbox'}, h('span',{class:'h'}, ['A reminder','A hint','Here’s how'][helpN-1]), t));
+    helpBtn.classList.remove('nudge');
+    if (helpN >= q.help.length) helpBtn.remove(); else helpBtn.textContent = 'Another hint';
+  }
+  if (q.type === 'choice') {
+    (q.shuffle === false ? q.options : shuffle(q.options)).forEach(o => {
+      const b = h('button',{class:'opt'}, h('span',null,o.t));
+      b.addEventListener('click', () => {
+        if (solved || b.disabled) return;
+        if (o.ok) { b.classList.add('right'); [...body.children].forEach(x => x.disabled = true); right(); }
+        else { b.classList.add('wrong'); b.disabled = true; wrong(o.why, o.t); }
+      });
+      body.append(b);
+    });
+  } else if (q.type === 'custom') {
+    q.mount(body, {right, wrong, solved: () => solved});
+  }
+  return {right, wrong, solved: () => solved};
+}
+/* Run a list of steps; each step is a function(next). */
+function chain(steps, done){
+  let i = 0;
+  function go(){ if (i < steps.length) { const f = steps[i++]; f(go); } else if (done) done(); }
+  go();
+}
+function finishPart(id){
+  S.done[id] = true; save(); GR.partDone(PARTS.find(p => p.id === id).name);
+  if (PARTS.every(p => S.done[p.id])) { S.finished = true; save(); GR.finish(); showEnd(); }
+  else hub();
+}
+
+/* ===================== Pictures ===================== */
+/* A static particle diagram. kind: solid | liquid | gas | slab */
+function partSVG(kind, w, hgt, label){
+  w = w || 200; hgt = hgt || 170;
+  const r = 9, pts = [];
+  const L = 14, R = w - 14, T = 14, B = hgt - 26;
+  if (kind === 'solid') {
+    const g = 2*r + 1.5, cols = 5, rows = 5, x0 = (L+R)/2 - (cols-1)*g/2;
+    for (let y=0; y<rows; y++) for (let x=0; x<cols; x++) pts.push([x0 + x*g, B - r - y*g]);
+  } else if (kind === 'liquid') {
+    const seed = [[0,0],[1,.1],[2,-.05],[3,.12],[4,0],[5,.08],[6,-.06],[7,.05],[.45,1.02],[1.5,1.08],[2.55,.96],[3.5,1.1],[4.5,1],[5.55,1.06],[6.5,.95],[.2,2.0],[1.15,2.08],[2.1,1.95],[3.05,2.06],[4.0,1.98],[5.0,2.08],[5.95,1.97],[6.85,2.04]];
+    const g = 2*r + 1, span = (R - L - 2*r), sx = span/7;
+    seed.forEach(([a,b]) => pts.push([L + r + a*sx, B - r - b*g]));
+  } else if (kind === 'gas') {
+    const seed = [[.08,.15],[.3,.08],[.55,.2],[.85,.12],[.18,.5],[.45,.42],[.72,.55],[.9,.4],[.1,.85],[.38,.78],[.62,.88],[.88,.8]];
+    seed.forEach(([a,b]) => pts.push([L + r + a*(R-L-2*r), T + r + b*(B-T-2*r)]));
+  }
+  let s = `<svg viewBox="0 0 ${w} ${hgt}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label || kind}">`;
+  s += `<rect x="4" y="4" width="${w-8}" height="${hgt-8}" rx="10" fill="#1E2B3A"/>`;
+  s += `<path d="M${L-4} ${T-2} V${B+4} H${R+4} V${T-2}" fill="none" stroke="#7FA6C0" stroke-width="2.5"/>`;
+  pts.forEach(([x,y]) => { s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="#9CC9E6" stroke="#3F7FA6" stroke-width="2"/>`; });
+  if (label) s += `<text x="${w/2}" y="${hgt-8}" text-anchor="middle" font-size="13" font-weight="600" fill="#F5EFE3">${label}</text>`;
+  return s + `</svg>`;
+}
+function panel3(a, b, c, mid1, mid2){
+  /* three diagrams in a row with labelled arrows between */
+  const one = (k,l) => partSVG(k, 200, 170, l).replace('<svg ', '<svg width="200" height="170" ');
+  let s = `<svg viewBox="0 0 760 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Particle diagrams">`;
+  s += `<rect width="760" height="230" fill="#FFFDF8"/>`;
+  s += `<g transform="translate(10 20)">${one(a[0],a[1])}</g>`;
+  s += `<g transform="translate(280 20)">${one(b[0],b[1])}</g>`;
+  if (c) s += `<g transform="translate(550 20)">${one(c[0],c[1])}</g>`;
+  const arrow = (x, t, back) => `<g transform="translate(${x} 0)"><path d="M0 92 H60" stroke="#B5652B" stroke-width="4" marker-end="url(#ah)"/>${back ? `<path d="M60 132 H0" stroke="#3F7FA6" stroke-width="4" marker-end="url(#ahb)"/>` : ''}<text x="30" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#7F4318">${t[0]}</text>${back ? `<text x="30" y="155" text-anchor="middle" font-size="13" font-weight="700" fill="#2D5E7E">${t[1]}</text>` : ''}</g>`;
+  s += `<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#B5652B"/></marker><marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#3F7FA6"/></marker></defs>`;
+  s += arrow(215, mid1, true);
+  if (c) s += arrow(485, mid2, true);
+  return s + `</svg>`;
+}
+
+const INTRO_PIC = `<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A country-house kitchen in summer. A copper kettle steams on the range, a glass jug of iced lemonade on the table is covered in drops, and a tall window looks out on a stone yard.">
+<rect width="800" height="560" fill="#EFE3CC"/>
+<rect y="380" width="800" height="180" fill="#C9B08A"/>
+<g stroke="#B39770" stroke-width="2"><path d="M0 420 H800 M0 470 H800 M0 520 H800"/><path d="M90 380 V420 M260 380 V420 M430 380 V420 M610 380 V420 M170 420 V470 M350 420 V470 M520 420 V470 M700 420 V470 M80 470 V520 M260 470 V520 M450 470 V520 M640 470 V520"/></g>
+<!-- window -->
+<rect x="470" y="50" width="250" height="260" rx="6" fill="#BFD7E6" stroke="#6B4A2E" stroke-width="10"/>
+<path d="M595 50 V310 M470 180 H720" stroke="#6B4A2E" stroke-width="8"/>
+<rect x="480" y="200" width="105" height="100" fill="#A9B79A"/><rect x="605" y="200" width="105" height="100" fill="#A9B79A"/>
+<ellipse cx="540" cy="285" rx="34" ry="8" fill="#8FB3CC"/>
+<circle cx="660" cy="100" r="26" fill="#FBE7A1"/>
+<rect x="455" y="310" width="280" height="16" fill="#8A6542"/>
+<!-- range and kettle -->
+<rect x="40" y="200" width="300" height="180" fill="#3A3A3A"/>
+<rect x="40" y="186" width="300" height="20" fill="#555"/>
+<rect x="80" y="250" width="90" height="70" rx="6" fill="#2A2A2A"/><rect x="92" y="262" width="66" height="46" fill="#E07B22" opacity=".85"/>
+<rect x="210" y="250" width="100" height="100" rx="6" fill="#2A2A2A"/>
+<g transform="translate(180 130)">
+ <path d="M-50 56 Q-56 4 0 -4 Q56 4 50 56Z" fill="#C9773A" stroke="#7F4318" stroke-width="4"/>
+ <path d="M-30 -2 Q0 -36 30 -2" fill="none" stroke="#7F4318" stroke-width="7"/>
+ <path d="M44 22 L86 -6 L92 0 L54 34Z" fill="#C9773A" stroke="#7F4318" stroke-width="3"/>
+</g>
+<g fill="#FFFFFF" opacity=".85"><circle cx="292" cy="96" r="14"/><circle cx="306" cy="78" r="18"/><circle cx="324" cy="56" r="22"/><circle cx="346" cy="38" r="18"/></g>
+<!-- table -->
+<rect x="360" y="370" width="420" height="20" fill="#8A6542"/>
+<rect x="380" y="390" width="16" height="150" fill="#6B4A2E"/><rect x="744" y="390" width="16" height="150" fill="#6B4A2E"/>
+<!-- jug -->
+<g transform="translate(560 250)">
+ <path d="M-50 0 L50 0 L44 120 L-44 120Z" fill="#F6E58E" opacity=".85" stroke="#7A8A96" stroke-width="4"/>
+ <path d="M-50 0 L50 0 L44 120 L-44 120Z" fill="none" stroke="#FFFFFF" stroke-width="2" opacity=".6"/>
+ <path d="M50 20 Q84 30 76 70 Q70 96 46 96" fill="none" stroke="#7A8A96" stroke-width="7"/>
+ <path d="M-50 0 L-62 -12" stroke="#7A8A96" stroke-width="5"/>
+ <rect x="-30" y="12" width="22" height="20" rx="3" fill="#E8F4FA" stroke="#9CC9E6" stroke-width="2"/><rect x="2" y="20" width="24" height="20" rx="3" fill="#E8F4FA" stroke="#9CC9E6" stroke-width="2"/>
+ <g fill="#FFFFFF" stroke="#5B8FB0" stroke-width="1.5"><circle cx="-38" cy="50" r="4"/><circle cx="-22" cy="70" r="3.5"/><circle cx="-40" cy="90" r="4"/><circle cx="20" cy="56" r="3.5"/><circle cx="34" cy="80" r="4"/><circle cx="10" cy="98" r="3.5"/><circle cx="-8" cy="60" r="3"/><circle cx="36" cy="40" r="3"/><circle cx="-30" cy="110" r="3.5"/><circle cx="26" cy="108" r="3"/></g>
+</g>
+<g fill="#9CC9E6"><ellipse cx="560" cy="374" rx="50" ry="5" opacity=".7"/></g>
+<text x="400" y="545" text-anchor="middle" font-size="18" font-weight="600" fill="#5E2A4A">Ashcombe House, the kitchen, summer 1811</text>
+</svg>`;
+
+const PUDDLE_PIC = `<svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The stable yard's stone flags on Tuesday, with puddles, and on Thursday, dry.">
+<rect width="760" height="340" fill="#FFFDF8"/>
+<g transform="translate(20 30)"><rect width="340" height="250" rx="10" fill="#B9AD98"/>
+<g stroke="#8F836E" stroke-width="3"><path d="M0 80 H340 M0 165 H340 M110 0 V80 M230 0 V80 M60 80 V165 M180 80 V165 M300 80 V165 M120 165 V250 M250 165 V250"/></g>
+<ellipse cx="120" cy="120" rx="70" ry="22" fill="#7FA9C7" opacity=".9"/><ellipse cx="250" cy="200" rx="60" ry="18" fill="#7FA9C7" opacity=".9"/><ellipse cx="270" cy="50" rx="38" ry="12" fill="#7FA9C7" opacity=".9"/>
+<text x="170" y="285" text-anchor="middle" font-size="18" font-weight="700" fill="#5E2A4A">Tuesday, after rain</text></g>
+<g transform="translate(400 30)"><rect width="340" height="250" rx="10" fill="#C7BCA8"/>
+<g stroke="#9C907B" stroke-width="3"><path d="M0 80 H340 M0 165 H340 M110 0 V80 M230 0 V80 M60 80 V165 M180 80 V165 M300 80 V165 M120 165 V250 M250 165 V250"/></g>
+<ellipse cx="120" cy="120" rx="70" ry="22" fill="none" stroke="#A89C86" stroke-width="2" stroke-dasharray="6 6"/><ellipse cx="250" cy="200" rx="60" ry="18" fill="none" stroke="#A89C86" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="170" y="285" text-anchor="middle" font-size="18" font-weight="700" fill="#5E2A4A">Thursday, mild and cloudy</text></g>
+</svg>`;
+
+const KETTLE_PIC = `<svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A boiling copper kettle. Bubbles rise all through the water inside. Just at the spout there is a clear gap, then a white cloud further out.">
+<rect width="760" height="380" fill="#FFFDF8"/>
+<rect x="60" y="300" width="420" height="60" fill="#3A3A3A"/>
+<g transform="translate(260 190)">
+ <path d="M-120 110 Q-132 0 0 -16 Q132 0 120 110Z" fill="#C9773A" stroke="#7F4318" stroke-width="5"/>
+ <path d="M-92 106 Q-100 30 0 20 Q100 30 92 106Z" fill="#9CC9E6" opacity=".9"/>
+ <g fill="#E8F4FA" stroke="#3F7FA6" stroke-width="2"><circle cx="-50" cy="90" r="8"/><circle cx="-20" cy="70" r="10"/><circle cx="20" cy="88" r="7"/><circle cx="50" cy="60" r="9"/><circle cx="-60" cy="50" r="6"/><circle cx="0" cy="40" r="8"/><circle cx="70" cy="92" r="6"/><circle cx="-30" cy="100" r="5"/></g>
+ <path d="M110 40 L200 -30 L212 -18 L126 70Z" fill="#C9773A" stroke="#7F4318" stroke-width="4"/>
+ <text x="0" y="140" text-anchor="middle" font-size="15" font-weight="600" fill="#5E2A4A">(the kettle drawn as if you could see inside)</text>
+</g>
+<g fill="#FFFFFF" stroke="#C9D6DE" stroke-width="2"><circle cx="560" cy="110" r="22"/><circle cx="590" cy="88" r="28"/><circle cx="626" cy="70" r="32"/><circle cx="664" cy="56" r="26"/><circle cx="600" cy="120" r="18"/></g>
+<path d="M478 160 L530 128" stroke="#B5652B" stroke-width="3" stroke-dasharray="6 5"/>
+<text x="446" y="132" font-size="16" font-weight="700" fill="#7F4318">clear gap</text>
+<text x="600" y="186" text-anchor="middle" font-size="16" font-weight="700" fill="#7F4318">white cloud</text>
+</svg>`;
+
+const WINDOW_PIC = `<svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The nursery window on a frosty morning: frost on the lawn outside, and drops of water running down the inside of the glass.">
+<rect width="760" height="380" fill="#F2E6D3"/>
+<rect x="190" y="30" width="380" height="300" rx="6" fill="#DDE9F0" stroke="#6B4A2E" stroke-width="12"/>
+<path d="M380 30 V330 M190 180 H570" stroke="#6B4A2E" stroke-width="9"/>
+<rect x="202" y="250" width="172" height="74" fill="#E9F1F4"/><rect x="386" y="250" width="178" height="74" fill="#E9F1F4"/>
+<g fill="#FFFFFF"><circle cx="230" cy="262" r="3"/><circle cx="270" cy="270" r="3"/><circle cx="320" cy="258" r="3"/><circle cx="420" cy="266" r="3"/><circle cx="480" cy="258" r="3"/><circle cx="530" cy="272" r="3"/></g>
+<g fill="#BFD7E6" stroke="#5B8FB0" stroke-width="1.5" opacity=".95">
+<circle cx="230" cy="70" r="5"/><circle cx="262" cy="96" r="4"/><circle cx="300" cy="60" r="5"/><circle cx="340" cy="110" r="4"/><circle cx="250" cy="140" r="5"/><circle cx="320" cy="150" r="4"/>
+<circle cx="420" cy="80" r="5"/><circle cx="460" cy="110" r="4"/><circle cx="510" cy="70" r="5"/><circle cx="540" cy="130" r="4"/><circle cx="440" cy="150" r="5"/><circle cx="500" cy="160" r="4"/>
+<circle cx="236" cy="210" r="4"/><circle cx="300" cy="226" r="5"/><circle cx="430" cy="214" r="4"/><circle cx="520" cy="230" r="5"/></g>
+<g stroke="#5B8FB0" stroke-width="2.5" opacity=".7"><path d="M300 66 V100"/><path d="M510 76 V118"/><path d="M250 146 V172"/></g>
+<rect x="170" y="330" width="420" height="18" fill="#8A6542"/>
+<text x="380" y="372" text-anchor="middle" font-size="16" font-weight="600" fill="#5E2A4A">Inside the nursery, 7 o’clock on a frosty morning</text>
+</svg>`;
+
+function jugPic(mode){
+  /* mode: 'cold' (drops), 'warm' (dry), 'taste' (a drop on a spoon, plain water) */
+  const drops = mode !== 'warm' ? `<g fill="#FFFFFF" stroke="#5B8FB0" stroke-width="1.5"><circle cx="-38" cy="50" r="5"/><circle cx="-22" cy="76" r="4.5"/><circle cx="-40" cy="100" r="5"/><circle cx="22" cy="56" r="4.5"/><circle cx="36" cy="84" r="5"/><circle cx="12" cy="108" r="4.5"/><circle cx="-8" cy="62" r="4"/><circle cx="38" cy="36" r="4"/><circle cx="-28" cy="124" r="4.5"/><circle cx="28" cy="120" r="4"/><circle cx="-4" cy="132" r="4"/></g>` : '';
+  const ice = mode !== 'warm' ? `<rect x="-30" y="12" width="24" height="22" rx="3" fill="#E8F4FA" stroke="#9CC9E6" stroke-width="2"/><rect x="4" y="22" width="26" height="22" rx="3" fill="#E8F4FA" stroke="#9CC9E6" stroke-width="2"/>` : `<g stroke="#D9A63A" stroke-width="2" fill="none" opacity=".8"><path d="M-14 -12 q6 -10 0 -20 q-6 -10 0 -20"/><path d="M10 -12 q6 -10 0 -20 q-6 -10 0 -20"/></g>`;
+  const label = mode === 'warm' ? 'The same jug, filled with warm lemonade' : (mode === 'taste' ? 'A drop from the outside of the jug, tasted' : 'Iced lemonade on a hot afternoon');
+  const spoon = mode === 'taste' ? `<g transform="translate(560 200)"><ellipse cx="0" cy="0" rx="46" ry="26" fill="#D8DDE2" stroke="#7A8A96" stroke-width="4"/><path d="M40 6 L150 50" stroke="#7A8A96" stroke-width="10" stroke-linecap="round"/><circle cx="-6" cy="-2" r="12" fill="#E8F4FA" stroke="#5B8FB0" stroke-width="2"/><text x="40" y="-46" text-anchor="middle" font-size="17" font-weight="700" fill="#2E7D4F">tastes of plain water</text><text x="40" y="-26" text-anchor="middle" font-size="15" fill="#655A50">not sweet, not lemony</text></g>` : '';
+  return `<svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label}">
+<rect width="760" height="360" fill="#FFFDF8"/>
+<rect x="60" y="290" width="640" height="18" fill="#8A6542"/>
+<g transform="translate(${mode === 'taste' ? 280 : 380} 150)">
+ <path d="M-56 0 L56 0 L50 140 L-50 140Z" fill="${mode === 'warm' ? '#F2D77A' : '#F6E58E'}" opacity=".9" stroke="#7A8A96" stroke-width="4"/>
+ <path d="M56 22 Q94 32 86 76 Q80 106 52 106" fill="none" stroke="#7A8A96" stroke-width="7"/>
+ <path d="M-56 0 L-68 -14" stroke="#7A8A96" stroke-width="5"/>
+ ${ice}${drops}
+</g>
+${spoon}
+<text x="380" y="340" text-anchor="middle" font-size="17" font-weight="600" fill="#5E2A4A">${label}</text>
+</svg>`;
+}
+
+const TRIP_PIC = `<svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Four moments in water's journey at Ashcombe House, jumbled: drops on a cold window, water in a jug, invisible water vapour in the air, and ice from the ice-house.">
+<rect width="760" height="330" fill="#FFFDF8"/>
+<g transform="translate(140 95)"><rect x="-44" y="-46" width="88" height="92" fill="#DDE9F0" stroke="#6B4A2E" stroke-width="6"/><g fill="#BFD7E6" stroke="#5B8FB0" stroke-width="1.5"><circle cx="-18" cy="-20" r="5"/><circle cx="12" cy="-4" r="5"/><circle cx="-8" cy="20" r="5"/><circle cx="20" cy="26" r="4"/></g><text y="72" text-anchor="middle" font-size="15" font-weight="600" fill="#5E2A4A">drops on a cold window</text></g>
+<g transform="translate(560 85)"><path d="M-40 -40 L40 -40 L34 46 L-34 46Z" fill="#9CC9E6" stroke="#7A8A96" stroke-width="4"/><text y="72" text-anchor="middle" font-size="15" font-weight="600" fill="#5E2A4A">water in a jug</text></g>
+<g transform="translate(300 215)"><circle r="44" fill="none" stroke="#9FB4C2" stroke-width="3" stroke-dasharray="7 7"/><text y="6" text-anchor="middle" font-size="14" fill="#655A50">(invisible)</text><text y="68" text-anchor="middle" font-size="15" font-weight="600" fill="#5E2A4A">water vapour in the air</text></g>
+<g transform="translate(620 225)"><rect x="-50" y="-40" width="100" height="80" rx="10" fill="#E8F4FA" stroke="#9CC9E6" stroke-width="4"/><path d="M-30 -20 l20 0" stroke="#FFFFFF" stroke-width="5"/><text y="62" text-anchor="middle" font-size="15" font-weight="600" fill="#5E2A4A">ice from the ice-house</text></g>
+</svg>`;
+
+const WORKBOOK_PIC = `<svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An open science workbook. On the left page, dot points with numbers written beside them. On the right page, two paragraphs.">
+<rect width="760" height="420" fill="#EFE3CC"/>
+<path d="M60 50 Q220 30 380 60 Q540 30 700 50 L700 380 Q540 360 380 390 Q220 360 60 380Z" fill="#FFFDF8" stroke="#BFAE90" stroke-width="3"/>
+<path d="M380 60 V390" stroke="#BFAE90" stroke-width="3"/>
+<g stroke="#D9E3EA" stroke-width="2"><path d="M90 110 H350 M90 150 H350 M90 190 H350 M90 230 H350 M90 270 H350 M90 310 H350"/><path d="M410 110 H670 M410 150 H670 M410 190 H670 M410 230 H670 M410 270 H670 M410 310 H670"/></g>
+<g fill="#5E2A4A"><circle cx="110" cy="104" r="4"/><circle cx="110" cy="144" r="4"/><circle cx="110" cy="184" r="4"/><circle cx="110" cy="224" r="4"/><circle cx="110" cy="264" r="4"/></g>
+<g stroke="#655A50" stroke-width="5" stroke-linecap="round"><path d="M126 102 H290"/><path d="M126 142 H250"/><path d="M126 182 H310"/><path d="M126 222 H270"/><path d="M126 262 H230"/></g>
+<g font-size="22" font-weight="700" fill="#B5652B" font-family="Georgia,serif"><text x="318" y="110">2</text><text x="318" y="150">1</text><text x="318" y="190">4</text><text x="318" y="230">3</text><text x="318" y="270">5</text></g>
+<g stroke="#655A50" stroke-width="5" stroke-linecap="round"><path d="M440 104 H660"/><path d="M420 144 H660"/><path d="M420 184 H600"/><path d="M440 234 H660"/><path d="M420 274 H660"/><path d="M420 314 H560"/></g>
+<text x="220" y="350" text-anchor="middle" font-size="16" font-weight="600" fill="#5E2A4A">Dot points, numbered</text>
+<text x="540" y="350" text-anchor="middle" font-size="16" font-weight="600" fill="#5E2A4A">Two paragraphs</text>
+</svg>`;
+
+const ICONS = {
+  film:`<svg viewBox="0 0 80 80"><rect x="10" y="18" width="60" height="44" rx="6" fill="#5E2A4A"/><path d="M34 30 L52 40 L34 50Z" fill="#FFFDF8"/></svg>`,
+  letter:`<svg viewBox="0 0 80 80"><rect x="12" y="20" width="56" height="40" rx="4" fill="#FFFDF8" stroke="#5E2A4A" stroke-width="3"/><path d="M12 22 L40 44 L68 22" fill="none" stroke="#5E2A4A" stroke-width="3"/><circle cx="40" cy="48" r="6" fill="#B5652B"/></svg>`,
+  box:`<svg viewBox="0 0 80 80"><rect x="14" y="14" width="52" height="52" rx="6" fill="#1E2B3A"/><g fill="#9CC9E6"><circle cx="28" cy="52" r="5"/><circle cx="40" cy="52" r="5"/><circle cx="52" cy="52" r="5"/><circle cx="34" cy="41" r="5"/><circle cx="46" cy="41" r="5"/><circle cx="30" cy="26" r="5"/></g></svg>`,
+  book:`<svg viewBox="0 0 80 80"><path d="M12 20 Q26 14 40 22 Q54 14 68 20 V62 Q54 56 40 64 Q26 56 12 62Z" fill="#FFFDF8" stroke="#5E2A4A" stroke-width="3"/><path d="M40 22 V64" stroke="#5E2A4A" stroke-width="3"/><path d="M48 32 H60 M48 40 H60 M20 32 H32 M20 40 H32" stroke="#B5652B" stroke-width="3"/></svg>`,
+  cycle:`<svg viewBox="0 0 80 80"><path d="M40 14 A26 26 0 1 1 15 46" fill="none" stroke="#5E2A4A" stroke-width="5"/><path d="M8 40 L15 50 L24 42" fill="none" stroke="#5E2A4A" stroke-width="5" stroke-linejoin="round"/><circle cx="40" cy="40" r="9" fill="#9CC9E6" stroke="#3F7FA6" stroke-width="3"/></svg>`,
+  pen:`<svg viewBox="0 0 80 80"><rect x="14" y="16" width="44" height="52" rx="4" fill="#FFFDF8" stroke="#5E2A4A" stroke-width="3"/><path d="M22 30 H48 M22 40 H48 M22 50 H40" stroke="#B5652B" stroke-width="3"/><path d="M50 58 L68 28 L74 32 L56 62 L48 66Z" fill="#B5652B" stroke="#7F4318" stroke-width="2"/></svg>`
+};
+
+/* ===================== Particle box (simulation) ===================== */
+let BOX = null;
+function stopBox(){ if (BOX) { BOX.stop(); BOX = null; } }
+function makeBox(canvas){
+  const W = 360, H = 300, R = 10, N = 36;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+  const L = 18, Rt = W - 18, T = 18, B = H - 14;
+  const gap = 2*R + 1.5;
+  const P = [];
+  /* Start as a block of ice from the ice-house: a 6 by 6 cube. */
+  const cubeHomes = [];
+  { const cols = 6, x0 = (L+Rt)/2 - (cols-1)*gap/2; for (let i=0;i<N;i++){ const c=i%cols, r=Math.floor(i/cols); cubeHomes.push([x0 + c*gap, B - R - r*gap]); } }
+  cubeHomes.forEach(([x,y]) => P.push({x, y, vx:0, vy:0, hx:x, hy:y, jx:0, jy:0}));
+  let temp = -10, state = 'solid', running = true, listeners = [];
+  const stateOf = t => t < 0 ? 'solid' : (t < 100 ? 'liquid' : 'gas');
+  function slabHomes(){
+    /* ice that freezes in the box takes the box's shape: rows across the bottom */
+    const cols = Math.floor((Rt - L) / gap), homes = [];
+    let left = N, row = 0;
+    while (left > 0) { const n = Math.min(cols, left); const x0 = (L+Rt)/2 - (n-1)*gap/2; for (let c=0;c<n;c++) homes.push([x0 + c*gap, B - R - row*gap]); left -= n; row++; }
+    return homes;
+  }
+  function assign(homes){
+    const ps = P.slice().sort((a,b) => (b.y - a.y) || (a.x - b.x));
+    const hs = homes.slice().sort((a,b) => (b[1] - a[1]) || (a[0] - b[0]));
+    ps.forEach((p,i) => { p.hx = hs[i][0]; p.hy = hs[i][1]; });
+  }
+  function setTemp(t){
+    temp = t; const s = stateOf(t);
+    if (s !== state) {
+      const old = state; state = s;
+      if (s === 'solid') assign(slabHomes());
+      if (s === 'gas') P.forEach(p => { const a = Math.random()*Math.PI*2; p.vx = Math.cos(a)*3; p.vy = Math.sin(a)*3 - 2; });
+      if (s === 'liquid') P.forEach(p => { p.vx = (Math.random()-.5); p.vy = 0; });
+      listeners.slice().forEach(f => f(s, old));
+    }
+  }
+  function repel(d, k, el){
+    const f = el ? 1 : .5;
+    for (let i=0;i<N;i++) for (let j=i+1;j<N;j++) {
+      const a = P[i], b = P[j], dx = b.x - a.x, dy = b.y - a.y, dist = Math.hypot(dx, dy) || .01;
+      if (dist < d) { const push = (d - dist)/2 * k, nx = dx/dist, ny = dy/dist; a.x -= nx*push; a.y -= ny*push; b.x += nx*push; b.y += ny*push;
+        const rv = (b.vx - a.vx)*nx + (b.vy - a.vy)*ny; if (rv < 0) { a.vx += rv*nx*f; a.vy += rv*ny*f; b.vx -= rv*nx*f; b.vy -= rv*ny*f; } }
+    }
+  }
+  function walls(p){
+    if (p.x < L + R) { p.x = L + R; p.vx = Math.abs(p.vx); }
+    if (p.x > Rt - R) { p.x = Rt - R; p.vx = -Math.abs(p.vx); }
+    if (p.y < T + R) { p.y = T + R; p.vy = Math.abs(p.vy); }
+    if (p.y > B - R) { p.y = B - R; p.vy = -Math.abs(p.vy) * .5; }
+  }
+  function step(){
+    const e = (temp + 30) / 160; /* 0 to 1 */
+    if (state === 'solid') {
+      const amp = 0.7 + (temp + 30) / 30 * 2.3;
+      P.forEach(p => { p.x += (p.hx - p.x) * .12; p.y += (p.hy - p.y) * .12; p.jx = (Math.random()*2-1)*amp; p.jy = (Math.random()*2-1)*amp; p.vx = p.vy = 0; });
+    } else if (state === 'liquid') {
+      const kick = .3 + e*1.1, vmax = 1.4 + e*2.6;
+      P.forEach(p => { p.vx += (Math.random()*2-1)*kick; p.vy += (Math.random()*2-1)*kick*.6 + .45; });
+      P.forEach(p => { const sp = Math.hypot(p.vx, p.vy); if (sp > vmax) { p.vx *= vmax/sp; p.vy *= vmax/sp; } p.vx *= .92; p.vy *= .92; p.x += p.vx; p.y += p.vy; walls(p); p.jx = p.jy = 0; });
+      for (let k=0;k<3;k++) { repel(2*R + 1, .9); P.forEach(walls); }
+    } else {
+      const sp = 3 + Math.max(0, temp - 100) / 30 * 2.5;
+      P.forEach(p => { const s = Math.hypot(p.vx, p.vy) || 1; p.vx = p.vx/s*sp; p.vy = p.vy/s*sp; p.x += p.vx; p.y += p.vy; walls(p); p.jx = p.jy = 0; });
+      repel(2*R, .8, true); P.forEach(walls);
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#1E2B3A'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = '#7FA6C0'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(L-4, T-6); ctx.lineTo(L-4, B+4); ctx.lineTo(Rt+4, B+4); ctx.lineTo(Rt+4, T-6); ctx.stroke();
+    ctx.lineWidth = 2;
+    P.forEach(p => { ctx.beginPath(); ctx.arc(p.x + p.jx, p.y + p.jy, R, 0, Math.PI*2); ctx.fillStyle = '#9CC9E6'; ctx.fill(); ctx.strokeStyle = '#3F7FA6'; ctx.stroke(); });
+  }
+  function loop(){ if (!running) return; step(); draw(); requestAnimationFrame(loop); }
+  loop();
+  return {
+    setTemp, temp: () => temp, state: () => state,
+    on(f){ listeners.push(f); return () => { listeners = listeners.filter(x => x !== f); }; },
+    stop(){ running = false; listeners = []; }
+  };
+}
+function boxStage(){
+  stopBox();
+  const canvas = h('canvas',{'aria-label':'The particle box: a magnified view of a little water. Its particles are drawn as circles.'});
+  const therm = h('p',{class:'therm'});
+  const slider = h('input',{type:'range', min:'-30', max:'130', step:'1', value:'-10', 'aria-label':'Heat dial'});
+  const cooler = h('button',{class:'btn ghost small'}, 'Cooler');
+  const warmer = h('button',{class:'btn copper small'}, 'Warmer');
+  stage(h('div',{class:'stagecard'},
+    h('div',{class:'box'}, canvas, therm,
+      h('div',{class:'dial'}, cooler, slider, warmer)),
+    h('div',{class:'stagefoot'}, h('span',null,'Magnified millions of times. Real particles are far too small to see.'))));
+  BOX = makeBox(canvas);
+  function setT(t){ t = Math.max(-30, Math.min(130, Math.round(t))); slider.value = String(t); BOX.setTemp(t); therm.textContent = 'Thermometer: ' + (t < 0 ? '−' + Math.abs(t) : t) + ' °C'; }
+  slider.addEventListener('input', () => setT(Number(slider.value)));
+  cooler.addEventListener('click', () => setT(Number(slider.value) - 10));
+  warmer.addEventListener('click', () => setT(Number(slider.value) + 10));
+  setT(-10);
+  const ctl = {
+    enable(on){ [slider, cooler, warmer].forEach(x => x.disabled = !on); }
+  };
+  ctl.enable(false);
+  return ctl;
+}
+
+/* ===================== Screens ===================== */
+function intro(){
+  $('introLetter').textContent = `My dear Miss ${NAME}, strange things keep happening in my kitchen. Puddles vanish, windows weep, and the lemonade jug sweats as if it had run a mile. Thomas the footman says the jug is cracked. I am not so sure. Will you come and explain? Your servant, Mrs Hartley, housekeeper.`;
+  $('introPic').replaceChildren(svgFrom(INTRO_PIC));
+  const pt = document.getElementById('parent-notes');
+  if (pt) $('parentLink').replaceChildren(h('button',{class:'linkish', onclick: parentScreen}, 'For the parent'));
+  show('sIntro');
+}
+function parentScreen(){
+  const t = document.getElementById('parent-notes'); if (!t) return;
+  $('parentBody').replaceChildren(t.content.cloneNode(true));
+  show('sParent');
+}
+function hub(){
+  GR.start(GAME);
+  pips($('pipsHub'));
+  const nDone = PARTS.filter(p => S.done[p.id]).length;
+  $('hubNote').textContent = nDone === 0 ? 'Start with the two films. Each room opens when you finish the one before.' :
+    (nDone < PARTS.length ? `${nDone} of ${PARTS.length} done. Your progress is saved, so you can stop here and come back.` : 'Every room is done. The mystery is solved.');
+  $('rooms').replaceChildren(...PARTS.map((p,i) => {
+    const open = i === 0 || S.done[PARTS[i-1].id];
+    const b = h('button',{class:'room' + (S.done[p.id] ? ' done' : ''), disabled: !open},
+      h('span',{class:'n'}, String(i+1)),
+      h('span',{class:'ico'}, svgFrom(ICONS[p.icon])),
+      h('span',{class:'t'}, p.name), h('span',{class:'s'}, p.sub),
+      h('span',{class:'st'}, S.done[p.id] ? 'Done ✓' : (open ? 'Open' : 'Locked')));
+    b.addEventListener('click', () => openPart(p.id));
+    return b;
+  }));
+  $('hubEnd').replaceChildren(S.finished ? h('button',{class:'btn copper', onclick: showEnd}, 'See how the mystery ends') : '');
+  show('sHub');
+}
+function openPart(id){
+  const p = PARTS.find(x => x.id === id);
+  GR.start(GAME); GR.part(p.name);
+  $('playTitle').textContent = p.name;
+  pips($('pipsPlay'));
+  show('sPlay');
+  ({p1, p2, p3, p4, p5, p6})[id]();
+}
+
+/* ---------- Part 1: two films ---------- */
+function p1(){
+  let cur = 0;
+  const frame = h('div',{class:'video'});
+  const list = h('div',{class:'films'});
+  const tick = h('label',{class:'watched'});
+  const nextArea = h('div',{style:'margin-top:12px'});
+  function play(i){
+    cur = i;
+    const f = FILMS[i];
+    const src = `https://www.youtube-nocookie.com/embed/${f.id}?rel=0&playsinline=1&modestbranding=1`;
+    frame.replaceChildren(h('iframe',{src, title:f.t, allow:'encrypted-media; picture-in-picture; fullscreen', allowfullscreen:true, referrerpolicy:'strict-origin-when-cross-origin'}));
+    render();
+  }
+  function render(){
+    list.replaceChildren(...FILMS.map((f,i) => h('button',{class:'film' + (i === cur ? ' on' : ''), onclick: () => play(i)},
+      h('span',{class:'k'}, String(i+1)), h('span',null, h('b',null,f.t), h('br'), h('span',{class:'note'}, f.s)),
+      S.watched[f.id] ? h('span',{class:'w'}, 'Watched ✓') : '')));
+    const f = FILMS[cur];
+    const box = h('input',{type:'checkbox'}); box.checked = !!S.watched[f.id];
+    box.addEventListener('change', () => { S.watched[f.id] = box.checked; save(); render(); });
+    tick.replaceChildren(box, `I’ve watched film ${cur+1} all the way through`);
+    const all = FILMS.every(x => S.watched[x.id]);
+    nextArea.replaceChildren(
+      !all && S.watched[f.id] && cur < FILMS.length - 1 ? h('button',{class:'btn', onclick: () => play(cur+1)}, 'Now film 2') : '',
+      all ? h('button',{class:'btn copper', onclick: () => finishPart('p1')}, 'Both watched. On to Mrs Hartley’s briefing') : '');
+  }
+  stage(h('div',{class:'stagecard'}, frame,
+    h('div',{class:'stagefoot'}, h('span',null,'If a film won’t play here:'),
+      h('span',null, ...FILMS.map((f,i) => [h('a',{href:`https://www.youtube.com/watch?v=${f.id}`, target:'_blank', rel:'noopener'}, `open film ${i+1} on YouTube`), i === 0 ? ' · ' : ''])))));
+  journal(
+    h('p',{class:'eyebrow'}, 'Part 1'),
+    h('h3',null,'Two films before you begin'),
+    h('p',{style:'margin-top:8px'}, 'Watch both films all the way through. Listen for what happens to things when they get warmer or cooler.'),
+    h('p',{class:'note',style:'margin-top:6px'}, 'You’ll use what you learn from them in your workbook at the end, so it’s worth paying attention.'),
+    list, tick, nextArea);
+  play(FILMS.findIndex(f => !S.watched[f.id]) >= 0 ? FILMS.findIndex(f => !S.watched[f.id]) : 0);
+}
+
+/* ---------- Part 2: briefing ---------- */
+function p2(){
+  const cards = [
+    {pic: panel3(['solid','solid'],['liquid','liquid'],['gas','gas'],['heat','cool'],['heat','cool']),
+     foot:'The same water particles as a solid, a liquid and a gas.',
+     h:'The same particles, moving differently',
+     t:['Everything is made of tiny particles. In 1808, only three years ago, the scientist John Dalton published his idea that all matter is made of tiny pieces. Today it’s how scientists explain everything you’ll see in this house.',
+        'Heating gives particles more energy, so they move faster. Cooling takes energy away, so they slow down. The particles themselves never change: ice, water and water vapour are all made of the same water particles.']},
+    {pic: panel3(['solid','ice'],['liquid','water'],null,['melting','freezing']),
+     foot:'Melting and freezing.',
+     h:'Melting and freezing',
+     t:['In ice, the particles are packed in neat rows. They can’t leave their places, but they are never still: they vibrate on the spot.',
+        'Heat the ice and they vibrate harder and harder, until they break free of their places and slide past one another. That’s melting. Cool the water and they slow down and lock back into rows. That’s freezing.']},
+    {pic: panel3(['liquid','water'],['gas','water vapour'],null,['evaporating or boiling','condensing']),
+     foot:'Evaporation and boiling both turn liquid into gas.',
+     h:'Evaporation and boiling',
+     t:['Even in cool water, a few particles at the surface are moving fast enough to escape into the air. That’s evaporation. It happens slowly, at the surface, even when nothing is hot.',
+        'Boiling happens when the liquid is so hot (100 °C for water) that particles break free all through it, making bubbles of vapour that rise and burst. Both are particles escaping. Boiling is faster, and happens everywhere in the liquid at once.']},
+    {pic: panel3(['gas','water vapour'],['liquid','drops'],null,['condensing','evaporating']),
+     foot:'Condensation: gas back to liquid.',
+     h:'Condensation',
+     t:['Water vapour, the gas, is invisible. The air in every room has some in it.',
+        'When water vapour touches something cold, its particles slow down and come closer together, and it turns back into liquid drops. That’s condensation.']},
+    {pic: panel3(['solid','ice'],['liquid','water'],['gas','vapour'],['melting','freezing'],['boiling','condensing']),
+     foot:'Every arrow can go back the other way.',
+     h:'Changes you can undo',
+     t:['Melting, freezing, evaporation, boiling and condensation are all reversible. You can freeze melted ice again, and turn vapour back into water.',
+        'That’s because no new substance is made. The particles only change how they move and how close together they are.']}
+  ];
+  let i = 0;
+  function showCard(){
+    const c = cards[i];
+    stagePic(c.pic, c.foot);
+    journal(
+      h('p',{class:'eyebrow'}, `Mrs Hartley’s briefing · ${i+1} of ${cards.length}`),
+      h('h3',null,c.h),
+      ...c.t.map(t => h('p',{style:'margin-top:10px'}, t)),
+      h('div',{class:'row',style:'margin-top:14px'},
+        i > 0 ? h('button',{class:'btn ghost', onclick: () => { i--; showCard(); }}, 'Back') : '',
+        h('button',{class:'btn', onclick: () => { if (i < cards.length - 1) { i++; showCard(); } else checks(); }}, i < cards.length - 1 ? 'Next' : 'I’m ready for two quick checks')));
+  }
+  function checks(){
+    stagePic(INTRO_PIC, 'Mrs Hartley has put her notes away for these two.');
+    const box = $('journal');
+    chain([
+      next => runQ(box, {item:'Particles in ice', concept:'Particles are always moving', count:'Quick check 1 of 2',
+        prompt:'In a block of ice from the ice-house, what are the particles doing?', type:'choice',
+        options:[
+          {t:'Vibrating on the spot, packed in neat rows', ok:true},
+          {t:'Not moving at all', why:'This is a common mix-up. They can’t leave their places, but particles are never still. What were they doing on the spot?'},
+          {t:'Sliding past one another', why:'That’s a liquid. In ice, the particles can’t slide anywhere.'},
+          {t:'Spread far apart, flying about', why:'That’s a gas. Ice is a solid: its particles are packed tightly.'}],
+        help:['Ice is a solid. Think about how tightly packed a solid’s particles are.','They are stuck in their places, but they still move a little. How?','Packed in neat rows, vibrating on the spot. They are never completely still.'],
+        right:'They can’t leave their places, but they never stop vibrating.'}, next),
+      next => runQ(box, {item:'Particles when ice melts', concept:'Particles stay the same when matter changes state', count:'Quick check 2 of 2',
+        prompt:'When ice melts into water, what happens to the particles?', type:'choice',
+        options:[
+          {t:'They are the same particles, now free to slide past one another', ok:true},
+          {t:'They turn into new water particles', why:'No new particles are made. Ice and water are made of exactly the same particles. Only their movement changes.'},
+          {t:'They get bigger', why:'Particles don’t grow. Heating changes how fast they move, not their size.'},
+          {t:'They break into smaller pieces', why:'The particles stay whole. They break free of their places, not into pieces.'}],
+        help:['Remember the first card: what never changes?','Ice, water and water vapour are all made of the same thing.','The same particles, moving more freely: they slide past one another.'],
+        right:'Same particles, different movement. That’s why melted ice can be frozen again.', nextLabel:'Finish the briefing'}, next)
+    ], () => finishPart('p2'));
+  }
+  showCard();
+}
+
+/* ---------- Part 3: the particle box ---------- */
+function p3(){
+  const ctl = boxStage();
+  const box = $('journal');
+  const waitFor = (test, ui) => {
+    if (test(BOX.state())) { ui.right(); return; }
+    const off = BOX.on(s => { if (test(s) && !ui.solved()) { off(); ui.right(); } });
+  };
+  chain([
+    next => runQ(box, {item:'Predict: heating ice', concept:'Melting and freezing', count:'1 of 7',
+      lead: h('div',{class:'speech'}, h('b',null,'Mrs Hartley: '), 'This box shows a little water from the ice-house, magnified millions of times. It’s frozen solid. Before you touch the heat dial, tell me what you expect.'),
+      prompt:'If you warm the ice, what will its particles do?', type:'choice',
+      options:[
+        {t:'Vibrate faster and faster, then break free and slide past one another', ok:true},
+        {t:'Grow bigger until they push each other apart', why:'Particles don’t change size. Warming changes how fast they move.'},
+        {t:'Slow down and stop', why:'That’s what cooling does. Warming gives particles more energy.'},
+        {t:'Turn into different particles', why:'The particles stay the same. Only their movement and spacing change.'}],
+      help:['Heat gives particles more energy.','More energy means faster movement. What happens when they move too much to stay in place?','They vibrate harder, then break free of their places and slide past one another.'],
+      right:'That’s your prediction. Now test it.', nextLabel:'Use the heat dial'}, () => { ctl.enable(true); next(); }),
+    next => runQ(box, {item:'Melt the ice', concept:'Melting and freezing', count:'2 of 7',
+      prompt:'Melt the ice. Use the Warmer button or slide the dial, and watch the particles closely.', type:'custom',
+      mount: (body, ui) => { body.append(h('p',{class:'note'}, 'Watch for the moment the particles break out of their rows.')); waitFor(s => s !== 'solid', ui); },
+      help:['Melting needs heat.','Tap Warmer a few times. Ice melts at 0 °C.','Take the thermometer above 0 °C and the ice will melt.'],
+      right:'It melted at 0 °C. Did you see the block slump down and spread across the bottom of the box? A liquid takes the shape of its container. (If you went straight past to boiling, cool it to about 20 °C to see the water.)', notes:true}, next),
+    next => runQ(box, {item:'What changed when ice melted', concept:'Particles stay the same when matter changes state', count:'3 of 7',
+      prompt:'Count them if you like: there are 36 particles before and after. So what changed when the ice melted?', type:'choice',
+      options:[
+        {t:'How the particles move and how they are arranged', ok:true},
+        {t:'The particles themselves', why:'They’re the very same 36 particles. Look at what they’re doing, not what they are.'},
+        {t:'The number of particles', why:'There are still 36. Nothing was added or taken away.'}],
+      help:['Watch one particle for a few seconds.','Before, each one stayed in its place. What is it doing now?','The arrangement and the movement changed: they slide past one another instead of staying in rows.'],
+      right:'The same particles, moving differently.', notes:true}, next),
+    next => runQ(box, {item:'Freeze the water', concept:'Melting and freezing', count:'4 of 7',
+      lead: h('div',{class:'speech'}, h('b',null,'Cook: '), 'I need that water frozen for my iced pudding, if you please.'),
+      prompt:'Freeze the water again.', type:'custom',
+      mount: (body, ui) => { body.append(h('p',{class:'note'}, 'Watch what happens to the particles’ movement as it cools.')); waitFor(s => s === 'solid', ui); },
+      help:['Freezing needs cooling.','Tap Cooler until the thermometer drops below 0 °C.','Take the thermometer below 0 °C.'],
+      right:'Frozen. Notice it didn’t go back to a tall block: it froze in the shape the water had, flat across the bottom.', notes:true}, next),
+    next => runQ(box, {item:'Are frozen particles still?', concept:'Particles are always moving', count:'5 of 7',
+      prompt:'Look closely at the frozen particles. What are they doing?', type:'choice',
+      options:[
+        {t:'Vibrating on the spot, still moving a little', ok:true},
+        {t:'Perfectly still', why:'Look again, very closely, at one particle. Is it completely still?'},
+        {t:'Sliding past one another', why:'Watch one particle. Does it travel anywhere, or stay in its place?'}],
+      help:['Pick one particle and watch only that one.','It stays in its place. But is it completely still?','They are jiggling on the spot. Particles are always moving, even in ice.'],
+      right:'They are always moving. Try Cooler right down to −30 °C: they vibrate less, but they never stop.', notes:true}, next),
+    next => runQ(box, {item:'Boil the water', concept:'Evaporation and boiling', count:'6 of 7',
+      lead: h('div',{class:'speech'}, h('b',null,'Cook: '), 'Changed my mind. Boil it for the tea.'),
+      prompt:'Melt the ice, then keep heating until the water boils.', type:'custom',
+      mount: (body, ui) => { body.append(h('p',{class:'note'}, 'Water boils at 100 °C.')); waitFor(s => s === 'gas', ui); },
+      help:['You’ll need to go past melting, all the way up.','Keep tapping Warmer.','Take the thermometer to 100 °C or more.'],
+      right:'Boiling! Look how far apart they are now.', notes:true}, next),
+    next => runQ(box, {item:'What happened when it boiled', concept:'Evaporation and boiling', count:'7 of 7',
+      prompt:'What happened to the particles when the water boiled?', type:'choice',
+      options:[
+        {t:'They moved fast enough to break free of one another and spread out to fill the whole box', ok:true},
+        {t:'They got bigger and filled the box', why:'Count them: still 36, still the same size. What changed is how far apart they are.'},
+        {t:'They turned into air particles', why:'They are still water particles. Water vapour is water as a gas, not air.'}],
+      help:['Look at how far apart they are now, and how fast they move.','They are the same 36 particles. Did they grow, or spread out?','They broke free of one another and spread out to fill the box. That’s water vapour, a gas.'],
+      right:'Water vapour is water as a gas: the same particles, far apart and moving fast.', nextLabel:'Finish this room', notes:true}, next)
+  ], () => finishPart('p3'));
+}
+
+/* ---------- Part 4: the housekeeper's notebook ---------- */
+const PUZZLES = [
+  {id:'puddle', t:'The vanishing puddles', s:'The stable yard, after rain'},
+  {id:'kettle', t:'Cook’s kettle', s:'Boiling, and a white cloud'},
+  {id:'window', t:'The weeping window', s:'The nursery, on a frosty morning'},
+  {id:'jug', t:'The sweating jug', s:'Is it cracked, or is it something else?'}
+];
+function p4(){
+  function menu(){
+    stagePic(INTRO_PIC, 'Choose a puzzle from Mrs Hartley’s notebook.');
+    const left = PUZZLES.filter(p => !S.puzzles[p.id]).length;
+    journal(
+      h('p',{class:'eyebrow'}, 'The housekeeper’s notebook'),
+      h('h3',null, left ? 'Four puzzles. Choose any one.' : 'Every puzzle explained.'),
+      h('p',{class:'muted',style:'margin:8px 0 12px'}, left ? 'Solve them in whatever order you like. The jug is the trickiest.' : 'Mrs Hartley is delighted.'),
+      h('div',{class:'tiles'}, ...PUZZLES.map(p => h('button',{class:'tile' + (S.puzzles[p.id] ? ' done' : ''), onclick: () => run(p.id)},
+        h('span',{class:'tt'}, p.t + (S.puzzles[p.id] ? ' ✓' : '')), h('span',{class:'ts'}, p.s)))),
+      !left ? h('div',{class:'row',style:'margin-top:14px'}, h('button',{class:'btn copper', onclick: () => finishPart('p4')}, 'Finish this room')) : '');
+  }
+  function solved(id){ S.puzzles[id] = true; save(); menu(); }
+  const box = () => $('journal');
+  function run(id){
+    if (id === 'puddle') {
+      stagePic(PUDDLE_PIC, 'The yard is paved with stone flags: no soil to soak the water up.');
+      chain([
+        next => runQ(box(), {item:'Puddles: which change', concept:'Evaporation and boiling', count:'The vanishing puddles · 1 of 2',
+          lead: h('div',{class:'speech'}, h('b',null,'Mrs Hartley: '), 'Tuesday’s rain left puddles all over the stable yard. By Thursday they were gone. Nobody swept them, and it was never hot.'),
+          prompt:'Which change made the puddles disappear?', type:'choice',
+          options:[{t:'Evaporation', ok:true},
+            {t:'Boiling', why:'Boiling needs water at 100 °C. Thursday was mild. What can happen even when water is cool?'},
+            {t:'Condensation', why:'Condensation turns a gas into a liquid. Here the liquid went away.'},
+            {t:'The stones soaked it up', why:'These are hard stone flags, and the water didn’t stay in them. Where else could it go?'}],
+          help:['The water turned into something you can’t see.','Which change turns liquid into gas without boiling?','Evaporation: water slowly escaping into the air from the surface.'],
+          right:'The water evaporated into the air as invisible water vapour.', notes:true}, next),
+        next => runQ(box(), {item:'Puddles: why without boiling', concept:'Explaining with the particle model', count:'The vanishing puddles · 2 of 2',
+          prompt:'How can a puddle turn to vapour when it never gets anywhere near 100 °C?', type:'choice',
+          options:[{t:'A few particles at the surface move fast enough to escape into the air, even when the water is cool', ok:true},
+            {t:'The sun makes new air particles out of the water', why:'No new particles are made. The water particles themselves go into the air.'},
+            {t:'The particles shrink until they’re too small to see', why:'Particles don’t shrink. They spread out into the air, far apart.'}],
+          help:['Not every particle in a liquid moves at the same speed.','Which particles could escape most easily: ones deep down, or ones at the top?','The fastest particles at the surface escape into the air, a few at a time.'],
+          right:'A few at a time, from the surface. That’s why a puddle takes days, but a kettle takes minutes.', nextLabel:'Back to the notebook', notes:true}, next)
+      ], () => solved('puddle'));
+    }
+    if (id === 'kettle') {
+      stagePic(KETTLE_PIC, 'Look at the bubbles inside, and at the gap just past the spout.');
+      chain([
+        next => runQ(box(), {item:'Boiling versus evaporation', concept:'Evaporation and boiling', count:'Cook’s kettle · 1 of 2',
+          lead: h('div',{class:'speech'}, h('b',null,'Cook: '), 'My kettle and that puddle both turn water into vapour. So what’s the difference?'),
+          prompt:'How is boiling different from evaporation?', type:'choice',
+          options:[{t:'Boiling happens all through the liquid, with bubbles of vapour, once it’s hot enough. Evaporation happens only at the surface, at any temperature.', ok:true},
+            {t:'Boiling makes water vapour, but evaporation makes air', why:'Both make water vapour. Look at where it happens, and how hot it must be.'},
+            {t:'There’s no difference at all', why:'They are alike: in both, particles break free into the air. But look at the bubbles inside the kettle. Does a puddle do that?'},
+            {t:'Evaporation is faster than boiling', why:'The puddle took two days. The kettle takes minutes.'}],
+          help:['Look inside the kettle. Where are the bubbles?','The bubbles are vapour forming deep in the water, not just at the top. Does that happen in a puddle?','Boiling: all through the liquid, with bubbles, at 100 °C. Evaporation: only at the surface, at any temperature.'],
+          right:'Both are particles escaping. Boiling happens everywhere in the liquid at once, so it’s much faster.', notes:true}, next),
+        next => runQ(box(), {item:'The white cloud from a kettle', concept:'Condensation', count:'Cook’s kettle · 2 of 2',
+          prompt:'Just at the spout there’s a clear gap. Further out, a white cloud. What is the white cloud?', type:'choice',
+          options:[{t:'Tiny drops of water, made when the invisible vapour meets cooler air and condenses', ok:true},
+            {t:'Water vapour, which is a white gas', why:'Water vapour is invisible. That’s why there’s a clear gap at the spout, where the vapour is still hot.'},
+            {t:'Smoke from the range', why:'It comes out of the spout, not the fire. What’s coming out of the spout?'}],
+          help:['Water vapour is invisible. So what can you see?','The vapour leaves the spout hot, then meets the cooler kitchen air. What happens to vapour when it cools?','It condenses into tiny drops of liquid water. The clear gap is the invisible vapour.'],
+          right:'People call it steam, but true water vapour is invisible. The white cloud is water again, in tiny drops.', nextLabel:'Back to the notebook', notes:true}, next)
+      ], () => solved('kettle'));
+    }
+    if (id === 'window') {
+      stagePic(WINDOW_PIC, 'The drops are on the inside of the glass.');
+      chain([
+        next => runQ(box(), {item:'The wet window', concept:'Condensation', count:'The weeping window',
+          lead: h('div',{class:'speech'}, h('b',null,'Nursemaid: '), 'Every frosty morning the nursery windows are wet on the inside, and no one has splashed them.'),
+          prompt:'Where does the water on the inside of the window come from?', type:'choice',
+          options:[{t:'Condensation: water vapour in the warm room touches the cold glass, its particles slow down and come together, and it turns to liquid drops', ok:true},
+            {t:'Rain and frost soak through the glass from outside', why:'Glass doesn’t let water through. And the drops are on the inside.'},
+            {t:'The cold glass makes new water', why:'No new water is made. It was already in the room, as invisible vapour.'},
+            {t:'Evaporation from the glass', why:'Evaporation turns liquid into gas. Here a gas has turned into liquid.'}],
+          help:['The air in the room has invisible water vapour in it, from people breathing and from washing.','What happens to vapour particles when they touch something cold?','They slow down, come closer together and condense into drops. That’s condensation.'],
+          right:'Breathing sleepers add water vapour to the air, and the frosty glass is cold enough to condense it.', nextLabel:'Back to the notebook', notes:true}, next)
+      ], () => solved('window'));
+    }
+    if (id === 'jug') jug();
+  }
+  function jug(){
+    const done = {taste:false, warm:false};
+    stagePic(jugPic('cold'), 'Within minutes, the outside of the jug is covered in drops.');
+    function choose(){
+      const left = ['taste','warm'].filter(k => !done[k]);
+      journal(
+        h('p',{class:'qcount'}, 'The sweating jug'),
+        h('div',{class:'speech'}, h('b',null,'Thomas the footman: '), 'The jug’s cracked, ma’am. The lemonade is seeping through the glass.'),
+        h('div',{class:'speech'}, h('b',null,'Mrs Hartley: '), 'Or the water comes from somewhere else, and it’s to do with the cold. Which of us is right?'),
+        h('p',{class:'prompt'}, left.length === 2 ? 'You can run two tests. Which will you try first?' : (left.length ? 'One more test to run.' : 'You have both results.')),
+        h('div',{class:'tests'},
+          !done.taste ? h('button',{class:'opt', onclick: () => test('taste')}, 'Taste a drop from the outside of the jug') : '',
+          !done.warm ? h('button',{class:'opt', onclick: () => test('warm')}, 'Fill the same jug with warm lemonade and watch') : '',
+          !left.length ? h('button',{class:'btn', onclick: conclude}, 'Decide who is right') : ''),
+        notesBox());
+    }
+    function test(k){
+      const box = $('journal');
+      if (k === 'taste') {
+        stagePic(jugPic('taste'), 'The drop tastes of plain water.');
+        runQ(box, {item:'Jug test: taste the drops', concept:'Testing explanations with evidence', count:'Test: taste a drop',
+          prompt:'The drops taste of plain water: not sweet, not lemony. Which explanation does that count against?', type:'choice',
+          options:[{t:'Thomas’s: if lemonade were leaking through, the drops would taste of lemonade', ok:true},
+            {t:'Mrs Hartley’s: water from somewhere else would taste of lemonade', why:'Think about where each explanation says the water comes from. Which one would make the drops sweet?'},
+            {t:'Neither: taste tells us nothing', why:'It tells us a lot. What would leaked lemonade taste like?'}],
+          help:['What’s inside the jug?','If the drops had come from inside, what would they taste of?','Leaked lemonade would taste sweet and lemony. Plain water counts against the leak.'],
+          right:'Plain water can’t have leaked out of a jug of lemonade.', nextLabel:'Back to the tests', notes:true},
+          () => { done.taste = true; stagePic(jugPic('cold'), 'Within minutes, the outside of the jug is covered in drops.'); choose(); });
+      } else {
+        stagePic(jugPic('warm'), 'With warm lemonade inside, the jug stays dry.');
+        runQ(box, {item:'Jug test: warm lemonade', concept:'Testing explanations with evidence', count:'Test: warm lemonade',
+          prompt:'With warm lemonade in the very same jug, no drops form at all. What does that tell you?', type:'choice',
+          options:[{t:'The jug isn’t leaking, and the cold is what makes the drops', ok:true},
+            {t:'The jug only leaks some of the time', why:'A crack would leak warm lemonade just as well as cold. What’s the only thing you changed?'},
+            {t:'Warm lemonade is too thick to leak', why:'Warm lemonade is runnier, if anything. What’s the one thing you changed?'}],
+          help:['You kept the same jug and changed only one thing.','The only thing you changed was the temperature. Drops come with cold, and not with warm.','A cracked jug would leak whatever was in it. So the drops depend on the cold, not on a crack.'],
+          right:'Same jug, only the temperature changed. So the cold makes the drops, not a crack.', nextLabel:'Back to the tests', notes:true},
+          () => { done.warm = true; stagePic(jugPic('cold'), 'Within minutes, the outside of the jug is covered in drops.'); choose(); });
+      }
+    }
+    function conclude(){
+      const box = $('journal');
+      chain([
+        next => runQ(box, {item:'Jug: where the drops come from', concept:'Condensation', count:'The sweating jug · conclusion',
+          prompt:'So where does the water on the outside of the cold jug come from?', type:'choice',
+          options:[{t:'Invisible water vapour in the air, condensing on the cold glass', ok:true},
+            {t:'Lemonade leaking through a crack', why:'Both tests count against that: the drops are plain water, and warm lemonade doesn’t leak.'},
+            {t:'The ice melting through the glass', why:'Glass doesn’t let water through, and the drops are plain water. Think about what’s in the air.'}],
+          help:['It isn’t from inside the jug. So it must come from outside.','What invisible thing is in the air of every room?','Water vapour from the air, turned back into liquid on the cold glass.'],
+          right:'Thomas owes Mrs Hartley an apology.'}, next),
+        next => runQ(box, {item:'Jug: why the cold matters', concept:'Explaining with the particle model', count:'The sweating jug · why',
+          prompt:'Why does the cold matter? Explain it with particles.', type:'choice',
+          options:[{t:'The cold glass cools the vapour particles that touch it, so they slow down, come closer together and become liquid', ok:true},
+            {t:'The cold glass pulls water out of the lemonade', why:'The drops are plain water, from the air. What does cold do to vapour particles?'},
+            {t:'Cold makes the vapour particles bigger, so you can see them', why:'Particles don’t change size. What does cooling do to how they move?'}],
+          help:['Cooling takes energy away from particles.','Slower particles can’t stay far apart. What do they do?','They slow down, come closer together and condense into liquid drops.'],
+          right:'That’s condensation, the same as the nursery window.', nextLabel:'Back to the notebook', notes:true}, next)
+      ], () => solved('jug'));
+    }
+    choose();
+  }
+  menu();
+}
+
+/* ---------- Part 5: water's round trip ---------- */
+function p5(){
+  const box = $('journal');
+  const ORDER = ['Ice in the ice-house','Water in a jug','Invisible water vapour in the air','Drops on a cold window'];
+  chain([
+    next => { stagePic(TRIP_PIC, 'Four moments in water’s journey, jumbled.'); runQ(box, {item:'Order water’s round trip', concept:'Changes of state', count:'1 of 5',
+      prompt:'Put water’s round trip in order. Tap the cards in order, starting with the ice.', type:'custom',
+      mount: (body, ui) => {
+        const picked = [];
+        const slots = h('div',{class:'trip'});
+        const cards = h('div',{class:'cards'});
+        const check = h('button',{class:'btn', style:'margin-top:6px'}, 'Check my order');
+        const clear = h('button',{class:'btn ghost small', style:'margin:6px 0 0 8px'}, 'Start again');
+        function draw(){
+          const parts = [];
+          for (let i=0;i<4;i++){ parts.push(h('div',{class:'slot' + (picked[i] ? ' filled' : '')}, picked[i] || String(i+1))); if (i<3) parts.push(h('div',{class:'arrow'}, '↓')); }
+          slots.replaceChildren(...parts);
+          cards.replaceChildren(...SHUF.map(t => h('button',{class:'cardbtn', disabled: picked.includes(t), onclick: () => { if (picked.length < 4) { picked.push(t); draw(); } }}, t)));
+          check.disabled = picked.length < 4;
+        }
+        const SHUF = shuffle(ORDER);
+        check.addEventListener('click', () => {
+          if (ui.solved()) return;
+          const bad = picked.findIndex((t,i) => t !== ORDER[i]);
+          if (bad < 0) { check.remove(); clear.remove(); cards.remove(); ui.right(); return; }
+          const why = bad === 0 ? 'Start with the ice: it’s where the water begins its journey.' :
+            `“${picked[bad]}” can’t come straight after “${picked[bad-1]}”. What change happens next to ${picked[bad-1].toLowerCase()}?`;
+          ui.wrong(why, picked.join(' > '));
+          picked.length = 0; draw();
+        });
+        clear.addEventListener('click', () => { picked.length = 0; draw(); });
+        draw();
+        body.append(slots, cards, check, clear);
+      },
+      help:['Ice first. What happens to ice when it warms up?','Ice melts into water. Then the water evaporates into the air as vapour. Where does vapour go when it touches something cold?','Ice, then water, then invisible vapour, then drops on the cold window.'],
+      right:'Solid, liquid, gas, and liquid again.', notes:true}, next); },
+    next => runQ(box, {item:'Name the three changes', concept:'Changes of state', count:'2 of 5',
+      prompt:'Name the change at each arrow.', type:'custom',
+      mount: (body, ui) => {
+        const OPTS = ['choose…','Melting','Freezing','Evaporating','Condensing'];
+        const want = ['Melting','Evaporating','Condensing'];
+        const labels = ['Ice → water','Water → invisible vapour','Vapour → drops on the window'];
+        const sels = labels.map(() => { const s = h('select',null, ...OPTS.map(o => h('option',{value:o}, o))); return s; });
+        const check = h('button',{class:'btn', style:'margin-top:10px'}, 'Check');
+        check.addEventListener('click', () => {
+          if (ui.solved()) return;
+          const vals = sels.map(s => s.value);
+          if (vals.some(v => v === 'choose…')) { ui.wrong('Choose a change for every arrow first.', vals.join(', ')); return; }
+          const bad = vals.findIndex((v,i) => v !== want[i]);
+          if (bad < 0) { sels.forEach(s => s.disabled = true); check.remove(); ui.right(); return; }
+          ui.wrong(`Look again at “${labels[bad]}”. ${['Which change turns a solid into a liquid?','Which change turns a liquid into a gas without boiling?','Which change turns a gas into a liquid?'][bad]}`, vals.join(', '));
+        });
+        body.append(h('div',{class:'arrows'}, ...labels.map((l,i) => h('label',null, l, sels[i]))), check);
+      },
+      help:['Solid to liquid is the first one you met in the particle box.','The second is how the puddles vanished. The third is how the window got wet.','Melting, then evaporating, then condensing.'],
+      right:'Melting, evaporating, condensing.', notes:true}, next),
+    next => runQ(box, {item:'Melted ice: spoilt for ever?', concept:'Reversible changes', count:'3 of 5',
+      lead: h('div',{class:'speech'}, h('b',null,'Mrs Hartley: '), 'Once ice from the ice-house has melted, it’s spoilt for ever. You can never have ice from it again.'),
+      prompt:'Is she right?', type:'choice',
+      options:[{t:'No. Freezing the water turns it back into ice, because melting makes no new substance: the particles are the same', ok:true},
+        {t:'Yes. Melting changes the particles, so it can’t be undone', why:'You froze it again yourself in the particle box. Did the particles change?'},
+        {t:'Yes. Only ice from the ice-house is real ice', why:'Ice is just water as a solid. Any water will freeze if it’s cold enough.'}],
+      help:['Think back to Cook’s iced pudding in the particle box.','You melted the ice and froze it again. Were the particles still the same?','No: the change is reversible, because no new substance is made.'],
+      right:'Melting is reversible. Ice-houses depended on keeping the ice cold, not on the ice being special.', notes:true}, next),
+    next => runQ(box, {item:'Butter in a warm carriage', concept:'Reversible changes', count:'4 of 5',
+      lead: h('div',{class:'speech'}, h('b',null,'Mrs Hartley: '), 'The butter for the picnic went soft and runny in the hot carriage, then set solid again in my cool larder.'),
+      prompt:'Which two changes happened to the butter, in order?', type:'choice',
+      options:[{t:'Melting, then freezing (setting solid again)', ok:true},
+        {t:'Evaporating, then condensing', why:'The butter never became a gas. It went from solid to runny and back.'},
+        {t:'Melting, then evaporating', why:'It didn’t vanish into the air. It set solid again.'}],
+      help:['Soft and runny: what state is that?','Solid to liquid, then liquid back to solid.','Melting, then freezing. For butter, freezing happens at a much warmer temperature than for water.'],
+      right:'Solid to liquid and back again: a reversible change. Different materials melt at different temperatures. Butter melts on a hot day, but water stays liquid until it’s far colder.', notes:true}, next),
+    next => { runQ(box, {item:'Which picture shows ice', concept:'Particle arrangement in solids, liquids and gases', count:'5 of 5 · notes away',
+      prompt:'Last one, from memory. Which picture shows the particles in ice?', type:'custom',
+      mount: (body, ui) => {
+        const kinds = shuffle([['solid',true],['liquid',false],['gas',false]]);
+        const why = {liquid:'Those particles are close together but jumbled, sliding about. That’s a liquid.', gas:'Those particles are spread far apart. That’s a gas.'};
+        const row = h('div',{class:'pics3'}, ...kinds.map(([k, ok]) => {
+          const b = h('button',{class:'picbtn', 'aria-label':'A particle picture'}, svgFrom(partSVG(k, 200, 170)));
+          b.addEventListener('click', () => { if (ui.solved() || b.disabled) return; if (ok) { b.classList.add('right'); ui.right(); } else { b.classList.add('wrong'); b.disabled = true; ui.wrong(why[k], k); } });
+          return b;
+        }));
+        body.append(row);
+      },
+      help:['Ice is a solid.','In a solid, particles are packed tightly in neat rows.','The picture with the particles in neat, tightly packed rows.'],
+      right:'Neat rows, tightly packed, vibrating on the spot.', nextLabel:'Finish this room'}, next); stagePic(TRIP_PIC); }
+  ], () => finishPart('p5'));
+}
+
+/* ---------- Part 6: the workbook ---------- */
+function p6(){
+  stagePic(WORKBOOK_PIC, 'Plan first, then write.');
+  journal(
+    h('p',{class:'eyebrow'}, 'Part 6 · away from the iPad'),
+    h('h3',null,'Write it up in your science workbook'),
+    h('p',{style:'margin-top:8px'}, 'Put the iPad down and open your science workbook. You’re going to write two paragraphs about what you learnt from the two films and from Ashcombe House.'),
+    h('ol',{class:'steps'},
+      h('li',null, h('b',null,'Write down the main dot points first. '), 'Jot down the most important things you learnt, one per line. Short notes, not sentences.'),
+      h('li',null, h('b',null,'Number your dot points '), 'in the order you want to describe them in your sentences and paragraphs.'),
+      h('li',null, h('b',null,'Then write your two paragraphs, '), 'following your numbers. Put at least one “because” in each paragraph, to explain why things happen.')),
+    h('p',{class:'note',style:'margin-top:10px'}, 'One idea: paragraph 1 about melting and freezing, paragraph 2 about evaporation, boiling, condensation, and why these changes can be undone. But you choose.'),
+    h('details',{class:'extra'}, h('summary',null,'Stuck for dot points? Tap for some topic words'),
+      h('ul',null, h('li',null,'particles never change, only their movement'), h('li',null,'melting and freezing'), h('li',null,'evaporation and boiling, and the difference'), h('li',null,'condensation, and the sweating jug'), h('li',null,'water vapour is invisible'), h('li',null,'reversible changes'))),
+    h('details',{class:'extra'}, h('summary',null,'Stuck starting a sentence? Tap for some starters'),
+      h('ul',null, h('li',null,'When a solid is heated, its particles…'), h('li',null,'The difference between boiling and evaporation is…'), h('li',null,'The drops on a cold jug come from…, because…'), h('li',null,'These changes are reversible because…'))),
+    h('div',{class:'row',style:'margin-top:16px'}, h('button',{class:'btn copper', onclick: () => finishPart('p6')}, 'I’ve finished my two paragraphs')),
+    h('p',{class:'note',style:'margin-top:8px'}, 'Then show your paragraphs to whoever is teaching today.'));
+}
+
+/* ---------- End ---------- */
+function showEnd(){
+  pips($('pipsEnd'));
+  $('endPic').replaceChildren(svgFrom(INTRO_PIC));
+  $('endText').replaceChildren(
+    h('p',{class:'eyebrow'}, 'Mystery solved'),
+    h('h2',null, 'The jug was never cracked'),
+    h('p',null, 'The drops on the jug, the wet nursery window and the white cloud from the kettle were all the same thing: invisible water vapour from the air, turning back into liquid when it cooled. The puddles went the other way, escaping into the air a few particles at a time. Through all of it, the water particles never changed. Only how they moved, and how close together they were.'),
+    h('div',{class:'talk'},
+      h('h3',null,'Something to guess before next lesson'),
+      h('p',{style:'margin-top:6px'}, 'In Lesson 14 you’ll leave an ice cube in a glass in a warm spot. Once it has melted, mark the water level. Do you think the level will stay the same all day? Why? Say your guess aloud, and find out next time.')),
+    h('p',{class:'note'}, 'Show your two paragraphs to whoever is teaching today.'),
+    h('div',{class:'row'}, h('button',{class:'btn ghost', onclick: hub}, 'Back to the house')));
+  show('sEnd');
+}
+
+/* ===================== Start ===================== */
+$('btnBegin').addEventListener('click', hub);
+$('btnToHub').addEventListener('click', hub);
+$('btnParentBack').addEventListener('click', intro);
+intro();
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>
