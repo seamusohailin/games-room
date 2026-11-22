@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "sun-compass",
+    title: "Captain Hale’s Sun Compass",
+    blurb: "Nutmeg knocked the compass overboard! Help Captain Hale find north using only the Sun.",
+    players: ["maeve"],
+    subject: "Geography",
+    source: "Earth is Our Home and My Earth Notebook, Lesson 11: Sunrise and Sunset (Earth pp. 29 to 30). About 14 minutes in five short parts (the Sun's day, the spinning Earth, the right-hand trick, noon shadows, a voyage north), then a short outdoor check with the compass and My Earth Notebook p. 16",
+    added: "2026-11-22",
+    colour: "#C8642B",
+    href: "games/sun-compass/index.html"
+  },
+  {
     id: "ashcombe-house",
     title: "The Puzzles of Ashcombe House",
     blurb: "Why do puddles vanish, windows weep and cold jugs sweat? Solve the housekeeper's puzzles with particles.",

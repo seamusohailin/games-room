@@ -1,0 +1,1304 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Captain Hale’s Sun Compass</title>
+<script src="../../results.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fraunces:opsz,wght@9..144,700&display=swap">
+<style>
+/* Captain Hale's Sun Compass: find north with only the Sun. Pictures first, one short line of text, hands-on moves. Maeve's teal for every action. */
+:root{
+  --bg:#10263a; --bg-deep:#091726; --glow:#f2c75c; --parch:#f8efdc; --parch-2:#e8d9b6; --parch-3:#d6c193;
+  --ink:#2a2118; --muted:#6d5c44; --teal:#16A08F; --teal-deep:#0c6b5f; --wax:#a5302a; --rope:#b0864f;
+  --ok:#2f7d4f; --ok-bg:#e1f1e2; --hmm-bg:#fbecd2; --clue-bg:#fff4d6; --on-dark:#f4ead6;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background-color:var(--bg);background-image:radial-gradient(ellipse at 90% -5%,rgba(242,199,92,.22),transparent 55%),radial-gradient(ellipse at 0% 100%,rgba(22,160,143,.14),transparent 50%);
+  color:var(--on-dark);font-family:var(--body);font-size:1.15rem;line-height:1.4;min-height:100vh;-webkit-text-size-adjust:100%}
+.wrap{max-width:960px;margin:0 auto;padding:max(12px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(90px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
+svg text{font-family:var(--body)}
+
+.top{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding-bottom:10px;margin-bottom:12px;border-bottom:2px dashed rgba(242,199,92,.35)}
+.brand h1{color:var(--glow);font-size:clamp(1.6rem,5vw,2.3rem);line-height:1.05}
+.status{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.pips{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.pips li{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem;border:2px solid var(--parch-3);color:var(--parch-3)}
+.pips li.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.pips li.now{background:var(--glow);border-color:var(--glow);color:var(--ink)}
+.toggle{display:inline-flex;align-items:center;gap:8px;background:var(--bg-deep);border:2px solid var(--parch-3);border-radius:999px;padding:6px 14px;min-height:46px;cursor:pointer;font-size:.95rem}
+.toggle .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--parch-3);display:grid;place-items:center}
+.toggle[aria-pressed="true"]{border-color:var(--teal)}
+.toggle[aria-pressed="true"] .box{background:var(--teal);border-color:var(--teal)}
+.toggle[aria-pressed="true"] .box::after{content:"";width:10px;height:6px;border:solid #fff;border-width:0 0 3px 3px;transform:rotate(-45deg) translate(1px,-1px)}
+
+.panel{background:var(--parch);color:var(--ink);border-radius:14px;padding:14px 16px 16px;box-shadow:0 6px 0 var(--bg-deep)}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.phead h2{color:var(--wax);font-size:clamp(1.3rem,4vw,1.7rem)}
+.dots{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.dots li{width:16px;height:16px;border-radius:50%;border:2px solid var(--parch-3);background:#fff}
+.dots li.on{background:var(--teal);border-color:var(--teal)}
+.bubble{display:flex;gap:10px;align-items:center;margin:10px 0 0;min-height:52px}
+.bubble .who{flex:none;width:50px;height:50px;border-radius:50%;background:var(--bg);display:grid;place-items:center;border:2px solid var(--rope)}
+.bubble .who svg{width:38px;height:38px}
+.bubble p{flex:1;margin:0;font-size:1.3rem;line-height:1.35;font-weight:700;background:#fff;border-radius:14px;padding:8px 14px;border:2px solid var(--parch-2)}
+.qbtn{flex:none;width:48px;height:48px;border-radius:50%;border:2px solid #E3BE5C;background:var(--clue-bg);font-weight:700;font-size:1.3rem;cursor:pointer;color:var(--ink)}
+.qbtn[disabled]{opacity:.35;cursor:default}
+.clue{margin:8px 0 0 60px;background:var(--clue-bg);border-radius:12px;padding:8px 12px;font-size:1.1rem}
+
+.sw{position:relative;margin-top:10px;border-radius:14px;background:#0b1c2c;padding:5px;box-shadow:inset 0 0 0 2px rgba(176,134,79,.45)}
+.sw>svg{display:block;width:100%;height:auto;border-radius:10px;touch-action:manipulation}
+.ov{position:absolute;inset:5px;pointer-events:none}
+.ov>*{pointer-events:auto}
+.toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:88%;padding:8px 18px;border-radius:999px;font-weight:700;font-size:1.2rem;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.25);z-index:5;pointer-events:none}
+.toast.yes{background:var(--ok-bg);color:var(--ok);border:3px solid var(--ok)}
+.toast.hmm{background:var(--hmm-bg);color:#7a4a12;border:3px solid #E3BE5C}
+.toast.info{background:#fff;color:var(--ink);border:3px solid var(--rope)}
+.tray{margin-top:12px;min-height:60px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center}
+.btn{font-family:var(--body);font-weight:700;font-size:1.25rem;background:var(--teal);color:#fff;border:0;border-radius:999px;padding:.5em 1.5em;min-height:58px;cursor:pointer;box-shadow:0 4px 0 var(--teal-deep)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--teal-deep)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink),0 4px 0 var(--parch-3)}
+.btn[disabled]{opacity:.5}
+
+/* picture tiles */
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.tile{background:#fff;border:3px solid var(--parch-2);border-radius:16px;padding:8px 8px 10px;cursor:pointer;box-shadow:0 4px 0 var(--parch-2);display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;font-size:1.15rem;color:var(--ink)}
+.tile svg{width:96px;height:72px}
+.tile.yes{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
+.tile.no{opacity:.35;box-shadow:none}
+
+/* things to drag */
+.chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.chip{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;border:3px solid var(--teal);border-radius:16px;padding:6px 14px;min-height:58px;display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:1.2rem;color:var(--ink);cursor:grab;box-shadow:0 4px 0 var(--teal-deep);position:relative}
+.chip svg{width:40px;height:40px;flex:none}
+.chip.lift{z-index:60;cursor:grabbing;box-shadow:0 10px 18px rgba(0,0,0,.3)}
+.chip.sel{background:#e9f7f5;box-shadow:0 0 0 4px var(--glow),0 4px 0 var(--teal-deep)}
+.chip.used{visibility:hidden}
+.chip.shake{animation:shake .45s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.chip.float{position:absolute;border-color:#1f5fa8;box-shadow:0 4px 0 #154a86;background:#e9f2fb;padding:4px 8px;min-height:52px}
+.chip.float svg{width:52px;height:52px}
+svg .drop{cursor:pointer}
+svg .drop.cando{fill:rgba(242,199,92,.25);stroke:#f2c75c;stroke-width:3;stroke-dasharray:8 6}
+svg .drop.over{fill:rgba(22,160,143,.35);stroke:#16A08F;stroke-width:4}
+#ara path.drop.cando{fill:#efe3bd;stroke:#f2c75c;stroke-width:4}
+#ara path.drop.over{fill:#cdeee8;stroke:#16A08F;stroke-width:5}
+
+/* slider */
+.slide{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--parch-2);border-radius:999px;padding:6px 16px}
+.slide svg{width:44px;height:44px;flex:none}
+.slide input{flex:1;height:48px;accent-color:var(--teal)}
+.monthbox{display:flex;align-items:center;gap:12px;justify-content:center;margin:0 0 8px}
+.monthbox b{font-family:var(--display);font-size:1.8rem;color:var(--wax);min-width:6.5em;text-align:center}
+.monthbox span{width:52px;height:52px;display:inline-block}
+.monthbox svg{width:52px;height:52px}
+
+/* poem */
+.poem{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;background:#fffaf0;border:2px solid var(--parch-2);border-radius:12px;padding:10px 14px;margin-top:10px}
+.poem p{margin:0;font-size:1.15rem;line-height:1.6;transition:opacity .5s}
+.poem p.dim{opacity:.2}
+.poem .cite{grid-column:1/-1;font-size:.85rem;color:var(--muted)}
+.gap{display:inline-block;min-width:96px;border-bottom:3px dashed var(--teal);text-align:center;color:var(--teal-deep);font-weight:700;padding:0 4px;border-radius:6px;cursor:pointer}
+.gap.cando{background:#fff4d6}
+.gap.over{background:#d9f1ed}
+.gap.filled{border-bottom-style:solid;border-color:var(--ok);color:var(--ok)}
+@media (max-width:640px){.poem{grid-template-columns:1fr}}
+
+/* chance line */
+.chance{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chance .drop{background:#fff;border:3px solid var(--parch-2);border-radius:14px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;text-align:center;color:var(--ink);cursor:pointer}
+.chance .drop svg{width:34px;height:34px}
+.chance .drop.cando{border-color:var(--glow);border-style:dashed}
+.chance .drop.over{border-color:var(--teal);background:#e9f7f5}
+.chance .drop.filled{border-color:var(--ok);background:var(--ok-bg)}
+
+/* sorting cards */
+.sorts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sorts .drop{background:#fff;border:3px solid var(--parch-2);border-radius:14px;padding:6px;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.sorts .drop svg{width:100%;height:auto;max-height:110px}
+.sorts .drop b{font-size:1.05rem;min-height:1.4em;color:var(--ok)}
+.sorts .drop.cando{border-color:var(--glow);border-style:dashed}
+.sorts .drop.over{border-color:var(--teal);background:#e9f7f5}
+.sorts .drop.filled{border-color:var(--ok);background:var(--ok-bg)}
+
+/* true-story card over the picture */
+.card{position:absolute;inset:5px;background:rgba(9,23,38,.72);border-radius:10px;display:flex;align-items:center;justify-content:center;padding:12px;z-index:8}
+.card .in{background:#fffaf0;border:3px double var(--rope);border-radius:14px;padding:14px 16px;max-width:560px;width:100%;position:relative}
+.card .ribbon{position:absolute;top:-14px;left:14px;background:var(--wax);color:#fff;font-weight:700;font-size:.9rem;padding:3px 12px;border-radius:999px}
+.card h3{color:var(--wax);font-size:1.25rem;margin:4px 0 6px}
+.card svg{width:100%;height:auto;display:block;margin:4px 0 8px}
+.card p{margin:0 0 4px;font-size:1.2rem;font-weight:700}
+.card .row{margin-top:8px}
+
+/* end of a part */
+.donebox{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;background:#fff;border:3px solid var(--ok);border-radius:16px;padding:10px 14px}
+.donebox .stamp{width:56px;height:56px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:1.8rem;font-weight:700;flex:none}
+.donebox p{margin:0;font-size:1.2rem;font-weight:700;flex:1;min-width:200px}
+
+/* contents */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:center}
+@media (max-width:700px){.hero{grid-template-columns:1fr}}
+.hero p{font-size:1.25rem;margin:0 0 8px}
+.hero .note{font-size:.9rem;color:var(--muted)}
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:14px}
+.part{text-align:center;border:0;cursor:pointer;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;box-shadow:0 4px 0 var(--parch-3)}
+.part svg{width:100%;max-width:150px;height:auto}
+.part[disabled]{opacity:.45;cursor:default}
+.part h3{font-size:1.05rem;color:var(--ink)}
+.part .tag{font-size:.85rem;font-weight:700;color:var(--muted)}
+.part.next{box-shadow:0 0 0 4px var(--glow),0 4px 0 var(--parch-3)}
+.part.next .tag{color:var(--teal-deep)}
+
+/* the end */
+.endgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.endgrid div{background:#fffaf0;border:2px solid var(--parch-2);border-radius:12px;padding:8px;text-align:center;font-size:1rem;font-weight:700}
+.endgrid svg{width:70px;height:56px;display:block;margin:0 auto 4px}
+.tell{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:10px 14px;margin-top:10px}
+.tell h3{color:var(--wax);font-size:1.15rem;margin-bottom:4px}
+.tell ul{margin:0;padding-left:1.2em}
+textarea{width:100%;min-height:64px;font:inherit;font-size:1.15rem;border:2px solid var(--parch-3);border-radius:12px;padding:10px;background:#fff;color:var(--ink);margin-top:6px}
+
+
+.smoke{animation:smoke 3s ease-out infinite}
+@keyframes smoke{0%{transform:translate(0,0);opacity:.8}100%{transform:translate(10px,-26px);opacity:0}}
+.half{cursor:pointer}
+.half.tappable{fill:rgba(242,199,92,.25);stroke:#f2c75c;stroke-width:3;stroke-dasharray:8 6}
+.half.no{fill:rgba(20,20,20,.3)}
+.half.yes{fill:rgba(22,160,143,.35);stroke:#16A08F;stroke-width:4}
+.readout{display:flex;align-items:center;gap:16px;justify-content:center;margin-top:10px;background:#fff;border:2px solid var(--parch-2);border-radius:14px;padding:8px 14px;color:var(--ink)}
+.readout svg{width:34px;height:90px;flex:none}
+.readout b{font-family:var(--display);font-size:2.3rem;color:var(--wax);display:block;line-height:1.05}
+.readout span{font-weight:700;font-size:1.2rem}
+.slide .end{font-weight:700;font-size:1rem;color:var(--muted);min-width:3.2em;text-align:center}
+.chip.big{padding:6px 10px}
+.chip.big svg{width:84px;height:62px}
+.chip.badge svg{width:46px;height:46px}
+.sorts.four{grid-template-columns:repeat(4,1fr)}
+@media (max-width:640px){.sorts.four{grid-template-columns:repeat(2,1fr)}}
+.clockbox{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 8px}
+.clockbox b{font-family:var(--display);font-size:1.8rem;color:var(--wax);min-width:6.5em;text-align:center}
+.clockbox svg{width:52px;height:52px}
+.todo{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px}
+.todo li button{width:100%;display:flex;align-items:center;gap:14px;background:#fff;border:3px solid var(--parch-2);border-radius:16px;padding:8px 12px;cursor:pointer;text-align:left;font-weight:700;font-size:1.25rem;color:var(--ink);min-height:76px;box-shadow:0 4px 0 var(--parch-2)}
+.todo li button svg.pic{width:78px;height:60px;flex:none}
+.todo li button small{display:block;font-weight:400;font-size:1rem;color:var(--muted)}
+.todo .box2{width:38px;height:38px;border-radius:10px;border:3px solid var(--parch-3);flex:none;display:grid;place-items:center;margin-left:auto}
+.todo button[aria-pressed="true"]{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 4px 0 var(--ok)}
+.todo button[aria-pressed="true"] .box2{background:var(--ok);border-color:var(--ok)}
+.todo button[aria-pressed="true"] .box2::after{content:"";width:14px;height:8px;border:solid #fff;border-width:0 0 4px 4px;transform:rotate(-45deg) translate(1px,-2px)}
+.todo li.mum button{border-color:var(--teal);box-shadow:0 4px 0 var(--teal-deep)}
+.bigq{font-family:var(--display);color:var(--wax);font-size:clamp(1.4rem,4.4vw,1.9rem);margin:14px 0 2px;text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+.inst{text-align:center;font-weight:700;font-size:1.1rem;color:var(--muted);margin:0 0 8px}
+.cand{cursor:pointer}
+.cand .vis{stroke:#f2c75c;stroke-width:5;stroke-dasharray:10 6;fill:none}
+.cand .hitp{stroke:transparent;stroke-width:44;fill:none}
+.cand.no .vis{stroke:#8a7a62;opacity:.45}
+.cand.ring .vis{stroke:#16A08F;stroke-width:7}
+.cand.yes .vis{stroke:#16A08F;stroke-dasharray:none;stroke-width:6}
+.grown{margin-top:24px;padding-top:12px;border-top:2px dashed rgba(244,234,214,.25);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;opacity:.85}
+.grown button{background:transparent;border:2px solid rgba(244,234,214,.5);border-radius:999px;padding:6px 14px;min-height:44px;cursor:pointer;font-size:.95rem}
+
+/* ---- Sun compass: sky, globe, island, beach and sea ---- */
+.sw>svg{max-height:62vh}
+@media (orientation:landscape){.sw>svg{max-height:50vh}}
+svg .drop{fill:transparent}
+.readout2{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:10px;background:#fff;border:2px solid var(--parch-2);border-radius:14px;padding:8px 14px;color:var(--ink);min-height:66px}
+.readout2 b{font-family:var(--display);font-size:clamp(1.15rem,3.6vw,1.45rem);color:var(--wax);text-align:center;line-height:1.2}
+.readout2 svg{width:46px;height:46px;flex:none}
+.ticks{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px;list-style:none;padding:0}
+.ticks li{background:#fff;border:2px solid var(--parch-3);color:var(--muted);border-radius:999px;padding:3px 12px;font-weight:700;font-size:.95rem}
+.ticks li.on{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.seq{display:grid;gap:8px;grid-template-columns:repeat(var(--n),minmax(0,1fr));margin-bottom:12px}
+.seq .drop{background:#fff;border:3px dashed var(--parch-3);border-radius:14px;min-height:108px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:700;color:var(--ink);font-size:.95rem;padding:4px;cursor:pointer}
+.seq .drop .n{font-family:var(--display);font-size:1.6rem;color:var(--parch-3)}
+.seq .drop.cando{border-color:var(--glow)}
+.seq .drop.over{border-color:var(--teal);background:#e9f7f5}
+.seq .drop.filled{border:3px solid var(--ok);background:var(--ok-bg)}
+.seq .drop svg{width:100%;max-width:96px;height:auto}
+.seqhead{display:flex;justify-content:space-between;font-weight:700;color:var(--muted);font-size:1rem;margin:0 4px 4px}
+.chip.sky{padding:4px 6px 4px;flex-direction:column;gap:0;font-size:1rem}
+.chip.sky svg{width:88px;height:66px}
+.turnrow .btn{display:inline-flex;align-items:center;gap:8px}
+.turnrow .btn svg{width:30px;height:30px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choices .tile svg{width:120px;height:90px}
+svg .ed{cursor:pointer}
+svg .ed circle.ring{fill:rgba(255,255,255,.18);stroke:#fff;stroke-width:3;stroke-dasharray:7 5}
+svg .ed text{pointer-events:none}
+svg .ed.tappable circle.ring{fill:rgba(242,199,92,.3);stroke:#f2c75c;stroke-width:4}
+svg .ed.no{opacity:.35}
+svg .ed.yes circle.ring,svg .ed.ring circle.ring{fill:rgba(22,160,143,.5);stroke:#16A08F;stroke-width:5;stroke-dasharray:none}
+svg .sc{cursor:pointer}
+svg .sc .vis{fill:rgba(42,33,24,.12);stroke:#fff;stroke-width:3;stroke-dasharray:8 6}
+svg .sc .hitp{fill:transparent;stroke:transparent;stroke-width:30}
+svg .sc.tappable .vis{stroke:#f2c75c;stroke-width:4}
+svg .sc.no{opacity:.3}
+svg .sc.yes .vis,svg .sc.ring .vis{fill:rgba(42,33,24,.6);stroke:#16A08F;stroke-width:4;stroke-dasharray:none}
+.hidden{opacity:0;transition:opacity .6s}
+.shown{opacity:1!important;transition:opacity .6s}
+.glowpulse{animation:gp 1.4s ease-in-out infinite}
+@keyframes gp{50%{opacity:.35}}
+.bobship{animation:bobs 3s ease-in-out infinite}
+@keyframes bobs{50%{transform:translateY(-2px)}}
+.letter{font-family:var(--display);font-weight:700}
+.letterbox{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.chip.let{font-family:var(--display);font-size:1.6rem;min-width:64px;justify-content:center}
+.wbox{background:#fff;border:2px solid var(--parch-2);border-radius:12px;padding:10px 14px;margin-top:12px;color:var(--ink)}
+.wbox label{font-weight:700;color:var(--wax);display:block}
+.wbox small{color:var(--muted)}
+.letterpaper{background:#fffaf0;border:3px double var(--rope);border-radius:14px;padding:12px 16px;margin-top:10px;color:var(--ink)}
+.letterpaper p{margin:0 0 6px;font-size:1.2rem}
+.letterpaper .sig{font-family:var(--display);color:var(--wax);font-size:1.3rem}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>Captain Hale’s Sun Compass</h1></div>
+    <div class="status">
+      <ol class="pips" id="pips" aria-label="Parts"></ol>
+      <button class="toggle" id="easy" aria-pressed="false"><span class="box"></span>Calm seas (easier)</button>
+    </div>
+  </header>
+  <main id="main"></main>
+  <footer class="grown">
+    <span>Your place is saved after each part. You can stop any time.</span>
+    <button id="home">Contents</button>
+    <button id="reset">Start again</button>
+  </footer>
+</div>
+<script>
+'use strict';
+const G=window.GR||{player:()=>'unknown',key:k=>k,start(){},part(){},partDone(){},finish(){},ask(){return {miss(){},hint(){},done(){},giveUp(){},missed:()=>0};},write(){}};
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const GAME='sun-compass';
+const RM=(()=>{try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}})();
+const main=$('#main');
+let runId=0;
+const sleep=ms=>{const r=runId;return new Promise(res=>setTimeout(()=>{if(r===runId)res();},ms));};
+function toTop(){try{window.scrollTo({top:0,behavior:'auto'});}catch(e){window.scrollTo(0,0);}}
+
+/* ---------- saved progress, separate for each girl ---------- */
+const KEY=G.key('sun-compass-v1');
+function blank(){return {done:[],easy:false,ticks:[],write:''};}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Array.isArray(v.done))return Object.assign(blank(),v);}catch(e){}return blank();}
+let S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ================= maths and colour helpers ================= */
+const D2R=Math.PI/180;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,k)=>a+(b-a)*k;
+const f1=v=>(+v).toFixed(1);
+const norm=a=>((a%360)+360)%360;
+const sameDir=(a,b)=>norm(a-b)<1||norm(a-b)>359;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+/* a point at screen angle a (degrees, anticlockwise from the right) */
+const PT=(cx,cy,rx,a,ry)=>[cx+rx*Math.cos(a*D2R),cy-(ry==null?rx:ry)*Math.sin(a*D2R)];
+function hex(h){return [1,3,5].map(i=>parseInt(h.slice(i,i+2),16));}
+function mix(a,b,k){k=clamp(k,0,1);const A=hex(a),B=hex(b);return '#'+A.map((v,i)=>Math.round(lerp(v,B[i],k)).toString(16).padStart(2,'0')).join('');}
+/* sky colours from the height of the Sun (s: -1 deep night to 1 high) */
+function skyCols(s){
+  if(s<-0.25)return ['#0b1630','#1a2a52'];
+  if(s<0){const k=(s+0.25)/0.25;return [mix('#0b1630','#3b4a86',k),mix('#1a2a52','#f2a26e',k)];}
+  if(s<0.3){const k=s/0.3;return [mix('#3b4a86','#5aa6e0',k),mix('#f2a26e','#c4e6f8',k)];}
+  return ['#5aa6e0','#c4e6f8'];
+}
+function setA(sel,k,v){const e=typeof sel==='string'?$(sel):sel;if(e)e.setAttribute(k,v);}
+function svgPoint(svg,e){const m=svg.getScreenCTM();if(!m)return null;const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(m.inverse());}
+function tween(ms,fn){return new Promise(res=>{if(RM||!ms){fn(1);res();return;}const r=runId,t0=performance.now();const st=t=>{if(r!==runId)return;const k=Math.min(1,(t-t0)/ms);fn(k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2);if(k<1)requestAnimationFrame(st);else res();};requestAnimationFrame(st);});}
+/* drag on an svg element: calls move(point) while a finger is down */
+function dragOn(el,svg,move,up){
+  let on=false,live=true;el.style.touchAction='none';
+  el.addEventListener('pointerdown',e=>{if(!live)return;on=true;try{el.setPointerCapture(e.pointerId);}catch(_){}const p=svgPoint(svg,e);if(p)move(p,true);e.preventDefault();});
+  el.addEventListener('pointermove',e=>{if(!on)return;const p=svgPoint(svg,e);if(p)move(p,false);});
+  const stop=()=>{if(on){on=false;if(up)up();}};
+  el.addEventListener('pointerup',stop);el.addEventListener('pointercancel',stop);
+  return {off(){live=false;on=false;el.style.touchAction='';}};
+}
+
+/* ================= pictures ================= */
+const NUTMEG='<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 15L9 3l9 8zM33 15L31 3l-9 8z" fill="#e08a3c"/><path d="M10 13l1-6 4 4zM30 13l-1-6-4 4z" fill="#f6c7a0"/><circle cx="20" cy="22" r="14" fill="#e08a3c"/><path d="M14 12q2 3 0 6M20 10v6M26 12q-2 3 0 6" stroke="#b35f1d" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="14.5" cy="22" rx="2.2" ry="3" fill="#1d1a14"/><ellipse cx="25.5" cy="22" rx="2.2" ry="3" fill="#1d1a14"/><circle cx="15.2" cy="21" r=".8" fill="#fff"/><circle cx="26.2" cy="21" r=".8" fill="#fff"/><path d="M18.6 27h2.8l-1.4 1.8z" fill="#d6577a"/><path d="M20 28.8v1.2M20 30q-2.2 1.8-4 .2M20 30q2.2 1.8 4 .2" stroke="#1d1a14" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M4 25l8 1M4 29l8-1M36 25l-8 1M36 29l-8-1" stroke="#fff" stroke-width="1" stroke-linecap="round"/></svg>';
+const SUNG=(x,y,r,rays)=>`<g transform="translate(${f1(x)} ${f1(y)})"><circle r="${r*1.7}" fill="#ffe08a" opacity=".3"/>${rays?`<g stroke="#ffc93c" stroke-width="${Math.max(2,r/6)}" stroke-linecap="round">${[0,45,90,135,180,225,270,315].map(a=>{const [x1,y1]=PT(0,0,r*1.25,a),[x2,y2]=PT(0,0,r*1.6,a);return `<path d="M${f1(x1)} ${f1(y1)}L${f1(x2)} ${f1(y2)}"/>`;}).join('')}</g>`:''}<circle r="${r}" fill="#ffc93c" stroke="#f2a51f" stroke-width="2"/></g>`;
+const TURNL='<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M22 22A9 9 0 1 1 22 8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M17 3l6 5-7 3z" fill="currentColor"/></svg>';
+const TURNR='<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M8 22A9 9 0 1 0 8 8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M13 3l-6 5 7 3z" fill="currentColor"/></svg>';
+const ARROWDEF=(id,col)=>`<marker id="${id}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto"><path d="M0 0L10 5L0 10z" fill="${col}"/></marker>`;
+
+/* a little sky picture for tiles and chips (t: time of day, as in the harbour) */
+function miniSky(t,w,h){
+  w=w||96;h=h||72;const s=Math.sin(Math.PI*t);const [top,hor]=skyCols(s);const id='m'+Math.random().toString(36).slice(2,8);
+  const hy=h*0.7,x=w/2+w*0.42*Math.cos(Math.PI*t),y=hy-h*0.55*Math.sin(Math.PI*t);
+  const glow=clamp(1-Math.abs(s+0.03)/0.22,0,1);
+  const stars=clamp(-s*5,0,1);
+  return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset="1" stop-color="${hor}"/></linearGradient><radialGradient id="${id}g"><stop offset="0" stop-color="#ffd08a" stop-opacity=".95"/><stop offset="1" stop-color="#f59a6a" stop-opacity="0"/></radialGradient><clipPath id="${id}c"><rect width="${w}" height="${hy}"/></clipPath></defs>
+  <rect width="${w}" height="${h}" rx="8" fill="url(#${id})"/>
+  <g fill="#fff" opacity="${stars.toFixed(2)}"><circle cx="${w*.2}" cy="${h*.15}" r="1.3"/><circle cx="${w*.5}" cy="${h*.1}" r="1.1"/><circle cx="${w*.75}" cy="${h*.22}" r="1.3"/><circle cx="${w*.35}" cy="${h*.3}" r="1"/></g>
+  <ellipse cx="${f1(clamp(x,6,w-6))}" cy="${hy}" rx="${w*.42}" ry="${h*.3}" fill="url(#${id}g)" opacity="${glow.toFixed(2)}"/>
+  ${s>0?`<g clip-path="url(#${id}c)"><circle cx="${f1(x)}" cy="${f1(y)}" r="${h*.13}" fill="#ffc93c"/></g>`:''}
+  <rect y="${hy}" width="${w}" height="${h-hy}" fill="${mix('#0e2240','#2f78ad',clamp((s+0.1)/0.35,0,1))}"/>
+  <rect width="${w}" height="${h}" rx="8" fill="none" stroke="rgba(0,0,0,.15)"/></svg>`;
+}
+
+/* ================= scene 1: the harbour, looking out to sea ================= */
+const HZ=250;
+const sunXY=t=>[300+250*Math.cos(Math.PI*t),HZ-190*Math.sin(Math.PI*t)];
+function harbourSVG(o){
+  o=o||{};
+  const stars=[[40,30],[120,70],[200,24],[260,90],[330,40],[410,80],[470,28],[540,60],[90,140],[380,150],[170,170],[500,130],[300,120]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="${(1+((x*7+y)%3)*0.4).toFixed(1)}"/>`).join('');
+  const kid=o.kid?`<g id="hs-kid">
+     <path d="M262 340q2-30 38-32t38 32z" fill="#16A08F"/>
+     <circle cx="300" cy="294" r="17" fill="#6b4a2b"/><path d="M285 300q15 10 30 0" stroke="#5a3d22" stroke-width="3" fill="none"/>
+     <path id="hs-arest" d="M332 318l8 22" stroke="#e8c9a6" stroke-width="9" stroke-linecap="round"/>
+     <path d="M268 318l-8 22" stroke="#e8c9a6" stroke-width="9" stroke-linecap="round"/>
+     <g id="hs-arm" class="hidden"><path d="M332 316L382 300" stroke="#e8c9a6" stroke-width="9" stroke-linecap="round"/><circle cx="390" cy="297" r="12" fill="#16A08F" stroke="#fff" stroke-width="2.5"/><text x="390" y="303" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">R</text></g>
+     <circle class="drop" data-t="sun" cx="550" cy="232" r="46"/>
+   </g>`:'';
+  return `<svg id="hs" viewBox="0 0 600 340" role="img" aria-label="Captain Hale's harbour, looking out to sea">
+  <defs>
+    <linearGradient id="hs-g" x1="0" y1="0" x2="0" y2="1"><stop id="hs-top" offset="0" stop-color="#0b1630"/><stop id="hs-hor" offset="1" stop-color="#1a2a52"/></linearGradient>
+    <radialGradient id="hs-glowg"><stop offset="0" stop-color="#ffd08a" stop-opacity=".95"/><stop offset=".5" stop-color="#f59a6a" stop-opacity=".45"/><stop offset="1" stop-color="#f59a6a" stop-opacity="0"/></radialGradient>
+    <clipPath id="hs-clip"><rect width="600" height="${HZ}"/></clipPath>
+  </defs>
+  <rect width="600" height="${HZ}" fill="url(#hs-g)"/>
+  <g id="hs-stars" fill="#fff">${stars}</g>
+  <ellipse id="hs-glow" cx="550" cy="${HZ}" rx="240" ry="130" fill="url(#hs-glowg)" opacity="0"/>
+  <path id="hs-path" d="M50 ${HZ}A250 190 0 0 1 550 ${HZ}" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2.5" stroke-dasharray="6 9"/>
+  <g clip-path="url(#hs-clip)"><g id="hs-sun"><circle r="44" fill="#ffe08a" opacity=".3"/><circle r="25" fill="#ffc93c" stroke="#f2a51f" stroke-width="2"/></g></g>
+  <rect id="hs-sea" y="${HZ}" width="600" height="${340-HZ}" fill="#0e2240"/>
+  <g id="hs-refl" opacity="0" fill="#ffd27a"><ellipse cx="0" cy="${HZ+8}" rx="26" ry="4"/><ellipse cx="0" cy="${HZ+20}" rx="18" ry="3"/><ellipse cx="0" cy="${HZ+32}" rx="11" ry="2.5"/></g>
+  <g stroke="rgba(255,255,255,.18)" stroke-width="2" fill="none" stroke-linecap="round"><path d="M40 285q10-5 20 0M150 300q10-5 20 0M470 292q10-5 20 0M520 318q10-5 20 0M90 322q10-5 20 0"/></g>
+  <g id="hs-land" fill="#17233a">
+    <path d="M120 ${HZ}q30-46 70-48t70 30q16 8 22 18z"/>
+    <path d="M370 ${HZ}q20-34 50-36t52 36z"/>
+    <rect x="428" y="176" width="14" height="40"/><path d="M424 176h22l-11-14z"/>
+    <path d="M196 ${HZ-2}l0-52M196 ${HZ-46}l26 30h-26zM196 ${HZ-40}l-20 24h20z" stroke="#17233a" stroke-width="3"/>
+    <path d="M168 ${HZ-2}h56l-8 12h-40z"/>
+  </g>
+  <rect id="hs-lamp" x="430" y="180" width="10" height="8" fill="#ffd27a" opacity="0"/>
+  <path d="M0 ${HZ}H600" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>
+  <g id="hs-hz" class="hidden"><path d="M0 ${HZ}H600" stroke="#f2c75c" stroke-width="4" stroke-dasharray="10 7"/><text x="300" y="${HZ-10}" text-anchor="middle" font-size="22" font-weight="700" fill="#fff" stroke="#0b1630" stroke-width="5" paint-order="stroke">horizon</text></g>
+  <g font-weight="700" text-anchor="middle" fill="#fff" stroke="#0b1630" stroke-width="5" paint-order="stroke">
+    <g id="hs-e"><text class="letter" x="566" y="282" font-size="30">E</text><text x="566" y="302" font-size="15">east</text></g>
+    <g id="hs-w"><text class="letter" x="34" y="282" font-size="30">W</text><text x="34" y="302" font-size="15">west</text></g>
+    <g id="hs-n" class="hidden"><text class="letter" x="300" y="${HZ+28}" font-size="34" fill="#f2c75c">N</text></g>
+  </g>
+  <g id="hs-s" class="hidden"><rect x="196" y="2" width="208" height="34" rx="17" fill="#fff" opacity=".92"/><text x="300" y="26" text-anchor="middle" font-size="17" font-weight="700" fill="#2a2118">South is behind you</text></g>
+  ${kid}
+</svg>`;
+}
+function setSky(t){
+  const s=Math.sin(Math.PI*t);const [x,y]=sunXY(t);const [top,hor]=skyCols(s);
+  setA('#hs-top','stop-color',top);setA('#hs-hor','stop-color',hor);
+  setA('#hs-sun','transform',`translate(${f1(x)} ${f1(y)})`);
+  setA('#hs-glow','cx',f1(clamp(x,30,570)));setA('#hs-glow','opacity',clamp(1-Math.abs(s+0.03)/0.22,0,1).toFixed(2));
+  setA('#hs-stars','opacity',clamp(-s*5,0,1).toFixed(2));
+  const k=clamp((s+0.1)/0.35,0,1);
+  setA('#hs-land','fill',mix('#17233a','#3f6b45',k));setA('#hs-sea','fill',mix('#0e2240','#2f78ad',k));
+  setA('#hs-refl','opacity',(s>0?clamp(s*3,0,0.85):0).toFixed(2));setA('#hs-refl','transform',`translate(${f1(x)} 0)`);
+  setA('#hs-lamp','opacity',s<0.02?'1':'0');
+}
+function dayWord(t){
+  if(t<-0.06)return {k:'night0',w:'Night. Morning is coming.'};
+  if(t<-0.008)return {k:'glow',w:'First light: the sky begins to glow.'};
+  if(t<0.06)return {k:'rise',w:'Sunrise! A golden rim, then the whole Sun.'};
+  if(t<0.42)return {k:'morning',w:'Morning: the Sun climbs higher.'};
+  if(t<0.58)return {k:'noon',w:'Noon: the middle of the day. The Sun is highest.'};
+  if(t<0.94)return {k:'afternoon',w:'Afternoon: the Sun goes lower.'};
+  if(t<1.008)return {k:'set',w:'Sunset! The Sun goes down.'};
+  if(t<1.07)return {k:'twi',w:'Twilight: a soft glow is left after sunset.'};
+  return {k:'night1',w:'Night.'};
+}
+
+/* a dawn or dusk horizon, with east and west on either side */
+function horizonSVG(eastRight,evening){
+  const t=evening?1.03:-0.03;const s=Math.sin(Math.PI*t);const [top,hor]=skyCols(s);
+  const L=eastRight?['W','west']:['E','east'],R=eastRight?['E','east']:['W','west'],M=eastRight?'N':'S';
+  const glowX=(eastRight!==!!evening)?540:60;
+  return `<svg id="hz" viewBox="0 0 600 340" role="img" aria-label="The sky at the edge of the sea">
+  <defs><linearGradient id="hz-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset="1" stop-color="${hor}"/></linearGradient>
+  <radialGradient id="hz-glowg"><stop offset="0" stop-color="#ffd08a" stop-opacity=".95"/><stop offset="1" stop-color="#f59a6a" stop-opacity="0"/></radialGradient><clipPath id="hz-clip"><rect width="600" height="${HZ}"/></clipPath></defs>
+  <rect width="600" height="${HZ}" fill="url(#hz-g)"/>
+  <ellipse id="hz-glow" cx="${glowX}" cy="${HZ}" rx="230" ry="120" fill="url(#hz-glowg)" opacity="0"/>
+  <g fill="#fff" opacity=".7"><circle cx="300" cy="40" r="1.6"/><circle cx="180" cy="70" r="1.3"/><circle cx="420" cy="60" r="1.4"/><circle cx="250" cy="120" r="1.1"/></g>
+  <g clip-path="url(#hz-clip)" id="hz-sun"></g>
+  <rect y="${HZ}" width="600" height="${340-HZ}" fill="#1b3c63"/>
+  <g stroke="rgba(255,255,255,.18)" stroke-width="2" fill="none" stroke-linecap="round"><path d="M80 285q10-5 20 0M250 305q10-5 20 0M430 292q10-5 20 0"/></g>
+  <path d="M0 ${HZ}H600" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
+  <g font-weight="700" text-anchor="middle" fill="#fff" stroke="#0b1630" stroke-width="5" paint-order="stroke">
+    <text class="letter" x="40" y="286" font-size="32">${L[0]}</text><text x="40" y="308" font-size="16">${L[1]}</text>
+    <text class="letter" x="560" y="286" font-size="32">${R[0]}</text><text x="560" y="308" font-size="16">${R[1]}</text>
+    <text class="letter" x="300" y="290" font-size="30" fill="#d6c193">${M}</text>
+  </g>
+  <circle class="drop" data-t="L" cx="120" cy="${HZ-14}" r="48"/>
+  <circle class="drop" data-t="R" cx="480" cy="${HZ-14}" r="48"/>
+</svg>`;
+}
+
+/* ================= scene 2: Wren's candle and globe, seen from the top ================= */
+const GT={cx:300,cy:182,R:98};
+function globeTopSVG(){
+  const {cx,cy,R}=GT;
+  const land=`<path d="M30 -60q20-20 45-8t10 30q-10 18-30 10t-25-32z" /><path d="M-70 -30q10-30 40-26t20 30q-6 24-30 24t-30-28z"/><path d="M-20 40q20-6 40 6t14 30q-20 14-40 0t-14-36z"/><path d="M55 20q16-4 22 10t-10 20q-18 0-12-30z"/><path d="M60 -6q12 -4 20 4t-2 14q-16 2-18-18z"/>`;
+  const hale=`<g transform="translate(${R} 0) scale(1.5)"><path d="M0 0H15" stroke="#1f3b66" stroke-width="6" stroke-linecap="round"/><path d="M8 0l6-8M8 0l6 8" stroke="#1f3b66" stroke-width="3" stroke-linecap="round"/><circle cx="20" cy="0" r="5.5" fill="#e8c9a6"/><path d="M24 -8q5 8 0 16l3 0q4-8 0-16z" fill="#1d1a14"/></g>`;
+  return `<svg id="gt" viewBox="0 0 600 340" role="img" aria-label="Mistress Wren's globe and candle, seen from above">
+  <defs><radialGradient id="gt-cl"><stop offset="0" stop-color="#ffe7a3" stop-opacity=".55"/><stop offset="1" stop-color="#ffe7a3" stop-opacity="0"/></radialGradient>
+   <linearGradient id="gt-ig" x1="0" y1="0" x2="0" y2="1"><stop id="gt-top" offset="0" stop-color="#0b1630"/><stop id="gt-hor" offset="1" stop-color="#1a2a52"/></linearGradient>
+   <clipPath id="gt-iclip"><rect x="14" y="14" width="190" height="86"/></clipPath>
+   ${ARROWDEF('gt-ar','#f2c75c')}</defs>
+  <rect width="600" height="340" fill="#1a1626"/>
+  <rect y="290" width="600" height="50" fill="#3a2a1c"/><path d="M0 290H600" stroke="#5a4330" stroke-width="3"/>
+  <polygon points="520,170 ${cx},${cy-R} ${cx},${cy+R}" fill="#ffe7a3" opacity=".12"/>
+  <circle cx="530" cy="168" r="80" fill="url(#gt-cl)"/>
+  <rect x="514" y="180" width="32" height="74" rx="4" fill="#f4ead6" stroke="#cbb88f" stroke-width="2"/><path d="M530 180v-8" stroke="#2a2118" stroke-width="2"/>
+  <path d="M530 146q12 14 0 26q-12-12 0-26z" fill="#ffc93c"/><path d="M530 156q5 7 0 13q-5-6 0-13z" fill="#fff6c8"/>
+  <text x="530" y="276" text-anchor="middle" font-size="16" font-weight="700" fill="#f4ead6">the Sun</text>
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="#3f7fae"/>
+  <g id="gt-spin" transform="translate(${cx} ${cy})"><g fill="#d8c79a" stroke="#8a7a62" stroke-width="1.5">${land}</g>${hale}</g>
+  <path d="M${cx} ${cy-R}A${R} ${R} 0 0 0 ${cx} ${cy+R}Z" fill="#05070f" opacity=".6" pointer-events="none"/>
+  <path d="M${cx} ${cy-R}V${cy+R}" stroke="#ffe7a3" stroke-opacity=".4" stroke-width="2" stroke-dasharray="4 5"/>
+  <text x="${cx-R+14}" y="${cy+R+28}" font-size="16" font-weight="700" fill="#9fb0c4">night side</text>
+  <text x="${cx+R-14}" y="${cy+R+28}" text-anchor="end" font-size="16" font-weight="700" fill="#ffe7a3">day side</text>
+  <path d="M${f1(PT(cx,cy,R+22,60)[0])} ${f1(PT(cx,cy,R+22,60)[1])}A${R+22} ${R+22} 0 0 0 ${f1(PT(cx,cy,R+22,125)[0])} ${f1(PT(cx,cy,R+22,125)[1])}" fill="none" stroke="#f2c75c" stroke-width="4" marker-end="url(#gt-ar)"/>
+  <g>
+    <rect x="12" y="12" width="194" height="124" rx="10" fill="#0b1630" stroke="#b0864f" stroke-width="3"/>
+    <rect x="14" y="14" width="190" height="86" fill="url(#gt-ig)"/>
+    <g clip-path="url(#gt-iclip)"><circle id="gt-isun" cx="0" cy="0" r="12" fill="#ffc93c"/></g>
+    <rect x="14" y="100" width="190" height="16" fill="#1b3c63"/>
+    <text x="109" y="131" text-anchor="middle" font-size="14" font-weight="700" fill="#f4ead6">What Hale sees</text>
+    <g font-size="14" font-weight="700" fill="#fff" stroke="#0b1630" stroke-width="3" paint-order="stroke"><text x="24" y="113">W</text><text x="184" y="113">E</text></g>
+  </g>
+  <circle id="gt-hit" cx="${cx}" cy="${cy}" r="${R+40}" fill="transparent" style="cursor:grab;touch-action:none"/>
+</svg>`;
+}
+const thN=th=>{let a=norm(th+180)-180;return a;};
+function setGlobe(th){
+  setA('#gt-spin','transform',`translate(${GT.cx} ${GT.cy}) rotate(${f1(-th)})`);
+  const a=thN(th),alt=90-Math.abs(a),s=Math.sin(alt*D2R);
+  const [top,hor]=skyCols(s);setA('#gt-top','stop-color',top);setA('#gt-hor','stop-color',hor);
+  const x=109-clamp(a/90,-1.3,1.3)*80,y=100-s*72;
+  setA('#gt-isun','cx',f1(x));setA('#gt-isun','cy',f1(y));
+}
+function axisSVG(){
+  return `<svg viewBox="0 0 600 300" role="img" aria-label="A globe with a dashed line through it from top to bottom">
+  <rect width="600" height="300" fill="#1a1626"/>
+  <circle cx="300" cy="150" r="110" fill="#3f7fae"/>
+  <g fill="#d8c79a" stroke="#8a7a62" stroke-width="1.5"><path d="M250 90q30-20 60 0t10 40q-30 20-60 0t-10-40z"/><path d="M330 170q30 0 40 20t-20 30q-30 0-30-20t10-30z"/></g>
+  <path d="M190 150h220" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
+  <path d="M300 20V280" stroke="#f2c75c" stroke-width="5" stroke-dasharray="12 8"/>
+  <path d="M250 32q50-20 100 0" fill="none" stroke="#f4ead6" stroke-width="3"/><path d="M350 32l-10-8 2 12z" fill="#f4ead6"/>
+  <text x="314" y="52" font-size="16" font-weight="700" fill="#f4ead6">spins</text>
+</svg>`;
+}
+
+/* ================= scene 3: the island, seen from above ================= */
+const IS={cx:300,cy:178,ex:262,ey:138};
+const edge=a=>PT(IS.cx,IS.cy,IS.ex,a,IS.ey);
+function islandSVG(){
+  const {cx,cy}=IS;
+  const palm=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})">${[0,60,120,180,240,300].map(a=>`<ellipse cx="0" cy="-16" rx="7" ry="18" fill="#3f9a4a" transform="rotate(${a})"/>`).join('')}<circle r="6" fill="#7a5a3a"/></g>`;
+  return `<svg id="isl" viewBox="0 0 600 356" role="img" aria-label="An island seen from high above">
+  <defs>${ARROWDEF('is-ar','#f2c75c')}</defs>
+  <rect width="600" height="356" fill="#2f78ad"/>
+  <g stroke="rgba(255,255,255,.22)" stroke-width="2.5" fill="none" stroke-linecap="round"><path d="M40 40q12-6 24 0M120 300q12-6 24 0M520 60q12-6 24 0M470 320q12-6 24 0M60 200q12-6 24 0M540 210q12-6 24 0M300 20q12-6 24 0M250 336q12-6 24 0"/></g>
+  <ellipse cx="${cx}" cy="${cy}" rx="200" ry="128" fill="#f0dca6" stroke="#fff" stroke-opacity=".6" stroke-width="6"/>
+  <ellipse cx="${cx}" cy="${cy}" rx="186" ry="116" fill="#e9d29a"/>
+  ${palm(170,120,1)}${palm(430,240,.9)}${palm(440,110,.75)}
+  <g fill="#c9b27a"><circle cx="230" cy="250" r="4"/><circle cx="380" cy="100" r="3"/><circle cx="210" cy="190" r="3"/></g>
+  <g id="is-sun"></g><g id="is-lbl"></g><g id="is-fig"></g><g id="is-x"></g>
+</svg>`;
+}
+/* a person seen from above, facing screen angle psi. mode: 'R' right arm out, 'L' left arm out */
+function figSVG(psi,mode,face,ghost){
+  const {cx,cy}=IS;const P=(r,a)=>PT(cx,cy,r,a);
+  const arm=(a,col,lab)=>{const [x1,y1]=P(24,a),[x2,y2]=P(68,a),[mx,my]=P(80,a);return `<path d="M${f1(x1)} ${f1(y1)}L${f1(x2)} ${f1(y2)}" stroke="#e8c9a6" stroke-width="11" stroke-linecap="round"/><circle cx="${f1(mx)}" cy="${f1(my)}" r="14" fill="${col}" stroke="#fff" stroke-width="3"/><text x="${f1(mx)}" y="${f1(my+6)}" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">${lab}</text>`;};
+  const hand=(a,col,lab)=>{const [mx,my]=P(30,a+(a===psi-90?28:-28));return `<circle cx="${f1(mx)}" cy="${f1(my)}" r="10" fill="${col}" stroke="#fff" stroke-width="2"/><text x="${f1(mx)}" y="${f1(my+5)}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">${lab}</text>`;};
+  const [n1x,n1y]=P(24,psi),[n2x,n2y]=P(13,psi+28),[n3x,n3y]=P(13,psi-28);
+  const [f1x,f1y]=P(34,psi),[f2x,f2y]=P(118,psi);
+  const R=mode==='L'?hand(psi-90,'#16A08F','R'):arm(psi-90,'#16A08F','R');
+  const L=mode==='L'?arm(psi+90,'#e08a3c','L'):hand(psi+90,'#e08a3c','L');
+  return `<g ${ghost?'opacity=".45"':''}>${face?`<path d="M${f1(f1x)} ${f1(f1y)}L${f1(f2x)} ${f1(f2y)}" stroke="#f2c75c" stroke-width="6" stroke-dasharray="10 7" marker-end="url(#is-ar)"/>`:''}
+   <ellipse cx="${cx}" cy="${cy}" rx="30" ry="15" fill="#16A08F" transform="rotate(${f1(90-psi)} ${cx} ${cy})"/>
+   ${R}${L}
+   <path d="M${f1(n1x)} ${f1(n1y)}L${f1(n2x)} ${f1(n2y)}L${f1(n3x)} ${f1(n3y)}Z" fill="#e8c9a6"/>
+   <circle cx="${cx}" cy="${cy}" r="15" fill="#6b4a2b"/>
+  </g>`;
+}
+function isSun(a,word){const [x,y]=PT(IS.cx,IS.cy,250,a,134);const side=Math.abs(Math.sin(a*D2R))>0.7;const lx=side?x+74:x,ly=side?y+7:y-40;
+  $('#is-sun').innerHTML=`${SUNG(x,y,22,true)}<text x="${f1(lx)}" y="${f1(ly)}" text-anchor="middle" font-size="19" font-weight="700" fill="#fff" stroke="#2a2118" stroke-width="5" paint-order="stroke">${word}</text>`;}
+function isLetter(a,L,cls){const [x,y]=edge(a);return `<g class="${cls||''}"><circle cx="${f1(x)}" cy="${f1(y)}" r="24" fill="#fff" stroke="#2a2118" stroke-width="3"/><text class="letter" x="${f1(x)}" y="${f1(y+10)}" text-anchor="middle" font-size="28" fill="#a5302a">${L}</text></g>`;}
+function edDrop(a,t){const [x,y]=edge(a);return `<circle cx="${f1(x)}" cy="${f1(y)}" r="26" fill="rgba(255,255,255,.35)" stroke="#fff" stroke-width="3" stroke-dasharray="7 5"/><circle class="drop" data-t="${t}" cx="${f1(x)}" cy="${f1(y)}" r="30"/><text id="ed-${t}" class="letter" x="${f1(x)}" y="${f1(y+10)}" text-anchor="middle" font-size="28" fill="#a5302a"></text>`;}
+function edTap(a,t){const [x,y]=edge(a);return `<g class="ed" data-t="${t}"><circle class="ring" cx="${f1(x)}" cy="${f1(y)}" r="30"/><text x="${f1(x)}" y="${f1(y+9)}" text-anchor="middle" font-size="26" font-weight="700" fill="#fff" stroke="#2a2118" stroke-width="4" paint-order="stroke">?</text></g>`;}
+/* the four directions around a facing direction (north at angle n) */
+const dirsFrom=n=>({N:norm(n),W:norm(n+90),S:norm(n+180),E:norm(n-90)});
+
+/* ================= scene 4: the flagpole on the beach, seen from above ================= */
+const BC={cx:300,cy:184,r:112};
+const RISE_AZ=116; /* sunrise is about east-south-east at home in late November */
+function beachSVG(o){
+  o=o||{};const {cx,cy,r}=BC;const rho=o.rho==null?90:o.rho;
+  let arc='';
+  if(o.arc){const pts=[];for(let i=0;i<=40;i++){const A=RISE_AZ-2*RISE_AZ*i/40;pts.push(PT(cx,cy,r,rho-A));}arc=`<path d="M${pts.map(p=>f1(p[0])+' '+f1(p[1])).join('L')}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="6 9" opacity=".8"/>`;}
+  const lt=(a,L)=>{const [x,y]=PT(cx,cy,o.lr||270,a,o.lry||152);return `<text class="letter" x="${f1(x)}" y="${f1(y+10)}" text-anchor="middle" font-size="28" fill="#fff" stroke="#6d5c44" stroke-width="5" paint-order="stroke">${L}</text>`;};
+  return `<svg id="bch" viewBox="0 0 600 356" role="img" aria-label="${o.deck?'The deck of the ship, seen from above':'A flagpole on the beach, seen from above'}">
+  ${o.deck?`<rect width="600" height="356" fill="#2b6f9e"/><g transform="translate(300 178)"><path d="M0 -175C130 -120 150 -20 140 160Q0 190 -140 160C-150 -20 -130 -120 0 -175Z" fill="#8a5a33"/><path d="M0 -160C115 -110 132 -20 124 148Q0 172 -124 148C-132 -20 -115 -110 0 -160Z" fill="#c8935c"/><g stroke="#a87442" stroke-width="2">${[-100,-70,-40,-10,20,50,80,110].map(x=>`<path d="M${x} -150V160"/>`).join('')}</g></g>`
+   :`<rect width="600" height="356" fill="#efd9a0"/><g fill="#e2c887"><ellipse cx="90" cy="60" rx="40" ry="12"/><ellipse cx="520" cy="300" rx="50" ry="14"/><ellipse cx="480" cy="70" rx="30" ry="9"/><ellipse cx="110" cy="290" rx="34" ry="10"/></g><g fill="#c9a76a"><circle cx="200" cy="80" r="4"/><circle cx="420" cy="290" r="3"/><circle cx="160" cy="250" r="3"/><circle cx="450" cy="150" r="4"/></g>`}
+  ${arc}
+  <path id="bs-sh" fill="#2a2118" opacity=".55"/>
+  <g id="bs-x"></g>
+  <circle cx="${cx}" cy="${cy}" r="11" fill="#6b4a2b" stroke="#3e2a16" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="4" fill="#a5302a"/>
+  <g id="bs-sun"></g>
+  ${o.letters?lt(rho,'N')+lt(rho-90,'E')+lt(rho+180,'S')+lt(rho+90,'W'):''}
+  ${o.clock?`<g transform="translate(16 16)"><rect width="128" height="44" rx="22" fill="#fff" stroke="#2a2118" stroke-width="2"/>${SUNG(24,22,9,true)}<text x="78" y="29" text-anchor="middle" font-size="19" font-weight="700" fill="#2a2118">${o.clock}</text></g>`:''}
+  ${o.hit?`<circle id="bs-hit" cx="${cx}" cy="${cy}" r="${r+40}" fill="transparent" style="touch-action:none;cursor:grab"/>`:''}
+</svg>`;
+}
+function shadowD(cx,cy,a,len,w){w=w||12;const [tx,ty]=PT(cx,cy,len,a),[b1x,b1y]=PT(cx,cy,w/2,a+90),[b2x,b2y]=PT(cx,cy,w/2,a-90),[t1x,t1y]=PT(tx,ty,w/3,a+90),[t2x,t2y]=PT(tx,ty,w/3,a-90);
+  return `M${f1(b1x)} ${f1(b1y)}L${f1(t1x)} ${f1(t1y)}L${f1(t2x)} ${f1(t2y)}L${f1(b2x)} ${f1(b2y)}Z`;}
+function setBeach(u,rho){
+  rho=rho==null?90:rho;const {cx,cy,r}=BC;
+  const A=RISE_AZ-2*RISE_AZ*u,alt=Math.max(5,72*Math.sin(Math.PI*u));
+  const sa=rho-A,len=clamp(90/Math.tan(alt*D2R),34,180);
+  const [x,y]=PT(cx,cy,r,sa);$('#bs-sun').innerHTML=SUNG(x,y,20,true);
+  setA('#bs-sh','d',shadowD(cx,cy,sa+180,len));
+}
+function beachWord(u){
+  if(u<0.3)return {k:'am',w:'Morning. The Sun is in the east, so the shadow points west.'};
+  if(u<0.43)return {k:'late',w:'The Sun moves, and the shadow turns.'};
+  if(u<=0.57)return {k:'noon',w:'Noon. The Sun is highest, in the north. The shadow is shortest, and points south.'};
+  if(u<0.7)return {k:'aft',w:'The Sun moves, and the shadow turns.'};
+  return {k:'pm',w:'Evening. The Sun is in the west, so the shadow points east.'};
+}
+function englandSVG(){
+  return `<svg viewBox="0 0 320 200" aria-hidden="true">
+  <rect width="320" height="200" rx="10" fill="#14243a"/>
+  ${SUNG(286,104,18,true)}
+  <circle cx="130" cy="100" r="82" fill="#3f7fae"/>
+  <path d="M48 100h164" stroke="#fff" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="130" y="96" text-anchor="middle" font-size="12" fill="#f4ead6">Equator</text>
+  <g transform="rotate(-38 130 100)"><path d="M212 100h18" stroke="#1f3b66" stroke-width="5" stroke-linecap="round"/><circle cx="234" cy="100" r="4.5" fill="#e8c9a6"/></g>
+  <path d="M195 47q-8-14-24-20" stroke="#2a2118" stroke-width="6" stroke-linecap="round" opacity=".6"/>
+  <g transform="rotate(38 130 100)"><path d="M212 100h18" stroke="#16A08F" stroke-width="5" stroke-linecap="round"/><circle cx="234" cy="100" r="4.5" fill="#e8c9a6"/></g>
+  <path d="M195 153q-8 14-24 20" stroke="#2a2118" stroke-width="6" stroke-linecap="round" opacity=".6"/>
+  <g font-size="13" font-weight="700" fill="#fff" stroke="#14243a" stroke-width="3" paint-order="stroke"><text x="8" y="18">England: noon shadow points north</text><text x="8" y="193">Home: noon shadow points south</text></g>
+</svg>`;
+}
+const SEASON={
+  winter:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#c9d4de"/><path d="M48 62V36M48 44l-12-12M48 40l12-12" stroke="#6b4a2b" stroke-width="4" stroke-linecap="round" fill="none"/><g fill="#fff"><circle cx="16" cy="14" r="2.5"/><circle cx="76" cy="18" r="2.5"/><circle cx="84" cy="38" r="2.5"/><circle cx="12" cy="36" r="2.5"/><circle cx="30" cy="22" r="2"/></g><path d="M0 60h96v12H0z" fill="#fff"/></svg>',
+  summer:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#bfe3f7"/><circle cx="72" cy="18" r="11" fill="#f6c430"/><path d="M36 62V38" stroke="#7a5a3a" stroke-width="5"/><g fill="#4f8f45"><circle cx="28" cy="32" r="11"/><circle cx="44" cy="30" r="11"/><circle cx="36" cy="20" r="10"/></g><path d="M0 62h96v10H0z" fill="#d9c25a"/></svg>',
+  spring:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#e3f0f8"/><path d="M48 62V40" stroke="#7a5a3a" stroke-width="4"/><g fill="#f2a6c0"><circle cx="40" cy="34" r="9"/><circle cx="56" cy="32" r="9"/><circle cx="48" cy="24" r="8"/></g><path d="M0 62h96v10H0z" fill="#8fc46a"/></svg>'
+};
+const ARROWPIC=(a,L)=>{const [x1,y1]=PT(42,36,22,a+180),[x2,y2]=PT(42,36,22,a),[h1x,h1y]=PT(x2,y2,12,a+150),[h2x,h2y]=PT(x2,y2,12,a-150);return `<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#fffaf0"/><path d="M${f1(x1)} ${f1(y1)}L${f1(x2)} ${f1(y2)}M${f1(h1x)} ${f1(h1y)}L${f1(x2)} ${f1(y2)}L${f1(h2x)} ${f1(h2y)}" stroke="#a5302a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text class="letter" x="80" y="64" text-anchor="middle" font-size="20" fill="#2a2118">${L}</text></svg>`;};
+
+/* ================= scene 5: Captain Hale's ship at sea, seen from above ================= */
+const SEA={cx:300,cy:182};
+function seaSVG(){
+  const {cx,cy}=SEA;
+  const wv=[];for(let x=-600;x<=1200;x+=110)for(let y=-360;y<=720;y+=80){const ox=((y/80)%2)*55;wv.push(`M${x+ox} ${y}q12-7 24 0`);}
+  return `<svg id="sea" viewBox="0 0 600 364" role="img" aria-label="Captain Hale's ship on the sea, seen from above">
+  <defs>${ARROWDEF('sea-ar','#f2c75c')}<clipPath id="sea-clip"><rect width="600" height="364"/></clipPath></defs>
+  <rect width="600" height="364" fill="#2b6f9e"/>
+  <g clip-path="url(#sea-clip)"><g id="sea-w" stroke="rgba(255,255,255,.25)" stroke-width="3" fill="none" stroke-linecap="round"><path d="${wv.join('')}"/></g></g>
+  <g id="sea-hb"></g>
+  <g id="sea-ghost"></g>
+  <g id="sea-ship" class="bobship"></g>
+  <path id="sea-sh" fill="#0b1a2c" opacity=".62"/>
+  <g id="sea-sun"></g>
+  <g id="sea-clock"></g>
+  <circle id="sea-hit" cx="${cx}" cy="${cy}" r="170" fill="transparent" style="touch-action:none;cursor:grab"/>
+</svg>`;
+}
+function shipG(h){
+  return `<g transform="translate(${SEA.cx} ${SEA.cy}) rotate(${f1(90-h)})">
+   <path d="M0 -20V-96" stroke="#3e2a16" stroke-width="3"/>
+   <path d="M0 -70C26 -46 28 0 25 46Q0 60 -25 46C-28 0 -26 -46 0 -70Z" fill="#7a4a26" stroke="#3e2a16" stroke-width="2"/>
+   <path d="M0 -60C20 -40 21 0 19 40Q0 50 -19 40C-21 0 -20 -40 0 -60Z" fill="#c8935c"/>
+   <g stroke="#a87442" stroke-width="1.5"><path d="M-10 -45V44M0 -58V48M10 -45V44"/></g>
+   <rect x="-40" y="-26" width="80" height="9" rx="4" fill="#f4ead6" stroke="#b9a77d" stroke-width="1.5"/>
+   <rect x="-30" y="16" width="60" height="7" rx="3" fill="#f4ead6" stroke="#b9a77d" stroke-width="1.5"/>
+   <circle cx="0" cy="0" r="7" fill="#3e2a16"/><circle cx="0" cy="34" r="6" fill="#a5302a"/>
+   <path d="M-6 -88h12" stroke="#f4ead6" stroke-width="3"/>
+  </g>`;
+}
+const NAMES8={0:'north',45:'north-east',90:'east',135:'south-east',180:'south',225:'south-west',270:'west',315:'north-west'};
+
+/* ================= the stage: one picture, one short line, one thing to do ================= */
+let STEP={n:0,of:0};
+let HELP=null,HELPN=0,HELPQ=[],HELPX=null;
+
+function stage(o){
+  toTop();untoast();
+  main.innerHTML=`<section class="panel"><div class="phead"><h2>${o.title}</h2><ol class="dots" id="dots" aria-label="Steps"></ol></div>
+    <div class="bubble"><span class="who">${NUTMEG}</span><p id="say"></p><button class="qbtn" id="help" aria-label="Help, please" disabled>?</button></div>
+    <p class="clue" id="clue" hidden></p>
+    <div class="sw" id="sw" ${o.scene?'':'hidden'}>${o.scene||'<svg></svg>'}<div class="ov" id="ov"></div><div class="toast" id="toast" hidden></div></div>
+    <div class="tray" id="tray"></div></section>`;
+  STEP={n:0,of:o.steps||0};dots();if(o.say)say(o.say);
+  $('#help').onclick=()=>{if(!HELP||HELPN>=HELP.length)return;HELPQ.forEach(q=>q&&q.hint());clue(`<b>${['Remember','Hint','Look'][Math.min(HELPN,2)]}:</b> ${HELP[HELPN]}`);if(HELPX)HELPX(HELPN);HELPN++;if(HELPN>=HELP.length)$('#help').disabled=true;};
+}
+function setScene(svg){const sw=$('#sw');const old=sw.querySelector(':scope>svg');const tmp=document.createElement('div');tmp.innerHTML=svg;old.replaceWith(tmp.firstElementChild);$('#ov').innerHTML='';}
+function dots(){const d=$('#dots');if(d)d.innerHTML=Array.from({length:STEP.of},(_,i)=>`<li class="${i<STEP.n?'on':''}"></li>`).join('');}
+function stepDone(){STEP.n++;dots();}
+function say(t){const s=$('#say');if(s)s.innerHTML=t;}
+function clue(t){const c=$('#clue');if(!c)return;if(!t){c.hidden=true;c.innerHTML='';return;}c.hidden=false;c.innerHTML=t;}
+let toastT=null;
+function toast(kind,t,ms){const el=$('#toast');if(!el)return;clearTimeout(toastT);el.className='toast '+kind;el.innerHTML=t;el.hidden=false;if(ms)toastT=setTimeout(()=>{el.hidden=true;},ms);}
+function untoast(){clearTimeout(toastT);const el=$('#toast');if(el)el.hidden=true;}
+function setHelp(levels,qs,extra){HELP=levels||null;HELPN=0;HELPQ=[].concat(qs||[]);HELPX=extra||null;clue(null);const b=$('#help');if(!b)return;b.disabled=!levels;if(S.easy&&levels&&levels.length>1){clue(`<b>Tip:</b> ${levels[0]}`);HELPN=1;}}
+async function yes(t,ms){toast('yes',t);await sleep(ms||1500);untoast();}
+function ask(o,suffix){return G.ask({item:o.item+(suffix||'')+(S.easy?'-calm':''),concept:o.concept,area:o.area||'SC'});}
+function tray(html){const t=$('#tray');if(t)t.innerHTML=html||'';}
+function press(label){tray(`<div class="row"><button class="btn" id="pr">${label}</button></div>`);return new Promise(res=>{$('#pr').onclick=()=>res();});}
+
+/* pick a picture */
+function pics(o){
+  return new Promise(res=>{
+    let opts=o.options.slice();
+    if(S.easy&&opts.length>2){const r=opts.find(x=>x.v===o.answer);const w=opts.filter(x=>x.v!==o.answer);opts=[r,w.find(x=>x.v===o.easyWrong)||w[0]];}
+    if(!o.keep)opts=shuffle(opts);
+    if(o.say)say(o.say);untoast();
+    tray(`<div class="tiles">${opts.map((op,i)=>`<button class="tile" data-i="${i}">${op.pic||''}<span>${op.label}</span></button>`).join('')}</div>`);
+    const q=ask(o);setHelp(o.help,q);
+    let locked=false;
+    $$('#tray .tile').forEach(b=>b.onclick=async()=>{
+      if(locked||b.disabled)return;const op=opts[+b.dataset.i];
+      if(op.v===o.answer){locked=true;q.done();b.classList.add('yes');$$('#tray .tile').forEach(x=>x.disabled=true);setHelp(null);if(o.onRight)o.onRight();await yes(o.yes,o.ms);stepDone();res();}
+      else{q.miss(op.label.replace(/<[^>]+>/g,''));b.classList.add('no');b.disabled=true;toast('hmm',o.miss?o.miss(op.v):'Not that one. Try again.');}
+    });
+  });
+}
+/* tap the right place on the picture */
+function tapScene(o){
+  return new Promise(res=>{
+    if(o.say)say(o.say);untoast();tray(o.tray||'');
+    const q=ask(o);setHelp(o.help,q,o.helpExtra);
+    let locked=false;const tried={};const els=$$(o.sel);
+    els.forEach(el=>{el.classList.add('tappable');el.addEventListener('click',async()=>{
+      if(locked)return;const k=el.dataset.t;
+      if(k===o.answer){locked=true;q.done();els.forEach(e=>e.classList.remove('tappable'));el.classList.add('yes');setHelp(null);if(o.onRight)await o.onRight(el);await yes(o.yes,o.ms);stepDone();res();}
+      else if(!tried[k]){tried[k]=1;q.miss(o.names?o.names[k]:k);el.classList.add('no');if(o.onMiss)o.onMiss(k);toast('hmm',o.miss(k));}
+    });});
+  });
+}
+/* drag things onto the picture. Tapping a thing and then a place works too. */
+function drag(o){
+  return new Promise(res=>{
+    if(o.say)say(o.say);untoast();
+    let chips=o.chips.slice();
+    if(S.easy&&o.easyDrop)chips=chips.filter(c=>!o.easyDrop.includes(c.v));
+    if(!o.keep)chips=shuffle(chips);
+    const inTray=chips.filter(c=>c.x==null),floats=chips.filter(c=>c.x!=null);
+    const chipHTML=c=>`<button class="chip ${c.cls||''} ${c.x!=null?'float':''}" data-v="${c.v}" ${c.x!=null?`style="left:${c.x}%;top:${c.y}%;translate:-50% -50%"`:''} aria-label="${c.aria||c.label||'drag me'}">${c.pic||''}${c.label?`<span>${c.label}</span>`:''}</button>`;
+    tray((o.trayHead||'')+(inTray.length?`<div class="chips">${inTray.map(chipHTML).join('')}</div>`:'<p style="text-align:center;margin:4px 0;font-weight:700;color:#6d5c44">Drag it on the picture.</p>'));
+    if(floats.length)$('#ov').insertAdjacentHTML('beforeend',floats.map(chipHTML).join(''));
+    const targets=$$(o.targets);
+    const decoy=t=>(o.decoys||[]).includes(t.dataset.t);
+    const qs={};let firstQ=null;
+    if(o.oneAsk){firstQ=ask(o);targets.forEach(t=>{if(!decoy(t))qs[t.dataset.t]=firstQ;});}
+    else targets.forEach(t=>{if(decoy(t))return;const k=t.dataset.t;qs[k]=ask(o,'-'+k);if(!firstQ)firstQ=qs[k];});
+    const allQ=[...new Set(Object.values(qs))];
+    setHelp(o.help,allQ,o.helpExtra);
+    const need=o.need||targets.filter(t=>!decoy(t)).length;
+    let placed=0,sel=null,finished=false;
+    const open=t=>!t.classList.contains('filled');
+    function targetAt(x,y){const p=o.pad==null?12:o.pad;let best=null;for(const t of targets){if(!open(t))continue;const r=t.getBoundingClientRect();if(x>=r.left-p&&x<=r.right+p&&y>=r.top-p&&y<=r.bottom+p){if(!best||decoy(best))best=t;}}return best;}
+    function mark(on){targets.forEach(t=>t.classList.toggle('cando',on&&open(t)));}
+    async function attempt(chip,t){
+      const v=chip.dataset.v,k=t.dataset.t,q=qs[k]||firstQ;
+      if(!decoy(t)&&o.fits(v,k)){
+        if(q&&!q._d){q.done();q._d=1;}
+        placed++;if(!o.reuse)chip.classList.add('used');if(!o.multi)t.classList.add('filled');
+        if(o.onPlace)o.onPlace(v,k,chip,t);
+        if(placed>=need&&!finished){finished=true;mark(false);setHelp(null);allQ.forEach(x=>{if(x&&!x._d){x.done();x._d=1;}});await yes(o.yes,o.ms);stepDone();res();}
+        else if(o.each)toast('yes',o.each(v,k),1200);
+      }else{
+        if(q)q.miss(o.label?o.label(v):v);chip.classList.remove('shake');void chip.offsetWidth;chip.classList.add('shake');
+        toast('hmm',o.miss(v,k));
+      }
+    }
+    const reset=chip=>{chip.style.transform='';};
+    [...$$('#tray .chip'),...$$('#ov .chip')].forEach(chip=>{
+      let sx=0,sy=0,moved=false,on=false;
+      chip.addEventListener('pointerdown',e=>{if(chip.classList.contains('used')||finished)return;on=true;moved=false;sx=e.clientX;sy=e.clientY;try{chip.setPointerCapture(e.pointerId);}catch(_){}chip.classList.add('lift');e.preventDefault();});
+      chip.addEventListener('pointermove',e=>{if(!on)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.hypot(dx,dy)>8)moved=true;chip.style.transform=`translate(${dx}px,${dy}px)`;const over=targetAt(e.clientX,e.clientY);targets.forEach(t=>t.classList.toggle('over',t===over));});
+      chip.addEventListener('pointerup',e=>{if(!on)return;on=false;chip.classList.remove('lift');reset(chip);targets.forEach(t=>t.classList.remove('over'));
+        if(!moved){sel=sel===chip?null:chip;$$('.chip').forEach(c=>c.classList.toggle('sel',c===sel));mark(!!sel);return;}
+        const t=targetAt(e.clientX,e.clientY);if(t)attempt(chip,t);});
+      chip.addEventListener('pointercancel',()=>{on=false;chip.classList.remove('lift');reset(chip);});
+    });
+    targets.forEach(t=>t.addEventListener('click',()=>{if(!sel||finished||!open(t))return;const c=sel;sel=null;c.classList.remove('sel');mark(false);attempt(c,t);}));
+  });
+}
+/* a card over the picture */
+function card(c){
+  return new Promise(res=>{untoast();const d=document.createElement('div');d.className='card';
+    d.innerHTML=`<div class="in"><span class="ribbon">${c.ribbon||'True fact'}</span><h3>${c.title}</h3>${c.pic||''}${c.ps.map(p=>`<p>${p}</p>`).join('')}<div class="row"><button class="btn" id="cgo">${c.go||'Go on'}</button></div></div>`;
+    $('#sw').appendChild(d);setHelp(null);tray('');$('#cgo').onclick=()=>{d.remove();res();};});
+}
+function sail(ship,path,from,to,ms,flip){
+  return new Promise(res=>{
+    const L=path.getTotalLength();
+    const place=f=>{const p=path.getPointAtLength(L*f);ship.setAttribute('transform',`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})${flip?' scale(-1 1)':''}`);};
+    if(RM||!ms){place(to);res();return;}
+    const r=runId,t0=performance.now();
+    const step=t=>{if(r!==runId)return;const k=Math.min(1,(t-t0)/ms);const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;place(from+(to-from)*e);if(k<1)requestAnimationFrame(step);else res();};
+    requestAnimationFrame(step);
+  });
+}
+
+
+/* turn something round (a person or the ship), then press the button to check */
+function turnTask(o){
+  return new Promise(res=>{
+    if(o.say)say(o.say);untoast();
+    const step=o.step||90;let ang=norm(o.start);o.set(ang);
+    tray(`<div class="row turnrow"><button class="btn ghost" id="tl" aria-label="Turn left">${TURNL}<span>Turn</span></button><button class="btn ghost" id="tr" aria-label="Turn right"><span>Turn</span>${TURNR}</button></div><p class="inst" style="margin:8px 0 0">Or drag round on the picture.</p><div class="row" style="margin-top:10px"><button class="btn" id="tgo">${o.btn||'This way!'}</button></div>`);
+    const q=ask(o);setHelp(o.help,q,o.helpExtra);
+    let active=true,locked=false;
+    const setTo=a=>{a=norm(a);if(a===ang)return;ang=a;o.set(ang);untoast();};
+    $('#tl').onclick=()=>{if(active)setTo(ang+step);};
+    $('#tr').onclick=()=>{if(active)setTo(ang-step);};
+    const svg=$('#sw>svg'),hit=(o.hit&&$(o.hit))||svg;
+    hit.style.touchAction='none';
+    let on=false,last=null,acc=0,ang0=0;
+    const angAt=e=>{const p=svgPoint(svg,e);return p?Math.atan2(-(p.y-o.cy),p.x-o.cx)/D2R:null;};
+    hit.addEventListener('pointerdown',e=>{if(!active)return;on=true;last=angAt(e);acc=0;ang0=ang;try{hit.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();});
+    hit.addEventListener('pointermove',e=>{if(!on||!active)return;const a=angAt(e);if(a==null||last==null)return;let d=a-last;if(d>180)d-=360;if(d<-180)d+=360;last=a;acc+=d;setTo(ang0+Math.round(acc/step)*step);});
+    const up=()=>{on=false;};hit.addEventListener('pointerup',up);hit.addEventListener('pointercancel',up);
+    $('#tgo').onclick=async()=>{
+      if(locked||!active)return;
+      if(o.isRight(ang)){locked=true;active=false;hit.style.touchAction='';q.done();setHelp(null);$$('#tray button').forEach(b=>b.disabled=true);if(o.onRight)await o.onRight(ang);await yes(o.yes,o.ms);stepDone();res(ang);}
+      else{q.miss(o.name?o.name(ang):String(ang));toast('hmm',o.why(ang));}
+    };
+  });
+}
+/* choose one of two pictures (no right or wrong) */
+function choose(opts){
+  return new Promise(res=>{
+    tray(`<div class="choices">${opts.map((op,i)=>`<button class="tile" data-i="${i}">${op.pic}<span>${op.label}</span></button>`).join('')}</div>`);
+    setHelp(['Either way works. Choose the one you like.']);
+    $$('#tray .tile').forEach(b=>b.onclick=()=>{const op=opts[+b.dataset.i];$$('#tray .tile').forEach(x=>x.disabled=true);b.classList.add('yes');setHelp(null);res(op.v);});
+  });
+}
+
+/* ================= small pictures ================= */
+const PIC={
+  spin:`<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#1a1626"/>${SUNG(82,36,8,true)}<circle cx="38" cy="36" r="20" fill="#3f7fae"/><path d="M38 16a20 20 0 0 0 0 40z" fill="#05070f" opacity=".5"/><path d="M58 18A26 26 0 0 0 16 22" fill="none" stroke="#f2c75c" stroke-width="3.5"/><path d="M16 22l1-9 7 6z" fill="#f2c75c"/></svg>`,
+  round:`<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#1a1626"/><circle cx="48" cy="36" r="14" fill="#3f7fae"/><ellipse cx="48" cy="36" rx="38" ry="24" fill="none" stroke="#f2c75c" stroke-width="2.5" stroke-dasharray="5 4"/>${SUNG(48,12,7,false)}<path d="M80 30l6 8 4-9z" fill="#f2c75c"/></svg>`,
+  cloud:`<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#bfe3f7"/>${SUNG(66,30,10,false)}<path d="M14 46h30a9 9 0 0 0 0-18a12 12 0 0 0-22-1a9 9 0 0 0-8 19z" fill="#fff" stroke="#9fb3c8" stroke-width="2"/><path d="M46 38h8" stroke="#6b7c90" stroke-width="3" stroke-linecap="round"/><path d="M52 34l5 4-5 4" fill="none" stroke="#6b7c90" stroke-width="3"/></svg>`,
+  axis:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#1a1626"/><circle cx="48" cy="36" r="24" fill="#3f7fae"/><path d="M48 4V68" stroke="#f2c75c" stroke-width="3.5" stroke-dasharray="6 4"/></svg>',
+  pole:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#1a1626"/><circle cx="48" cy="36" r="24" fill="#3f7fae"/><rect x="45" y="4" width="6" height="64" rx="2" fill="#9aa4ad" stroke="#5d666e" stroke-width="1.5"/><circle cx="48" cy="5" r="4" fill="#5d666e"/></svg>',
+  eqtr:'<svg viewBox="0 0 96 72" aria-hidden="true"><rect width="96" height="72" rx="8" fill="#1a1626"/><circle cx="48" cy="36" r="24" fill="#3f7fae"/><path d="M20 36H76" stroke="#fff" stroke-width="3.5" stroke-dasharray="6 4"/></svg>',
+  mast:a=>{const [x,y]=PT(60,45,44,a);return `<svg viewBox="0 0 120 90" aria-hidden="true"><rect width="120" height="90" rx="8" fill="#c8935c"/><g stroke="#a87442" stroke-width="2"><path d="M20 0V90M44 0V90M76 0V90M100 0V90"/></g><path d="M60 45L${f1(x)} ${f1(y)}" stroke="#2a2118" stroke-width="10" stroke-linecap="round" opacity=".5"/><circle cx="60" cy="45" r="8" fill="#3e2a16"/></svg>`;},
+  sky:t=>miniSky(t,120,90)
+};
+function clockBadge(when){
+  const t=when==='Morning'?0.1:when==='Noon'?0.5:0.9;
+  return `<g transform="translate(14 14)"><rect width="168" height="48" rx="24" fill="#fff" stroke="#2a2118" stroke-width="2"/>${miniSky(t,72,72).replace('<svg','<svg x="7" y="6" width="36" height="36"')}<text x="108" y="31" text-anchor="middle" font-size="20" font-weight="700" fill="#2a2118">${when}</text></g>`;
+}
+function trickPic(){
+  return `<svg viewBox="150 40 300 276" style="max-height:200px" aria-hidden="true"><defs>${ARROWDEF('is-ar','#f2c75c')}</defs><rect x="150" y="40" width="300" height="276" rx="14" fill="#e9d29a"/>${SUNG(420,178,15,true)}${figSVG(90,'R',true)}
+  <g class="letter" font-size="26" text-anchor="middle" fill="#a5302a"><text x="300" y="62" font-size="22">N</text><text x="300" y="306">S</text><text x="172" y="187">W</text><text x="420" y="218">E</text></g></svg>`;
+}
+function shadowRulePic(){
+  return `<svg viewBox="0 0 320 120" style="max-height:130px" aria-hidden="true"><rect width="320" height="120" rx="10" fill="#efd9a0"/>${SUNG(52,60,18,true)}<path d="${shadowD(160,60,0,110,16)}" fill="#2a2118" opacity=".55"/><circle cx="160" cy="60" r="9" fill="#6b4a2b" stroke="#3e2a16" stroke-width="2.5"/><path d="M200 96h70" stroke="#a5302a" stroke-width="4"/><path d="M262 89l10 7-10 7" fill="none" stroke="#a5302a" stroke-width="4"/><text x="236" y="86" text-anchor="middle" font-size="15" font-weight="700" fill="#a5302a">away</text></svg>`;
+}
+function compassPic(){
+  return `<svg viewBox="0 0 200 150" style="max-height:150px" aria-hidden="true"><circle cx="100" cy="75" r="62" fill="#b0864f"/><circle cx="100" cy="75" r="54" fill="#fffaf0" stroke="#6d5c44" stroke-width="2"/><g class="letter" font-size="18" text-anchor="middle" fill="#2a2118"><text x="100" y="38" fill="#a5302a">N</text><text x="100" y="126">S</text><text x="58" y="81">W</text><text x="142" y="81">E</text></g><path d="M100 30L108 75H92Z" fill="#a5302a"/><path d="M100 120L108 75H92Z" fill="#6d5c44"/><circle cx="100" cy="75" r="5" fill="#2a2118"/></svg>`;
+}
+function harbourTop(){
+  return `<g><rect x="0" y="0" width="600" height="58" fill="#7c8a72"/><path d="M0 58H600" stroke="#c9b98f" stroke-width="6"/>
+   <g fill="#b0864f" stroke="#6d5c44" stroke-width="2"><rect x="40" y="6" width="60" height="38"/><rect x="120" y="10" width="50" height="34"/><rect x="440" y="8" width="56" height="36"/><rect x="510" y="12" width="60" height="32"/></g>
+   <g fill="#a5302a"><path d="M36 10l34-12 34 12z"/><path d="M436 12l32-12 32 12z"/></g>
+   <rect x="262" y="40" width="76" height="44" fill="#9a8a6a" stroke="#6d5c44" stroke-width="2"/>
+   <g transform="translate(300 60)"><circle r="14" fill="#7a4fb5"/><circle r="8" fill="#5a3d22"/><circle cy="-2" r="4" fill="#5a3d22"/><path d="M12 -4l14-14" stroke="#e8c9a6" stroke-width="5" stroke-linecap="round"/><circle cx="27" cy="-19" r="4" fill="#e8c9a6"/></g>
+   <text x="352" y="70" font-size="16" font-weight="700" fill="#fff" stroke="#2a2118" stroke-width="4" paint-order="stroke">Mistress Wren</text></g>`;
+}
+function heroSVG(){
+  return `<svg viewBox="0 0 420 300" role="img" aria-label="Captain Hale's ship at sunrise, and a compass falling into the sea">
+  <defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b4a86"/><stop offset="1" stop-color="#f2a26e"/></linearGradient>
+  <radialGradient id="hgl"><stop offset="0" stop-color="#ffd08a" stop-opacity=".9"/><stop offset="1" stop-color="#f59a6a" stop-opacity="0"/></radialGradient><clipPath id="hcl"><rect width="420" height="190"/></clipPath></defs>
+  <rect width="420" height="190" fill="url(#hg)"/>
+  <g fill="#fff" opacity=".6"><circle cx="40" cy="30" r="1.5"/><circle cx="120" cy="20" r="1.2"/><circle cx="200" cy="40" r="1.4"/></g>
+  <ellipse cx="360" cy="190" rx="170" ry="90" fill="url(#hgl)"/>
+  <g clip-path="url(#hcl)"><circle cx="360" cy="196" r="26" fill="#ffc93c"/></g>
+  <rect y="190" width="420" height="110" fill="#2f5f8f"/>
+  <g fill="#ffd27a" opacity=".7"><ellipse cx="360" cy="198" rx="24" ry="3"/><ellipse cx="360" cy="210" rx="16" ry="2.5"/></g>
+  <g transform="translate(150 196)">
+    <path d="M-90 -6h180l-26 40h-128z" fill="#6b3f1f" stroke="#3e2a16" stroke-width="2"/>
+    <path d="M-80 -6h160" stroke="#c8935c" stroke-width="5"/>
+    <path d="M-10 -6V-140" stroke="#3e2a16" stroke-width="5"/><path d="M50 -6V-110" stroke="#3e2a16" stroke-width="4"/>
+    <path d="M-10 -134q46 30 0 62q-40-30 0-62z" fill="#f4ead6" stroke="#b9a77d" stroke-width="2"/>
+    <path d="M-10 -66q50 24 0 54q-44-26 0-54z" fill="#f4ead6" stroke="#b9a77d" stroke-width="2"/>
+    <path d="M50 -104q34 22 0 44q-28-22 0-44z" fill="#f4ead6" stroke="#b9a77d" stroke-width="2"/>
+    <path d="M-10 -140l22 6-22 6z" fill="#a5302a"/>
+    <g transform="translate(-62 -24) scale(1)">${NUTMEG.replace('<svg','<svg x="-20" y="-24" width="40" height="40"')}</g>
+  </g>
+  <g transform="translate(265 232)"><circle r="13" fill="#b0864f"/><circle r="9" fill="#fffaf0"/><path d="M0-7L3 0H-3z" fill="#a5302a"/></g>
+  <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M248 250q-6-12-12-6M282 250q6-12 12-6M265 216v-10"/></g>
+  <text x="265" y="282" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">Splash!</text>
+</svg>`;
+}
+const TILEPIC={
+  day:miniSky(0.02,150,100),
+  spin:`<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="10" fill="#1a1626"/>${SUNG(126,50,9,true)}<circle cx="60" cy="50" r="32" fill="#3f7fae"/><path d="M60 18a32 32 0 0 0 0 64z" fill="#05070f" opacity=".55"/><path d="M92 24A40 40 0 0 0 26 28" fill="none" stroke="#f2c75c" stroke-width="4"/><path d="M26 28l1-11 9 7z" fill="#f2c75c"/></svg>`,
+  trick:`<svg viewBox="170 70 260 216" aria-hidden="true"><defs>${ARROWDEF('is-ar','#f2c75c')}</defs><rect x="170" y="70" width="260" height="216" rx="14" fill="#e9d29a"/>${SUNG(408,178,15,true)}${figSVG(90,'R',true)}<text class="letter" x="300" y="92" text-anchor="middle" font-size="22" fill="#a5302a">N</text></svg>`,
+  shadow:`<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="10" fill="#efd9a0"/>${SUNG(75,18,10,true)}<path d="${shadowD(75,52,270,34,12)}" fill="#2a2118" opacity=".55"/><circle cx="75" cy="52" r="7" fill="#6b4a2b"/><text x="96" y="94" font-size="13" font-weight="700" fill="#6d5c44">noon</text></svg>`,
+  voyage:`<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="10" fill="#2b6f9e"/><g stroke="rgba(255,255,255,.3)" stroke-width="2.5" fill="none"><path d="M14 20q8-5 16 0M110 76q8-5 16 0M24 80q8-5 16 0M112 18q8-5 16 0"/></g><g transform="translate(75 54) scale(.55)"><path d="M0 -70C26 -46 28 0 25 46Q0 60 -25 46C-28 0 -26 -46 0 -70Z" fill="#7a4a26"/><path d="M0 -60C20 -40 21 0 19 40Q0 50 -19 40C-21 0 -20 -40 0 -60Z" fill="#c8935c"/><rect x="-40" y="-26" width="80" height="9" rx="4" fill="#f4ead6"/><circle r="7" fill="#3e2a16"/></g><text x="75" y="14" text-anchor="middle" class="letter" font-size="14" fill="#fff">N</text></svg>`
+};
+
+/* ================= parts ================= */
+const PARTS=[
+  {id:'day',name:'The Sun’s day',fn:()=>partDay()},
+  {id:'spin',name:'Is the Sun really moving?',fn:()=>partSpin()},
+  {id:'trick',name:'The right-hand trick',fn:()=>partTrick()},
+  {id:'shadow',name:'Shadows point away',fn:()=>partShadow()},
+  {id:'voyage',name:'Steer for home',fn:()=>partVoyage()}
+];
+const done=id=>S.done.includes(id);
+const unlocked=i=>i===0||done(PARTS[i-1].id);
+function pips(c){$('#pips').innerHTML=PARTS.map((p,i)=>`<li class="${done(p.id)?'done':''} ${i===c?'now':''}" title="${p.name}">${i+1}</li>`).join('');}
+let cur=-1;
+function finishPart(i){const p=PARTS[i];if(!done(p.id))S.done.push(p.id);save();G.partDone(p.name);}
+function afterPart(i,line){
+  pips(-1);setHelp(null);untoast();
+  const next=PARTS.findIndex((p,k)=>!done(p.id)&&unlocked(k));
+  tray(`<div class="donebox"><span class="stamp">✓</span><p>${line}</p><div class="row">${next>=0?`<button class="btn" id="nx">Next part</button>`:''}<button class="btn ghost" id="ct">Contents</button></div></div>`);
+  if(next>=0)$('#nx').onclick=()=>runPart(next);
+  $('#ct').onclick=home;
+  try{$('#tray').scrollIntoView({block:'nearest'});}catch(e){}
+}
+function runPart(i){runId++;cur=i;pips(i);G.start(GAME);G.part(PARTS[i].name);PARTS[i].fn();}
+
+/* ===== Part 1: the Sun's day ===== */
+function dayDrag(){
+  return new Promise(res=>{
+    say('Drag the Sun through one whole day. Start on the right.');
+    const need=['glow','rise','noon','set','twi'],names={glow:'first light',rise:'sunrise',noon:'noon',set:'sunset',twi:'twilight'};
+    tray(`<div class="readout2"><b id="rdw">Night. Morning is coming.</b></div>
+      <ol class="ticks">${need.map(k=>`<li data-k="${k}">${names[k]}</li>`).join('')}</ol>
+      <div class="slide" style="margin-top:10px"><span class="end">evening</span><input type="range" id="dayR" min="0" max="1000" value="1000" aria-label="Move the Sun through the day"><span class="end">morning</span></div>`);
+    setHelp(['Put your finger on the sky, on the right. Slide it slowly to the left.','You can use the slider too. Slide it from right to left.','Keep going past sunset, until the glow has gone.']);
+    const r=runId,seen={};let finished=false;
+    const svg=$('#hs');
+    const set=t=>{
+      t=clamp(t,-0.12,1.12);setSky(t);const d=dayWord(t);$('#rdw').textContent=d.w;
+      if(need.includes(d.k)&&!seen[d.k]){seen[d.k]=1;const li=$(`.ticks li[data-k="${d.k}"]`);if(li)li.classList.add('on');}
+      const sl=$('#dayR');if(sl)sl.value=String(Math.round(1000-(t+0.12)/1.24*1000));
+      if(!finished&&need.every(k=>seen[k])){finished=true;setTimeout(()=>{if(runId===r){dr.off();setHelp(null);res();}},1800);}
+    };
+    const dr=dragOn(svg,svg,p=>set((550-p.x)/500));
+    $('#dayR').addEventListener('input',e=>set(-0.12+(1000-(+e.target.value))/1000*1.24));
+    set(-0.12);
+  });
+}
+function partDay(){
+  stage({title:'The Sun’s day',steps:S.easy?4:5,scene:harbourSVG(),say:'Captain Hale’s ship is in the harbour. It is still night.'});
+  (async()=>{
+    setSky(-0.12);
+    await sleep(1700);
+    $('#hs-hz').classList.add('shown');
+    say('The line where the sky meets the sea is called the <b>horizon</b>.');
+    await press('Go on');
+    $('#hs-hz').classList.remove('shown');
+    await dayDrag();
+    stepDone();
+    $('#hs-e').classList.add('glowpulse');$('#hs-w').classList.add('glowpulse');
+    say('The Sun came up on one side, and went down on the other.');
+    toast('info','The Sun rises in the <b>east</b>. It sets in the <b>west</b>.');
+    await press('Go on');
+    untoast();$('#hs-e').classList.remove('glowpulse');$('#hs-w').classList.remove('glowpulse');
+    setSky(0.5);
+    /* put the day in order */
+    const ALL=[{v:'glow',t:-0.03,label:'first light'},{v:'rise',t:0.012,label:'sunrise'},{v:'noon',t:0.5,label:'noon'},{v:'set',t:0.988,label:'sunset'},{v:'twi',t:1.035,label:'twilight'}];
+    const items=S.easy?ALL.filter(x=>['rise','noon','set'].includes(x.v)):ALL;
+    const idx=v=>items.findIndex(x=>x.v===v);
+    await drag({item:'day-order',concept:'The order of the Sun’s day',area:'SC',oneAsk:true,targets:'#tray .seq .drop',
+      say:'Put the day in order. Drag each sky into its box.',
+      trayHead:`<div class="seqhead"><span>first</span><span>last</span></div><div class="seq" style="--n:${items.length}">${items.map((x,i)=>`<div class="drop" data-t="${x.v}"><span class="n">${i+1}</span></div>`).join('')}</div>`,
+      chips:items.map(x=>({v:x.v,cls:'sky',pic:miniSky(x.t,88,66),label:x.label})),
+      fits:(v,k)=>v===k,label:v=>v+' in box '+(idx(v)+1),each:()=>'Yes!',
+      miss:(v,k)=>idx(v)<idx(k)?'That one comes earlier in the day. Try again.':'That one comes later in the day. Try again.',
+      help:[S.easy?'The Sun comes up, is high in the middle of the day, then goes down.':'First the sky glows, then the Sun comes up.','The Sun is highest at noon, in the middle of the day.',S.easy?'Sunrise, noon, sunset.':'First light, sunrise, noon, sunset, twilight.'],
+      onPlace:(v,k,chip,t)=>{const it=items[idx(v)];t.innerHTML=miniSky(it.t,88,66)+`<span>${it.label}</span>`;},
+      yes:S.easy?'Yes! Sunrise, noon, then sunset.':'Yes! First light, sunrise, noon, sunset, twilight.',ms:2200});
+    /* where does the Sun come up? */
+    const er=Math.random()<.5;
+    setScene(horizonSVG(er,false));
+    const riseAt=(k,evening)=>{const x=k==='L'?110:490;$('#hz-sun').innerHTML=`<circle cx="${x}" cy="${HZ+4}" r="40" fill="#ffe08a" opacity=".35"/><circle cx="${x}" cy="${HZ+4}" r="25" fill="#ffc93c"/>`;setA('#hz-glow','cx',x);setA('#hz-glow','opacity','1');};
+    await drag({item:'day-rise',need:1,concept:'The Sun rises in the east and sets in the west',area:'HSS',oneAsk:true,targets:'#hz .drop',
+      say:'Morning is coming. Drag the Sun to where it comes up.',
+      chips:[{v:'sun',label:'the Sun',pic:`<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="12" fill="#ffc93c" stroke="#f2a51f" stroke-width="2"/></svg>`}],
+      fits:(v,k)=>k===(er?'R':'L'),label:()=>'the west side',
+      miss:()=>'That side is west. The Sun comes up in the east. Try again.',
+      help:['The Sun rises in the east.','Find the E for east.','Drag the Sun to the side with the E.'],
+      onPlace:(v,k)=>riseAt(k),yes:'Yes! The Sun rises in the east.',ms:1900});
+    if(!S.easy){
+      const er2=Math.random()<.5;
+      setScene(horizonSVG(er2,true));
+      await drag({item:'day-set',need:1,concept:'The Sun rises in the east and sets in the west',area:'HSS',oneAsk:true,targets:'#hz .drop',
+        say:'Now it is evening. Drag the Sun to where it goes down.',
+        chips:[{v:'sun',label:'the Sun',pic:`<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="12" fill="#ffc93c" stroke="#f2a51f" stroke-width="2"/></svg>`}],
+        fits:(v,k)=>k===(er2?'L':'R'),label:()=>'the east side',
+        miss:()=>'That side is east. The Sun goes down in the west. Try again.',
+        help:['The Sun sets in the west.','Find the W for west.','Drag the Sun to the side with the W.'],
+        onPlace:(v,k)=>riseAt(k,true),yes:'Yes! The Sun sets in the west.',ms:1900});
+    }
+    /* twilight */
+    setScene(harbourSVG());setSky(1.035);
+    await pics({item:'day-twilight',concept:'Twilight',area:'SC',say:'The Sun has gone down, but the sky still glows. What is this glow called?',
+      options:[{v:'twi',label:'twilight',pic:miniSky(1.035)},{v:'noon',label:'noon',pic:miniSky(0.5)},{v:'rise',label:'sunrise',pic:miniSky(0.012)}],answer:'twi',easyWrong:'noon',
+      help:['It comes just after sunset.','It starts with “twi”.','It is called twilight.'],
+      miss:v=>v==='noon'?'Noon is the middle of the day. Try again.':'Sunrise is in the morning. Try again.',yes:'Yes! Twilight.',ms:1600});
+    finishPart(0);
+    afterPart(0,'The Sun rises in the east and sets in the west. After sunset comes twilight.');
+  })();
+}
+
+/* ===== Part 2: is the Sun really moving? ===== */
+function spinTask(){
+  return new Promise(res=>{
+    const words={night:'Night for Hale. His side faces away from the candle.',rise:'Sunrise for Hale! He is turning into the light.',am:'Morning for Hale. The Sun climbs.',noon:'Noon for Hale. The Sun is highest.',pm:'Afternoon for Hale. The Sun goes lower.',set:'Sunset for Hale. He is turning away from the light.'};
+    tray(`<div class="readout2"><b id="spw">${words.night}</b></div><div class="row" style="margin-top:10px"><button class="btn ghost" id="spinme">Spin it for me</button></div>`);
+    setHelp(['Put your finger on the globe. Drag it round the way the gold arrow points.','Watch Hale’s little sky in the corner as he turns into the light.','Or tap “Spin it for me”.']);
+    const r=runId,start=-150;let th=start,last=null,fin=false,region='night',warned=false;
+    const regionOf=a=>{a=thN(a);if(Math.abs(a)>100)return 'night';if(a<-80)return 'rise';if(a<-12)return 'am';if(a<=12)return 'noon';if(a<80)return 'pm';return 'set';};
+    const set=v=>{th=v;setGlobe(th);const g=regionOf(th);if(g!==region){region=g;$('#spw').textContent=words[g];}
+      if(!fin&&th-start>=360){fin=true;setTimeout(()=>{if(runId===r){dr.off();setHelp(null);res();}},1800);}
+      if(!warned&&th<start-25){warned=true;toast('hmm','The real Earth only spins one way. Follow the gold arrow!',2800);}};
+    const svg=$('#gt');
+    const dr=dragOn($('#gt-hit'),svg,(p,first)=>{const a=Math.atan2(-(p.y-GT.cy),p.x-GT.cx)/D2R;if(first||last==null){last=a;return;}let d=a-last;if(d>180)d-=360;if(d<-180)d+=360;last=a;set(th+d);},()=>{last=null;});
+    $('#spinme').onclick=async()=>{$('#spinme').disabled=true;const from=th;await tween(7500,k=>set(from+(start+380-from)*k));};
+    set(start);
+  });
+}
+function partSpin(){
+  stage({title:'Is the Sun really moving?',steps:3,scene:globeTopSVG(),say:'Mistress Wren lights a candle. It will be the Sun.'});
+  (async()=>{
+    setGlobe(-150);
+    await sleep(1900);
+    say('Tiny Captain Hale stands on her globe. Spin the globe, and watch his sky.');
+    await spinTask();
+    stepDone();
+    say('Did you see? The candle never moved at all.');
+    toast('info','The globe spun round. That made the Sun rise and set for Hale.');
+    await press('Go on');untoast();
+    await pics({item:'spin-why',concept:'The Earth spins, so the Sun seems to move',area:'SC',say:'So why does the real Sun seem to move across our sky?',
+      options:[{v:'spin',label:'The Earth spins',pic:PIC.spin},{v:'round',label:'The Sun goes round the Earth',pic:PIC.round},{v:'cloud',label:'Clouds push the Sun along',pic:PIC.cloud}],answer:'spin',easyWrong:'round',
+      help:['Think about Wren’s candle. Did it move?','Something else turned round and round.','The Earth spins.'],
+      miss:v=>v==='round'?'Wren’s candle didn’t move at all. Try again.':'Clouds can’t move the Sun. Try again.',
+      yes:'Yes! The Earth spins, so the Sun seems to move.',ms:2000});
+    setScene(axisSVG());
+    await pics({item:'spin-axis',concept:'The axis is the imaginary line the Earth spins around',area:'SC',say:'Wren’s globe spins around this dashed line, from pole to pole. What is it?',
+      options:[{v:'axis',label:'The axis: a pretend (imaginary) line',pic:PIC.axis},{v:'pole',label:'A real metal pole inside the Earth',pic:PIC.pole},{v:'eq',label:'The Equator',pic:PIC.eqtr}],answer:'axis',easyWrong:'pole',
+      help:['It goes from the North Pole to the South Pole.','The real Earth has no stick through it. The line is only pretend.','It is the axis, an imaginary line.'],
+      miss:v=>v==='pole'?'The real Earth has no metal pole inside. The line is only pretend. Try again.':'The Equator goes round the middle. This line goes from top to bottom. Try again.',
+      yes:'Yes! The axis. It is an imaginary line.',ms:2000});
+    finishPart(1);
+    afterPart(1,'The Sun doesn’t go round us. The Earth spins, so the Sun seems to rise, cross the sky and set.');
+  })();
+}
+
+/* ===== Part 3: the right-hand trick ===== */
+async function trickRound(o){
+  const need=o.mode==='R'?norm(o.phi+90):norm(o.phi-90);
+  $('#is-lbl').innerHTML='';$('#is-x').innerHTML='';
+  isSun(o.phi,o.mode==='R'?'sunrise':'sunset');
+  const start=pick([0,90,180,270].filter(a=>a!==need));
+  const H=o.mode==='R'?'right hand (R)':'left hand (L)';
+  const why=a=>{
+    if(sameDir(a,o.phi))return `She is looking at the Sun. Turn her so her ${H} points at it.`;
+    if(sameDir(a+180,o.phi))return 'The Sun is behind her. Keep turning.';
+    return o.mode==='R'?'That’s her left hand (L) pointing at the Sun. Turn her right round.':'That’s her right hand (R) pointing at the Sun. Turn her right round.';
+  };
+  await turnTask({item:'trick-turn-'+o.n,concept:o.mode==='R'?'Right hand to the sunrise: facing north':'Left hand to the sunset: facing north',area:'HSS',
+    say:o.mode==='R'?(o.n===1?'Turn the girl until her right hand (R) points at the sunrise.':'A new morning. Turn her so her right hand (R) points at the sunrise.'):'Evening! Hale sees the sunset. Turn her so her LEFT hand (L) points at it.',
+    start,step:90,cx:IS.cx,cy:IS.cy,hit:'#isl',
+    set:a=>{$('#is-fig').innerHTML=figSVG(a,o.mode);},
+    isRight:a=>sameDir(a,need),
+    name:a=>sameDir(a,o.phi)?'facing the Sun':sameDir(a+180,o.phi)?'back to the Sun':'other hand to the Sun',
+    why,
+    help:o.mode==='R'?['Right hand to the sunrise.','Find the R. Turn her until the R points at the Sun.','Look: when she faces this way, the R points at the Sun.']:['Left hand to the sunset.','Find the L. Turn her until the L points at the Sun.','Look: when she faces this way, the L points at the Sun.'],
+    helpExtra:n=>{if(n===2)$('#is-x').innerHTML=figSVG(need,o.mode,true,true);},
+    onRight:a=>{$('#is-x').innerHTML='';$('#is-fig').innerHTML=figSVG(a,o.mode,true);$('#is-lbl').innerHTML=isLetter(a,'N');},
+    yes:'She is facing north!',ms:1800});
+}
+async function placeLetters(n){
+  const d=dirsFrom(n);
+  const need=S.easy?['S']:['S','E','W'];
+  $('#is-x').innerHTML=need.map(L=>edDrop(d[L],L)).join('');
+  if(S.easy)$('#is-lbl').insertAdjacentHTML('beforeend',isLetter(d.E,'E','')+isLetter(d.W,'W',''));
+  await drag({item:'trick-letters',concept:'Compass directions',area:'HSS',targets:'#is-x .drop',oneAsk:true,
+    say:S.easy?'Where is south? Drag the S to its place.':'Now put S, E and W in their places.',
+    chips:need.map(L=>({v:L,label:L,cls:'let'})),
+    fits:(v,k)=>v===k,label:v=>v,each:v=>v==='S'?'South is behind her.':v==='E'?'East, where the Sun came up.':'West is on her left.',
+    miss:v=>({S:'South is opposite north, behind her.',E:'East is where the Sun came up.',W:'West is on her left side.'})[v]+' Try again.',
+    help:['North is where she is facing.','South is behind her. East is her right hand. West is her left hand.','S goes opposite the N.'],
+    onPlace:(v,k)=>{const t=$('#ed-'+k);if(t)t.textContent=v;},
+    yes:'Yes! North, south, east and west.',ms:1800});
+}
+async function findNorth(phi){
+  $('#is-fig').innerHTML='';$('#is-lbl').innerHTML='';isSun(phi,'sunrise');
+  const d=dirsFrom(phi+90);
+  $('#is-x').innerHTML=['N','S','W'].map(L=>edTap(d[L],L)).join('');
+  await tapScene({item:'trick-north',concept:'Right hand to the sunrise: facing north',area:'HSS',sel:'#is-x .ed',answer:'N',names:{N:'north',S:'south',W:'west'},
+    say:'No girl this time! Here is the sunrise. Tap where north is.',
+    help:['Pretend you are standing in the middle. Point your right hand at the Sun.','Which way would your nose point?','Look: here is the girl again.'],
+    helpExtra:n=>{if(n===2)$('#is-fig').innerHTML=figSVG(phi+90,'R',true,true);},
+    miss:k=>k==='S'?'That way is south. It would be behind you. Try again.':'That way is west, opposite the sunrise. Try again.',
+    onRight:()=>{$('#is-fig').innerHTML='';$('#is-lbl').innerHTML=isLetter(phi+90,'N');},
+    yes:'Yes! You found north, all by yourself.',ms:2000});
+}
+function partTrick(){
+  stage({title:'The right-hand trick',steps:S.easy?4:6,scene:harbourSVG({kid:true}),say:'Back at the harbour. Here comes the sunrise!'});
+  (async()=>{
+    setSky(0.025);$('#hs-e').classList.add('glowpulse');
+    await sleep(1500);
+    await drag({item:'trick-point',concept:'Right hand to the sunrise: facing north',area:'HSS',oneAsk:true,targets:'#hs .drop',
+      say:'You are on the jetty. Drag your right hand (R) to point at the sunrise.',
+      chips:[{v:'R',label:'R',cls:'let',x:57,y:88,aria:'your right hand'}],
+      fits:()=>true,miss:()=>'Point it at the Sun.',
+      help:['Your right hand is the R.','Drag the R across to the rising Sun.','The Sun is coming up on the right, in the east.'],
+      onPlace:()=>{$('#hs-arm').classList.add('shown');const a=$('#hs-arest');if(a)a.style.opacity='0';},
+      yes:'Your right hand points east, to the sunrise.',ms:2000});
+    $('#hs-e').classList.remove('glowpulse');
+    $('#hs-n').classList.add('shown','glowpulse');$('#hs-s').classList.add('shown');
+    say('So you are facing <b>north</b>! We were looking north the whole time.');
+    await press('Go on');
+    await card({ribbon:'Learn this',title:'The right-hand trick',pic:trickPic(),ps:['Point your right hand at the sunrise.','Now you are facing north.','South is behind you. West is on your left.'],go:'Got it'});
+    setScene(islandSVG());
+    say('Now look down from high above, like a seagull.');
+    $('#is-fig').innerHTML=figSVG(270,'R');
+    await sleep(2200);
+    await trickRound({n:1,phi:0,mode:'R'});
+    const phi2=pick([90,180,270]);
+    await trickRound({n:2,phi:phi2,mode:'R'});
+    await placeLetters(phi2+90);
+    if(!S.easy){
+      await trickRound({n:3,phi:pick([0,90,180,270]),mode:'L'});
+      await findNorth(pick([90,180,270]));
+    }
+    finishPart(2);
+    afterPart(2,'Right hand to the sunrise, and you are facing north. Left hand to the sunset works too.');
+  })();
+}
+
+/* ===== Part 4: shadows ===== */
+function shadowDrag(){
+  return new Promise(res=>{
+    say('Drag the Sun along the dotted path. Watch the shadow!');
+    const need=['am','noon','pm'],names={am:'morning',noon:'noon',pm:'evening'};
+    tray(`<div class="readout2"><b id="shw"></b></div><ol class="ticks">${need.map(k=>`<li data-k="${k}">${names[k]}</li>`).join('')}</ol><div class="slide" style="margin-top:10px"><span class="end">evening</span><input type="range" id="shR" min="0" max="1000" value="920" aria-label="Move the Sun"><span class="end">morning</span></div>`);
+    setHelp(['Put your finger on the Sun. Drag it along the dotted path.','You can use the slider too.','Stop at the top, in the middle of the day. See how short the shadow is!']);
+    const r=runId,seen={};let fin=false;
+    const set=u=>{u=clamp(u,0,1);setBeach(u);const w=beachWord(u);$('#shw').textContent=w.w;
+      if(need.includes(w.k)&&!seen[w.k]){seen[w.k]=1;const li=$(`.ticks li[data-k="${w.k}"]`);if(li)li.classList.add('on');}
+      const sl=$('#shR');if(sl)sl.value=String(Math.round(1000-u*1000));
+      if(!fin&&need.every(k=>seen[k])){fin=true;setTimeout(()=>{if(runId===r){dr.off();setHelp(null);res();}},2800);}};
+    const dr=dragOn($('#bs-hit'),$('#bch'),p=>{const sa=Math.atan2(-(p.y-BC.cy),p.x-BC.cx)/D2R;let A=norm(90-sa);if(A>180)A-=360;set((RISE_AZ-A)/(2*RISE_AZ));});
+    $('#shR').addEventListener('input',e=>set((1000-(+e.target.value))/1000));
+    set(0.08);
+  });
+}
+async function predictShadow(i){
+  const z=pick([0,45,90,135,180,225,270,315]);
+  setScene(beachSVG({}));
+  const {cx,cy,r}=BC;const [x,y]=PT(cx,cy,r,z);$('#bs-sun').innerHTML=SUNG(x,y,20,true);
+  const opts=S.easy?[['away',z+180],['toward',z]]:[['away',z+180],['toward',z],['side1',z+90],['side2',z-90]];
+  $('#bs-x').innerHTML=shuffle(opts).map(([t,a])=>{const d=shadowD(cx,cy,a,112,18);return `<g class="sc" data-t="${t}"><path class="hitp" d="${d}"/><path class="vis" d="${d}"/></g>`;}).join('');
+  await tapScene({item:'shadow-predict-'+(i+1),concept:'Shadows point away from the Sun',area:'SC',sel:'#bs-x .sc',answer:'away',names:{away:'away from the Sun',toward:'toward the Sun',side1:'sideways',side2:'sideways'},
+    say:i===0?'Here is the Sun. Tap where the pole’s shadow will be.':'The Sun has moved. Where is the shadow now?',
+    help:['A shadow points away from the Sun.','Find the dotted shadow on the far side of the pole from the Sun.','It is this one, pointing straight away from the Sun.'],
+    helpExtra:n=>{if(n===2){const e=$('#bs-x .sc[data-t="away"]');if(e)e.classList.add('ring');}},
+    miss:k=>k==='toward'?'That one points at the Sun. Shadows point away. Try again.':'Not sideways. Shadows point straight away from the Sun. Try again.',
+    yes:'Yes! The shadow points away from the Sun.',ms:1700});
+}
+async function noonNorth(){
+  const sg=pick([0,90,180,270]);
+  setScene(beachSVG({deck:true,clock:'Noon'}));
+  const {cx,cy}=BC;setA('#bs-sh','d',shadowD(cx,cy,sg,46,14));
+  const d=dirsFrom(sg+180);
+  $('#bs-x').innerHTML=['N','E','S','W'].map(L=>edTap(d[L],L)).join('');
+  await tapScene({item:'shadow-noon-north',concept:'Noon shadows point south in our hemisphere',area:'HSS',sel:'#bs-x .ed',answer:'N',names:{N:'north',E:'east',S:'south',W:'west'},
+    say:'Noon on Hale’s ship. The mast’s shadow points this way. Tap where north is.',
+    help:['At noon here, shadows point south.','So this shadow points south. North is the opposite way.','North is at the other end from the shadow.'],
+    helpExtra:n=>{if(n===2){const e=$('#bs-x .ed[data-t="N"]');if(e)e.classList.add('ring');}},
+    miss:k=>k==='S'?'That is the way the shadow points: south. North is the opposite way. Try again.':'Not sideways. Look at the shadow again. Try again.',
+    yes:'Yes! The noon shadow points south, so north is the other way.',ms:2200});
+}
+function partShadow(){
+  stage({title:'Shadows point away from the Sun',steps:S.easy?5:6,scene:beachSVG({arc:true,letters:true,hit:true}),say:'This is Hale’s flagpole on the beach, seen from above.'});
+  (async()=>{
+    setBeach(0.08);
+    await sleep(1600);
+    say('A <b>shadow</b> is the dark shape where the pole blocks the sunlight.');
+    await press('Go on');
+    await shadowDrag();
+    stepDone();
+    await card({ribbon:'Learn this',title:'Shadows point away from the Sun',pic:shadowRulePic(),ps:['A shadow always points away from the Sun.','At noon here, the Sun is in the north.','So a noon shadow points south.'],go:'Got it'});
+    const rounds=S.easy?1:2;
+    for(let i=0;i<rounds;i++)await predictShadow(i);
+    await noonNorth();
+    await card({ribbon:'True fact',title:'The top half of the world',pic:englandSVG(),ps:['England is in the top half of the world.','There, the noon Sun is in the south.','So in England, noon shadows point north.'],go:'Go on'});
+    await pics({item:'shadow-england',concept:'Noon shadows point north in the Northern Hemisphere',area:'HSS',say:'Captain Hale is home in England. It is noon. Which way does his shadow point?',
+      options:[{v:'n',label:'north',pic:ARROWPIC(90,'N')},{v:'s',label:'south',pic:ARROWPIC(270,'S')},{v:'e',label:'east',pic:ARROWPIC(0,'E')}],answer:'n',easyWrong:'s',
+      help:['In England, the noon Sun is in the south.','Shadows point away from the Sun.','The Sun is in the south, so the shadow points north.'],
+      miss:v=>v==='s'?'That’s how it is here at home. England is in the other half of the world. Try again.':'At noon the shadow doesn’t point east. Try again.',
+      yes:'Yes! In England, noon shadows point north.',ms:1900});
+    await pics({item:'shadow-seasons',concept:'The hemispheres have opposite seasons',area:'SC',say:'One more! It is December. We have summer here. What season is Hale having in England?',
+      options:[{v:'w',label:'winter',pic:SEASON.winter},{v:'su',label:'summer',pic:SEASON.summer},{v:'sp',label:'spring',pic:SEASON.spring}],answer:'w',easyWrong:'su',
+      help:['The two halves of the world have opposite seasons.','What is the opposite of summer?','Winter.'],
+      miss:v=>v==='su'?'When we have summer, the top half of the world has the opposite. Try again.':'Spring is an in-between season. Think of the opposite of summer. Try again.',
+      yes:'Yes! It is winter in England. Hale might see snow at Christmas.',ms:2200});
+    finishPart(3);
+    afterPart(3,'Shadows point away from the Sun. Here, a noon shadow points south, so north is the other way.');
+  })();
+}
+
+/* ===== Part 5: steer for home ===== */
+const CLUE={
+  rise:{say:'The Sun is coming up over the sea. Turn the ship to point north.',hint:'Right hand to the sunrise, and you face north.',help:['Right hand to the sunrise.','The Sun is in the east. North is a quarter turn round from it.','Look: the dotted arrow shows north.']},
+  amsh:{say:'The Sun is too bright to look at, so use the mast’s shadow. Turn the ship to point north.',hint:'In the morning, the Sun is on the other side from the shadow, in the east.',help:['Shadows point away from the Sun.','It is morning, so the Sun is in the east and the shadow points west. Right hand to the east…','Look: the dotted arrow shows north.']},
+  noonsh:{say:'Noon. Use the mast’s shadow. Turn the ship to point north.',hint:'At noon here, the shadow points south. North is the other way.',help:['At noon here, shadows point south.','North is the opposite way to the shadow.','Look: the dotted arrow shows north.']},
+  set:{say:'The Sun is going down. Turn the ship to point north.',hint:'Left hand to the sunset, and you face north.',help:['Left hand to the sunset.','The Sun is in the west. North is a quarter turn round from it.','Look: the dotted arrow shows north.']},
+  pmsh:{say:'Use the mast’s evening shadow. Turn the ship to point north.',hint:'In the evening, the Sun is on the other side from the shadow, in the west.',help:['Shadows point away from the Sun.','It is evening, so the Sun is in the west and the shadow points east. Left hand to the west…','Look: the dotted arrow shows north.']}
+};
+const seaEdge=a=>PT(SEA.cx,SEA.cy,258,a,138);
+function drawClue(clue,rho){
+  $('#sea-sun').innerHTML='';setA('#sea-sh','d','');
+  const sunAt=(a,w)=>{const [x,y]=seaEdge(a);const [lx,ly]=PT(SEA.cx,SEA.cy,200,a,104);$('#sea-sun').innerHTML=SUNG(x,y,24,true)+`<text x="${f1(lx)}" y="${f1(ly+6)}" text-anchor="middle" font-size="19" font-weight="700" fill="#fff" stroke="#0f2438" stroke-width="5" paint-order="stroke">${w}</text>`;};
+  const shadow=(a,len)=>{setA('#sea-sh','d',shadowD(SEA.cx,SEA.cy,a,len,22));};
+  if(clue==='rise')sunAt(rho-90,'sunrise');
+  if(clue==='set')sunAt(rho+90,'sunset');
+  if(clue==='amsh')shadow(rho+90,150);
+  if(clue==='pmsh')shadow(rho-90,150);
+  if(clue==='noonsh')shadow(rho+180,48);
+}
+async function voyageLeg(i,leg){
+  const rho=pick([0,90,180,270]);
+  $('#sea-ghost').innerHTML='';$('#sea-sun').innerHTML='';setA('#sea-sh','d','');
+  $('#sea-clock').innerHTML=clockBadge(leg.when);
+  let clue=leg.opts[0].v;
+  if(leg.opts.length>1){say(`${leg.when}. How will you find north? You choose.`);clue=await choose(leg.opts);}
+  drawClue(clue,rho);
+  const steps=S.easy?[0,90,180,270]:[0,45,90,135,180,225,270,315];
+  const start=pick(steps.filter(a=>!sameDir(a,rho)));
+  const nameOf=a=>NAMES8[norm(Math.round((rho-a)/45)*45)];
+  await turnTask({item:`voyage-${i+1}-${clue}`,concept:'Finding north from the Sun',area:'HSS',
+    say:CLUE[clue].say,start,step:S.easy?90:45,cx:SEA.cx,cy:SEA.cy,hit:'#sea-hit',btn:'Sail this way!',
+    set:a=>{$('#sea-ship').innerHTML=shipG(a);},
+    isRight:a=>sameDir(a,rho),name:nameOf,
+    why:a=>`That way is ${nameOf(a)}. ${CLUE[clue].hint}`,
+    help:CLUE[clue].help,
+    helpExtra:n=>{if(n===2){const [x,y]=PT(SEA.cx,SEA.cy,150,rho,130);$('#sea-ghost').innerHTML=`<path d="M${SEA.cx} ${SEA.cy}L${f1(x)} ${f1(y)}" stroke="#f2c75c" stroke-width="6" stroke-dasharray="10 7" marker-end="url(#sea-ar)"/><text x="${f1(PT(SEA.cx,SEA.cy,175,rho,150)[0])}" y="${f1(PT(SEA.cx,SEA.cy,175,rho,150)[1]+6)}" text-anchor="middle" font-size="18" font-weight="700" fill="#fff" stroke="#0f2438" stroke-width="4" paint-order="stroke">north</text>`;}},
+    onRight:()=>{$('#sea-ghost').innerHTML='';},
+    yes:['Full sail, north!','Still heading north!','North again! Nearly home.'][i],ms:1500});
+  const dx=-Math.cos(rho*D2R)*110,dy=Math.sin(rho*D2R)*110;
+  await tween(1800,k=>setA('#sea-w','transform',`translate(${f1(dx*k)} ${f1(dy*k)})`));
+  setA('#sea-w','transform','');
+}
+function partVoyage(){
+  stage({title:'Steer for home',steps:3,scene:seaSVG(),say:'Captain Hale must sail north, home to Mistress Wren.'});
+  (async()=>{
+    $('#sea-ship').innerHTML=shipG(90);
+    await sleep(1800);
+    const legs=[
+      {when:'Morning',opts:[{v:'rise',label:'Look at the sunrise',pic:PIC.sky(0.02)},{v:'amsh',label:'Look at the mast’s shadow',pic:PIC.mast(180)}]},
+      {when:'Noon',opts:[{v:'noonsh'}]},
+      {when:'Evening',opts:[{v:'set',label:'Look at the sunset',pic:PIC.sky(0.98)},{v:'pmsh',label:'Look at the mast’s shadow',pic:PIC.mast(0)}]}
+    ];
+    for(let i=0;i<legs.length;i++)await voyageLeg(i,legs[i]);
+    $('#sea-sun').innerHTML='';setA('#sea-sh','d','');$('#sea-clock').innerHTML='';
+    $('#sea-hb').innerHTML=harbourTop();
+    say('Land ho! There is the harbour, and Mistress Wren!');
+    tray('');
+    await tween(2200,k=>{$('#sea-ship').innerHTML=`<g transform="translate(0 ${f1(-8*k)})">${shipG(90)}</g>`;});
+    await sleep(1800);
+    await card({ribbon:'Home!',title:'A new compass',pic:compassPic(),ps:['Mistress Wren has a new compass for Captain Hale.','Its needle points north, the way you steered!'],go:'Hooray!'});
+    ending();
+  })();
+}
+
+/* ---------- the end: outside, then the notebook ---------- */
+const TI={
+  mum:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><circle cx="24" cy="16" r="9" fill="#e8c9a6"/><path d="M15 14q2-12 18-6q-2-6-9-6t-9 12z" fill="#6b4a2b"/><path d="M10 56q0-26 14-26t14 26z" fill="#2453A3"/><circle cx="54" cy="22" r="7" fill="#e8c9a6"/><path d="M47 20q0-10 14-4" stroke="#6b4a2b" stroke-width="5" fill="none"/><path d="M44 56q0-22 10-22t10 22z" fill="#16A08F"/><path d="M60 6h14v10h-8l-4 4z" fill="#fff" stroke="#6d5c44" stroke-width="1.5"/></svg>',
+  sun:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><rect width="78" height="60" rx="8" fill="#bfe3f7"/>'+SUNG(56,20,9,true)+'<path d="M0 46h78v14H0z" fill="#8fc46a"/><path d="M18 46v-12M14 38l4-4 4 4" stroke="#2a2118" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="18" cy="28" r="4" fill="#e8c9a6"/></svg>',
+  hand:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><rect width="78" height="60" rx="8" fill="#e9d29a"/><ellipse cx="34" cy="34" rx="14" ry="7" fill="#16A08F"/><path d="M46 34h18" stroke="#e8c9a6" stroke-width="6" stroke-linecap="round"/><circle cx="67" cy="34" r="6" fill="#16A08F"/><circle cx="34" cy="34" r="7" fill="#6b4a2b"/><path d="M34 22V6" stroke="#f2c75c" stroke-width="3" stroke-dasharray="4 3"/><text x="40" y="12" font-size="11" font-weight="700" fill="#a5302a">N</text></svg>',
+  compass:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><circle cx="39" cy="30" r="24" fill="#b0864f"/><circle cx="39" cy="30" r="19" fill="#fffaf0"/><path d="M39 14l4 16h-8z" fill="#a5302a"/><path d="M39 46l4-16h-8z" fill="#6d5c44"/></svg>',
+  shadow:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><rect width="78" height="60" rx="8" fill="#efd9a0"/>'+SUNG(14,14,6,true)+'<path d="M40 40l26 14" stroke="#2a2118" stroke-width="7" stroke-linecap="round" opacity=".5"/><path d="M40 40V18" stroke="#2a2118" stroke-width="4"/><circle cx="40" cy="15" r="4" fill="#e8c9a6"/></svg>',
+  window:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><path d="M8 26L39 6l31 20v30H8z" fill="#f4ead6" stroke="#6d5c44" stroke-width="2"/><rect x="18" y="30" width="18" height="16" fill="#bfe3f7" stroke="#6d5c44" stroke-width="2"/><rect x="44" y="30" width="18" height="16" fill="#bfe3f7" stroke="#6d5c44" stroke-width="2"/><text x="66" y="16" font-size="12" font-weight="700" fill="#a5302a">?</text></svg>',
+  book:'<svg class="pic" viewBox="0 0 78 60" aria-hidden="true"><path d="M8 10h28q3 0 3 3v40q0-3-3-3H8z" fill="#fffaf0" stroke="#16A08F" stroke-width="3"/><path d="M70 10H42q-3 0-3 3v40q0-3 3-3h28z" fill="#fffaf0" stroke="#16A08F" stroke-width="3"/><text x="55" y="38" text-anchor="middle" font-size="16" font-weight="700" fill="#a5302a">16</text></svg>'
+};
+const TODO=[
+  {k:'tell',pic:TI.mum,t:'Tell Mum two ways to find north',s:'with no compass at all'},
+  {k:'out',pic:TI.sun,t:'Go outside together. Where is the Sun?',s:'Don’t look straight at it!'},
+  {k:'hand',pic:TI.hand,t:'Do the hand trick. Which way are you facing?',s:'Morning: right hand to the Sun. Afternoon: left hand.'},
+  {k:'comp',pic:TI.compass,t:'Check with your compass',s:''},
+  {k:'shad',pic:TI.shadow,t:'Which way does your shadow point?',s:'Away from the Sun!'},
+  {k:'win',pic:TI.window,t:'Which way do our big windows face?',s:''},
+  {k:'book',pic:TI.book,t:'My Earth Notebook, page 16',s:'Lesson 11: Sunrise and Sunset'}
+];
+function ending(){
+  runId++;toTop();
+  finishPart(4);
+  G.finish();
+  pips(-1);
+  main.innerHTML=`<section class="panel"><div class="phead"><h2>Home, safe and sound!</h2></div>
+    <div class="letterpaper"><p>Dear Apprentice,</p><p>Thank you! With no compass at all, you found north using only the Sun.</p><p>Nutmeg says sorry.</p><p class="sig">Captain Hale</p></div>
+    <h3 class="bigq">Now, off you go!</h3>
+    <p class="inst">Tap each box when you’ve done it.</p>
+    <ol class="todo">${TODO.map(x=>`<li class="${x.k==='tell'?'mum':''}"><button data-k="${x.k}" aria-pressed="${S.ticks.includes(x.k)?'true':'false'}">${x.pic}<span>${x.t}${x.s?`<small>${x.s}</small>`:''}</span><span class="box2"></span></button></li>`).join('')}</ol>
+    <div class="wbox"><label for="wr">If you like: write one way to find north</label><small>One sentence is plenty. Mum can write it for you.</small><textarea id="wr" maxlength="400"></textarea></div>
+    <p id="alldone" style="text-align:center;font-weight:700;font-size:1.25rem;margin:12px 0 0" hidden>All done! Purr. Well steered, Apprentice.</p>
+    <div class="row" style="margin-top:12px"><button class="btn ghost" id="go">Back to the contents</button></div></section>`;
+  const upd=()=>{$('#alldone').hidden=!(TODO.every(x=>S.ticks.includes(x.k)));};
+  $$('.todo button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;const i=S.ticks.indexOf(k);if(i<0)S.ticks.push(k);else S.ticks.splice(i,1);save();b.setAttribute('aria-pressed',i<0?'true':'false');upd();});
+  const wr=$('#wr');wr.value=S.write||'';
+  wr.addEventListener('input',()=>{S.write=wr.value;save();G.write({prompt:'One way to find north',text:wr.value,area:'HSS'});});
+  upd();
+  $('#go').onclick=home;
+}
+
+/* ---------- contents ---------- */
+function home(){
+  runId++;cur=-1;pips(-1);toTop();
+  main.innerHTML=`<section class="panel"><div class="hero"><div class="sw" style="margin:0">${heroSVG()}</div><div>
+      <div class="bubble" style="margin:0 0 8px"><span class="who">${NUTMEG}</span><p>Oops. It’s Nutmeg. I did a bad thing.</p></div>
+      <p>I knocked Captain Hale’s compass into the sea! Now he can’t tell which way is north.</p>
+      <p>Can you help him find north, using only the Sun?</p>
+      <p class="note">Captain Hale, Mistress Wren and Nutmeg are made up. Everything about the Sun is true.</p></div></div>
+    <div class="parts">${PARTS.map((p,i)=>{const ok=unlocked(i),d=done(p.id),nx=ok&&!d;
+      return `<button class="panel part ${nx?'next':''}" data-i="${i}" ${ok?'':'disabled'}>${TILEPIC[p.id]}<h3>${i+1}. ${p.name}</h3><span class="tag">${d?'Done ✓':ok?'Ready':'Locked'}</span></button>`;}).join('')}</div></section>`;
+  $$('.part').forEach(b=>b.onclick=()=>{if(!b.disabled)runPart(+b.dataset.i);});
+}
+
+/* ---------- grown-up controls ---------- */
+function setEasy(){$('#easy').setAttribute('aria-pressed',S.easy?'true':'false');}
+$('#easy').onclick=()=>{S.easy=!S.easy;save();setEasy();if(cur>=0)runPart(cur);};
+$('#home').onclick=home;
+let armed=false;
+$('#reset').onclick=()=>{
+  if(!armed){armed=true;$('#reset').textContent='Tap again to start again';setTimeout(()=>{armed=false;$('#reset').textContent='Start again';},4000);return;}
+  armed=false;$('#reset').textContent='Start again';const e=S.easy;S=blank();S.easy=e;save();home();
+};
+setEasy();home();
+
+</script>
+<script src="../../home.js"></script>
+</body>
+</html>
