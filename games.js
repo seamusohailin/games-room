@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "great-plain-express",
+    title: "The Great Plain Express",
+    blurb: "Ride with Zofia from Finland across Russia to Poland, and find out why her train needs new wheels.",
+    players: ["maggie"],
+    subject: "Geography",
+    source: "Exploring Europe (Pleasant Talk of Places), Lesson 3: The Great Plain of the East, Finland, Russia and Poland (ebook pp. 12 to 17). Includes two whole videos: Let's Take a Journey: Russia (Miacademy, 11 minutes) and Poland Explained in 10 Minutes (Opentiera, 10 minutes). About 20 minutes of play plus the videos, about 40 minutes in all",
+    added: "2026-11-24",
+    colour: "#2E3F6E",
+    href: "games/great-plain-express/index.html"
+  },
+  {
     id: "sun-compass",
     title: "Captain Hale’s Sun Compass",
     blurb: "Nutmeg knocked the compass overboard! Help Captain Hale find north using only the Sun.",
