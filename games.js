@@ -19,6 +19,17 @@ window.PLAYERS = [
 
 window.GAMES = [
   {
+    id: "over-the-bridge",
+    title: "Over the Bridge",
+    blurb: "Why don’t you land on your head in a walkover? Find your balance point, learn the beats, then find your first step.",
+    players: ["maggie", "maeve"],
+    subject: "Health and PE",
+    source: "Health and PE: the back walkover (sequel to The Rainbow Bridge). Balance point over the hands, the walkover's beats, and a step-by-step ladder from The Tumbling Coach's three back walkover videos. About 10 minutes, then about 8 minutes practising one rung with a grown-up. For the Thursday Games Room health slot",
+    added: "2026-11-26",
+    colour: "#C2452D",
+    href: "games/over-the-bridge/index.html"
+  },
+  {
     id: "great-plain-express",
     title: "The Great Plain Express",
     blurb: "Ride with Zofia from Finland across Russia to Poland, and find out why her train needs new wheels.",
